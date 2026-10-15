@@ -1,0 +1,17 @@
+# Godot
+.godot/
+*.translation
+# GUT test output
+.gut_junit.xml
+# Python
+__pycache__/
+.venv/
+# Unity leftovers — never commit these here
+*.meta
+ProjectSettings/
+Library/
+
+# Build output (export 대상) — 산출물이므로 커밋하지 않는다
+build/
+*.app/
+*.dmg
