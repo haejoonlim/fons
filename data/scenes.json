@@ -1,0 +1,437 @@
+{
+  "meta": {
+    "source": "design-docs/설계/아크3_13_시나리오_가안.md v1.3 + 아크1_2_시나리오_가안.md v0.6 (13:8:5 재배치 · 130회차 · 엔딩 7분기)",
+    "rule": "자유도 원칙 5계 (확정 #63 · 자유도원칙_Unity구현사양 §3) — forced 씬 단 1건(sc_08_076_01)",
+    "rel_clamp": "[-5, 5]"
+  },
+  "scenes": [
+    {
+      "id": "sc_01_001_01",
+      "forced": false,
+      "triggerFloor": 1,
+      "lines": [
+        "재가 흩날리는 언덕. 부서진 소환 제단.",
+        "새김 흔적이 129번 겹친 자리. 그 옆 한 구석은 아직 비어 있다.",
+        "…곁에 이미 앉아 있던 누군가가 장부를 펼친다."
+      ],
+      "epilogueLine": "제1항. 다시 시작한다.",
+      "choices": [
+        {
+          "text": "장부를 받는다",
+          "relLineage": "abyss",
+          "relDelta": 1,
+          "flag": "ledger_accepted",
+          "reward": "튜토리얼 개시"
+        },
+        {
+          "text": "대답하지 않는다",
+          "relLineage": "abyss",
+          "relDelta": 0,
+          "flag": "ledger_silent",
+          "reward": "튜토리얼 개시(침묵)"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 0
+    },
+    {
+      "id": "sc_01_008_01",
+      "forced": false,
+      "triggerFloor": 8,
+      "lines": [
+        "브렌의 몸이 빛의 입자로 흩어진다. 추모 비석 앞에서.",
+        "프리마가 펜을 내민다: \"문장을 새기세요. 이 비석의 주인이, 살았다는 문장을.\""
+      ],
+      "epilogueLine": "제2항. 첫 장례.",
+      "choices": [
+        {
+          "text": "직접 새긴다",
+          "relLineage": "abyss",
+          "relDelta": 1,
+          "flag": "first_epitaph",
+          "reward": "비석 문장 1 (계정 축적 — 씬 10-98 재생 재료)"
+        },
+        {
+          "text": "프리마에게 맡긴다",
+          "relLineage": "abyss",
+          "relDelta": 0,
+          "flag": "first_epitaph_delegated",
+          "reward": "비석 문장 1"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 0
+    },
+    {
+      "id": "sc_02_016_01",
+      "forced": false,
+      "triggerFloor": 16,
+      "lines": [
+        "탑의 서고. 벽 전체가 목록 배열이다 — 자리를 129개, 하나하나 새겨놓은 것.",
+        "근접하면 알 수 있다. 칸은 있는데, 안에는 아무것도 없다. 긁어낸 흔적만 남았다.",
+        "룬인형족이 묻는다: \"몇 번째 새김이냐.\"",
+        "당신은 답할 수 없다. 지워졌으니까.",
+        "프리마가 아주 짧게 말한다: \"목록은 아래에 있어요. 저쪽에.\""
+      ],
+      "epilogueLine": "제4항. 비어 있는 자리는 하나다.",
+      "choices": [
+        {
+          "text": "자의로 한 칸을 메운다",
+          "relLineage": "elf",
+          "relDelta": 1,
+          "flag": "slot_filled_self",
+          "reward": "기억이 남는 영웅 1인 (계정 영구)"
+        },
+        {
+          "text": "룬인형족에게 새기게 한다",
+          "relLineage": "elf",
+          "relDelta": 2,
+          "flag": "slot_filled_rune",
+          "reward": "룬인형족 기록자 — 합류 가능"
+        },
+        {
+          "text": "지나간다",
+          "relLineage": null,
+          "relDelta": 0,
+          "flag": "slot_passed",
+          "reward": "아무 일도 없다 (정본 경로 · 원칙 1)"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 0
+    },
+    {
+      "id": "sc_02_020_01",
+      "forced": false,
+      "triggerFloor": 20,
+      "lines": [
+        "서명의 금고 최심부 — 당신이 쓰는 모든 돈은 아래에서 파낸 죽은 자의 힘이다.",
+        "금고의 가장 깊은 서류가 하나 흘러나온다. 붉은 잉크의 인장 — 서명은… 당신의 것이다.",
+        "서고를 빠져나오며: 룬 파수꾼이 서고의 룬을 삼켜 한다. 문지기는 지식을 삼키는 자다.",
+        "토르발드의 대장간 서약 제안에, 그림자 속 뱀파이어 사자가 야행 서약을 건넨다."
+      ],
+      "epilogueLine": "제5항. 서명도 기록이다.",
+      "choices": [
+        {
+          "text": "서약 튜토리얼을 받는다",
+          "relLineage": "abyss",
+          "relDelta": 1,
+          "flag": "crimson_seal_seen",
+          "reward": "서약 개시"
+        },
+        {
+          "text": "서류를 태운다",
+          "relLineage": "abyss",
+          "relDelta": -1,
+          "flag": "seal_burned",
+          "reward": "서약 개시(불신)"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 0
+    },
+    {
+      "id": "sc_03_029_01",
+      "forced": false,
+      "triggerFloor": 29,
+      "lines": [
+        "프리마의 장부에서 해체 예고 명단이 흘러나온다. 증기구름층 위 층 마을 사람들의 이름.",
+        "당신이 집어 드는 순간, 프리마가 처음으로 펜을 뺏는다.",
+        "\"…대장님은 안 보셔도 되는 항목이에요.\"",
+        "이후 3일(게임 시간) 동안, 프리마는 말이 없다."
+      ],
+      "epilogueLine": null,
+      "choices": [
+        {
+          "text": "명단을 본다",
+          "relLineage": "abyss",
+          "relDelta": 1,
+          "flag": "manifest_seen",
+          "reward": "탑의 명부 개시"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 0
+    },
+    {
+      "id": "sc_04_040_01",
+      "forced": false,
+      "triggerFloor": 40,
+      "lines": [
+        "서약이 돌로 굳는다. 제단이 물을 막는다 — 대사 없이, 프리마가 장부에 한 줄만 기입한다.",
+        "대사는 없다. 프리마가 장부에 한 줄만 기입한다."
+      ],
+      "epilogueLine": "제7항. 서약은 돌이 되었고, 돌은 물을 막는다.",
+      "choices": [
+        {
+          "text": "물을 바라본다",
+          "relLineage": null,
+          "relDelta": 0,
+          "flag": "cleansed_water_seen",
+          "reward": "아크 4 종결"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 0
+    },
+    {
+      "id": "sc_05_049_01",
+      "forced": false,
+      "triggerFloor": 49,
+      "lines": [
+        "야행 가문의 붉은 인장 초대장. 인장은… 아크 2 금고 서류와 같은 것이다.",
+        "프리마가 처음으로 의견을 댄다: \"…가보셔도 돼요. 아니, 안 가셔도 돼요.\""
+      ],
+      "epilogueLine": null,
+      "choices": [
+        {
+          "text": "초대장을 간직한다",
+          "relLineage": "abyss",
+          "relDelta": 1,
+          "flag": "invitation_kept",
+          "reward": "아크 7 야행 가문 입장 경로"
+        },
+        {
+          "text": "초대장을 태운다",
+          "relLineage": "abyss",
+          "relDelta": -1,
+          "flag": "invitation_burned",
+          "reward": "아크 7 강제 소환 경로"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 0
+    },
+    {
+      "id": "sc_06_059_01",
+      "forced": false,
+      "triggerFloor": 59,
+      "lines": [
+        "침전수로의 관로가 스스로 관로를 연다. 당신이 한 일은 미션뿐이었다.",
+        "원인은 설명되지 않는다. 당신이 한 일은 미션뿐이었다."
+      ],
+      "epilogueLine": "제8항. 길은 스스로 난다.",
+      "choices": [
+        {
+          "text": "그저 지나간다",
+          "relLineage": null,
+          "relDelta": 0,
+          "flag": "city_path_open",
+          "reward": "아크 6 종결"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 0
+    },
+    {
+      "id": "sc_07_066_01",
+      "forced": false,
+      "triggerFloor": 66,
+      "lines": [
+        "야행 가주의 말: \"당신이 지낸 밤이 몇 번인지 세어 봤는가.",
+        "우리는 세지 않았습니다. 셀 수 없었으니까 —",
+        "당신이 내려올 때마다 우리가 깨어 있었거든요.\""
+      ],
+      "epilogueLine": "제9항. 죽음도 리듬이다.",
+      "choices": [
+        {
+          "text": "몇 번인지 대답한다",
+          "relLineage": "abyss",
+          "relDelta": 1,
+          "flag": "nights_counted",
+          "reward": "야행 인장 획득"
+        },
+        {
+          "text": "드워프 진영에 건넨다",
+          "relLineage": "abyss",
+          "relDelta": 2,
+          "flag": "pact_converted",
+          "reward": "원천 재개방 협상 — 아크 13 재료"
+        },
+        {
+          "text": "거절한다",
+          "relLineage": "abyss",
+          "relDelta": -2,
+          "flag": "pact_refused",
+          "reward": "야행 인장 파기"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 0
+    },
+    {
+      "id": "sc_08_076_01",
+      "forced": true,
+      "triggerFloor": 76,
+      "lines": [
+        "기억묘역의 가장 깊은 곳에서 나온 대장은 — 제129권까지 차 있다.",
+        "1권부터 129권까지는, 당신의 129번의 삶.",
+        "16~20층 서고의 빈 129칸과, 여기서 자리가 일치한다.",
+        "인트로의 낭독이 통째로 재생된다 — 이번엔 뭉개지지 않은 화면으로.",
+        "프리마: \"…제130권은 비어 있습니다. 아직 새기고 계시니까요.\""
+      ],
+      "epilogueLine": "129권까지 차 있는 장부, 130권은 한 글자도 쓰이지 않았다.",
+      "choices": [
+        {
+          "text": "대장을 받는다",
+          "relLineage": "abyss",
+          "relDelta": 2,
+          "flag": "ledger_130_accepted",
+          "reward": "아크 8 종결"
+        }
+      ],
+      "skipXp": 0,
+      "minRun": 0
+    },
+    {
+      "id": "sc_08_078_01",
+      "forced": false,
+      "triggerFloor": 78,
+      "lines": [
+        "프리마의 정체 — 탑이 관리인을 관리하기 위해 만든 존재.",
+        "츤데레의 정체는, 해체를 시켜야 하는 존재의 감정 억제 장치의 균열.",
+        "선택: 남기면 서사가 이어지고, 해고하면 대사 0인 침묵 모드 — 진행은 어느 쪽도 막히지 않는다."
+      ],
+      "epilogueLine": null,
+      "choices": [
+        {
+          "text": "프리마를 남긴다",
+          "relLineage": "abyss",
+          "relDelta": 3,
+          "flag": "prima_kept",
+          "reward": "프리마 서사 계속"
+        },
+        {
+          "text": "프리마를 해고한다",
+          "relLineage": "abyss",
+          "relDelta": -2,
+          "flag": "prima_dismissed",
+          "reward": "침묵 모드 — 진행 차단 0"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 0
+    },
+    {
+      "id": "sc_09_083_01",
+      "forced": false,
+      "triggerFloor": 83,
+      "lines": [
+        "먼지벌판의 뿌연 것 속 — 흐려진 영혼이 자기 기억을 되찾고 원본을 8% 초월한다.",
+        "되찾은 기억이 다음 회차로 이어진다. 프리마의 장부가 한 줄 흘러나온다."
+      ],
+      "epilogueLine": "제9항. 사본이 원본을 다시 찾았다.",
+      "choices": [
+        {
+          "text": "그 순간을 지켜본다",
+          "relLineage": null,
+          "relDelta": 0,
+          "flag": "remembrance_witnessed",
+          "reward": "기억 회수 연출 해금"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 0
+    },
+    {
+      "id": "sc_10_098_01",
+      "forced": false,
+      "triggerFloor": 98,
+      "lines": [
+        "무광심연(96~100)의 백묵 벽. 빛이 없으니 새김이 오히려 잘 보인다 — 129번의 실패가 가장 선명한 층.",
+        "재런을 거칠수록 벽은 더 길어진다. 계정이 쌓아 온 것이, 지금 서사가 되었다."
+      ],
+      "epilogueLine": null,
+      "choices": [
+        {
+          "text": "벽을 끝까지 읽는다",
+          "relLineage": null,
+          "relDelta": 0,
+          "flag": "chalk_wall_read",
+          "reward": "아크 10 종결"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 1
+    },
+    {
+      "id": "sc_11_110_01",
+      "forced": false,
+      "triggerFloor": 110,
+      "lines": [
+        "101층을 통과한다. 무광심연을 처음 빠져나온 층 — 여기서 빛이 처음으로 닿는다. 광로 회복률이 급상승한다.",
+        "프리마의 장부: \"제11항. 빛이 너무 가까우면, 어둠이 그리워진다.\""
+      ],
+      "epilogueLine": "129회 대장에 새 줄: \"130회차. 아직 새기는 중.\"",
+      "choices": [
+        {
+          "text": "광로를 올려다본다",
+          "relLineage": null,
+          "relDelta": 0,
+          "flag": "g4_light_seen",
+          "reward": "G4 진입 확정"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 6
+    },
+    {
+      "id": "sc_12_118_01",
+      "forced": false,
+      "triggerFloor": 118,
+      "lines": [
+        "포기한 세 번 3인이 처음으로 인간의 언어로 말한다.",
+        "\"우리는 당신이 밀어낸 것들입니다. 129번 동안, 매번 한 가지씩.\"",
+        "— 조건을 제시하지 않는다. 증언만 한다."
+      ],
+      "epilogueLine": null,
+      "choices": [
+        {
+          "text": "끝까지 듣는다",
+          "relLineage": null,
+          "relDelta": 1,
+          "flag": "testimony_complete",
+          "reward": "포기한 세 번 정체"
+        },
+        {
+          "text": "여기서 멈춘다",
+          "relLineage": null,
+          "relDelta": 0,
+          "flag": "testimony_refused",
+          "reward": "DLC '심층 재귀' 훅"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 6
+    },
+    {
+      "id": "sc_13_123_01",
+      "forced": false,
+      "triggerFloor": 123,
+      "lines": [
+        "129번 겹친 새김 흔적. 그 옆, 아직 비어 있던 자리에 당신의 흔적이 새겨지고 있다.",
+        "아직 문장은 없다. 프리마가 펜을 든다: \"대장님, 문장을 지어주세요.\"",
+        "\"…아니요. 제가 대신 쓸 수는 없어요. 이건 당신이 새기는 자리입니다.\""
+      ],
+      "epilogueLine": null,
+      "choices": [
+        {
+          "text": "문장을 지어준다",
+          "relLineage": "abyss",
+          "relDelta": 2,
+          "flag": "epitaph_130_written",
+          "reward": "130회차 기록"
+        },
+        {
+          "text": "백지로 남긴다",
+          "relLineage": "abyss",
+          "relDelta": 0,
+          "flag": "epitaph_130_blank",
+          "reward": "열린 문 엔딩 근거"
+        }
+      ],
+      "skipXp": 10,
+      "minRun": 6
+    }
+  ]
+}

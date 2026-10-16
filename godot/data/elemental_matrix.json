@@ -1,0 +1,248 @@
+{
+  "$schema": "5.3 원소 매트릭스 — 7원소 상성표 + 정령족/용족 14분파 배정 + 마도사 학파 6개/10직업 (D-278, 2026-09-28 · 학파 재편 2026-09-30). 활성 전투 판정용. 64비정령 분파는 element를 보유하지 않으며 이 표의 영향을 받지 않는다.",
+  "meta": {
+    "status": "가안",
+    "source": "races.json 정령족·용족 14분파 + world_laws.json 7법칙 + job_tree.json 마법 학파 7개 · 직업 15종",
+    "note": "유리 155% · 불리 65%는 정령족 종족 보정(races.json race_genasi.elemental)을 분파 단위로 확장한 값. 그 외 무승부 100%. 2026-09-28 갱신: 단일원소 마도사 7종 삭제 → 원소 마도사 1학파(법칙=첫 원소). 대원소마도사는 7원소 전소유 조건부. 개명 반영(광명사·망령소환사·혈마도사·파멸마도사·제물마도사·심연마도사·파수사).",
+    "rule": "공격 원소 vs 방어 원소로 단일 배율을 고른다. 다중 약점(weakness.element 배열)이면 가장 유리한 약점만 적용한다. 무효(dark vs light 와 같은 상쇄쌍)는 100%다.",
+    "scope": "정령족·용족 14분파와 마법 학파 15직업만 이 표의 판정을 받는다. 그 외 종족·직업은 element 없음으로 100% 통과. 소환 직업(정령소환사·곤충소환사)은 피해를 소환체에 위임하므로 학파 판정에서 제외한다 — 총 17 마법직업 중 2종 제외.",
+    "rename": "마도사 6종을 원소 정본명으로 통일 (2026-09-28 사용자) — 화염→불 · 심해→물 · 폭풍→바람 · 성광→빛 · 흑암→어둠 · 대지는 원래 정합. 월광 마도사 삭제 (2026-09-28 사용자 · 천체축 직업 불필요) → L3 82→81 · 트리 110→109. 무(무) 원소에 대응하는 단독 마도사 직업은 없으며 대원소마도사만 void 학파로 묶인다."
+  },
+  "elements": {
+    "fire": {
+      "name": "불",
+      "color": "#ff8a4c"
+    },
+    "water": {
+      "name": "물",
+      "color": "#5aa9e6"
+    },
+    "earth": {
+      "name": "대지",
+      "color": "#a08a5a"
+    },
+    "wind": {
+      "name": "바람",
+      "color": "#8fd6b0"
+    },
+    "light": {
+      "name": "빛",
+      "color": "#f0e2a0"
+    },
+    "dark": {
+      "name": "어둠",
+      "color": "#9a7bc0"
+    },
+    "void": {
+      "name": "무",
+      "color": "#c0c8d8"
+    }
+  },
+  "favorablePct": 155,
+  "unfavorablePct": 65,
+  "neutralPct": 100,
+  "matrix": [
+    {
+      "element": "fire",
+      "favorable": [
+        "wind"
+      ],
+      "unfavorable": [
+        "water"
+      ]
+    },
+    {
+      "element": "water",
+      "favorable": [
+        "fire"
+      ],
+      "unfavorable": [
+        "earth"
+      ]
+    },
+    {
+      "element": "earth",
+      "favorable": [
+        "water"
+      ],
+      "unfavorable": [
+        "wind"
+      ]
+    },
+    {
+      "element": "wind",
+      "favorable": [
+        "earth"
+      ],
+      "unfavorable": [
+        "fire"
+      ]
+    },
+    {
+      "element": "light",
+      "favorable": [
+        "dark"
+      ],
+      "unfavorable": [
+        "void"
+      ]
+    },
+    {
+      "element": "dark",
+      "favorable": [
+        "light"
+      ],
+      "unfavorable": [
+        "void"
+      ]
+    },
+    {
+      "element": "void",
+      "favorable": [
+        "light",
+        "dark"
+      ],
+      "unfavorable": []
+    }
+  ],
+  "branches": [
+    {
+      "branch": "불의 정령족",
+      "race": "정령족",
+      "element": "fire",
+      "biome": "압력화구"
+    },
+    {
+      "branch": "물의 정령족",
+      "race": "정령족",
+      "element": "water",
+      "biome": "역류폭포"
+    },
+    {
+      "branch": "대지의 정령족",
+      "race": "정령족",
+      "element": "earth",
+      "biome": "지맥굴"
+    },
+    {
+      "branch": "바람의 정령족",
+      "race": "정령족",
+      "element": "wind",
+      "biome": "찢긴 천창"
+    },
+    {
+      "branch": "빛의 정령족",
+      "race": "정령족",
+      "element": "light",
+      "biome": "서약성소"
+    },
+    {
+      "branch": "어둠의 정령족",
+      "race": "정령족",
+      "element": "dark",
+      "biome": "무광심연"
+    },
+    {
+      "branch": "무의 정령족",
+      "race": "정령족",
+      "element": "void",
+      "biome": "형상군락"
+    },
+    {
+      "branch": "화염 용족",
+      "race": "용족",
+      "element": "fire",
+      "biome": "압력화구"
+    },
+    {
+      "branch": "물 용족",
+      "race": "용족",
+      "element": "water",
+      "biome": "먹빛 해구"
+    },
+    {
+      "branch": "대지 용족",
+      "race": "용족",
+      "element": "earth",
+      "biome": "지맥굴"
+    },
+    {
+      "branch": "바람 용족",
+      "race": "용족",
+      "element": "wind",
+      "biome": "증기구름층"
+    },
+    {
+      "branch": "빛 용족",
+      "race": "용족",
+      "element": "light",
+      "biome": "서약성소"
+    },
+    {
+      "branch": "어둠 용족",
+      "race": "용족",
+      "element": "dark",
+      "biome": "무광심연"
+    },
+    {
+      "branch": "무 용족",
+      "race": "용족",
+      "element": "void",
+      "biome": "맥의 상흔"
+    }
+  ],
+  "mageJobs": [
+    "마법사"
+  ],
+  "schools": [
+    {
+      "school": "화염 마도사",
+      "law": "fire",
+      "jobs": [
+        "화염마도사"
+      ],
+      "note": "원소 마도사의 firstElement 이름 6종 중 하나 — 해당 원소가 법칙이다."
+    },
+    {
+      "school": "물 마도사",
+      "law": "water",
+      "jobs": [
+        "물마도사"
+      ]
+    },
+    {
+      "school": "대지 마도사",
+      "law": "earth",
+      "jobs": [
+        "대지마도사"
+      ]
+    },
+    {
+      "school": "바람 마도사",
+      "law": "wind",
+      "jobs": [
+        "바람마도사"
+      ]
+    },
+    {
+      "school": "빛 마도사",
+      "law": "light",
+      "jobs": [
+        "빛마도사",
+        "신관",
+        "성술사",
+        "수도사"
+      ],
+      "note": "빛 계층 — 원소 마도사의 빛마도사 + 신관·성술사·수도사 3직업 (2026-09-30 사용자 결정)"
+    },
+    {
+      "school": "어둠 마도사",
+      "law": "dark",
+      "jobs": [
+        "어둠마도사",
+        "주술사"
+      ],
+      "note": "어둠은 주술사만 — 2026-09-30 사용자 결정"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "meta": { "schema_version": "1.0" },
+  "facilities": [
+    { "id": "summon_altar", "name_ko": "소환제단", "unlock_floor": 1, "build_cost": 0, "operate_required": true, "initial_level": 1, "max_level": 7, "upgrade_costs": [3000, 8000, 20000, 40000, 80000, 150000] },
+    { "id": "hospital", "name_ko": "병원", "unlock_floor": 1, "build_cost": 0, "operate_required": true, "initial_level": 0, "max_level": 7, "upgrade_costs": [3000, 8000, 20000, 40000, 80000, 150000] },
+    { "id": "tactics_office", "name_ko": "전술소", "unlock_floor": 4, "build_cost": 1000, "operate_required": true, "initial_level": 0, "max_level": 7, "upgrade_costs": [3000, 8000, 20000, 40000, 80000, 150000] },
+    { "id": "training_ground", "name_ko": "훈련장", "unlock_floor": 12, "build_cost": 3000, "operate_required": true, "initial_level": 0, "max_level": 7, "upgrade_costs": [3000, 8000, 20000, 40000, 80000, 150000] },
+    { "id": "dining_hall", "name_ko": "식당", "unlock_floor": 10, "build_cost": 3000, "operate_required": true, "initial_level": 0, "max_level": 7, "upgrade_costs": [3000, 8000, 20000, 40000, 80000, 150000] },
+    { "id": "lodging", "name_ko": "숙소", "unlock_floor": 14, "build_cost": 3000, "operate_required": true, "initial_level": 0, "max_level": 7, "upgrade_costs": [3000, 8000, 20000, 40000, 80000, 150000] },
+    { "id": "research_lab", "name_ko": "연구소", "unlock_floor": 20, "build_cost": 3000, "operate_required": true, "initial_level": 0, "max_level": 7, "upgrade_costs": [3000, 8000, 20000, 40000, 80000, 150000] },
+    { "id": "alchemy_lab", "name_ko": "연금술소", "unlock_floor": 20, "build_cost": 3000, "operate_required": true, "initial_level": 0, "max_level": 7, "upgrade_costs": [3000, 8000, 20000, 40000, 80000, 150000] },
+    { "id": "synthesis_lab", "name_ko": "합성소", "unlock_floor": 30, "build_cost": 3000, "operate_required": true, "initial_level": 0, "max_level": 7, "upgrade_costs": [3000, 8000, 20000, 40000, 80000, 150000] },
+    { "id": "extraction_lab", "name_ko": "추출소", "unlock_floor": 30, "build_cost": 3000, "operate_required": true, "initial_level": 0, "max_level": 7, "upgrade_costs": [3000, 8000, 20000, 40000, 80000, 150000] },
+    { "id": "housing", "name_ko": "주택", "unlock_floor": 1, "build_cost": 0, "operate_required": false, "initial_level": 0, "max_level": 7, "upgrade_costs": [3000, 8000, 20000, 40000, 80000, 150000] },
+    { "id": "hall_of_heroes", "name_ko": "영웅의 전당", "unlock_floor": 100, "build_cost": 0, "operate_required": false, "initial_level": 0, "max_level": 1, "upgrade_costs": [] }
+  ],
+  "population": {
+    "initial": 30,
+    "max_by_stage": [60, 150, 400, 1300],
+    "natural_growth_rate_per_island_day": 0.02
+  },
+  "food": {
+    "consumption_per_pop_per_island_day": 1
+  },
+  "morale": {
+    "initial": 50,
+    "min": 0,
+    "max": 100,
+    "production_bonus_factor": 0.20
+  },
+  "tax": {
+    "gold_per_pop_per_island_day": 1
+  },
+  "gathering": {
+    "team_size": 4,
+    "max_teams_by_altar_level": [1, 2, 3, 4, 5, 5, 5],
+    "cooldown_island_hours": 24,
+    "base_yield": {
+      "food": 150,
+      "herb": 10,
+      "wood": 8,
+      "ore": 5
+    },
+    "floor_multiplier_formula": "1+floor/50"
+  },
+  "farming": {
+    "plots_per_housing": 1,
+    "crops": [
+      { "id": "grain", "name_ko": "곡물", "yield_food": 30, "yield_herb": 0, "growth_island_days": 2 },
+      { "id": "herb", "name_ko": "약초", "yield_food": 0, "yield_herb": 3, "growth_island_days": 3 }
+    ],
+    "seasons": [
+      { "id": "spring", "months": [3, 4, 5], "harvest_mul": 1.0, "food_yield_mul": 1.0, "natural_growth_mul": 1.5, "growth_mul": 1.0 },
+      { "id": "summer", "months": [6, 7, 8], "harvest_mul": 1.0, "food_yield_mul": 1.0, "natural_growth_mul": 1.0, "growth_mul": 1.0 },
+      { "id": "autumn", "months": [9, 10, 11], "harvest_mul": 1.1, "food_yield_mul": 1.0, "natural_growth_mul": 1.0, "growth_mul": 1.0 },
+      { "id": "winter", "months": [12, 1, 2], "harvest_mul": 1.0, "food_yield_mul": 0.7, "natural_growth_mul": 1.0, "growth_mul": 0.0, "morale_delta": -5 }
+    ]
+  },
+  "edicts": {
+    "unlock_floor": 10,
+    "slot_count_by_floor": [
+      { "floor": 1, "slots": 0 },
+      { "floor": 10, "slots": 1 },
+      { "floor": 30, "slots": 2 }
+    ],
+    "change_cooldown_floors": 5,
+    "list": [
+      { "id": "mercantilism", "name_ko": "중상주의", "tax_mul": 1.30, "morale_delta": -15, "gathering_yield_mul": 1.0, "natural_growth_mul": 1.0 },
+      { "id": "distributism", "name_ko": "분배주의", "tax_mul": 0.80, "morale_delta": 15, "gathering_yield_mul": 1.0, "natural_growth_mul": 1.5 },
+      { "id": "gathering_order", "name_ko": "채집장려", "tax_mul": 1.0, "morale_delta": -5, "gathering_yield_mul": 1.2, "natural_growth_mul": 1.0 }
+    ]
+  },
+  "maintenance_gold_per_level_per_island_day": 10,
+  "stages": [
+    { "id": "S1", "unlock_floor": 1, "expansion_cost": 0, "max_population": 60 },
+    { "id": "S2", "unlock_floor": 16, "expansion_cost": 3000, "max_population": 150 },
+    { "id": "S3", "unlock_floor": 25, "expansion_cost": 10000, "max_population": 400 },
+    { "id": "S4", "unlock_floor": 50, "expansion_cost": 30000, "max_population": 1300 }
+  ],
+  "manaCycle": {
+    "_doc": "D-268 마나 순환 체계 — 마석=마나 결정, 소비의 80% 지맥 환원→재결정화 (소진형 금지)",
+    "schema_version": "0.1",
+    "mp_per_crystal": 130,
+    "ley_return_ratio": 0.80,
+    "recrystallize_delay_days": 3,
+    "ley_health": {
+      "_doc": "층별 지맥 건강도 0~1 — 학살 시 하락, 보존·휴경 시 회복, 수확량에 곱승",
+      "start": 1.0,
+      "penalty_per_kill": 0.06,
+      "conserve_bonus": 0.03,
+      "natural_recovery_per_day": 0.10,
+      "floor_mul_min": 0.70,
+      "floor_mul_min_hard_limit": 0.55,
+      "event_disturb": { "storm": true, "fire": true },
+      "breath_return_per_day": 0.0
+    }
+  },
+  "sanitation": {
+    "_doc": "위생도 체인 가안 (D-256 · 04 §3.12 — 방어는 피해 경감이 아니라 연쇄율 자체 절하 · 병원 Lv 기반)",
+    "schema_version": "0.1",
+    "base_level": 40,
+    "per_hospital_level": 15,
+    "chain_base_p": 0.30,
+    "chain_reduction_per_hospital_lv": 0.15,
+    "chain_p_min": 0.06,
+    "chain_pop_loss_pct": 0.02
+  },
+  "disaster": {
+    "_doc": "재해 대응 가안 (D-267 사건 v2 — 화재 채집대 1팀 차출 = §3.11 채집 -20% · 지속 2섬일 — sim seized_days 정합)",
+    "schema_version": "0.1",
+    "fire_divert_days": 2,
+    "fire_gather_mul": 0.80
+  },
+  "facility_wear": {
+    "_doc": "노후도 가안 (04 데이터 흐름도 — 시설별 운영 층수 누적 ×rate · 화재 발화 우선순위 정렬용 · 시설 패널 마모 바)",
+    "schema_version": "0.1",
+    "rate_per_floor": 0.005,
+    "cap": 0.80,
+    "warn_at": 0.50
+  },
+  "morale_unrest": {
+    "_doc": "불만 게이지 가안 (04 데이터 흐름도 — 민심 25 미만 진입 표시·15 이하 경고·20 미달 3층 지속 시 파업 유예 계층)",
+    "schema_version": "0.1",
+    "enter_below": 25,
+    "warn_below": 15,
+    "strike_after_days": 3
+  },
+  "lightway": {
+    "_doc": "D-278 광로 회복률 — 얼어붙은 이데아가 녹은 정도(0~1). 계정 영속 · 엔딩 판정 축 2(StoryDirector.LightwayRecovery). 101층 스윗스팟이 유일한 대폭 상승.",
+    "schema_version": "0.1",
+    "sweetspot_floor": 101,
+    "sweetspot_gain": 0.30,
+    "sweetspot_once_flag": "lightway_sweetspot_used",
+    "per_floor_gain": 0.005,
+    "high_floor_min": 101,
+    "high_floor_gain": 0.007,
+    "unreachable_from": 86,
+    "unreachable_to": 90,
+    "cap": 1.0,
+    "_balance": "1~100 완주 0.475(균열) · 101층 스윗스팟 → 0.782(녹음 진입) · 1~130 완주 0.985(상한 미달). 스윗스팟이 '녹음 진입의 유일한 통로'라야 어긋나지 않는다 — per_floor_gain 을 0.01 로 두면 85층에 0.85 가 되어 스윗스팟이 상한에 잘려 memorable 해진다."
+  }
+}

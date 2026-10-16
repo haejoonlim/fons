@@ -14,7 +14,7 @@
   DANGLING_SSOT      SSOT 라고 주장하면서 존재하는 파일을 지목하지 않음
   NUMBER_CONFLICT    추적 상수가 문서마다 다른 값 (registry 파일 필요)
   CONST_DRIFT        같은 상수가 코드/데이터에서 다른 값으로 선언됨
-  UNVERIFIED_CLAIM   원본 저장소에 대한 숫자 주장에 '원본 미검증' 표시가 없음
+  UNVERIFIED_CLAIM   원본 저장소에 대한 숫자 주장에 출처 표시('원본 미검증'·'원본 대조'·'자체 실측')가 없음
 
 정밀도 우선 원칙 (오탐 방지):
   - 원본 저장소 경로(design-docs/, fons-web-ver/, unity/, Scripts/ ...)는 이 저장소에
@@ -24,7 +24,11 @@
   - 확장자 없는 것, 와일드카드(*), 자리표시(... , < >), 절대경로(/ ~ ./ ../)는 경로로 보지 않는다.
   - 파일명 표지는 단어 경계로 판정한다 ('DEV_PLAN.md' 안의 'PLAN.md' 는 원본 표지가 아니다).
   - 번호 목록의 서수('1. ', '2) ')는 숫자 주장으로 보지 않는다.
-  - 결정 번호(D-265 등)의 숫자는 값이 아니라 인용 부호이므로 주장으로 보지 않는다.
+  - 결정 번호(D-265 등)와 문서 절 참조(§9)의 숫자는 값이 아니라 인용 부호이므로 주장으로 보지 않는다.
+  - 숫자 주장에 붙는 표시는 두 가지다: '원본 미검증'(아직 대조 못 한 2차 인용) 또는
+    '원본 대조'(원본을 읽고 확인한 값). 어느 쪽이든 표시가 없으면 여전히 발견이다.
+  - 표(|로 시작하는 줄)는 바로 윗 행의 표시를 물려받지 않는다. 표는 행 하나가 사실
+    하나이므로, 윗 행의 표시가 다음 행까지 덮으면 표시 없는 주장이 면제로 새어 나간다.
   - 면제 건수를 항상 함께 출력한다. 조용히 넘기지 않는다.
 
 사용법:
@@ -61,14 +65,15 @@ CHECK_DESC = {
     "DUPLICATE_H1": "docs/ 안 두 문서의 H1 제목이 동일",
     "DANGLING_SSOT": "SSOT 라고 주장하지만 존재하는 파일을 지목하지 않음",
     "NUMBER_CONFLICT": "추적 상수가 문서마다 다른 값으로 적힘 (registry 필요)",
-    "CONST_DRIFT": "같은 상수가 코드/데이터에서 다른 값으로 선언됨",
-    "UNVERIFIED_CLAIM": "원본 저장소에 대한 숫자 주장에 '원본 미검증' 표시가 없음",
+    "CONST_DRIFT": "같은 이름의 상수가 코드/데이터에서 다른 값으로 선언됨",
+    "UNVERIFIED_CLAIM": "원본 저장소에 대한 숫자 주장에 출처 표시('원본 미검증'·'원본 대조'·'자체 실측')가 없음",
 }
 
 # 원본 저장소에만 있는 경로 접두어. 이 저장소에 없는 것이 정상이다.
 ORIGINAL_PREFIXES = (
     "design-docs/",
     "fons-web-ver/",
+    "app/src/",
     "unity/",
     "loop/",
     "fons-launcher/",
@@ -96,8 +101,24 @@ ORIGINAL_MARKERS = (
 # 원본 저장소의 결정 번호(D-265 등). 숫자 주장 검사에서 '원본 참조' 신호로 쓴다.
 DECISION_RE = re.compile(r"(?<![A-Za-z0-9_])D-\d+")
 
-# 이 표시가 있는 줄(또는 바로 윗줄)의 숫자 주장은 '검증 표시됨'으로 본다.
+# 문서 절 참조(§9) — 결정 번호와 같은 이유로 값이 아니라 인용 부호다.
+# 이걸 빼지 않으면 '§9의 절차를 밟는다' 같은 문장이 숫자 주장으로 오탐된다.
+SECTION_RE = re.compile(r"§\s*\d+")
+
+# 숫자 주장에 붙는 출처 표시 세 종류 — 숫자의 ' 어디서 왔나'를 적게 한다.
+#   미검증 계열 — 아직 원본과 대조하지 않은 2차 인용
+#   대조 계열   — 원본을 실제로 읽고 확인한 값 (2026-10-17 원본 클론 이후 추가)
+#   실측 계열   — 원본이 아니라 이 머신에서 직접 측정한 값
+# 표시가 여러 개인 것은 출처를 구분해 적기 위함이지, 면제를 늘리기 위함이 아니다 —
+# 표시가 아예 없으면 세 경우 모두 발견이고, 잘못된 표시를 다는 것은 거짓 기록이다.
 UNVERIFIED_MARKERS = ("원본 미검증", "미검증", "미확인")
+VERIFIED_MARKERS = ("원본 대조", "대조 완료")
+MEASURED_MARKERS = ("자체 실측",)
+CLAIM_MARKERS = UNVERIFIED_MARKERS + VERIFIED_MARKERS + MEASURED_MARKERS
+
+# 반박 표기 — 원본에 없다고 밝히며 그 값을 인용하는 줄은 드리프트가 아니다.
+# (원본 저장소도 같은 취지의 '문맥 인식 면제 — 철회·폐기·역사' 규칙을 쓴다.)
+REFUTATION_MARKERS = ("원본에 없음", "폐기", "철회", "구값", "삭제", "틀림")
 
 # 아직 안 만든 것이 정상인 미래 산출물. 여기 있으면 참조 검사에서 면제.
 PLANNED_PATHS = (
@@ -276,9 +297,33 @@ def line_has_original(line):
     return bool(DECISION_RE.search(line))
 
 
+def imported_data_names(root, data_dir):
+    """`data/manifest.json` 이 나열한 "원본에서 가져온 런타임 데이터" 이름.
+
+    이 파일들은 이 저장소가 쓴 주장이 아니라 원본 데이터의 복사본이다.
+    문서 검사(참조·링크·SSOT·숫자 주장)는 사람이 쓴 문서에만 적용해야 한다 —
+    복사본을 문장으로 읽으면 원본 JSON 안의 문자열을 우리 주장으로 오인한다.
+    """
+    p = root / data_dir / "manifest.json"
+    if not p.exists():
+        return set()
+    try:
+        obj = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return set()
+    files = obj.get("files")
+    if not isinstance(files, list):
+        return set()
+    return set(str(f) for f in files)
+
+
 def collect_docs(root, data_dir):
-    """검사 대상 문서 수집 (md 전체 + data 디렉터리 안 json)."""
+    """검사 대상 문서 수집 (md 전체 + data 디렉터리 안 json).
+
+    manifest 가 나열한 이관 데이터 JSON 은 제외한다 (imported_data_names 참조).
+    """
     out = []
+    imported = imported_data_names(root, data_dir)
     for p in sorted(root.rglob("*.md")):
         try:
             rel = p.relative_to(root)
@@ -290,6 +335,8 @@ def collect_docs(root, data_dir):
     data_root = root / data_dir
     if data_root.is_dir():
         for p in sorted(data_root.glob("*.json")):
+            if p.name in imported:
+                continue
             out.append(p)
     return out
 
@@ -328,6 +375,16 @@ def prev_prose_line(prose, index):
     return prose[index - 1][1]
 
 
+def inherits_prev(line):
+    """이 줄이 바로 윗줄의 문맥을 물려받아도 되는가.
+
+    표 행(|로 시작)은 아니다 — 표에서 행 하나는 사실 하나이므로,
+    윗 행이 '원본 이야기'라거나 '원본 대조' 표시를 달았다고 해서
+    바로 아래 행까지 그 상태가 번지면 안 된다 (정밀도 결함).
+    """
+    return not line.lstrip().startswith("|")
+
+
 # ---------------------------------------------------------------- 검사들
 
 
@@ -338,7 +395,9 @@ def check_broken_reference(root, docs, stats):
         lines = read_lines(path)
         prose, _ = split_fences(lines)
         for i, (no, line) in enumerate(prose):
-            if line_has_original(line) or line_has_original(prev_prose_line(prose, i)):
+            if line_has_original(line) or (
+                inherits_prev(line) and line_has_original(prev_prose_line(prose, i))
+            ):
                 stats["exempt"] += 1
                 continue
             for tok in BACKTICK_RE.findall(line):
@@ -454,9 +513,10 @@ def check_number_conflict(root, docs, registry, stats):
     if registry is None:
         return None
     findings = []
-    docs_text = {}
+    docs_lines = {}
     for path in docs:
-        docs_text[str(path.relative_to(root))] = "\n".join(read_lines(path))
+        prose, _ = split_fences(read_lines(path))
+        docs_lines[str(path.relative_to(root))] = prose
     for entry in registry["numbers"]:
         name = str(entry.get("name", "")).strip()
         value = str(entry.get("value", "")).strip()
@@ -468,16 +528,20 @@ def check_number_conflict(root, docs, registry, stats):
         if not pattern:
             continue
         value_re = re.compile(r"(?:%s)\D{0,12}?([0-9]+(?:\.[0-9]+)?)" % pattern)
-        for rel, text in sorted(docs_text.items()):
+        for rel, lines in sorted(docs_lines.items()):
             if sources and rel not in sources:
                 continue
-            seen = set(value_re.findall(text))
-            for found in sorted(seen):
-                if found != value:
-                    findings.append(
-                        (rel, 1, "`%s` 값이 registry(%s)와 다릅니다: %s"
-                         % (name, value, found))
-                    )
+            for no, line in lines:
+                if any(mark in line for mark in REFUTATION_MARKERS):
+                    stats["exempt"] += 1
+                    continue
+                seen = set(value_re.findall(line))
+                for found in sorted(seen):
+                    if found != value:
+                        findings.append(
+                            (rel, no, "`%s` 값이 registry(%s)와 다릅니다: %s"
+                             % (name, value, found))
+                        )
         stats["checked"] += 1
     return findings
 
@@ -494,8 +558,10 @@ def check_const_drift(root, stats):
     decls = {}  # (tail, value) -> [locations]
 
     def add(name, value, loc):
-        tail = name.split("_")[-1].upper()
-        decls.setdefault((tail, value), set()).add(loc)
+        # 전체 이름으로 묶는다. 예전에는 마지막 꼬리말(_RATE·_SEED ...)로 묶어서
+        # SHAPED_RATE=0.05 와 LEGACY_RATE=0.95 가 '다른 상수의 드리프트'로 보고됐다 —
+        # 꼬리말이 같은 다른 상수를 같은 것으로 본 정밀도 결함이었다.
+        decls.setdefault((name.upper(), value), set()).add(loc)
 
     sim_dir = root / "sim"
     if sim_dir.is_dir():
@@ -516,7 +582,12 @@ def check_const_drift(root, stats):
                 add(m.group(1), str(m.group(2)), "%s:%d" % (rel, no))
     data_dir = root / "data"
     if data_dir.is_dir():
+        # manifest 가 나열한 이관 데이터는 '우리 상수의 선언 장소'가 아니다 —
+        # 원본 복사본과 우리 코드의 우연한 이름 충돌을 드리프트로 보고하지 않는다.
+        imported = imported_data_names(root, "data")
         for p in sorted(data_dir.glob("*.json")):
+            if p.name in imported:
+                continue
             try:
                 obj = json.loads(p.read_text(encoding="utf-8"))
             except (OSError, ValueError):
@@ -531,19 +602,19 @@ def check_const_drift(root, stats):
                     add(key, str(val), "%s:%s" % (p.name, key))
 
     stats["checked"] += len(decls)
-    tails = {}
-    for (tail, value), locs in decls.items():
-        tails.setdefault(tail, {})[value] = sorted(locs)
+    names = {}
+    for (name, value), locs in decls.items():
+        names.setdefault(name, {})[value] = sorted(locs)
     findings = []
-    for tail in sorted(tails):
-        values = tails[tail]
+    for name in sorted(names):
+        values = names[name]
         if len(values) < 2:
             continue
         for value in sorted(values):
             for loc in values[value]:
                 findings.append(
-                    (loc, 0, "이름 꼬리말 '%s' 상수가 파일마다 다른 값입니다: %s"
-                     % (tail, ", ".join("%s=%s" % (v, len(values[v]))
+                    (loc, 0, "상수 '%s' 가 파일마다 다른 값입니다: %s"
+                     % (name, ", ".join("%s=%s" % (v, len(values[v]))
                                         for v in sorted(values))))
                 )
     return findings
@@ -565,10 +636,14 @@ def check_unverified_claim(root, docs, stats):
             #   - 결정 번호(D-265, D-267) : 인용 부호이지 값이 아니다
             claim_text = LIST_ORDINAL_RE.sub("", line, count=1)
             claim_text = DECISION_RE.sub("D", claim_text)
+            claim_text = SECTION_RE.sub("§", claim_text)
             if not STANDALONE_NUM_RE.search(claim_text):
                 continue
-            window = line + "\n" + prev_prose_line(prose, i)
-            if any(mark in window for mark in UNVERIFIED_MARKERS):
+            if inherits_prev(line):
+                window = line + "\n" + prev_prose_line(prose, i)
+            else:
+                window = line
+            if any(mark in window for mark in CLAIM_MARKERS):
                 stats["exempt"] += 1
                 continue
             findings.append(

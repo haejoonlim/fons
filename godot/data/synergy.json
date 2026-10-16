@@ -1,0 +1,295 @@
+{
+  "meta": {
+    "schemaVersion": "0.9-gavan",
+    "title": "파티 시너지 스키마 — 유니티 구현용 (00 #42 · 01 §3-3)",
+    "created": "2026-09-19",
+    "note": "Y = clamp(1 + Σ양성×band + bioPos − Σ음성×band − bioNeg + 다양성 + 중복 + 공진, 0.90, 1.15). partyCP = Σ개인CP × Y. 개인 카드 CP는 Y 미포함. 검증기: design-docs/_tools/party_synergy_sim.py (B안 계약 — 무작위 평균 +2.0% · 이상 +12.5% · 최악 −6.0%)"
+  },
+  "clamp": {
+    "min": 0.9,
+    "max": 1.15
+  },
+  "personalityChemistry": {
+    "description": "성격 케미 — 파티 내 쌍(pairs) 존재 시 합산. 인스턴스당 합산(중복 페어 중복 가산 허용 — 시뮬 기준).",
+    "positive": [
+      {
+        "pair": [
+          "용감",
+          "신중"
+        ],
+        "value": 0.03,
+        "id": "chem_brave_prudent",
+        "label": "선봉과 방패"
+      },
+      {
+        "pair": [
+          "냉정",
+          "교활"
+        ],
+        "value": 0.03,
+        "id": "chem_calm_cunning",
+        "label": "냉정한 암살 콤비"
+      },
+      {
+        "pair": [
+          "헌신",
+          "낭만"
+        ],
+        "value": 0.03,
+        "id": "chem_devoted_romantic",
+        "label": "사기 듀오"
+      },
+      {
+        "pair": [
+          "성실",
+          "몰입"
+        ],
+        "value": 0.03,
+        "id": "chem_diligent_immersed",
+        "label": "성장 듀오"
+      },
+      {
+        "pair": [
+          "불굴",
+          "고집"
+        ],
+        "value": 0.02,
+        "id": "chem_unyielding_stubborn",
+        "label": "버티기 콤비"
+      },
+      {
+        "pair": [
+          "난폭",
+          "무자비"
+        ],
+        "value": 0.02,
+        "id": "chem_savage_ruthless",
+        "label": "살기 콤비"
+      },
+      {
+        "pair": [
+          "교활",
+          "몰입"
+        ],
+        "value": 0.02,
+        "id": "chem_cunning_immersed",
+        "label": "그림자 듀오"
+      },
+      {
+        "pair": [
+          "무자비",
+          "고집"
+        ],
+        "value": 0.02,
+        "id": "chem_ruthless_stubborn",
+        "label": "강철 의지"
+      },
+      {
+        "pair": [
+          "신중",
+          "성실"
+        ],
+        "value": 0.02,
+        "id": "chem_prudent_diligent",
+        "label": "꼼꼼 듀오"
+      },
+      {
+        "pair": [
+          "용감",
+          "낭만"
+        ],
+        "value": 0.02,
+        "id": "chem_brave_romantic",
+        "label": "이야기가 될 전투"
+      },
+      {
+        "pair": [
+          "냉정",
+          "무자비"
+        ],
+        "value": 0.03,
+        "id": "chem_calm_ruthless",
+        "label": "완벽한 처형"
+      }
+    ],
+    "negative": [
+      {
+        "pair": [
+          "난폭",
+          "신중"
+        ],
+        "value": 0.04,
+        "id": "clash_savage_prudent",
+        "label": "무모함 vs 신중함",
+        "stressPerReturn": 0.25
+      },
+      {
+        "pair": [
+          "무자비",
+          "헌신"
+        ],
+        "value": 0.04,
+        "id": "clash_ruthless_devoted",
+        "label": "잔혹함 vs 헌신",
+        "stressPerReturn": 0.25
+      },
+      {
+        "pair": [
+          "고집",
+          "교활"
+        ],
+        "value": 0.03,
+        "id": "clash_stubborn_cunning",
+        "label": "고집 vs 융통성",
+        "stressPerReturn": 0.25
+      },
+      {
+        "pair": [
+          "난폭",
+          "냉정"
+        ],
+        "value": 0.02,
+        "id": "clash_savage_calm",
+        "label": "흥분 vs 침착",
+        "stressPerReturn": 0.25
+      },
+      {
+        "pair": [
+          "몰입",
+          "낭만"
+        ],
+        "value": 0.02,
+        "id": "clash_immersed_romantic",
+        "label": "몰두 vs 여유",
+        "stressPerReturn": 0.25
+      },
+      {
+        "pair": [
+          "난폭",
+          "교활"
+        ],
+        "value": 0.02,
+        "id": "clash_savage_cunning",
+        "label": "거침 vs 계산",
+        "stressPerReturn": 0.25
+      },
+      {
+        "pair": [
+          "성실",
+          "난폭"
+        ],
+        "value": 0.02,
+        "id": "clash_diligent_savage",
+        "label": "규율 vs 폭주",
+        "stressPerReturn": 0.25
+      }
+    ],
+    "stressRule": {
+      "perNegativePair": 0.25,
+      "target": "파티원 전원",
+      "timing": "hub_return_settlement",
+      "doc": "04 §3.6-2 — 불화 쌍 1개당 스트레스 획득 +25%"
+    }
+  },
+  "lineageDiversity": {
+    "description": "계열 다양성 — 출격 파티의 서로 다른 계열(unique) 수 기준. 공명(동계열 3명 +5%)과 별개·양립.",
+    "byUniqueCount": {
+      "4": 0.02,
+      "5": 0.03,
+      "6": 0.04
+    },
+    "default": 0.0
+  },
+  "jobDuplication": {
+    "description": "동일 직업 3명 이상 — 육성 자원 경쟁·전술 단조 벌점",
+    "threshold": 3,
+    "penalty": -0.02
+  },
+  "featResonance": {
+    "description": "같은 특성(특성명) 2명 이상 보유 시 — 1종당 +1.5%, 상한 +3%",
+    "perFeat": 0.015,
+    "cap": 0.03,
+    "minPartyCount": 2
+  },
+  "zoneRules": {
+    "floorBands": {
+      "description": "페어 계수(케미·불화)에만 적용되는 밴드 승수 — 다양성·중복·공진 불변. 실측: G3에서도 상한 도달 3.5% (인플레 안전).",
+      "appliesTo": [
+        "personalityChemistry.positive",
+        "personalityChemistry.negative"
+      ],
+      "bands": [
+        {
+          "id": "G1",
+          "floors": [
+            1,
+            50
+          ],
+          "pairMultiplier": 1.0
+        },
+        {
+          "id": "G2",
+          "floors": [
+            51,
+            95
+          ],
+          "pairMultiplier": 1.25
+        },
+        {
+          "id": "G3",
+          "floors": [
+            96,
+            100
+          ],
+          "pairMultiplier": 1.5
+        }
+      ]
+    },
+    "biomeCategories": {
+      "description": "바이옴 카테고리 델타 (%p 가산) — 소속 매핑은 biomes.json biome.category 필드 (단일 소스·단일 소속). 델타 합산 최대 ±3%p.",
+      "categories": [
+        {
+          "id": "dark",
+          "label": "어둠 — 갈등 증폭 (심연층 불화 강화)",
+          "deltaPositive": 0.01,
+          "deltaNegative": 0.02
+        },
+        {
+          "id": "extreme",
+          "label": "극한 — 환경 부담으로 시너지 중립",
+          "deltaPositive": 0.0,
+          "deltaNegative": 0.0
+        },
+        {
+          "id": "waterside",
+          "label": "물가 — 수해 계열 유대감",
+          "deltaPositive": 0.01,
+          "deltaNegative": 0.0
+        },
+        {
+          "id": "calm",
+          "label": "평온 — 불화 완화",
+          "deltaPositive": 0.01,
+          "deltaNegative": -0.01
+        },
+        {
+          "id": "chaos",
+          "label": "혼돈 — 기습·함정 지형 신경전",
+          "deltaPositive": 0.0,
+          "deltaNegative": 0.01
+        }
+      ],
+      "lookup": "biome.category → 이 표의 category id 1개 조회 (이중 소속 없음 — biomes.json categoryRule 참조)"
+    }
+  },
+  "evaluationOrder": [
+    "1. pairs: 5인 조합의 성격 쌍 10개 중 positive/negative 매칭 → pos, neg 합산",
+    "2. band: 현재 층의 floorBand.pairMultiplier로 pos·neg 승산",
+    "3. biome: 현재 바이옴 카테고리 delta 가산 (bioPos, bioNeg)",
+    "4. diversity: unique 계열 수 → lineageDiversity",
+    "5. jobDup: 최다 직업 count ≥3 → penalty",
+    "6. featReso: 중복 특성 1종당 +perFeat (cap)",
+    "7. Y = clamp(1 + pos + bioPos − neg − bioNeg + diversity + jobDup + featReso, 0.90, 1.15)",
+    "8. partyCP = Σ 개인CP × Y"
+  ]
+}

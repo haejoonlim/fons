@@ -1,24 +1,76 @@
 {
-  "notes": "이 프로젝트가 실제로 판단 근거로 쓰는 상수만 등록한다. 값은 전부 '원본 미검증' 상태이며, 원본 저장소와 대조한 뒤 확정한다. alias는 사람이 쓰는 표현이 아니라 코드/문서에 그대로 나타나는 식별자만 넣는다 — '5%' 같은 표현을 alias로 넣으면 뒤따르는 다른 수를 잘못 집는다.",
-  "registry_version": 1,
+  "notes": "이 프로젝트가 실제로 판단 근거로 쓰는 상수만 등록한다. 값은 전부 원본 저장소와 대조한 확정값이다 (2026-10-17 대조). alias 는 사람이 쓰는 표현이 아니라 코드/문서에 그대로 나타나는 식별자만 넣는다 — '5%' 같은 표현을 alias 로 넣으면 뒤따르는 다른 수를 잘못 집는다. 문서에 이 상수를 쓸 때는 registry 의 값 표기를 그대로 쓴다 (예: SHAPED_RATE = 0.05). 이전 판의 PULLS=130 은 원본에 없는 정의라 삭제했다.",
+  "registry_version": 2,
   "numbers": [
-    {
-      "name": "PULLS",
-      "value": "130",
-      "aliases": ["PULLS"],
-      "sources": []
-    },
     {
       "name": "SHAPED_RATE",
       "value": "0.05",
-      "aliases": ["SHAPED_RATE", "SHAPED_BONUS"],
-      "sources": []
+      "aliases": ["SHAPED_RATE"],
+      "sources": [],
+      "note": "확정 #11 · D-276 — shaped 종족 롤 비율"
     },
     {
-      "name": "LEGACY_COVERAGE",
+      "name": "LEGACY_RATE",
       "value": "0.95",
-      "aliases": ["LEGACY_COVERAGE"],
-      "sources": []
+      "aliases": ["LEGACY_RATE"],
+      "sources": [],
+      "note": "확정 #11 · D-276 — legacy 20종 합계 비율"
+    },
+    {
+      "name": "LEGACY_SPECIES",
+      "value": "20",
+      "aliases": ["LEGACY_SPECIES"],
+      "sources": [],
+      "note": "확정 #11 · D-276 — legacy 종족 수 (종족별 균등 4.75%)"
+    },
+    {
+      "name": "TICKET_COST",
+      "value": "130",
+      "aliases": ["TICKET_COST"],
+      "sources": [],
+      "note": "확정 #16 — 소환 티켓 단가(마석)"
+    },
+    {
+      "name": "SOFT_PITY_START",
+      "value": "70",
+      "aliases": ["SOFT_PITY_START"],
+      "sources": [],
+      "note": "확정 #32 — ★4 소프트 피티 시작 회차"
+    },
+    {
+      "name": "SOFT_PITY_STEP",
+      "value": "0.02",
+      "aliases": ["SOFT_PITY_STEP"],
+      "sources": [],
+      "note": "확정 #32 — 소프트 피티 회차당 증가폭"
+    },
+    {
+      "name": "HARD_PITY_4",
+      "value": "130",
+      "aliases": ["HARD_PITY_4"],
+      "sources": [],
+      "note": "확정 #32 — ★4 하드 천장"
+    },
+    {
+      "name": "LEY_PER_CRYSTAL",
+      "value": "60",
+      "aliases": ["LEY_PER_CRYSTAL"],
+      "sources": [],
+      "note": "D-267 — 마석 1개의 화폐(LEY) 발행액"
+    },
+    {
+      "name": "MP_PER_CRYSTAL",
+      "value": "130",
+      "aliases": ["MP_PER_CRYSTAL"],
+      "sources": [],
+      "note": "D-267 — 마석 1개의 마나 환산"
+    },
+    {
+      "name": "LEVEL_CAP",
+      "value": "130",
+      "aliases": ["LEVEL_CAP"],
+      "sources": [],
+      "note": "확정 #34 — 영웅 레벨 상한"
     }
   ]
 }

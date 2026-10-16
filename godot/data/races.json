@@ -1,0 +1,3988 @@
+{
+  "$schema": "설계 카탈로그 — 플레이어블 종족 26종 · 계열 7종 · 분파 78종 (정본: design-docs/GDD_v8.0_00_확정사항.md #11·#12 + GDD_v8.0_01_등급_전투력.md §1)",
+  "meta": {
+    "docVersion": "GDD v8.0 (#11·#12 · 01 §1 기준 · 지성·마법친화 0~130 스케일 D-279)",
+    "updated": "2026-09-28",
+    "decision": "D-180 + D-274/D-275/D-276 승인 (플레이어블 15→26 — 용족·수인 및 조형생명 확장)",
+    "capRules": {
+      "combatStatCapPct": 15,
+      "spdCapPct": 10,
+      "note": "동일 스탯 보정은 가산되되 전투 보정 스탯당 +15% 상한 (SPD +10%) — 출처: 구 Bestiary §7.1-6 (v8.0 정본 미등재, 수치 확인 필요). 일시 버프(전투 개시 X초)는 상한 제외."
+    },
+    "heroBaseStats": {
+      "hp": 500,
+      "atk": 45,
+      "def": 20,
+      "aspd": 10,
+      "mag": 20,
+      "mdef": 0,
+      "pen": 0,
+      "eva": 0,
+      "cdmg": 0,
+      "cri": 0,
+      "mana": 100,
+      "spd_cast": 30,
+      "sta": 80,
+      "status": "가안",
+      "note": "05 §7 13종 기준스탯 (2026-09-14). 필드스탯 = 기준 × (1+statMods%) × 직업계수(05 §4) × 등급계수(01 §2) × 레벨계수. ASPD/CRI/PEN/EVA/CDMG/SPD_CAST/STA는 등급계수 미적용. 플탐 튜닝."
+    },
+    "jobWeightContract": {
+      "order": [
+        "l1_warrior",
+        "l1_guardian",
+        "l1_assassin",
+        "l1_archer",
+        "l1_mage",
+        "l1_supporter",
+        "l1_nameless"
+      ],
+      "sumPerRace": 100,
+      "magicAxis": [
+        "l1_mage"
+      ],
+      "intellectAxis": [
+        "l1_supporter",
+        "l1_archer",
+        "l1_nameless"
+      ],
+      "note": "롤 축은 L1 7종(전사·수호자·암살자·궁수·마법사·지원가·**무명자**). 종족 jobWeights(합 100) × 분파 jobWeightMods(원소 배수)를 정규화해 쓴다. 7번 슬롯(무명자)은 종족·분파 무관하게 **3 고정** — 산하가 없는 자리(무직·현자 2갈래). 데이터가 없으면 균등(1/7) 롤백. progression 의 지성·마법친도는 이 가중치에서 파생된다. 성좌기사(l2_paladin)·드루이드(l2_druid)는 각 상위 L1 에 합산된다.",
+      "namelessWeight": 3
+    }
+  },
+  "lineages": [
+    {
+      "code": 0,
+      "key": "human",
+      "name": "인간 계열",
+      "passive5": {
+        "name": "적응력",
+        "desc": "레벨업 경험치 +10% (비전투형 — 계정 전체 적용)"
+      },
+      "members": [
+        "race_human",
+        "race_genasi"
+      ]
+    },
+    {
+      "code": 1,
+      "key": "elf",
+      "name": "엘프 계열",
+      "passive5": {
+        "name": "마력·감각",
+        "desc": "궁극기 게이지 충전 +10%"
+      },
+      "members": [
+        "race_highelf",
+        "race_woodelf",
+        "race_darkelf",
+        "race_seaelve"
+      ]
+    },
+    {
+      "code": 2,
+      "key": "dwarf",
+      "name": "드워프 계열",
+      "passive5": {
+        "name": "기술·제련",
+        "desc": "제작 품질 +10% (영지 시너지 — 비전투형, 계정 전체 적용)"
+      },
+      "members": [
+        "race_dwarf",
+        "race_gnome",
+        "race_halfling"
+      ]
+    },
+    {
+      "code": 3,
+      "key": "beast",
+      "name": "짐승 계열",
+      "passive5": {
+        "name": "감각·근력",
+        "desc": "SPD +5%"
+      },
+      "members": [
+        "race_felid",
+        "race_houndkin",
+        "race_tengu",
+        "race_lizardman",
+        "race_amphibian",
+        "race_rodent",
+        "race_goatkin",
+        "race_longtail",
+        "race_dragon"
+      ]
+    },
+    {
+      "code": 4,
+      "key": "warrior",
+      "name": "오크 계열",
+      "passive5": {
+        "name": "근력·전투",
+        "desc": "ATK +5%"
+      },
+      "members": [
+        "race_orc"
+      ],
+      "note": "내부 key warrior 유지 — 저장 호환"
+    },
+    {
+      "code": 5,
+      "key": "abyss",
+      "name": "뱀파이어 계열",
+      "passive5": {
+        "name": "차원·비정상",
+        "desc": "적 처치 시 HP 2% 회복"
+      },
+      "members": [
+        "race_vampire"
+      ],
+      "note": "내부 key abyss 유지 — 저장 호환"
+    },
+    {
+      "code": 6,
+      "key": "shaped",
+      "name": "조형생명 계열",
+      "passive5": {
+        "name": "재료 공명",
+        "desc": "계열 고유 효과는 후속 밸런스 결정 전까지 미구현"
+      },
+      "members": [
+        "race_stoneborn",
+        "race_claykin",
+        "race_ironawakened",
+        "race_crystalcore",
+        "race_runeconstruct",
+        "race_clockwork"
+      ]
+    }
+  ],
+  "resonance": {
+    "tier3": {
+      "condition": "동계열 영웅 3명 보유",
+      "effect": "파티에 편성된 해당 계열 영웅 전원 HP/ATK +5%"
+    },
+    "tier5": {
+      "condition": "동계열 영웅 5명 보유",
+      "effect": "계열 고유 패시브 해금 (lineages[].passive5)"
+    },
+    "tier7": {
+      "condition": "동계열 영웅 7명 보유",
+      "effect": "해당 계열 영웅 궁극기 피해량 +20%"
+    },
+    "note": "판정은 보유(소유) 기준, 버프 적용은 출격 멤버 기준 · 전투 중 사망 시 재계산 (v7.11 5.4)"
+  },
+  "races": [
+    {
+      "id": "race_human",
+      "name": "인간",
+      "lineage": "human",
+      "statMods": {},
+      "aptitude": null,
+      "racePassive": {
+        "name": "만능 재능",
+        "desc": "모든 스탯 +3% (버시틸리티)",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "player/base/human_male.png",
+        "tintRGB": [
+          220,
+          205,
+          185
+        ],
+        "scale": 1.0,
+        "traits": [
+          "둥근 귀",
+          "M/F 변형"
+        ]
+      },
+      "namePool": {
+        "dir": "보편적 2음절",
+        "examples": [
+          "시온",
+          "유진",
+          "카이"
+        ]
+      },
+      "relations": "전 종족과 친구·연인 가능 (세계의 다리)",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "유목민",
+          "statMods": {
+            "aspd": 3
+          },
+          "passive": {
+            "name": "투지",
+            "desc": "HP 20%↓ 시 5초 ATK/DEF +10%"
+          },
+          "element": "wind",
+          "biome": "풀바다",
+          "ref": "PoE Meadow (Thyrtan)",
+          "jobWeightMods": [
+            0.9,
+            0.85,
+            1.15,
+            1.3,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "항해민",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "항해사",
+            "desc": "수해 상성 불리 70→75% 완화 · 물가 회복 +10%"
+          },
+          "element": "water",
+          "biome": "원천연안",
+          "ref": "PoE Ocean (Calbandra)",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        },
+        {
+          "name": "수렵민",
+          "statMods": {
+            "atk": 3
+          },
+          "passive": {
+            "name": "생존 본능",
+            "desc": "야생 지형 회피 +5%"
+          },
+          "element": "earth",
+          "biome": "지맥능선",
+          "ref": "PoE Savannah (Natlan)",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        },
+        {
+          "name": "개척민",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "폐허 개척",
+            "desc": "폐허에서 안전한 길과 재사용할 자원을 찾음"
+          },
+          "element": "fire",
+          "biome": "잿마을",
+          "jobWeightMods": [
+            1.3,
+            0.9,
+            1.15,
+            0.9,
+            0.95,
+            0.85,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        13,
+        18,
+        9,
+        15,
+        15,
+        27,
+        3
+      ]
+    },
+    {
+      "id": "race_genasi",
+      "name": "정령족",
+      "lineage": "human",
+      "statMods": {},
+      "aptitude": "연구자 +",
+      "racePassive": {
+        "name": "원소 혈통",
+        "desc": "아종별 원소 패시브 (서브레이스 참조)",
+        "type": "combat"
+      },
+      "elemental": {
+        "favorablePct": 155,
+        "unfavorablePct": 65,
+        "note": "5.3 매트릭스 예외 — 유리 150%→155% · 불리 70%→65% (고정 수치 조정)"
+      },
+      "elementAffinity": {
+        "weighted": [
+          "fire",
+          "water",
+          "earth",
+          "wind",
+          "light",
+          "dark",
+          "void"
+        ],
+        "subraceSpecific": true
+      },
+      "visual": {
+        "dcssSource": "monster/nonliving/fire_elemental_new.png",
+        "tintRGB": [
+          230,
+          160,
+          80
+        ],
+        "scale": 1.0,
+        "traits": [
+          "원소별 피부/머리 (불=주황 물=파랑 바람=보라 대지=초록)",
+          "뿔 (curled)",
+          "발광오라/룬문양 서브"
+        ]
+      },
+      "namePool": {
+        "dir": "원소 감성",
+        "examples": [
+          "이그나",
+          "템페스트",
+          "아쿠아"
+        ]
+      },
+      "relations": "무소속 성향 (원소 정령 친화)",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "불의 정령족",
+          "statMods": {
+            "atk": 3
+          },
+          "passive": {
+            "name": "전장의 제련",
+            "desc": "HP 20%↓ 시 ATK +15% (화염)"
+          },
+          "element": "fire",
+          "biome": "먼지벌판",
+          "ref": "FONS 원소 분파",
+          "jobWeightMods": [
+            1.3,
+            0.9,
+            1.15,
+            0.9,
+            0.95,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "물의 정령족",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "파도와 함께",
+            "desc": "수해 상성 유리 유지 · 물가 회복 +10%"
+          },
+          "element": "water",
+          "biome": "역류폭포",
+          "ref": "FONS 원소 분파",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        },
+        {
+          "name": "대지의 정령족",
+          "statMods": {
+            "def": 5
+          },
+          "passive": {
+            "name": "돌의 심장",
+            "desc": "상태이상 저항 +10%"
+          },
+          "element": "earth",
+          "biome": "지맥굴",
+          "ref": "FONS 원소 분파",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        },
+        {
+          "name": "바람의 정령족",
+          "statMods": {
+            "aspd": 5
+          },
+          "passive": {
+            "name": "바람의 걸음",
+            "desc": "이동 중 회피 +5%"
+          },
+          "element": "wind",
+          "biome": "찢긴 천창",
+          "ref": "FONS 원소 분파",
+          "jobWeightMods": [
+            0.9,
+            0.85,
+            1.15,
+            1.3,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "빛의 정령족",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "잔광의 가호",
+            "desc": "빛 속성 피해 +10%"
+          },
+          "element": "light",
+          "biome": "서약성소",
+          "ref": "FONS 원소 분파",
+          "jobWeightMods": [
+            0.85,
+            1.1,
+            0.8,
+            1.0,
+            1.0,
+            1.35,
+            1.0
+          ]
+        },
+        {
+          "name": "어둠의 정령족",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "그늘의 감응",
+            "desc": "어둠 속성 피해 +10%"
+          },
+          "element": "dark",
+          "biome": "무광심연",
+          "ref": "FONS 원소 분파",
+          "jobWeightMods": [
+            0.95,
+            0.85,
+            1.3,
+            0.9,
+            1.1,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "무의 정령족",
+          "statMods": {
+            "mana": 3
+          },
+          "passive": {
+            "name": "무의 완충",
+            "desc": "마나 간섭 및 정신 상태이상 저항 +10%"
+          },
+          "element": "void",
+          "biome": "형상군락",
+          "ref": "FONS 원소 분파",
+          "jobWeightMods": [
+            0.85,
+            0.8,
+            1.2,
+            0.95,
+            1.25,
+            0.8,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        8,
+        13,
+        4,
+        9,
+        38,
+        25,
+        3
+      ]
+    },
+    {
+      "id": "race_highelf",
+      "name": "하이 엘프",
+      "lineage": "elf",
+      "statMods": {
+        "mag": 10
+      },
+      "aptitude": "연구자 +",
+      "racePassive": {
+        "name": "비전 유산",
+        "desc": "스킬 쿨타임 -5%",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "player/base/elf_male.png",
+        "tintRGB": [
+          210,
+          200,
+          130
+        ],
+        "scale": 1.0,
+        "traits": [
+          "긴 뾰족 귀 (위로)",
+          "금발",
+          "보라 눈"
+        ]
+      },
+      "namePool": {
+        "dir": "부드러운 ㄹ·ㄴ",
+        "examples": [
+          "리안",
+          "엘라린"
+        ]
+      },
+      "relations": "드워프와 원수 (앙숙)",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "광로 엘프",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "광로 관측",
+            "desc": "빛 속성 피해 +10%"
+          },
+          "element": "light",
+          "biome": "탑의 서고",
+          "culture": "중층까지 이어지는 광로의 밝기와 주기를 관찰하고 기록하는 하이 엘프. 광로들판은 관측 대상이지 상주지가 아니며, 서약 엘프와 하나의 전통을 이룸.",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            0.85,
+            1.1,
+            0.8,
+            1.0,
+            1.0,
+            1.35,
+            1.0
+          ]
+        },
+        {
+          "name": "서약 엘프",
+          "statMods": {
+            "spd_cast": 3
+          },
+          "passive": {
+            "name": "서약의 전승",
+            "desc": "스킬 쿨타임 -3%"
+          },
+          "element": "light",
+          "biome": "서약성소",
+          "culture": "광로 엘프가 관찰한 빛의 변화를 공동체의 서약과 의례로 전승하는 하이 엘프.",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            0.85,
+            1.1,
+            0.8,
+            1.0,
+            1.0,
+            1.35,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        4,
+        13,
+        4,
+        20,
+        20,
+        36,
+        3
+      ]
+    },
+    {
+      "id": "race_woodelf",
+      "name": "우드 엘프",
+      "lineage": "elf",
+      "statMods": {
+        "aspd": 7,
+        "def": 3
+      },
+      "aptitude": "요리사 +",
+      "racePassive": {
+        "name": "원거리 우위",
+        "desc": "5m 이상 원거리 CRI +5% (PoE Distant Advantage)",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "monster/elf_new.png",
+        "tintRGB": [
+          90,
+          150,
+          80
+        ],
+        "scale": 1.0,
+        "traits": [
+          "뾰족 귀 (약간 위)",
+          "초록 머리/눈"
+        ]
+      },
+      "namePool": {
+        "dir": "자연 친화",
+        "examples": [
+          "리프",
+          "실바",
+          "아리아"
+        ]
+      },
+      "relations": "드워프와 원수 (앙숙)",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "심림 엘프",
+          "statMods": {
+            "aspd": 3
+          },
+          "passive": {
+            "name": "숲의 은신",
+            "desc": "식생 지형 은신 +5%"
+          },
+          "element": "earth",
+          "biome": "뿌리숲",
+          "ref": "PoE Wood (Sceltrfolc)",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        },
+        {
+          "name": "초원 엘프",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "야생 추적",
+            "desc": "야생 지형 이동 속도 +10%"
+          },
+          "element": "wind",
+          "biome": "풀바다",
+          "ref": "Solasta Sylvan",
+          "jobWeightMods": [
+            0.9,
+            0.85,
+            1.15,
+            1.3,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "수관 엘프",
+          "statMods": {
+            "aspd": 3
+          },
+          "passive": {
+            "name": "수관 보행",
+            "desc": "높은 나무길을 타고 수관 위 위험을 먼저 감지"
+          },
+          "element": "wind",
+          "biome": "포식밀림",
+          "jobWeightMods": [
+            0.9,
+            0.85,
+            1.15,
+            1.3,
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        8,
+        20,
+        6,
+        22,
+        11,
+        30,
+        3
+      ]
+    },
+    {
+      "id": "race_darkelf",
+      "name": "다크 엘프",
+      "lineage": "elf",
+      "statMods": {
+        "cri": 5,
+        "mag": 5
+      },
+      "aptitude": "연구자 +",
+      "racePassive": {
+        "name": "암흑 시야",
+        "desc": "어둠 지형 치명타 +5%",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "player/base/deep_elf_male.png",
+        "tintRGB": [
+          120,
+          90,
+          160
+        ],
+        "scale": 1.0,
+        "traits": [
+          "뾰족 귀 (아래로)",
+          "보라 피부",
+          "보라/빨강 눈"
+        ]
+      },
+      "namePool": {
+        "dir": "어두운 감성",
+        "examples": [
+          "벨리안",
+          "드레아"
+        ]
+      },
+      "relations": "하이 엘프와 원수 (분파)",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "지하 엘프 (드로우)",
+          "statMods": {
+            "mag": 2
+          },
+          "passive": {
+            "name": "마법 저항",
+            "desc": "마법 피해 -5%"
+          },
+          "element": "dark",
+          "biome": "지맥굴",
+          "ref": "NWN2 Drow",
+          "jobWeightMods": [
+            0.95,
+            0.85,
+            1.3,
+            0.9,
+            1.1,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "심연 엘프",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "심연의 속삭임",
+            "desc": "정신 공격 저항 +10%"
+          },
+          "element": "dark",
+          "biome": "기억묘역",
+          "ref": "NWN2 Drow (심연 분파)",
+          "jobWeightMods": [
+            0.95,
+            0.85,
+            1.3,
+            0.9,
+            1.1,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "맥그늘 엘프",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "균열 감응",
+            "desc": "지맥 균열과 마나 잔향을 읽음"
+          },
+          "element": "void",
+          "biome": "맥의 상흔",
+          "jobWeightMods": [
+            0.85,
+            0.8,
+            1.2,
+            0.95,
+            1.25,
+            0.8,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        9,
+        11,
+        20,
+        9,
+        24,
+        24,
+        3
+      ]
+    },
+    {
+      "id": "race_seaelve",
+      "name": "시 엘프",
+      "lineage": "elf",
+      "statMods": {
+        "hp": 5,
+        "mag": 5
+      },
+      "aptitude": "요리사 +",
+      "racePassive": {
+        "name": "해양 적응",
+        "desc": "수중/물가 전투 회피 +5%",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "player/base/merfolk_male.png",
+        "tintRGB": [
+          80,
+          150,
+          180
+        ],
+        "scale": 1.0,
+        "traits": [
+          "푸른 지느러미 귀",
+          "청록 피부",
+          "지느러미 (fin)",
+          "롱이어 (long ears)"
+        ]
+      },
+      "namePool": {
+        "dir": "물결 감성",
+        "examples": [
+          "마린",
+          "리아네"
+        ]
+      },
+      "relations": "인어족과 친구",
+      "unlock": {
+        "code": 2,
+        "window": "업데이트 1~4"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "산호 엘프",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "산호 방패",
+            "desc": "수해 피해 -10%"
+          },
+          "element": "water",
+          "biome": "원천연안",
+          "ref": "해양 적응 (PoE Aumaua 영감)",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        },
+        {
+          "name": "폭풍 엘프",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "폭풍 항해",
+            "desc": "이동 속도 +5%"
+          },
+          "element": "wind",
+          "biome": "지맥능선",
+          "ref": "폭풍 추종자 (고유 설계)",
+          "jobWeightMods": [
+            0.9,
+            0.85,
+            1.15,
+            1.3,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "심류 엘프",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "심류 적응",
+            "desc": "깊은 물의 압력과 어둠에 익숙한 잠수 관측자"
+          },
+          "element": "dark",
+          "biome": "먹빛 해구",
+          "jobWeightMods": [
+            0.95,
+            0.85,
+            1.3,
+            0.9,
+            1.1,
+            0.85,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        8,
+        13,
+        8,
+        18,
+        24,
+        26,
+        3
+      ]
+    },
+    {
+      "id": "race_dwarf",
+      "name": "드워프",
+      "lineage": "dwarf",
+      "statMods": {
+        "def": 10,
+        "hp": 5
+      },
+      "aptitude": "대장장이 ++",
+      "racePassive": {
+        "name": "강인한 체질",
+        "desc": "독·질병 저항 +20% (PoE Hale and Hardy)",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "player/base/dwarf_male.png",
+        "tintRGB": [
+          150,
+          110,
+          70
+        ],
+        "scale": 0.92,
+        "traits": [
+          "작고 둥근 귀 (투구 아래)",
+          "긴 수염",
+          "땋은 머리"
+        ]
+      },
+      "namePool": {
+        "dir": "강한 자음",
+        "examples": [
+          "그림",
+          "브론",
+          "토르빈"
+        ]
+      },
+      "relations": "엘프와 원수 (앙숙)",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "지맥 드워프",
+          "statMods": {
+            "def": 5
+          },
+          "passive": {
+            "name": "맥석의 갑주",
+            "desc": "기절 저항 +15%"
+          },
+          "element": "earth",
+          "biome": "지맥굴",
+          "culture": "지맥굴에서 광물과 열의 흐름을 읽으며 균류·분해 생태를 보전하는 드워프.",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        },
+        {
+          "name": "화로 드워프",
+          "statMods": {
+            "def": 3
+          },
+          "passive": {
+            "name": "열수 제련",
+            "desc": "화산열·열수 작업에 익숙하고 열 위험을 완화"
+          },
+          "element": "fire",
+          "biome": "압력화구",
+          "jobWeightMods": [
+            1.3,
+            0.9,
+            1.15,
+            0.9,
+            0.95,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "앵커 드워프",
+          "statMods": {
+            "hp": 5
+          },
+          "passive": {
+            "name": "닻의 버팀",
+            "desc": "넉백·낙하 유발 효과 저항 +10%"
+          },
+          "element": "earth",
+          "biome": "이데아 문턱",
+          "culture": "지맥능선과 찢긴 천창의 통로를 잇는 고정점·등반 구조를 세우는 드워프.",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        18,
+        25,
+        6,
+        8,
+        6,
+        34,
+        3
+      ]
+    },
+    {
+      "id": "race_gnome",
+      "name": "노움",
+      "lineage": "dwarf",
+      "statMods": {
+        "mag": 5,
+        "spd_cast": 5
+      },
+      "aptitude": "조약사 ++, 연구자 +",
+      "racePassive": {
+        "name": "기계 직감",
+        "desc": "제작(연금/대장) 시간 -10%",
+        "type": "noncombat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "player/base/gnome_male.png",
+        "tintRGB": [
+          180,
+          160,
+          90
+        ],
+        "scale": 0.85,
+        "traits": [
+          "크고 둥근 귀",
+          "갈색 머리"
+        ]
+      },
+      "namePool": {
+        "dir": "경쾌한",
+        "examples": [
+          "핀",
+          "틴커",
+          "밉"
+        ]
+      },
+      "relations": "하프링과 친구",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "흑수 노움",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "침전수 감각",
+            "desc": "독·오염 상태이상 저항 +10%"
+          },
+          "element": "water",
+          "biome": "침전수로",
+          "culture": "침전수로 가장자리의 배수 공간에 마을을 짓고 어두운 유약과 수로 문양을 전승합니다.",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        },
+        {
+          "name": "기류 노움",
+          "statMods": {
+            "spd_cast": 3
+          },
+          "passive": {
+            "name": "기류 독해",
+            "desc": "구름·바람 변화를 읽어 경로와 낙뢰를 예측"
+          },
+          "element": "wind",
+          "biome": "찢긴 천창",
+          "jobWeightMods": [
+            0.9,
+            0.85,
+            1.15,
+            1.3,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "울림석 노움",
+          "statMods": {
+            "def": 3
+          },
+          "passive": {
+            "name": "층리의 울림",
+            "desc": "기습 공격을 받을 때 회피 +5%"
+          },
+          "element": "earth",
+          "biome": "무풍고원",
+          "culture": "무풍고원의 암반 진동을 감각하며 층리암과 두드림 신호를 생활에 씁니다.",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        9,
+        11,
+        6,
+        9,
+        37,
+        25,
+        3
+      ]
+    },
+    {
+      "id": "race_halfling",
+      "name": "하프링",
+      "lineage": "dwarf",
+      "statMods": {
+        "aspd": 8,
+        "eva": 5
+      },
+      "aptitude": "요리사 ++",
+      "racePassive": {
+        "name": "행운의 발걸음",
+        "desc": "함정 회피 +10%",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "player/base/halfling_male.png",
+        "tintRGB": [
+          190,
+          150,
+          110
+        ],
+        "scale": 0.88,
+        "traits": [
+          "크고 둥근 귀",
+          "갈색 곱슬머리",
+          "샌들"
+        ]
+      },
+      "namePool": {
+        "dir": "소박한",
+        "examples": [
+          "샘",
+          "피피",
+          "로니"
+        ]
+      },
+      "relations": "노움과 친구",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "씨앗무늬 하프링",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "씨앗의 풍요",
+            "desc": "채집 수확량 +5%"
+          },
+          "element": "earth",
+          "biome": "풀바다",
+          "culture": "풀바다의 씨앗 문양과 계절 색을 의복·가옥에 새기며 초지의 성장 주기에 맞춰 이동합니다.",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        },
+        {
+          "name": "뜬뿌리 하프링",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "부유 뿌리길",
+            "desc": "습지 지형 이동 페널티 10% 완화"
+          },
+          "element": "water",
+          "biome": "부유 이끼늪",
+          "culture": "부유 이끼늪의 이끼판 아래 뿌리망에 집을 매달고 마을별 엮기 문양을 전승합니다.",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        },
+        {
+          "name": "역참 하프링",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "길 위의 쉼터",
+            "desc": "먼 길의 보급망과 안전한 야영지를 연결"
+          },
+          "element": "fire",
+          "biome": "먼지벌판",
+          "jobWeightMods": [
+            1.3,
+            0.9,
+            1.15,
+            0.9,
+            0.95,
+            0.85,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        9,
+        24,
+        8,
+        24,
+        6,
+        26,
+        3
+      ]
+    },
+    {
+      "id": "race_felid",
+      "name": "묘인족",
+      "lineage": "beast",
+      "statMods": {
+        "aspd": 7,
+        "cri": 3
+      },
+      "aptitude": "요리사 +",
+      "racePassive": {
+        "name": "9개의 생명",
+        "desc": "치명 피해 시 1회 HP 10% 생존 (쿨 3분)",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "player/felids/cat_6.png",
+        "tintRGB": [
+          210,
+          140,
+          60
+        ],
+        "scale": 0.95,
+        "traits": [
+          "삼각형 고양이 귀 + 내부 분홍",
+          "주황 털",
+          "꼬리"
+        ]
+      },
+      "namePool": {
+        "dir": "야수 감성",
+        "examples": [
+          "나비",
+          "미로",
+          "사야"
+        ]
+      },
+      "relations": "견인족과 원수 (천적)",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "표범 묘인족",
+          "statMods": {
+            "aspd": 2
+          },
+          "passive": {
+            "name": "매복",
+            "desc": "전투 시작 첫 공격 CRI +10%"
+          },
+          "element": "dark",
+          "biome": "형상군락",
+          "ref": "Felid (사냥 분파)",
+          "jobWeightMods": [
+            0.95,
+            0.85,
+            1.3,
+            0.9,
+            1.1,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "살쾡이 묘인족",
+          "statMods": {
+            "aspd": 3
+          },
+          "passive": {
+            "name": "사뿐한 걸음",
+            "desc": "이동 속도 +5%"
+          },
+          "element": "dark",
+          "biome": "잿마을",
+          "ref": "Felid (경량 분파)",
+          "jobWeightMods": [
+            0.95,
+            0.85,
+            1.3,
+            0.9,
+            1.1,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "설릉 묘인족",
+          "statMods": {
+            "def": 3
+          },
+          "passive": {
+            "name": "설릉 도약",
+            "desc": "바위 능선과 좁은 발판을 빠르게 오름"
+          },
+          "element": "earth",
+          "biome": "광로들판",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        20,
+        15,
+        20,
+        11,
+        6,
+        25,
+        3
+      ]
+    },
+    {
+      "id": "race_houndkin",
+      "name": "견인족",
+      "lineage": "beast",
+      "statMods": {
+        "hp": 5,
+        "atk": 5
+      },
+      "aptitude": "의사 +",
+      "racePassive": {
+        "name": "충성의 수호",
+        "desc": "아군 HP 30%↓ 시 주변 아군 DEF +5%",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "monster/animals/hound.png",
+        "tintRGB": [
+          140,
+          130,
+          120
+        ],
+        "scale": 1.0,
+        "traits": [
+          "처진 개 귀 (아래로)",
+          "갈색 털",
+          "꼬리"
+        ]
+      },
+      "namePool": {
+        "dir": "충성 감성",
+        "examples": [
+          "루트",
+          "바크",
+          "하운드"
+        ]
+      },
+      "relations": "묘인족과 원수 (천적)",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "갈빛 견인족",
+          "statMods": {
+            "atk": 3
+          },
+          "passive": {
+            "name": "퇴적층의 후각",
+            "desc": "은신 적 감지 +10%"
+          },
+          "element": "earth",
+          "biome": "침전수로",
+          "culture": "침전수로의 갈색 퇴적층과 수로 냄새·물색을 생활의 일부로 여깁니다.",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        },
+        {
+          "name": "물숨 견인족",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "물숨 적응",
+            "desc": "수중 이동 +10% · 수해 피해 -5%"
+          },
+          "element": "water",
+          "biome": "부유 이끼늪",
+          "culture": "부유 이끼늪의 물길과 이끼판 사이에 살며 잠수와 뿌리 매트 주거에 익숙합니다.",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        },
+        {
+          "name": "산길 견인족",
+          "statMods": {
+            "atk": 3
+          },
+          "passive": {
+            "name": "산길 추적",
+            "desc": "냄새와 발자국으로 산악 통로와 동료 흔적을 추적"
+          },
+          "element": "earth",
+          "biome": "지맥능선",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        27,
+        15,
+        15,
+        6,
+        4,
+        30,
+        3
+      ]
+    },
+    {
+      "id": "race_tengu",
+      "name": "조인족",
+      "lineage": "beast",
+      "statMods": {
+        "aspd": 10
+      },
+      "aptitude": null,
+      "racePassive": {
+        "name": "상승 기류",
+        "desc": "전투 개시 5초 SPD +10%",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "player/base/tengu_wingless_brown_male.png",
+        "tintRGB": [
+          120,
+          140,
+          170
+        ],
+        "scale": 1.0,
+        "traits": [
+          "깃털 귀 (위로)",
+          "회색 깃털",
+          "날개"
+        ]
+      },
+      "namePool": {
+        "dir": "하늘 감성",
+        "examples": [
+          "에일",
+          "윙",
+          "페더"
+        ]
+      },
+      "relations": "자유 성향, 고립",
+      "unlock": {
+        "code": 3,
+        "window": "업데이트 5~8"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "독수리 조인족",
+          "statMods": {
+            "atk": 3
+          },
+          "passive": {
+            "name": "급강하",
+            "desc": "원거리→근접 전환 첫 공격 +20%"
+          },
+          "element": "wind",
+          "biome": "지맥능선",
+          "ref": "Tengu (맹금 분파)",
+          "jobWeightMods": [
+            0.9,
+            0.85,
+            1.15,
+            1.3,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "까마귀 조인족",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "악운의 울음",
+            "desc": "적 CRI -3% (오라)"
+          },
+          "element": "dark",
+          "biome": "광로들판",
+          "ref": "Tengu (지혜 분파)",
+          "jobWeightMods": [
+            0.95,
+            0.85,
+            1.3,
+            0.9,
+            1.1,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "두루미 조인족",
+          "statMods": {
+            "spd_cast": 3
+          },
+          "passive": {
+            "name": "습지 정찰",
+            "desc": "얕은 물과 부유 지형을 살피는 장거리 정찰"
+          },
+          "element": "water",
+          "biome": "부유 이끼늪",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        8,
+        15,
+        11,
+        27,
+        11,
+        25,
+        3
+      ]
+    },
+    {
+      "id": "race_lizardman",
+      "name": "리자드맨",
+      "lineage": "beast",
+      "statMods": {
+        "def": 8,
+        "hp": 5
+      },
+      "aptitude": "연구자 +",
+      "racePassive": {
+        "name": "비늘 갑옷",
+        "desc": "물리 피해 -5%",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "monster/animals/giant_lizard.png",
+        "tintRGB": [
+          110,
+          160,
+          90
+        ],
+        "scale": 1.0,
+        "traits": [
+          "뿔 (머리 양옆)",
+          "초록 비늘",
+          "노란 눈",
+          "꼬리"
+        ]
+      },
+      "namePool": {
+        "dir": "냉철한",
+        "examples": [
+          "스케일",
+          "크록",
+          "바실"
+        ]
+      },
+      "relations": "냉철 성향, 원수 없음",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "늪지 리자드맨",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "수중 잠복",
+            "desc": "수중 이동 +10%"
+          },
+          "element": "water",
+          "biome": "부유 이끼늪",
+          "ref": "Yuan-Ti 영감 (늪지)",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        },
+        {
+          "name": "사막 리자드맨",
+          "statMods": {
+            "atk": 3
+          },
+          "passive": {
+            "name": "내열 비늘",
+            "desc": "화염 피해 -10%"
+          },
+          "element": "fire",
+          "biome": "마른 지맥",
+          "ref": "Yuan-Ti 영감 (사막)",
+          "jobWeightMods": [
+            1.3,
+            0.9,
+            1.15,
+            0.9,
+            0.95,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "수림 리자드맨",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "수림 위장",
+            "desc": "습한 숲의 색에 몸을 숨기고 매복을 피함"
+          },
+          "element": "earth",
+          "biome": "포식밀림",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        24,
+        18,
+        13,
+        8,
+        8,
+        26,
+        3
+      ]
+    },
+    {
+      "id": "race_amphibian",
+      "name": "물갈퀴족",
+      "lineage": "beast",
+      "statMods": {},
+      "aptitude": null,
+      "racePassive": {
+        "name": "습지 적응",
+        "desc": "물길과 부유 이끼섬에 적응한 양서류 수인 — 효과 수치 미정",
+        "type": "noncombat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "proposal",
+        "tintRGB": [
+          100,
+          170,
+          150
+        ],
+        "scale": 0.95,
+        "traits": [
+          "물갈퀴 손발",
+          "습지색 피부",
+          "수중 호흡 기관"
+        ]
+      },
+      "namePool": {
+        "dir": "습지·물길 문화",
+        "examples": [
+          "이끼",
+          "갈대",
+          "연해"
+        ]
+      },
+      "relations": "습지와 얕은 물길을 공동으로 관리하는 수인 공동체",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "이끼등 물갈퀴족",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "부유섬 걸음",
+            "desc": "이끼판 사이를 건너며 습지 이동 페널티 완화"
+          },
+          "element": "water",
+          "biome": "부유 이끼늪",
+          "culture": "부유 이끼섬과 얕은 물길을 잇는 양서류 공동체.",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        },
+        {
+          "name": "갈대길 물갈퀴족",
+          "statMods": {
+            "aspd": 3
+          },
+          "passive": {
+            "name": "갈대 숨기",
+            "desc": "갈대 수로에서 매복을 먼저 감지"
+          },
+          "element": "water",
+          "biome": "침전수로",
+          "culture": "침전수로의 갈대 가장자리와 배수길을 지키는 정찰 공동체.",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        },
+        {
+          "name": "연해 물갈퀴족",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "물결 감각",
+            "desc": "연안의 흐름과 수중 위험을 빠르게 파악"
+          },
+          "element": "water",
+          "biome": "원천연안",
+          "culture": "연안 항로와 습지 하구를 오가는 물길 안내자.",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        9,
+        20,
+        8,
+        11,
+        18,
+        31,
+        3
+      ]
+    },
+    {
+      "id": "race_rodent",
+      "name": "굴길족",
+      "lineage": "beast",
+      "statMods": {},
+      "aptitude": null,
+      "racePassive": {
+        "name": "굴길 감각",
+        "desc": "배수로와 폐허 밑길을 기억하는 설치류 수인 — 효과 수치 미정",
+        "type": "noncombat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "proposal",
+        "tintRGB": [
+          145,
+          125,
+          105
+        ],
+        "scale": 0.9,
+        "traits": [
+          "둥근 설치류 귀",
+          "민첩한 앞발",
+          "짧은 주둥이"
+        ]
+      },
+      "namePool": {
+        "dir": "굴길·잔해 문화",
+        "examples": [
+          "잿골",
+          "맥굴",
+          "수로"
+        ]
+      },
+      "relations": "폐허 아래 통로와 배수길을 기억하고 작은 물자를 회수하는 수인 공동체",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "잿골 굴길족",
+          "statMods": {
+            "aspd": 3
+          },
+          "passive": {
+            "name": "잔해 틈새",
+            "desc": "폐허의 좁은 통로와 숨은 보급품을 찾음"
+          },
+          "element": "earth",
+          "biome": "잿마을",
+          "culture": "잿마을 폐허 아래의 좁은 통로를 잇는 회수자 공동체.",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        },
+        {
+          "name": "수로 굴길족",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "배수로 감각",
+            "desc": "침수 구간과 안전한 배수 경로를 구별"
+          },
+          "element": "water",
+          "biome": "침전수로",
+          "culture": "침전수로의 수위와 배수문을 기억하는 수로 거주민.",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        },
+        {
+          "name": "맥굴 굴길족",
+          "statMods": {
+            "def": 3
+          },
+          "passive": {
+            "name": "굴벽 잔향",
+            "desc": "굴의 진동으로 붕괴와 접근을 감지"
+          },
+          "element": "earth",
+          "biome": "지맥굴",
+          "culture": "지맥굴의 암벽 진동과 광맥 틈을 읽는 굴길 공동체.",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        20,
+        15,
+        15,
+        8,
+        4,
+        35,
+        3
+      ]
+    },
+    {
+      "id": "race_goatkin",
+      "name": "산양족",
+      "lineage": "beast",
+      "statMods": {},
+      "aptitude": null,
+      "racePassive": {
+        "name": "절벽 균형",
+        "desc": "가파른 고저차와 좁은 길에 익숙한 산악 수인 — 효과 수치 미정",
+        "type": "noncombat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "proposal",
+        "tintRGB": [
+          155,
+          145,
+          125
+        ],
+        "scale": 1.0,
+        "traits": [
+          "굽은 뿔",
+          "갈라진 발굽",
+          "산악용 짧은 털"
+        ]
+      },
+      "namePool": {
+        "dir": "능선·고원 문화",
+        "examples": [
+          "능선",
+          "화구",
+          "고원"
+        ]
+      },
+      "relations": "가파른 절벽과 고열 통로를 잇는 등반·운반 수인 공동체",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "능선 산양족",
+          "statMods": {
+            "def": 3
+          },
+          "passive": {
+            "name": "절벽 발굽",
+            "desc": "가파른 경사와 좁은 발판에서 균형 유지"
+          },
+          "element": "earth",
+          "biome": "지맥능선",
+          "culture": "지맥능선의 좁은 등반로를 연결하고 길을 보수하는 산악 공동체.",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        },
+        {
+          "name": "화구 산양족",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "열맥 운반",
+            "desc": "고열 통로에서 운반과 작업을 지속"
+          },
+          "element": "fire",
+          "biome": "마른 지맥",
+          "culture": "압력화구의 열수 통로를 따라 장비와 광물을 운반하는 분파.",
+          "jobWeightMods": [
+            1.3,
+            0.9,
+            1.15,
+            0.9,
+            0.95,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "고원 산양족",
+          "statMods": {
+            "aspd": 3
+          },
+          "passive": {
+            "name": "무풍 도약",
+            "desc": "바람 없는 고원에서 고저차를 이용해 기동"
+          },
+          "element": "wind",
+          "biome": "무풍고원",
+          "culture": "무풍고원의 고저차를 이용해 전령과 물자를 나르는 고원 공동체.",
+          "jobWeightMods": [
+            0.9,
+            0.85,
+            1.15,
+            1.3,
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        24,
+        15,
+        13,
+        8,
+        4,
+        33,
+        3
+      ]
+    },
+    {
+      "id": "race_longtail",
+      "name": "긴꼬리족",
+      "lineage": "beast",
+      "statMods": {},
+      "aptitude": null,
+      "racePassive": {
+        "name": "수직 기동",
+        "desc": "꼬리와 손발로 수관·뿌리길을 오가는 영장류 수인 — 효과 수치 미정",
+        "type": "noncombat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "proposal",
+        "tintRGB": [
+          155,
+          115,
+          80
+        ],
+        "scale": 0.95,
+        "traits": [
+          "긴 균형 꼬리",
+          "잡는 손발",
+          "수관 생활"
+        ]
+      },
+      "namePool": {
+        "dir": "수관·숲길 문화",
+        "examples": [
+          "수관",
+          "뿌리",
+          "미궁"
+        ]
+      },
+      "relations": "수관 사이를 오가며 식량과 소식을 나르는 수인 공동체",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "수관 긴꼬리족",
+          "statMods": {
+            "aspd": 3
+          },
+          "passive": {
+            "name": "가지길 주파",
+            "desc": "높은 가지와 수관 사이를 빠르게 이동"
+          },
+          "element": "wind",
+          "biome": "포식밀림",
+          "culture": "포식밀림 수관을 연결하는 가지길과 전령망을 관리.",
+          "jobWeightMods": [
+            0.9,
+            0.85,
+            1.15,
+            1.3,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "뿌리길 긴꼬리족",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "뿌리 오르기",
+            "desc": "뿌리숲의 수직 지형을 안정적으로 오름"
+          },
+          "element": "earth",
+          "biome": "뿌리숲",
+          "culture": "뿌리숲의 거대한 뿌리 사이에 거주하며 수직 통로를 잇는 공동체.",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        },
+        {
+          "name": "미궁 긴꼬리족",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "길 기억",
+            "desc": "변형되는 골목과 우회로를 빠르게 기억"
+          },
+          "element": "dark",
+          "biome": "미궁도시",
+          "culture": "변형되는 미궁도시의 골목과 우회로를 기억하는 길잡이 분파.",
+          "jobWeightMods": [
+            0.95,
+            0.85,
+            1.3,
+            0.9,
+            1.1,
+            0.85,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        18,
+        15,
+        20,
+        9,
+        6,
+        29,
+        3
+      ]
+    },
+    {
+      "id": "race_dragon",
+      "name": "용족",
+      "lineage": "beast",
+      "statMods": {},
+      "aptitude": null,
+      "racePassive": {
+        "name": "원소 혈통",
+        "desc": "7원소별 분파 친화 — 전투 효과 수치 미정",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": {
+        "weighted": [
+          "fire",
+          "water",
+          "earth",
+          "wind",
+          "light",
+          "dark",
+          "void"
+        ],
+        "subraceSpecific": true
+      },
+      "visual": {
+        "dcssSource": "proposal",
+        "tintRGB": [
+          155,
+          105,
+          80
+        ],
+        "scale": 1.05,
+        "traits": [
+          "용의 뿔·비늘",
+          "날개 또는 지느러미는 분파별 차이",
+          "꼬리"
+        ]
+      },
+      "namePool": {
+        "dir": "용 혈통·원소 감성",
+        "examples": [
+          "아르덴",
+          "비룡",
+          "이그니스"
+        ]
+      },
+      "relations": "수인 계열의 독립된 용 혈통 — 원소는 종족이 아니라 분파 정체성",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "화염 용족",
+          "statMods": {
+            "hp": 3,
+            "atk": 5
+          },
+          "passive": {
+            "name": "화염 혈통",
+            "desc": "화염 속성 피해 +10% · 화염 피해 내성 +15%"
+          },
+          "element": "fire",
+          "biome": "압력화구",
+          "jobWeightMods": [
+            1.3,
+            0.9,
+            1.15,
+            0.9,
+            0.95,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "물 용족",
+          "statMods": {
+            "hp": 5,
+            "def": 3
+          },
+          "passive": {
+            "name": "물의 혈통",
+            "desc": "물 속성 피해 +10% · 수해 상성 불리 5%p 완화"
+          },
+          "element": "water",
+          "biome": "먹빛 해구",
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        },
+        {
+          "name": "대지 용족",
+          "statMods": {
+            "hp": 5,
+            "def": 5
+          },
+          "passive": {
+            "name": "대지 혈통",
+            "desc": "대지 속성 피해 +10% · 넉백·낙하 유발 효과 저항 +10%"
+          },
+          "element": "earth",
+          "biome": "지맥굴",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        },
+        {
+          "name": "바람 용족",
+          "statMods": {
+            "aspd": 5
+          },
+          "passive": {
+            "name": "바람 혈통",
+            "desc": "바람 속성 피해 +10% · 이동 중 회피 +5%"
+          },
+          "element": "wind",
+          "biome": "증기구름층",
+          "jobWeightMods": [
+            0.9,
+            0.85,
+            1.15,
+            1.3,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "빛 용족",
+          "statMods": {
+            "mag": 5,
+            "spd_cast": 3
+          },
+          "passive": {
+            "name": "빛 혈통",
+            "desc": "빛 속성 피해 +10% · 스킬 쿨타임 -3%"
+          },
+          "element": "light",
+          "biome": "서약성소",
+          "jobWeightMods": [
+            0.85,
+            1.1,
+            0.8,
+            1.0,
+            1.0,
+            1.35,
+            1.0
+          ]
+        },
+        {
+          "name": "어둠 용족",
+          "statMods": {
+            "mag": 5,
+            "spd_cast": 3
+          },
+          "passive": {
+            "name": "어둠 혈통",
+            "desc": "어둠 속성 피해 +10% · 치명타 피격 확률 -3%"
+          },
+          "element": "dark",
+          "biome": "무광심연",
+          "jobWeightMods": [
+            0.95,
+            0.85,
+            1.3,
+            0.9,
+            1.1,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "무 용족",
+          "statMods": {
+            "mag": 3,
+            "mana": 5
+          },
+          "passive": {
+            "name": "무의 혈통",
+            "desc": "무 속성 피해 +10% · 정신·마나 간섭 저항 +10%"
+          },
+          "element": "void",
+          "biome": "맥의 상흔",
+          "jobWeightMods": [
+            0.85,
+            0.8,
+            1.2,
+            0.95,
+            1.25,
+            0.8,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        11,
+        18,
+        6,
+        8,
+        34,
+        20,
+        3
+      ]
+    },
+    {
+      "id": "race_stoneborn",
+      "name": "석상인",
+      "lineage": "shaped",
+      "statMods": {},
+      "aptitude": null,
+      "racePassive": {
+        "name": "암반 각성",
+        "desc": "암석 생명핵으로 자아와 공동체를 이룬 조형생명 — 효과 미구현",
+        "type": "noncombat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "proposal",
+        "tintRGB": [
+          145,
+          145,
+          155
+        ],
+        "scale": 1.0,
+        "traits": [
+          "암반 몸체",
+          "광맥 결",
+          "각성핵"
+        ]
+      },
+      "namePool": {
+        "dir": "암석·지맥 공동체",
+        "examples": [
+          "지맥",
+          "능선",
+          "석결"
+        ]
+      },
+      "relations": "지맥과 암반의 결에서 의식을 얻은 석질 공동체",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "지맥수호 석상인",
+          "statMods": {
+            "def": 3
+          },
+          "passive": {
+            "name": "층리 감각",
+            "desc": "지맥굴 암반 균열·매복 징후 감지 · 서브 테마 지형 회피 +5%"
+          },
+          "element": "earth",
+          "biome": "지맥굴",
+          "culture": "지맥굴의 균열과 암반 변화를 읽는 수호 공동체.",
+          "slot": 8,
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        },
+        {
+          "name": "능선 파수 석상인",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "절벽 고정",
+            "desc": "밀쳐내기·넉백 저항 +10% · 좁은 발판 이동 페널티 10% 완화"
+          },
+          "element": "earth",
+          "biome": "지맥능선",
+          "culture": "바위 기둥과 능선 통로를 지키는 장거리 감시자.",
+          "slot": 12,
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        20,
+        24,
+        6,
+        8,
+        8,
+        31,
+        3
+      ]
+    },
+    {
+      "id": "race_claykin",
+      "name": "점토생명체",
+      "lineage": "shaped",
+      "statMods": {},
+      "aptitude": null,
+      "racePassive": {
+        "name": "형상 재구성",
+        "desc": "잿가마와 벽토에서 깨어난 재건 공동체 — 효과 미구현",
+        "type": "noncombat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "proposal",
+        "tintRGB": [
+          170,
+          115,
+          90
+        ],
+        "scale": 1.0,
+        "traits": [
+          "구운 점토 외피",
+          "흙빛 균열",
+          "유동적 형상"
+        ]
+      },
+      "namePool": {
+        "dir": "가마·재건 문화",
+        "examples": [
+          "잿가마",
+          "벽토",
+          "잔불"
+        ]
+      },
+      "relations": "잿마을의 가마와 벽토에서 깨어나 형상을 바꾸는 재건자",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "잿가마 점토인",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "유연한 외피",
+            "desc": "받는 타격의 첫 10% 완화 (내부 쿨타임 8초)"
+          },
+          "element": "fire",
+          "biome": "잿마을",
+          "culture": "잿마을 폐허의 가마와 벽토에서 깨어나 복구 기술을 전승한다.",
+          "slot": 9,
+          "jobWeightMods": [
+            1.3,
+            0.9,
+            1.15,
+            0.9,
+            0.95,
+            0.85,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        11,
+        25,
+        6,
+        8,
+        6,
+        41,
+        3
+      ]
+    },
+    {
+      "id": "race_ironawakened",
+      "name": "강철각성체",
+      "lineage": "shaped",
+      "statMods": {},
+      "aptitude": null,
+      "racePassive": {
+        "name": "금속맥 각성",
+        "desc": "압력화구의 열수에서 각성한 금속 생명 — 효과 미구현",
+        "type": "noncombat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "proposal",
+        "tintRGB": [
+          155,
+          165,
+          175
+        ],
+        "scale": 1.05,
+        "traits": [
+          "강철 외피",
+          "열맥 발광",
+          "중장갑 체형"
+        ]
+      },
+      "namePool": {
+        "dir": "금속·제련 문화",
+        "examples": [
+          "화구",
+          "강철",
+          "열맥"
+        ]
+      },
+      "relations": "압력화구의 금속맥과 열수에서 각성한 방위 공동체",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "화구 강철각성체",
+          "statMods": {
+            "def": 3
+          },
+          "passive": {
+            "name": "열제련",
+            "desc": "화염 피해 -10% · 화구 지형 작업 불이익 완화"
+          },
+          "element": "fire",
+          "biome": "압력화구",
+          "culture": "열수와 금속맥을 다루는 중장갑 노동·방위 공동체.",
+          "slot": 16,
+          "jobWeightMods": [
+            1.3,
+            0.9,
+            1.15,
+            0.9,
+            0.95,
+            0.85,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        22,
+        25,
+        8,
+        8,
+        6,
+        28,
+        3
+      ]
+    },
+    {
+      "id": "race_crystalcore",
+      "name": "수정핵체",
+      "lineage": "shaped",
+      "statMods": {},
+      "aptitude": null,
+      "racePassive": {
+        "name": "결정핵 공명",
+        "desc": "빛과 진동으로 생각을 나누는 결정 생명 — 효과 미구현",
+        "type": "noncombat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "proposal",
+        "tintRGB": [
+          125,
+          185,
+          205
+        ],
+        "scale": 1.0,
+        "traits": [
+          "발광 결정핵",
+          "굴절 표면",
+          "수정 파편"
+        ]
+      },
+      "namePool": {
+        "dir": "결정·조석 문화",
+        "examples": [
+          "해구",
+          "조석",
+          "유리결"
+        ]
+      },
+      "relations": "결정핵의 빛과 진동으로 생각을 전하는 조형생명",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "해구 수정핵체",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "핵 공명",
+            "desc": "마력 간섭 저항 +10% · 최대 마나 +5%"
+          },
+          "element": "water",
+          "biome": "먹빛 해구",
+          "culture": "저광·고압 환경에 맞춰 내부 광핵으로 의사소통한다.",
+          "slot": 10,
+          "jobWeightMods": [
+            0.8,
+            1.05,
+            0.9,
+            1.0,
+            1.1,
+            1.15,
+            1.0
+          ]
+        },
+        {
+          "name": "조석유리체",
+          "statMods": {
+            "aspd": 3
+          },
+          "passive": {
+            "name": "굴절막",
+            "desc": "전투 첫 원거리 공격 회피 +5% · 조석 지형 투명 위장"
+          },
+          "element": "light",
+          "biome": "역류폭포",
+          "culture": "규산 유리질 몸과 수정핵으로 빛과 파동을 굴절한다.",
+          "slot": 21,
+          "jobWeightMods": [
+            0.85,
+            1.1,
+            0.8,
+            1.0,
+            1.0,
+            1.35,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        9,
+        13,
+        6,
+        8,
+        36,
+        25,
+        3
+      ]
+    },
+    {
+      "id": "race_runeconstruct",
+      "name": "룬인형족",
+      "lineage": "shaped",
+      "statMods": {},
+      "aptitude": null,
+      "racePassive": {
+        "name": "새김 기억",
+        "desc": "룬 문자와 봉인으로 의지를 잇는 기록 공동체 — 효과 미구현",
+        "type": "noncombat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "proposal",
+        "tintRGB": [
+          155,
+          135,
+          195
+        ],
+        "scale": 1.0,
+        "traits": [
+          "새김 문자",
+          "봉인 문양",
+          "기억석"
+        ]
+      },
+      "namePool": {
+        "dir": "룬·기록 문화",
+        "examples": [
+          "봉인",
+          "서고",
+          "각인"
+        ]
+      },
+      "relations": "새긴 문자와 봉인으로 기억·의지를 이어가는 기록 공동체",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "서고 봉인 룬인형",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "각인 기억",
+            "desc": "제어·봉인 상태 저항 +10% · 스킬 쿨타임 -2%"
+          },
+          "element": "light",
+          "biome": "탑의 서고",
+          "culture": "탑의 서고에서 기록과 봉인 문자를 새겨 기억을 보존한다.",
+          "slot": 4,
+          "jobWeightMods": [
+            0.85,
+            1.1,
+            0.8,
+            1.0,
+            1.0,
+            1.35,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        11,
+        18,
+        6,
+        11,
+        24,
+        27,
+        3
+      ]
+    },
+    {
+      "id": "race_clockwork",
+      "name": "태엽자동인형족",
+      "lineage": "shaped",
+      "statMods": {},
+      "aptitude": null,
+      "racePassive": {
+        "name": "자율 태엽",
+        "desc": "기류와 태엽 동력으로 자율성을 얻은 탐사 종족 — 효과 미구현",
+        "type": "noncombat"
+      },
+      "elemental": null,
+      "elementAffinity": null,
+      "visual": {
+        "dcssSource": "proposal",
+        "tintRGB": [
+          185,
+          155,
+          105
+        ],
+        "scale": 1.0,
+        "traits": [
+          "태엽 동력핵",
+          "기류 기관",
+          "정밀 관절"
+        ]
+      },
+      "namePool": {
+        "dir": "태엽·기류 문화",
+        "examples": [
+          "기류",
+          "태엽",
+          "미궁"
+        ]
+      },
+      "relations": "기류와 태엽 동력으로 자율성을 얻은 탐사·전령 종족",
+      "unlock": {
+        "code": 1,
+        "window": "런칭"
+      },
+      "rankGate": null,
+      "subraces": [
+        {
+          "name": "기류태엽족",
+          "statMods": {
+            "spd_cast": 3
+          },
+          "passive": {
+            "name": "기류 독해",
+            "desc": "증기구름층의 돌풍·낙뢰 경로 예측 · 기류 지형 이동 +10%"
+          },
+          "element": "wind",
+          "biome": "증기구름층",
+          "culture": "증기구름층의 기류를 동력으로 바꾸는 정찰·전령 분파.",
+          "slot": 6,
+          "jobWeightMods": [
+            0.9,
+            0.85,
+            1.15,
+            1.3,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "미궁태엽족",
+          "statMods": {
+            "aspd": 3
+          },
+          "passive": {
+            "name": "경로 기억",
+            "desc": "미궁도시 골목망 기억 · 반복 구간 이동 페널티 -50%"
+          },
+          "element": "dark",
+          "biome": "미궁도시",
+          "culture": "미궁도시의 자동 장치와 길의 재배치를 기억하는 탐사 분파.",
+          "slot": 5,
+          "jobWeightMods": [
+            0.95,
+            0.85,
+            1.3,
+            0.9,
+            1.1,
+            0.85,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        15,
+        22,
+        6,
+        11,
+        13,
+        30,
+        3
+      ]
+    },
+    {
+      "id": "race_orc",
+      "name": "오크",
+      "lineage": "warrior",
+      "promoted": "2026-09-03",
+      "promotionNote": "D-180 — 몬스터 mon_orc('타락한 분파')와 분파 분리 · 플레이어블은 '비타락 부족'. 해금 ④ 이후 소환 가능.",
+      "statMods": {
+        "hp": 8,
+        "atk": 8
+      },
+      "aptitude": "대장장이 +",
+      "racePassive": {
+        "name": "포악한 맹공",
+        "desc": "근접(1m 이내) 공격 피해 +8%",
+        "type": "combat"
+      },
+      "elemental": null,
+      "elementAffinity": {
+        "up": [
+          "earth",
+          "fire"
+        ],
+        "down": [
+          "water",
+          "light"
+        ],
+        "note": "몬스터판 '수해(물) +20% 취약'과 정합 — 물 공격에 취약 성향"
+      },
+      "visual": {
+        "dcssSource": "player/base/orc_male.png (후보)",
+        "tintRGB": [
+          90,
+          140,
+          75
+        ],
+        "scale": 1.05,
+        "traits": [
+          "녹색 피부",
+          "하단 송곳니(엄니)",
+          "대형 체형 (파티 프레임 한도 1.10)",
+          "흉터/전쟁 문신 서브"
+        ]
+      },
+      "namePool": {
+        "dir": "부족 전사 2음절",
+        "examples": [
+          "그로크",
+          "카르그",
+          "우락"
+        ]
+      },
+      "relations": "엘프와 원수 (앙숙) · 인간/드워프와 '전장의 형제' 이벤트 재활성 · 고블린노이드 지배는 몬스터 유지",
+      "unlock": {
+        "code": 4,
+        "window": "업데이트 9~12"
+      },
+      "rankGate": null,
+      "jobAffinity": {
+        "up": [
+          "전사",
+          "수호자"
+        ],
+        "note": "v7.11 5.2 '오크→전사 ↑' 어필리티 정식화"
+      },
+      "subraces": [
+        {
+          "name": "산지 오크",
+          "statMods": {
+            "def": 3
+          },
+          "passive": {
+            "name": "무쇠 의지",
+            "desc": "공포·매혹 저항 +10%"
+          },
+          "element": "earth",
+          "biome": "지맥능선",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            1.1,
+            1.3,
+            0.9,
+            0.8,
+            0.85,
+            1.05,
+            1.0
+          ]
+        },
+        {
+          "name": "초원 오크",
+          "statMods": {
+            "atk": 3
+          },
+          "passive": {
+            "name": "부족의 함성",
+            "desc": "전투 개시 5초 파티 ATK +3%"
+          },
+          "element": "wind",
+          "biome": "풀바다",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            0.9,
+            0.85,
+            1.15,
+            1.3,
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "name": "화구 오크",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "화구의 버팀",
+            "desc": "화염 피해 -10%"
+          },
+          "element": "fire",
+          "biome": "압력화구",
+          "ref": "FONS 고유 분파",
+          "jobWeightMods": [
+            1.3,
+            0.9,
+            1.15,
+            0.9,
+            0.95,
+            0.85,
+            1.0
+          ]
+        },
+        {
+          "name": "잿터 오크",
+          "statMods": {
+            "def": 3
+          },
+          "passive": {
+            "name": "잿터 재건",
+            "desc": "무너진 터를 부족 거점으로 되살리고 잔해를 수색"
+          },
+          "element": "dark",
+          "biome": "잿마을",
+          "jobWeightMods": [
+            0.95,
+            0.85,
+            1.3,
+            0.9,
+            1.1,
+            0.85,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        34,
+        22,
+        22,
+        6,
+        2,
+        11,
+        3
+      ]
+    },
+    {
+      "id": "race_vampire",
+      "name": "뱀파이어",
+      "lineage": "abyss",
+      "promoted": "2026-09-03",
+      "promotionNote": "D-180 — 몬스터 mon_vampire(야생 개체)와 분리 · 플레이어블은 마나를 생존 자원으로 삼는 세 혈족. 등급 게이트 없음 (GDD v8.0 #8 등급×종족 완전 독립).",
+      "nourishment": {
+        "resource": "mana",
+        "method": "주변의 자유 마나와 마나 잔류물을 흡수한다. 동료의 체내 마나나 인간의 피를 먹지 않는다.",
+        "sharedLiving": true
+      },
+      "statMods": {
+        "mag": 8,
+        "cri": 3
+      },
+      "aptitude": "연구자 +",
+      "racePassive": {
+        "name": "마나 친화",
+        "desc": "전투 외부의 마나 잔류물을 양분으로 삼으며, 어둠 속성 피해 +10%",
+        "type": "combat"
+      },
+      "elemental": {
+        "lightWeaknessPct": 10,
+        "note": "종족 예외 — 언데드의 대가로 신성(빛) 공격 +10% 추가 피해 (정령족 상성 예외와 같은 '종족 예외' 패밀리)"
+      },
+      "elementAffinity": {
+        "up": [
+          "dark"
+        ],
+        "down": [
+          "light"
+        ]
+      },
+      "undeadException": {
+        "healNormal": true,
+        "reviveOk": true,
+        "noStatusImmunity": true,
+        "lightWeaknessPct": 10,
+        "note": "몬스터 언데드 규칙(힐 역전) 미적용 — 힐·부활·시너지 정상 작동. 출혈/독 면역 없음(표준 적용). 혈액이 아니라 마나 잔류물을 양분으로 삼으며 동료의 마나를 흡수하지 않는다. Permadeath 동일."
+      },
+      "visual": {
+        "dcssSource": "monster/undead/vampire_mage_new.png (후보 — 휴머노이드)",
+        "tintRGB": [
+          205,
+          190,
+          215
+        ],
+        "scale": 1.0,
+        "traits": [
+          "창백한 피부",
+          "붉은 눈",
+          "날카로운 송곳니",
+          "하이칼라 망토/혈석 장신구 서브"
+        ]
+      },
+      "namePool": {
+        "dir": "오래된 혈족 문화권",
+        "examples": [
+          "세바스찬",
+          "루크레치아",
+          "아드리안"
+        ]
+      },
+      "relations": "인간과 동료·이웃으로 공존 · 세 혈족은 문화적·정치적 갈래이며 소환 영웅으로 함께 생활 가능",
+      "unlock": {
+        "code": 5,
+        "window": "업데이트 13~16"
+      },
+      "rankGate": null,
+      "jobAffinity": {
+        "up": [
+          "마법사",
+          "암살자"
+        ],
+        "note": "다크 엘프(암살자 우선)와 다른 '혈마법 캐스터' 우선"
+      },
+      "subraces": [
+        {
+          "name": "명맥 혈족",
+          "statMods": {
+            "mag": 3
+          },
+          "passive": {
+            "name": "기억의 맥",
+            "desc": "전투 중 마나 회복량 +5%"
+          },
+          "element": "void",
+          "biome": "기억묘역",
+          "culture": "가문의 역사와 회차의 흔적을 공동체의 기억으로 보존하고 전승합니다.",
+          "ref": "FONS 고유 혈족",
+          "jobWeightMods": [
+            0.85,
+            0.8,
+            1.2,
+            0.95,
+            1.25,
+            0.8,
+            1.0
+          ]
+        },
+        {
+          "name": "귀원 혈족",
+          "statMods": {
+            "spd_cast": 3
+          },
+          "passive": {
+            "name": "원천 회귀",
+            "desc": "스킬 쿨타임 -3%"
+          },
+          "element": "light",
+          "biome": "서약성소",
+          "culture": "원천의 흐름을 다시 잇되, 다른 계열과 맺은 서약과 공동 책임을 중시합니다.",
+          "ref": "FONS 고유 혈족",
+          "jobWeightMods": [
+            0.85,
+            1.1,
+            0.8,
+            1.0,
+            1.0,
+            1.35,
+            1.0
+          ]
+        },
+        {
+          "name": "영야 혈족",
+          "statMods": {
+            "hp": 3
+          },
+          "passive": {
+            "name": "영야의 장막",
+            "desc": "어둠 속성 피해 +10%"
+          },
+          "element": "dark",
+          "biome": "이데아 문턱",
+          "culture": "광로의 빛이 어둠의 생태와 주민을 덮지 않도록 확장을 경계합니다.",
+          "ref": "FONS 고유 혈족",
+          "jobWeightMods": [
+            0.95,
+            0.85,
+            1.3,
+            0.9,
+            1.1,
+            0.85,
+            1.0
+          ]
+        }
+      ],
+      "jobWeights": [
+        6,
+        15,
+        9,
+        13,
+        24,
+        30,
+        3
+      ]
+    }
+  ],
+  "progression": [
+    {
+      "raceId": "race_amphibian",
+      "intellectBase": 111.7,
+      "magicAffinity": 74.1,
+      "primaryLaw": "water",
+      "secondaryLaw": "earth",
+      "lawAffinity": [
+        0.5,
+        0.62,
+        0.55,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_rodent",
+      "intellectBase": 111.7,
+      "magicAffinity": 35.9,
+      "primaryLaw": "earth",
+      "secondaryLaw": "dark",
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.62,
+        0.5,
+        0.5,
+        0.58,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_goatkin",
+      "intellectBase": 108.9,
+      "magicAffinity": 35.9,
+      "primaryLaw": "earth",
+      "secondaryLaw": "fire",
+      "lawAffinity": [
+        0.55,
+        0.5,
+        0.62,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_longtail",
+      "intellectBase": 106.1,
+      "magicAffinity": 41.8,
+      "primaryLaw": "wind",
+      "secondaryLaw": "water",
+      "lawAffinity": [
+        0.5,
+        0.58,
+        0.5,
+        0.62,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_dragon",
+      "intellectBase": 92.1,
+      "magicAffinity": 121.2,
+      "primaryLaw": "fire",
+      "secondaryLaw": "void",
+      "lawAffinity": [
+        0.62,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.58
+      ]
+    },
+    {
+      "raceId": "race_human",
+      "intellectBase": 110.3,
+      "magicAffinity": 68.2,
+      "primaryLaw": "wind",
+      "secondaryLaw": "light",
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.62,
+        0.58,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_genasi",
+      "intellectBase": 100.5,
+      "magicAffinity": 130.0,
+      "primaryLaw": "fire",
+      "secondaryLaw": "water",
+      "lawAffinity": [
+        0.62,
+        0.62,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_highelf",
+      "intellectBase": 130.0,
+      "magicAffinity": 80.0,
+      "primaryLaw": "light",
+      "secondaryLaw": "void",
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.7,
+        0.5,
+        0.62
+      ]
+    },
+    {
+      "raceId": "race_woodelf",
+      "intellectBase": 124.4,
+      "magicAffinity": 56.5,
+      "primaryLaw": "water",
+      "secondaryLaw": "earth",
+      "lawAffinity": [
+        0.5,
+        0.62,
+        0.58,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_darkelf",
+      "intellectBase": 99.1,
+      "magicAffinity": 91.8,
+      "primaryLaw": "dark",
+      "secondaryLaw": "light",
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.58,
+        0.62,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_seaelve",
+      "intellectBase": 113.1,
+      "magicAffinity": 91.8,
+      "primaryLaw": "water",
+      "secondaryLaw": "light",
+      "lawAffinity": [
+        0.5,
+        0.58,
+        0.5,
+        0.5,
+        0.62,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_dwarf",
+      "intellectBase": 111.7,
+      "magicAffinity": 41.8,
+      "primaryLaw": "earth",
+      "secondaryLaw": "fire",
+      "lawAffinity": [
+        0.58,
+        0.5,
+        0.62,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_gnome",
+      "intellectBase": 100.5,
+      "magicAffinity": 127.1,
+      "primaryLaw": "fire",
+      "secondaryLaw": "light",
+      "lawAffinity": [
+        0.62,
+        0.5,
+        0.5,
+        0.5,
+        0.58,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_halfling",
+      "intellectBase": 121.6,
+      "magicAffinity": 41.8,
+      "primaryLaw": "wind",
+      "secondaryLaw": "light",
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.58,
+        0.55,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_felid",
+      "intellectBase": 103.3,
+      "magicAffinity": 41.8,
+      "primaryLaw": "wind",
+      "secondaryLaw": "dark",
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.58,
+        0.5,
+        0.58,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_houndkin",
+      "intellectBase": 101.9,
+      "magicAffinity": 35.9,
+      "primaryLaw": "earth",
+      "secondaryLaw": "wind",
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.62,
+        0.55,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_tengu",
+      "intellectBase": 123.0,
+      "magicAffinity": 56.5,
+      "primaryLaw": "wind",
+      "secondaryLaw": "light",
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.62,
+        0.55,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_lizardman",
+      "intellectBase": 100.5,
+      "magicAffinity": 47.6,
+      "primaryLaw": "earth",
+      "secondaryLaw": "water",
+      "lawAffinity": [
+        0.5,
+        0.58,
+        0.62,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_orc",
+      "intellectBase": 78.0,
+      "magicAffinity": 30.0,
+      "primaryLaw": "fire",
+      "secondaryLaw": "dark",
+      "lawAffinity": [
+        0.62,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.58,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_vampire",
+      "intellectBase": 111.7,
+      "magicAffinity": 91.8,
+      "primaryLaw": "dark",
+      "secondaryLaw": "void",
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.7,
+        0.62
+      ]
+    },
+    {
+      "raceId": "race_stoneborn",
+      "intellectBase": 107.5,
+      "magicAffinity": 47.6,
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_claykin",
+      "intellectBase": 120.2,
+      "magicAffinity": 41.8,
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_ironawakened",
+      "intellectBase": 103.3,
+      "magicAffinity": 41.8,
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_crystalcore",
+      "intellectBase": 99.1,
+      "magicAffinity": 124.1,
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_runeconstruct",
+      "intellectBase": 106.1,
+      "magicAffinity": 91.8,
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "raceId": "race_clockwork",
+      "intellectBase": 108.9,
+      "magicAffinity": 62.4,
+      "lawAffinity": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    }
+  ],
+  "subraceCount": 78,
+  "expansionProposals": {
+    "status": "활성 정본 26종·7계열·78분파. 조형생명 6종·9분파는 D-276으로 활성화 완료. 해연 플레이어블 확장은 중단 제안이며 사이렌은 별도 해양 몬스터",
+    "counts": {
+      "existingRaceSubraceAdditions": 0,
+      "newPlayableRaces": 0,
+      "newRaceSubraces": 0,
+      "candidateRaceTotal": 26,
+      "candidateSubraceTotal": 78
+    },
+    "existingRaceSubraces": [],
+    "newPlayableRaces": [],
+    "inactiveShapedLifeLegacy": [],
+    "inactiveShapedLifeLegacyArchive": [
+      {
+        "id": "proposal_race_stoneborn",
+        "name": "석상인",
+        "lineage": "shaped (proposal)",
+        "concept": "지맥과 암반의 결에 의식이 깨어난 석질 공동체",
+        "subraces": [
+          {
+            "name": "지맥수호 석상인",
+            "statMods": {
+              "def": 3
+            },
+            "biome": "지맥굴",
+            "slot": 8
+          },
+          {
+            "name": "능선 파수 석상인",
+            "statMods": {
+              "hp": 3
+            },
+            "biome": "지맥능선",
+            "slot": 12
+          }
+        ]
+      },
+      {
+        "id": "proposal_race_claykin",
+        "name": "점토생명체",
+        "lineage": "shaped (proposal)",
+        "concept": "잿마을의 가마와 벽토에서 깨어나 형상을 바꾸는 재건자",
+        "subraces": [
+          {
+            "name": "잿가마 점토인",
+            "statMods": {
+              "hp": 3
+            },
+            "biome": "잿마을",
+            "slot": 9
+          }
+        ]
+      },
+      {
+        "id": "proposal_race_ironawakened",
+        "name": "강철각성체",
+        "lineage": "shaped (proposal)",
+        "concept": "압력화구의 금속맥과 열수에서 각성한 중장갑 제작·방위형",
+        "subraces": [
+          {
+            "name": "화구 강철각성체",
+            "statMods": {
+              "def": 3
+            },
+            "biome": "압력화구",
+            "slot": 16
+          }
+        ]
+      },
+      {
+        "id": "proposal_race_crystalcore",
+        "name": "수정핵체",
+        "lineage": "shaped (proposal)",
+        "concept": "결정핵의 빛과 진동으로 생각을 전하는 조형생명",
+        "subraces": [
+          {
+            "name": "해구 수정핵체",
+            "statMods": {
+              "mag": 3
+            },
+            "biome": "먹빛 해구",
+            "slot": 10
+          },
+          {
+            "name": "조석유리체",
+            "statMods": {
+              "aspd": 3
+            },
+            "biome": "역류폭포",
+            "slot": 21
+          }
+        ]
+      },
+      {
+        "id": "proposal_race_runeconstruct",
+        "name": "룬인형족",
+        "lineage": "shaped (proposal)",
+        "concept": "새긴 문자와 봉인으로 기억·의지를 이어가는 기록 공동체",
+        "subraces": [
+          {
+            "name": "서고 봉인 룬인형",
+            "statMods": {
+              "mag": 3
+            },
+            "biome": "탑의 서고",
+            "slot": 4
+          }
+        ]
+      },
+      {
+        "id": "proposal_race_clockwork",
+        "name": "태엽자동인형족",
+        "lineage": "shaped (proposal)",
+        "concept": "기류와 태엽 동력으로 자율성을 얻은 탐사·전령 종족",
+        "subraces": [
+          {
+            "name": "기류태엽족",
+            "statMods": {
+              "spd_cast": 3
+            },
+            "biome": "증기구름층",
+            "slot": 6
+          },
+          {
+            "name": "미궁태엽족",
+            "statMods": {
+              "aspd": 3
+            },
+            "biome": "미궁도시",
+            "slot": 5
+          }
+        ]
+      }
+    ],
+    "excludedProposals": [
+      {
+        "name": "해연 6종·9분파",
+        "status": "중단 — 플레이어블 확장 대신 사이렌류는 몬스터로 분류"
+      }
+    ],
+    "proposalNote": "조형생명은 D-276으로 활성 정본·소환 풀에 승격 완료했으며 비활성 제안 배열에는 포함하지 않는다. 해연 플레이어블 확장은 중단 제안으로 유지하고 사이렌은 별도 몬스터로 분류한다. 활성 총계 26종·7계열·78분파.",
+    "furtherCandidates": [
+      {
+        "name": "토끼족",
+        "concept": "초원·역참 사이를 달리는 경보·전령 공동체",
+        "biome": "풀바다",
+        "slot": 1
+      },
+      {
+        "name": "여우족",
+        "concept": "숲과 폐허의 경계를 오가며 소문·교역로를 잇는 수인",
+        "biome": "뿌리숲 또는 잿마을",
+        "slot": "2 또는 9"
+      },
+      {
+        "name": "나방족",
+        "concept": "광로 잔광을 따라 이동하는 야행성 비행 수인",
+        "biome": "증기구름층",
+        "slot": 6
+      },
+      {
+        "name": "서광 하이 엘프",
+        "concept": "광로의 일출·일몰 변화를 의례로 기록하는 하이 엘프 추가 분파",
+        "biome": "탑의 서고",
+        "slot": 4
+      },
+      {
+        "name": "빙맥 드워프",
+        "concept": "차가운 결정맥과 지하 온천을 탐사하는 드워프 추가 분파",
+        "biome": "무풍고원",
+        "slot": 18
+      },
+      {
+        "name": "비늘노움",
+        "concept": "생체 유리와 미세 장치를 다루는 노움 추가 분파",
+        "biome": "형상군락",
+        "slot": 23,
+        "settlement": false
+      }
+    ]
+  },
+  "notes": [
+    "지성(intellectBase)·마법친화(magicAffinity)는 2026-09-28 사용자 결정(D-279)으로 0~130 스케일이다. D-279 재설계로 2축이 상충한다 — 최고 지성=하이 엘프(130/92), 최고 마법친화=정령족(104/130), 노움(122/124)만 양축 균형 상위. 130을 두 축 동시 보유한 종족은 0개(만능 종족 방지). 범용(인간 104/86)과 야수형(묘인족 110/52 · 견인족 90/34 · 오크 84/30)으로 역할을 갈라 잡았다. 개인은 3~4% 스펙 대비 0~4% 수준이라 종족 선택이 빌드의 축을 결정한다. 다만 lawAffinity 는 예외적으로 7원소 0~1 친화도 벡터다(WorldLawCatalog.NormalizeAffinity) — 스케일을 섞지 않는다. 개인차 가산(성격 ±3.9 · 개체 ±5.2 · 전직 +2.6/+5.2)도 130 기준으로 키웠다.",
+    "분파 element는 2026-09-28에 78분파 전량 배정했다. 정령족·용족 14분파는 원래 원소 분파이고, 나머지 64분파는 주제 연응의 정령적 친화(컨셉)다. 비정령 분파의 element는 현재 전투에 반영되지 않는다 — 5.3 원소 매트릭스 판정은 정령족·용족과 그 후손이 실제로 원소를 쓸 때 연결한다. 종족사전 표시·특성 그룹핑 용도.",
+    "조형생명은 2026-09-28 D-276으로 활성 카탈로그·소환 풀에 승격됐다. 기존 6 lineage key는 보존하고 신규 key shaped만 추가했다. 소환은 shaped에 5%를 배정하고 나머지 95%는 기존 20종 중 균등 선택한다. 신규 race 직업 가중치는 중립 기본값, 시그니처는 미지정이며, 전용 특성은 데이터 기록만 하고 효과를 구현하지 않았다.",
+    "표기 변경 (D-183, 2026-09-03): 제나시 → 정령족 — 설계 문서·데이터 name 필드 한정. 슬러그 race_genasi · 에셋 키 · 영문 레퍼런스 Genasi는 유지.",
+    "분파 데이터의 statMods·passive·biome·culture는 캐릭터/설정 기준값이다. 신규 영웅은 분파명을 저장하고 분파 statMods를 종족 statMods에 합산해 전투력·전투 스탯에 적용한다. 2026-09-28에 26종 기본 보정까지 포함해 meta.capRules(+15% 전투 / +10% SPD) 초과 0건으로 정리했다 — 우드 엘프 aspd 10→7·def 3, 묘인족 aspd 8→7. 분파 passive는 설계값이며 실제 효과 로직은 아직 연결되지 않았다. 배치명·수치·패시브는 확정 개념과 구분되는 제안안이며, 기존 저장 영웅의 subraceName은 미지정(null)으로 유지한다.",
+    "오크·뱀파이어 DCSS 소스는 후보 — 최종 스프라이트는 아트 트랙 확정 (art/map_dcss.py RACES 15 반영 후속).",
+    "2026-09-27 생태계 재설계와 D-275 활성화에 이어 조형생명 6종·9분파를 D-276에서 승격했다. 현재 활성 정본은 26종·7계열·78분파이며, 해연 플레이어블 확장은 중단 상태다. 사이렌은 별도 해양 몬스터다.",
+    "분파는 표시 이름으로 HeroRecord.subraceName에 저장하고 raceId는 유지한다. 세이브 스키마 11→12는 기존 영웅에 임의 분파를 소급 배정하지 않는다."
+  ]
+}

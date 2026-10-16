@@ -1,0 +1,2826 @@
+{
+ "$schema": "job_tree/v3.4",
+ "version": "3.4.0",
+ "l1Count": 7,
+ "l2Count": 26,
+ "l3Count": 1,
+ "keywordCount": 94,
+ "startAsL2": [
+  {
+   "l1Id": "l1_mage",
+   "entryStage": 2,
+   "rule": "elementFirst",
+   "desc": "먼저 원소가 정해지고, 정해진 원소의 마법 L2 로 바로 등장한다",
+   "startL2": [
+    "l2_elementalist",
+    "l2_hierophant",
+    "l2_summoner",
+    "l2_hexcaller"
+   ],
+   "needTags": [
+    "element"
+   ]
+  },
+  {
+   "l1Id": "l1_supporter",
+   "entryStage": 2,
+   "rule": "faithOrNatureFirst",
+   "desc": "믿음(신앙) 또는 자연친화가 먼저 정해지고, 그 계열의 L2 로 바로 등장한다",
+   "startL2": [
+    "l2_druid",
+    "l2_priest",
+    "l2_monk",
+    "l2_paladin"
+   ],
+   "needTags": [
+    "natureAffinity",
+    "faith"
+   ]
+  }
+ ],
+ "jobs": [
+  {
+   "id": "l1_warrior",
+   "name": "전사",
+   "stage": 1,
+   "parentId": null,
+   "role": "선봉",
+   "lawTags": [
+    "fire",
+    "earth"
+   ],
+   "desc": "먼저 서서 버티는 직업 기술"
+  },
+  {
+   "id": "l1_guardian",
+   "name": "수호자",
+   "stage": 1,
+   "parentId": null,
+   "role": "수호",
+   "lawTags": [
+    "earth",
+    "light"
+   ],
+   "desc": "서 있기만 하면 시간이 가는 직업"
+  },
+  {
+   "id": "l1_assassin",
+   "name": "암살자",
+   "stage": 1,
+   "parentId": null,
+   "role": "암살",
+   "lawTags": [
+    "dark",
+    "wind"
+   ],
+   "desc": "보이지 않는 쪽이 되는 직업"
+  },
+  {
+   "id": "l1_archer",
+   "name": "궁수",
+   "stage": 1,
+   "parentId": null,
+   "role": "포격",
+   "lawTags": [
+    "wind",
+    "earth"
+   ],
+   "desc": "거리만을 방패로 삼는 직업"
+  },
+  {
+   "id": "l1_mage",
+   "name": "마법사",
+   "stage": 1,
+   "parentId": null,
+   "role": "마법",
+   "lawTags": [
+    "fire",
+    "water"
+   ],
+   "desc": "먼저 원소가 정해지고, 정해진 원소의 마법 L2 로 바로 등장한다",
+   "entryStage": 2,
+   "rule": "elementFirst",
+   "startL2": [
+    "l2_elementalist",
+    "l2_hierophant",
+    "l2_summoner",
+    "l2_hexcaller"
+   ],
+   "needTags": [
+    "element"
+   ]
+  },
+  {
+   "id": "l1_supporter",
+   "name": "지원가",
+   "stage": 1,
+   "parentId": null,
+   "role": "지원",
+   "lawTags": [
+    "light",
+    "water"
+   ],
+   "desc": "믿음(신앙) 또는 자연친화가 먼저 정해지고, 그 계열의 L2 로 바로 등장한다",
+   "entryStage": 2,
+   "rule": "faithOrNatureFirst",
+   "startL2": [
+    "l2_druid",
+    "l2_priest",
+    "l2_monk",
+    "l2_paladin"
+   ],
+   "needTags": [
+    "natureAffinity",
+    "faith"
+   ]
+  },
+  {
+   "id": "l1_nameless",
+   "name": "무명자",
+   "stage": 1,
+   "parentId": null,
+   "role": "무직",
+   "lawTags": [
+    "void"
+   ],
+   "desc": "아직 이름이 정해지지 않은 직업"
+  },
+  {
+   "id": "l2_breaker",
+   "name": "파쇄사",
+   "stage": 2,
+   "parentId": "l1_warrior",
+   "role": "선봉",
+   "lawTags": [
+    "fire",
+    "earth"
+   ],
+   "desc": "방어선을 부수러 앞으로 나가는 직업",
+   "keywords": [
+    {
+     "id": "kw_breaker_siege",
+     "name": "공성",
+     "parentId": "l2_breaker",
+     "tier": "2",
+     "power": 1.133,
+     "statMod": [
+      1.1074,
+      1.2263,
+      1.0836,
+      1.1074,
+      1.0836,
+      1.0836,
+      1.155,
+      1.4405,
+      1.0598,
+      1.1074,
+      1.0836,
+      1.1074,
+      1.0836
+     ],
+     "desc": "성벽 한 곳만 골라 부수고 끝까지 버티는",
+     "shape": "관통"
+    },
+    {
+     "id": "kw_breaker_rammer",
+     "name": "충각",
+     "parentId": "l2_breaker",
+     "tier": "3",
+     "power": 1.0636,
+     "statMod": [
+      1.0653,
+      1.378,
+      0.9983,
+      1.043,
+      1.043,
+      0.9983,
+      1.043,
+      1.043,
+      1.043,
+      1.0206,
+      1.0653,
+      1.043,
+      1.043
+     ],
+     "desc": "달려들어 부딪히며 멈추지 않는",
+     "shape": "힘"
+    },
+    {
+     "id": "kw_breaker_mortar",
+     "name": "포탄",
+     "parentId": "l2_breaker",
+     "tier": "1",
+     "power": 1.1813,
+     "statMod": [
+      1.142,
+      1.142,
+      1.142,
+      1.5885,
+      1.142,
+      1.142,
+      1.1321,
+      1.1668,
+      1.1668,
+      1.142,
+      1.142,
+      1.1668,
+      1.142
+     ],
+     "desc": "먼저 쏘아 선제 피해를 건네는",
+     "shape": "속도"
+    }
+   ]
+  },
+  {
+   "id": "l2_vengeance_knight",
+   "name": "광전사",
+   "stage": 2,
+   "parentId": "l1_warrior",
+   "role": "선봉",
+   "lawTags": [
+    "dark",
+    "fire"
+   ],
+   "desc": "받은 만큼 돌려주는 직업",
+   "keywords": [
+    {
+     "id": "kw_vengeance_knight_waste",
+     "name": "멸망",
+     "parentId": "l2_vengeance_knight",
+     "tier": "1",
+     "power": 1.1842,
+     "statMod": [
+      1.1448,
+      1.1448,
+      1.1448,
+      1.5924,
+      1.1448,
+      1.1448,
+      1.1348,
+      1.1697,
+      1.1697,
+      1.1448,
+      1.1448,
+      1.1697,
+      1.1448
+     ],
+     "desc": "자기를 소모하며 점점 빨라지는",
+     "shape": "속도"
+    },
+    {
+     "id": "kw_vengeance_knight_reflex",
+     "name": "역습",
+     "parentId": "l2_vengeance_knight",
+     "tier": "2",
+     "power": 1.1941,
+     "statMod": [
+      1.1227,
+      1.1478,
+      1.1478,
+      1.1478,
+      1.223,
+      1.1478,
+      1.198,
+      1.1478,
+      1.1478,
+      1.1729,
+      1.5239,
+      1.1478,
+      1.2481
+     ],
+     "desc": "맞은 만큼 모아 한 번에 되돌려 주는",
+     "shape": "치명위력"
+    },
+    {
+     "id": "kw_vengeance_knight_pyre",
+     "name": "소각",
+     "parentId": "l2_vengeance_knight",
+     "tier": "3",
+     "power": 1.1679,
+     "statMod": [
+      1.1471,
+      1.1226,
+      1.1471,
+      1.1471,
+      1.515,
+      1.1471,
+      1.1226,
+      1.1471,
+      1.0981,
+      1.1226,
+      1.1226,
+      1.1471,
+      1.1962
+     ],
+     "desc": "몸에 불을 입혀 주변까지 함께 태우는",
+     "shape": "주문"
+    }
+   ]
+  },
+  {
+   "id": "l2_fighter",
+   "name": "격투사",
+   "stage": 2,
+   "parentId": "l1_warrior",
+   "role": "선봉",
+   "lawTags": [
+    "fire",
+    "wind"
+   ],
+   "desc": "거리를 지워서 붙고서 싸우는 직업",
+   "keywords": [
+    {
+     "id": "kw_fighter_rush",
+     "name": "속격",
+     "parentId": "l2_fighter",
+     "tier": "1",
+     "power": 1.1887,
+     "statMod": [
+      1.1491,
+      1.1491,
+      1.1491,
+      1.5985,
+      1.1491,
+      1.1491,
+      1.1392,
+      1.1741,
+      1.1741,
+      1.1491,
+      1.1491,
+      1.1741,
+      1.1491
+     ],
+     "desc": "빠른 손이 먼저 닿는",
+     "shape": "속도"
+    },
+    {
+     "id": "kw_fighter_crush",
+     "name": "중격",
+     "parentId": "l2_fighter",
+     "tier": "3",
+     "power": 1.0371,
+     "statMod": [
+      1.0388,
+      1.3437,
+      0.9734,
+      1.017,
+      1.017,
+      0.9734,
+      1.017,
+      1.017,
+      1.017,
+      0.9952,
+      1.0388,
+      1.017,
+      1.017
+     ],
+     "desc": "한 방의 무게로 승부를 내는",
+     "shape": "힘"
+    },
+    {
+     "id": "kw_fighter_clinch",
+     "name": "밀착",
+     "parentId": "l2_fighter",
+     "tier": "2",
+     "power": 1.0725,
+     "statMod": [
+      1.3999,
+      1.0171,
+      1.0396,
+      1.0621,
+      1.0396,
+      1.0396,
+      1.0396,
+      1.0621,
+      1.0621,
+      1.0396,
+      1.0396,
+      1.0621,
+      1.0396
+     ],
+     "desc": "붙잡고 늘어져 상대가 못 벗어나게 하는",
+     "shape": "체력"
+    }
+   ]
+  },
+  {
+   "id": "l2_swordsman",
+   "name": "검술사",
+   "stage": 2,
+   "parentId": "l1_warrior",
+   "role": "선봉",
+   "lawTags": [
+    "wind",
+    "dark"
+   ],
+   "desc": "칼이 손보다 먼저 닿는 직업",
+   "keywords": [
+    {
+     "id": "kw_swordsman_quick",
+     "name": "속검",
+     "parentId": "l2_swordsman",
+     "tier": "1",
+     "power": 1.2016,
+     "statMod": [
+      1.1616,
+      1.1616,
+      1.1616,
+      1.6158,
+      1.1616,
+      1.1616,
+      1.1515,
+      1.1868,
+      1.1868,
+      1.1616,
+      1.1616,
+      1.1868,
+      1.1616
+     ],
+     "desc": "잘라내는 횟수로 이기는",
+     "shape": "속도"
+    },
+    {
+     "id": "kw_swordsman_single",
+     "name": "일섬",
+     "parentId": "l2_swordsman",
+     "tier": "3",
+     "power": 1.0421,
+     "statMod": [
+      1.0438,
+      1.3502,
+      0.9781,
+      1.0219,
+      1.0219,
+      0.9781,
+      1.0219,
+      1.0219,
+      1.0219,
+      1.0,
+      1.0438,
+      1.0219,
+      1.0219
+     ],
+     "desc": "베는 횟수가 아니라 한 방으로 끝내는",
+     "shape": "힘"
+    },
+    {
+     "id": "kw_swordsman_riposte",
+     "name": "반격",
+     "parentId": "l2_swordsman",
+     "tier": "2",
+     "power": 1.2075,
+     "statMod": [
+      1.1353,
+      1.1607,
+      1.1607,
+      1.1607,
+      1.2368,
+      1.1607,
+      1.2114,
+      1.1607,
+      1.1607,
+      1.186,
+      1.541,
+      1.1607,
+      1.2621
+     ],
+     "desc": "상대 공격을 받아넘긴 자리에서 바로 베는",
+     "shape": "치명위력"
+    }
+   ]
+  },
+  {
+   "id": "l2_spirit_knight",
+   "name": "정령기사",
+   "stage": 2,
+   "parentId": "l1_warrior",
+   "role": "선봉",
+   "lawTags": [],
+   "desc": "정령 하나와 계약해 함께 싸우는 직업",
+   "keywords": [
+    {
+     "id": "kw_spirit_knight_fire",
+     "name": "화염정령기사",
+     "parentId": "l2_spirit_knight",
+     "tier": "2",
+     "power": 1.1681,
+     "statMod": [
+      1.1473,
+      1.1228,
+      1.1473,
+      1.1473,
+      1.5153,
+      1.1473,
+      1.1228,
+      1.1473,
+      1.0983,
+      1.1228,
+      1.1228,
+      1.1473,
+      1.1964
+     ],
+     "desc": "불을 계약해 같이 태우는",
+     "shape": "주문",
+     "nameRule": "spirit",
+     "spiritRollFor": "fire"
+    },
+    {
+     "id": "kw_spirit_knight_water",
+     "name": "물정령기사",
+     "parentId": "l2_spirit_knight",
+     "tier": "1",
+     "power": 1.1975,
+     "statMod": [
+      1.2168,
+      1.1414,
+      1.1665,
+      1.1917,
+      1.2168,
+      1.5941,
+      1.1665,
+      1.1917,
+      0.9151,
+      1.1917,
+      1.1665,
+      1.1917,
+      1.2168
+     ],
+     "desc": "물을 계약해 같이 감싸는",
+     "shape": "마법방어",
+     "nameRule": "spirit",
+     "spiritRollFor": "water"
+    },
+    {
+     "id": "kw_spirit_knight_earth",
+     "name": "대지정령기사",
+     "parentId": "l2_spirit_knight",
+     "tier": "2",
+     "power": 1.0436,
+     "statMod": [
+      1.3622,
+      0.9897,
+      1.0116,
+      1.0335,
+      1.0116,
+      1.0116,
+      1.0116,
+      1.0335,
+      1.0335,
+      1.0116,
+      1.0116,
+      1.0335,
+      1.0116
+     ],
+     "desc": "땅을 계약해 같이 버티는",
+     "shape": "체력",
+     "nameRule": "spirit",
+     "spiritRollFor": "earth"
+    },
+    {
+     "id": "kw_spirit_knight_wind",
+     "name": "바람정령기사",
+     "parentId": "l2_spirit_knight",
+     "tier": "1",
+     "power": 1.1845,
+     "statMod": [
+      1.1451,
+      1.1451,
+      1.1451,
+      1.5928,
+      1.1451,
+      1.1451,
+      1.1351,
+      1.17,
+      1.17,
+      1.1451,
+      1.1451,
+      1.17,
+      1.1451
+     ],
+     "desc": "바람을 계약해 같이 돌아가는",
+     "shape": "속도",
+     "nameRule": "spirit",
+     "spiritRollFor": "wind"
+    },
+    {
+     "id": "kw_spirit_knight_light",
+     "name": "빛정령기사",
+     "parentId": "l2_spirit_knight",
+     "tier": "2",
+     "power": 1.1359,
+     "statMod": [
+      1.0919,
+      1.1634,
+      1.0919,
+      1.1157,
+      1.1157,
+      1.0919,
+      1.4974,
+      1.1157,
+      1.1157,
+      1.0919,
+      1.068,
+      1.1157,
+      1.0919
+     ],
+     "desc": "빛을 계약해 같이 밝히는",
+     "shape": "치명",
+     "nameRule": "spirit",
+     "spiritRollFor": "light"
+    },
+    {
+     "id": "kw_spirit_knight_dark",
+     "name": "어둠정령기사",
+     "parentId": "l2_spirit_knight",
+     "tier": "2",
+     "power": 1.1665,
+     "statMod": [
+      1.1665,
+      1.1175,
+      1.142,
+      1.1175,
+      1.142,
+      1.142,
+      1.1175,
+      1.142,
+      1.142,
+      1.1175,
+      1.1175,
+      1.5339,
+      1.1665
+     ],
+     "desc": "어둠을 계약해 같이 숨는",
+     "shape": "근성",
+     "nameRule": "spirit",
+     "spiritRollFor": "dark"
+    },
+    {
+     "id": "kw_spirit_knight_void",
+     "name": "무정령기사",
+     "parentId": "l2_spirit_knight",
+     "tier": "2",
+     "power": 1.1934,
+     "statMod": [
+      1.1221,
+      1.1471,
+      1.1471,
+      1.1471,
+      1.2223,
+      1.1471,
+      1.1973,
+      1.1471,
+      1.1471,
+      1.1722,
+      1.5231,
+      1.1471,
+      1.2474
+     ],
+     "desc": "아무것도 없는 것을 계약해 그대로 쓰는",
+     "shape": "치명위력",
+     "nameRule": "spirit",
+     "spiritRollFor": "void"
+    }
+   ],
+   "spiritRoll": {
+    "pool": [
+     "fire",
+     "water",
+     "earth",
+     "wind",
+     "light",
+     "dark",
+     "void"
+    ],
+    "kind": "weightedPick",
+    "weights": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.12
+    ]
+   }
+  },
+  {
+   "id": "l2_ironwall",
+   "name": "철벽기사",
+   "stage": 2,
+   "parentId": "l1_guardian",
+   "role": "수호",
+   "lawTags": [
+    "earth",
+    "water"
+   ],
+   "desc": "갑옷을 입고 제자리를 지키는 직업",
+   "keywords": [
+    {
+     "id": "kw_ironwall_plate",
+     "name": "방탄",
+     "parentId": "l2_ironwall",
+     "tier": "2",
+     "power": 1.0663,
+     "statMod": [
+      1.0904,
+      1.0232,
+      1.4263,
+      1.068,
+      1.0456,
+      1.0456,
+      1.0456,
+      0.8217,
+      1.068,
+      1.068,
+      1.0456,
+      1.068,
+      1.0456
+     ],
+     "desc": "피가 스치지 않고 갑옷이 대신 맞는",
+     "shape": "방어"
+    },
+    {
+     "id": "kw_ironwall_repair",
+     "name": "철갑",
+     "parentId": "l2_ironwall",
+     "tier": "3",
+     "power": 0.9863,
+     "statMod": [
+      1.2874,
+      0.9353,
+      0.956,
+      0.9767,
+      0.956,
+      0.956,
+      0.956,
+      0.9767,
+      0.9767,
+      0.956,
+      0.956,
+      0.9767,
+      0.956
+     ],
+     "desc": "덮은 판이 상대의 흠집을 먼저 받는",
+     "shape": "체력"
+    },
+    {
+     "id": "kw_ironwall_anchor",
+     "name": "요새",
+     "parentId": "l2_ironwall",
+     "tier": "1",
+     "power": 1.1543,
+     "statMod": [
+      1.1543,
+      1.1058,
+      1.1301,
+      1.1058,
+      1.1301,
+      1.1301,
+      1.1058,
+      1.1301,
+      1.1301,
+      1.1058,
+      1.1058,
+      1.5179,
+      1.1543
+     ],
+     "desc": "발을 내딛지 않아 밀려오지 않는",
+     "shape": "근성"
+    }
+   ]
+  },
+  {
+   "id": "l2_vanguard",
+   "name": "전위기사",
+   "stage": 2,
+   "parentId": "l1_guardian",
+   "role": "수호",
+   "lawTags": [
+    "earth",
+    "light"
+   ],
+   "desc": "서 있는 대신 앞으로 밀고 나가는 직업",
+   "keywords": [
+    {
+     "id": "kw_vanguard_lead",
+     "name": "선두",
+     "parentId": "l2_vanguard",
+     "tier": "1",
+     "power": 1.1869,
+     "statMod": [
+      1.1474,
+      1.1474,
+      1.1474,
+      1.5961,
+      1.1474,
+      1.1474,
+      1.1374,
+      1.1723,
+      1.1723,
+      1.1474,
+      1.1474,
+      1.1723,
+      1.1474
+     ],
+     "desc": "맨 앞줄을 잡고 밀려도 그 자리로 돌아오는",
+     "shape": "속도"
+    },
+    {
+     "id": "kw_vanguard_press",
+     "name": "전진",
+     "parentId": "l2_vanguard",
+     "tier": "3",
+     "power": 1.1211,
+     "statMod": [
+      1.1229,
+      1.4525,
+      1.0523,
+      1.0994,
+      1.0994,
+      1.0523,
+      1.0994,
+      1.0994,
+      1.0994,
+      1.0758,
+      1.1229,
+      1.0994,
+      1.0994
+     ],
+     "desc": "거리를 두지 않고 상대 자리에 닿아붙는",
+     "shape": "힘"
+    },
+    {
+     "id": "kw_vanguard_breakthrough",
+     "name": "돌파",
+     "parentId": "l2_vanguard",
+     "tier": "2",
+     "power": 1.1605,
+     "statMod": [
+      1.1343,
+      1.2561,
+      1.1099,
+      1.1343,
+      1.1099,
+      1.1099,
+      1.183,
+      1.4754,
+      1.0855,
+      1.1343,
+      1.1099,
+      1.1343,
+      1.1099
+     ],
+     "desc": "앞에 선 것을 밀치고 저 너머로 나가는",
+     "shape": "관통"
+    }
+   ]
+  },
+  {
+   "id": "l2_cutthroat",
+   "name": "자객",
+   "stage": 2,
+   "parentId": "l1_assassin",
+   "role": "암살",
+   "lawTags": [
+    "dark",
+    "wind"
+   ],
+   "desc": "보이지 않는 쪽에서 먼저 끝내는 직업",
+   "keywords": [
+    {
+     "id": "kw_cutthroat_ambush",
+     "name": "기습",
+     "parentId": "l2_cutthroat",
+     "tier": "3",
+     "power": 0.9668,
+     "statMod": [
+      0.9684,
+      1.2526,
+      0.9075,
+      0.9481,
+      0.9481,
+      0.9075,
+      0.9481,
+      0.9481,
+      0.9481,
+      0.9278,
+      0.9684,
+      0.9481,
+      0.9481
+     ],
+     "desc": "매복했다가 한 방에 끝내는",
+     "shape": "힘"
+    },
+    {
+     "id": "kw_cutthroat_sneak",
+     "name": "은밀",
+     "parentId": "l2_cutthroat",
+     "tier": "2",
+     "power": 1.1955,
+     "statMod": [
+      1.1395,
+      1.1646,
+      1.1646,
+      1.2148,
+      1.1646,
+      1.1646,
+      1.1395,
+      1.1897,
+      1.1897,
+      1.5663,
+      1.1395,
+      1.1646,
+      1.1395
+     ],
+     "desc": "기척 없이 다가가 먼저 닿는",
+     "shape": "회피"
+    },
+    {
+     "id": "kw_cutthroat_sunder",
+     "name": "절단",
+     "parentId": "l2_cutthroat",
+     "tier": "1",
+     "power": 1.2008,
+     "statMod": [
+      1.1608,
+      1.1608,
+      1.1608,
+      1.6147,
+      1.1608,
+      1.1608,
+      1.1508,
+      1.1861,
+      1.1861,
+      1.1608,
+      1.1608,
+      1.1861,
+      1.1608
+     ],
+     "desc": "한 명을 쓰러뜨리면 바로 다음으로 옮겨 가는",
+     "shape": "속도"
+    }
+   ]
+  },
+  {
+   "id": "l2_poisoner",
+   "name": "맹독사",
+   "stage": 2,
+   "parentId": "l1_assassin",
+   "role": "암살",
+   "lawTags": [
+    "water",
+    "dark"
+   ],
+   "desc": "빨리 죽이는 대신 늦게 죽게 하는 직업",
+   "keywords": [
+    {
+     "id": "kw_poisoner_swift",
+     "name": "급독",
+     "parentId": "l2_poisoner",
+     "tier": "1",
+     "power": 1.1932,
+     "statMod": [
+      1.1373,
+      1.1624,
+      1.1624,
+      1.2125,
+      1.1624,
+      1.1624,
+      1.1373,
+      1.1874,
+      1.1874,
+      1.5633,
+      1.1373,
+      1.1624,
+      1.1373
+     ],
+     "desc": "독을 한 번에 깊게 넣고 바로 빠지는",
+     "shape": "회피"
+    },
+    {
+     "id": "kw_poisoner_stack",
+     "name": "중독",
+     "parentId": "l2_poisoner",
+     "tier": "2",
+     "power": 1.1952,
+     "statMod": [
+      1.1238,
+      1.1489,
+      1.1489,
+      1.1489,
+      1.2242,
+      1.1489,
+      1.1991,
+      1.1489,
+      1.1489,
+      1.174,
+      1.5254,
+      1.1489,
+      1.2493
+     ],
+     "desc": "독을 겹겹이 쌓아 천천히 죽이는",
+     "shape": "치명위력"
+    },
+    {
+     "id": "kw_poisoner_deepvenom",
+     "name": "심독",
+     "parentId": "l2_poisoner",
+     "tier": "3",
+     "power": 1.1955,
+     "statMod": [
+      1.1627,
+      1.1376,
+      1.1376,
+      1.1627,
+      1.2882,
+      1.1627,
+      1.2129,
+      1.1125,
+      1.5141,
+      1.1627,
+      1.1376,
+      1.1627,
+      1.1878
+     ],
+     "desc": "시간이 갈수록 깊어지는",
+     "shape": "마법관통"
+    }
+   ]
+  },
+  {
+   "id": "l2_thief",
+   "name": "도적",
+   "stage": 2,
+   "parentId": "l1_assassin",
+   "role": "암살",
+   "lawTags": [
+    "dark",
+    "fire"
+   ],
+   "desc": "죽이러 오는 게 아니라 뺏으러 오는 직업",
+   "keywords": [
+    {
+     "id": "kw_thief_steal",
+     "name": "절도",
+     "parentId": "l2_thief",
+     "tier": "1",
+     "power": 1.1932,
+     "statMod": [
+      1.1535,
+      1.1535,
+      1.1535,
+      1.6045,
+      1.1535,
+      1.1535,
+      1.1435,
+      1.1786,
+      1.1786,
+      1.1535,
+      1.1535,
+      1.1786,
+      1.1535
+     ],
+     "desc": "상대 것을 훔쳐 가며 싸우는",
+     "shape": "속도"
+    },
+    {
+     "id": "kw_thief_bait",
+     "name": "미끼",
+     "parentId": "l2_thief",
+     "tier": "3",
+     "power": 0.964,
+     "statMod": [
+      0.9656,
+      1.249,
+      0.9048,
+      0.9453,
+      0.9453,
+      0.9048,
+      0.9453,
+      0.9453,
+      0.9453,
+      0.9251,
+      0.9656,
+      0.9453,
+      0.9453
+     ],
+     "desc": "일부러 눈에 띄어 공격을 끌어오는",
+     "shape": "힘"
+    },
+    {
+     "id": "kw_thief_infiltrate",
+     "name": "잠입",
+     "parentId": "l2_thief",
+     "tier": "2",
+     "power": 1.1883,
+     "statMod": [
+      1.1326,
+      1.1576,
+      1.1576,
+      1.2075,
+      1.1576,
+      1.1576,
+      1.1326,
+      1.1825,
+      1.1825,
+      1.5569,
+      1.1326,
+      1.1576,
+      1.1326
+     ],
+     "desc": "빈틈으로 들어가 몰래 움직이는",
+     "shape": "회피"
+    }
+   ]
+  },
+  {
+   "id": "l2_marksman",
+   "name": "명사수",
+   "stage": 2,
+   "parentId": "l1_archer",
+   "role": "포격",
+   "lawTags": [
+    "wind",
+    "light"
+   ],
+   "desc": "멀리서 한 점만 겨누는 직업",
+   "keywords": [
+    {
+     "id": "kw_marksman_precision",
+     "name": "정밀",
+     "parentId": "l2_marksman",
+     "tier": "2",
+     "power": 1.092,
+     "statMod": [
+      1.0497,
+      1.1185,
+      1.0497,
+      1.0726,
+      1.0726,
+      1.0497,
+      1.4395,
+      1.0726,
+      1.0726,
+      1.0497,
+      1.0267,
+      1.0726,
+      1.0497
+     ],
+     "desc": "급소 한 점만 노려 빗나가면 다시 조준하는",
+     "shape": "치명"
+    },
+    {
+     "id": "kw_marksman_pierce",
+     "name": "관통사",
+     "parentId": "l2_marksman",
+     "tier": "3",
+     "power": 1.0977,
+     "statMod": [
+      1.0729,
+      1.1881,
+      1.0498,
+      1.0729,
+      1.0498,
+      1.0498,
+      1.119,
+      1.3956,
+      1.0268,
+      1.0729,
+      1.0498,
+      1.0729,
+      1.0498
+     ],
+     "desc": "방어와 거리를 따로 뚫고 지나가는",
+     "shape": "관통"
+    },
+    {
+     "id": "kw_marksman_keepsake",
+     "name": "비거리",
+     "parentId": "l2_marksman",
+     "tier": "1",
+     "power": 1.1859,
+     "statMod": [
+      1.115,
+      1.1399,
+      1.1399,
+      1.1399,
+      1.2146,
+      1.1399,
+      1.1897,
+      1.1399,
+      1.1399,
+      1.1648,
+      1.5135,
+      1.1399,
+      1.2395
+     ],
+     "desc": "멀리서 쏜 화살이 끝까지 힘을 유지하는",
+     "shape": "치명위력"
+    }
+   ]
+  },
+  {
+   "id": "l2_volley",
+   "name": "포화사수",
+   "stage": 2,
+   "parentId": "l1_archer",
+   "role": "포격",
+   "lawTags": [
+    "fire",
+    "wind"
+   ],
+   "desc": "한 발이 아니라 한 번의 사격으로 싸우는 직업",
+   "keywords": [
+    {
+     "id": "kw_volley_rapid",
+     "name": "속사",
+     "parentId": "l2_volley",
+     "tier": "1",
+     "power": 1.2154,
+     "statMod": [
+      1.175,
+      1.175,
+      1.175,
+      1.6344,
+      1.175,
+      1.175,
+      1.1647,
+      1.2005,
+      1.2005,
+      1.175,
+      1.175,
+      1.2005,
+      1.175
+     ],
+     "desc": "쉬지 않고 계속 쏘아 끊김 없는",
+     "shape": "속도"
+    },
+    {
+     "id": "kw_volley_volleyline",
+     "name": "포줄",
+     "parentId": "l2_volley",
+     "tier": "2",
+     "power": 1.2124,
+     "statMod": [
+      1.1556,
+      1.1811,
+      1.1811,
+      1.232,
+      1.1811,
+      1.1811,
+      1.1556,
+      1.2065,
+      1.2065,
+      1.5884,
+      1.1556,
+      1.1811,
+      1.1556
+     ],
+     "desc": "쏘는 선을 먼저 그어 길을 막는",
+     "shape": "회피"
+    },
+    {
+     "id": "kw_volley_cover",
+     "name": "차폐",
+     "parentId": "l2_volley",
+     "tier": "3",
+     "power": 1.1824,
+     "statMod": [
+      1.2091,
+      1.1346,
+      1.5816,
+      1.1843,
+      1.1595,
+      1.1595,
+      1.1595,
+      0.9112,
+      1.1843,
+      1.1843,
+      1.1595,
+      1.1843,
+      1.1595
+     ],
+     "desc": "쏘는 대신 아군 앞을 몸으로 가리는",
+     "shape": "방어"
+    }
+   ]
+  },
+  {
+   "id": "l2_hunter",
+   "name": "사냥꾼",
+   "stage": 2,
+   "parentId": "l1_archer",
+   "role": "포격",
+   "lawTags": [
+    "earth",
+    "water"
+   ],
+   "desc": "먼저 이빨을 드러내게 만드는 직업",
+   "keywords": [
+    {
+     "id": "kw_hunter_snare",
+     "name": "함정",
+     "parentId": "l2_hunter",
+     "tier": "2",
+     "power": 1.1941,
+     "statMod": [
+      1.1382,
+      1.1632,
+      1.1632,
+      1.2134,
+      1.1632,
+      1.1632,
+      1.1382,
+      1.1883,
+      1.1883,
+      1.5645,
+      1.1382,
+      1.1632,
+      1.1382
+     ],
+     "desc": "길 자체를 막아 상대를 다섯 걸음도 못 오게 하는",
+     "shape": "회피"
+    },
+    {
+     "id": "kw_hunter_tame",
+     "name": "길들임",
+     "parentId": "l2_hunter",
+     "tier": "3",
+     "power": 1.0049,
+     "statMod": [
+      1.0065,
+      1.302,
+      0.9432,
+      0.9854,
+      0.9854,
+      0.9432,
+      0.9854,
+      0.9854,
+      0.9854,
+      0.9643,
+      1.0065,
+      0.9854,
+      0.9854
+     ],
+     "desc": "길들인 짐승을 앞세워 대신 버티게 하는",
+     "shape": "힘"
+    },
+    {
+     "id": "kw_hunter_lure",
+     "name": "유인",
+     "parentId": "l2_hunter",
+     "tier": "1",
+     "power": 1.2079,
+     "statMod": [
+      1.2079,
+      1.1572,
+      1.1825,
+      1.1572,
+      1.1825,
+      1.1825,
+      1.1572,
+      1.1825,
+      1.1825,
+      1.1572,
+      1.1572,
+      1.5884,
+      1.2079
+     ],
+     "desc": "먹이를 대어 지면이 빠져나오게 만드는",
+     "shape": "근성"
+    }
+   ]
+  },
+  {
+   "id": "l2_magearrow",
+   "name": "마궁사",
+   "stage": 2,
+   "parentId": "l1_archer",
+   "role": "포격",
+   "lawTags": [
+    "light",
+    "fire"
+   ],
+   "desc": "화살에 마법을 얹어 멀리 보내는 직업",
+   "keywords": [
+    {
+     "id": "kw_magearrow_enchant",
+     "name": "인장 새기기",
+     "parentId": "l2_magearrow",
+     "tier": "1",
+     "power": 1.1992,
+     "statMod": [
+      1.1779,
+      1.1527,
+      1.1779,
+      1.1779,
+      1.5556,
+      1.1779,
+      1.1527,
+      1.1779,
+      1.1275,
+      1.1527,
+      1.1527,
+      1.1779,
+      1.2283
+     ],
+     "desc": "화살 하나에 한 마법을 오래 새기는",
+     "shape": "주문"
+    },
+    {
+     "id": "kw_magearrow_split",
+     "name": "갈라뜨리기",
+     "parentId": "l2_magearrow",
+     "tier": "3",
+     "power": 1.1808,
+     "statMod": [
+      1.1484,
+      1.1236,
+      1.1236,
+      1.1484,
+      1.2724,
+      1.1484,
+      1.198,
+      1.0988,
+      1.4955,
+      1.1484,
+      1.1236,
+      1.1484,
+      1.1732
+     ],
+     "desc": "맞은 자리에서 한 발이 여러 갈래로 벌어지는",
+     "shape": "마법관통"
+    },
+    {
+     "id": "kw_magearrow_homing",
+     "name": "쏟아붓기",
+     "parentId": "l2_magearrow",
+     "tier": "2",
+     "power": 1.1601,
+     "statMod": [
+      1.1788,
+      1.1058,
+      1.1301,
+      1.1545,
+      1.1788,
+      1.5443,
+      1.1301,
+      1.1545,
+      0.8865,
+      1.1545,
+      1.1301,
+      1.1545,
+      1.1788
+     ],
+     "desc": "쏟아서 자청이 끌려오게 하는",
+     "shape": "마법방어"
+    }
+   ]
+  },
+  {
+   "id": "l2_hierophant",
+   "name": "성술사",
+   "stage": 2,
+   "parentId": "l1_mage",
+   "role": "마법",
+   "lawTags": [
+    "light",
+    "water"
+   ],
+   "desc": "빛으로 밀어내고 지켜내는 직업",
+   "keywords": [
+    {
+     "id": "kw_hierophant_radiance",
+     "name": "광명",
+     "parentId": "l2_hierophant",
+     "tier": "3",
+     "power": 1.0204,
+     "statMod": [
+      1.0023,
+      0.9808,
+      1.0023,
+      1.0023,
+      1.3237,
+      1.0023,
+      0.9808,
+      1.0023,
+      0.9594,
+      0.9808,
+      0.9808,
+      1.0023,
+      1.0451
+     ],
+     "desc": "빛으로 충격을 주며 밀어내고 태우는",
+     "shape": "주문"
+    },
+    {
+     "id": "kw_hierophant_ward",
+     "name": "결계",
+     "parentId": "l2_hierophant",
+     "tier": "2",
+     "power": 1.0963,
+     "statMod": [
+      1.114,
+      1.0449,
+      1.068,
+      1.091,
+      1.114,
+      1.4593,
+      1.068,
+      1.091,
+      0.8377,
+      1.091,
+      1.068,
+      1.091,
+      1.114
+     ],
+     "desc": "보호막을 먼저 세워 아군을 지키는",
+     "shape": "마법방어"
+    },
+    {
+     "id": "kw_hierophant_mend",
+     "name": "치유",
+     "parentId": "l2_hierophant",
+     "tier": "1",
+     "power": 1.146,
+     "statMod": [
+      1.1016,
+      1.1016,
+      1.1256,
+      1.1016,
+      1.1497,
+      1.1256,
+      1.1016,
+      1.1256,
+      1.1256,
+      1.1016,
+      1.1016,
+      1.1256,
+      1.5107
+     ],
+     "desc": "회복량보다 회복이 이어지는 시간을 늘리는",
+     "shape": "마나"
+    }
+   ]
+  },
+  {
+   "id": "l2_summoner",
+   "name": "소환술사",
+   "stage": 2,
+   "parentId": "l1_mage",
+   "role": "마법",
+   "lawTags": [
+    "void",
+    "wind"
+   ],
+   "desc": "혼자 싸우지 않고 부르는 직업",
+   "keywords": [
+    {
+     "id": "kw_summoner_swarm",
+     "name": "곤충",
+     "parentId": "l2_summoner",
+     "tier": "1",
+     "power": 1.1637,
+     "statMod": [
+      1.519,
+      1.1035,
+      1.128,
+      1.1524,
+      1.128,
+      1.128,
+      1.128,
+      1.1524,
+      1.1524,
+      1.128,
+      1.128,
+      1.1524,
+      1.128
+     ],
+     "desc": "떼를 불러 머릿수로 전장을 채우는",
+     "shape": "체력"
+    },
+    {
+     "id": "kw_summoner_wraith",
+     "name": "망령",
+     "parentId": "l2_summoner",
+     "tier": "3",
+     "power": 1.1232,
+     "statMod": [
+      1.0924,
+      1.0688,
+      1.0688,
+      1.0924,
+      1.2103,
+      1.0924,
+      1.1395,
+      1.0452,
+      1.4226,
+      1.0924,
+      1.0688,
+      1.0924,
+      1.1159
+     ],
+     "desc": "죽은 자를 불러 싸우게 하되 대가를 치르는",
+     "shape": "마법관통"
+    },
+    {
+     "id": "kw_summoner_convoke",
+     "name": "정령",
+     "parentId": "l2_summoner",
+     "tier": "2",
+     "power": 1.1567,
+     "statMod": [
+      1.0876,
+      1.1119,
+      1.1119,
+      1.1119,
+      1.1847,
+      1.1119,
+      1.1604,
+      1.1119,
+      1.1119,
+      1.1361,
+      1.4762,
+      1.1119,
+      1.209
+     ],
+     "desc": "혼자서는 못 잡을 것을 불러 세우는",
+     "shape": "치명위력"
+    }
+   ]
+  },
+  {
+   "id": "l2_elementalist",
+   "name": "원소 마도사",
+   "stage": 2,
+   "parentId": "l1_mage",
+   "role": "마법",
+   "lawTags": [],
+   "desc": "원소 여섯을 손에 넣고 쓰는 직업",
+   "keywords": [
+    {
+     "id": "kw_elementalist_fire",
+     "name": "화염마도사",
+     "parentId": "l2_elementalist",
+     "tier": "2",
+     "power": 1.0118,
+     "statMod": [
+      0.9938,
+      0.9726,
+      0.9938,
+      0.9938,
+      1.3125,
+      0.9938,
+      0.9726,
+      0.9938,
+      0.9513,
+      0.9726,
+      0.9726,
+      0.9938,
+      1.0363
+     ],
+     "desc": "타는 것을 더 태우는",
+     "shape": "주문",
+     "nameRule": "firstElement"
+    },
+    {
+     "id": "kw_elementalist_water",
+     "name": "물마도사",
+     "parentId": "l2_elementalist",
+     "tier": "2",
+     "power": 1.1426,
+     "statMod": [
+      1.1611,
+      1.0891,
+      1.1131,
+      1.1371,
+      1.1611,
+      1.521,
+      1.1131,
+      1.1371,
+      0.8731,
+      1.1371,
+      1.1131,
+      1.1371,
+      1.1611
+     ],
+     "desc": "흐르는 것을 더 끌어당기는",
+     "shape": "마법방어",
+     "nameRule": "firstElement"
+    },
+    {
+     "id": "kw_elementalist_earth",
+     "name": "대지마도사",
+     "parentId": "l2_elementalist",
+     "tier": "2",
+     "power": 1.1653,
+     "statMod": [
+      1.5211,
+      1.1051,
+      1.1295,
+      1.154,
+      1.1295,
+      1.1295,
+      1.1295,
+      1.154,
+      1.154,
+      1.1295,
+      1.1295,
+      1.154,
+      1.1295
+     ],
+     "desc": "무너지는 것을 더 받쳐 주는",
+     "shape": "체력",
+     "nameRule": "firstElement"
+    },
+    {
+     "id": "kw_elementalist_wind",
+     "name": "바람마도사",
+     "parentId": "l2_elementalist",
+     "tier": "1",
+     "power": 1.195,
+     "statMod": [
+      1.1552,
+      1.1552,
+      1.1552,
+      1.6069,
+      1.1552,
+      1.1552,
+      1.1452,
+      1.1803,
+      1.1803,
+      1.1552,
+      1.1552,
+      1.1803,
+      1.1552
+     ],
+     "desc": "늦은 것을 더 앞당기는",
+     "shape": "속도",
+     "nameRule": "firstElement"
+    },
+    {
+     "id": "kw_elementalist_light",
+     "name": "빛마도사",
+     "parentId": "l2_elementalist",
+     "tier": "2",
+     "power": 1.1386,
+     "statMod": [
+      1.0945,
+      1.1662,
+      1.0945,
+      1.1184,
+      1.1184,
+      1.0945,
+      1.5009,
+      1.1184,
+      1.1184,
+      1.0945,
+      1.0705,
+      1.1184,
+      1.0945
+     ],
+     "desc": "가려진 것을 밝히는",
+     "shape": "치명",
+     "nameRule": "firstElement"
+    },
+    {
+     "id": "kw_elementalist_dark",
+     "name": "어둠마도사",
+     "parentId": "l2_elementalist",
+     "tier": "1",
+     "power": 1.1806,
+     "statMod": [
+      1.1806,
+      1.131,
+      1.1558,
+      1.131,
+      1.1558,
+      1.1558,
+      1.131,
+      1.1558,
+      1.1558,
+      1.131,
+      1.131,
+      1.5525,
+      1.1806
+     ],
+     "desc": "보이지 않는 곳에 손을 거는",
+     "shape": "근성",
+     "nameRule": "firstElement"
+    },
+    {
+     "id": "kw_elementalist_great",
+     "name": "대원소마도사",
+     "parentId": "l2_elementalist",
+     "tier": "2",
+     "power": 1.1561,
+     "statMod": [
+      1.087,
+      1.1113,
+      1.1113,
+      1.1113,
+      1.1841,
+      1.1113,
+      1.1598,
+      1.1113,
+      1.1113,
+      1.1356,
+      1.4755,
+      1.1113,
+      1.2084
+     ],
+     "desc": "여섯을 다 써서 무엇이든 한 번에 태우는",
+     "shape": "치명위력",
+     "nameRule": "fixed",
+     "condition": "allSixElements"
+    }
+   ]
+  },
+  {
+   "id": "l2_hexcaller",
+   "name": "주술사",
+   "stage": 2,
+   "parentId": "l1_mage",
+   "role": "마법",
+   "lawTags": [
+    "dark",
+    "void"
+   ],
+   "desc": "상대에게 매여드는 저주를 푸는 직업",
+   "keywords": [
+    {
+     "id": "kw_hexcaller_abyss",
+     "name": "심연",
+     "parentId": "l2_hexcaller",
+     "tier": "2",
+     "power": 1.1254,
+     "statMod": [
+      1.0945,
+      1.0709,
+      1.0709,
+      1.0945,
+      1.2127,
+      1.0945,
+      1.1418,
+      1.0472,
+      1.4254,
+      1.0945,
+      1.0709,
+      1.0945,
+      1.1181
+     ],
+     "desc": "주문 한 번으로 전장을 쓸어버리는",
+     "shape": "마법관통"
+    },
+    {
+     "id": "kw_hexcaller_offering",
+     "name": "제물",
+     "parentId": "l2_hexcaller",
+     "tier": "1",
+     "power": 1.1577,
+     "statMod": [
+      1.0885,
+      1.1128,
+      1.1128,
+      1.1128,
+      1.1858,
+      1.1128,
+      1.1614,
+      1.1128,
+      1.1128,
+      1.1371,
+      1.4775,
+      1.1128,
+      1.2101
+     ],
+     "desc": "자기 것을 바쳐 상대의 저주만 되돌려 보내는",
+     "shape": "치명위력"
+    },
+    {
+     "id": "kw_hexcaller_ruin",
+     "name": "파멸",
+     "parentId": "l2_hexcaller",
+     "tier": "3",
+     "power": 1.0201,
+     "statMod": [
+      1.002,
+      0.9806,
+      1.002,
+      1.002,
+      1.3233,
+      1.002,
+      0.9806,
+      1.002,
+      0.9591,
+      0.9806,
+      0.9806,
+      1.002,
+      1.0448
+     ],
+     "desc": "저주가 바|BEL 자리를 바닥부터 태우는",
+     "shape": "주문"
+    }
+   ]
+  },
+  {
+   "id": "l2_druid",
+   "name": "드루이드",
+   "stage": 2,
+   "parentId": "l1_supporter",
+   "role": "지원",
+   "lawTags": [
+    "water",
+    "earth"
+   ],
+   "desc": "숲과 통하는 자. 자연친화가 없으면 힘이 나오지 않는다",
+   "keywords": [
+    {
+     "id": "kw_druid_bloom",
+     "name": "개화",
+     "parentId": "l2_druid",
+     "tier": "1",
+     "power": 1.1737,
+     "statMod": [
+      1.1282,
+      1.1282,
+      1.1528,
+      1.1282,
+      1.1775,
+      1.1528,
+      1.1282,
+      1.1528,
+      1.1528,
+      1.1282,
+      1.1282,
+      1.1528,
+      1.5472
+     ],
+     "desc": "먼저 꽃을 피워 아군을 되살리는",
+     "shape": "마나"
+    },
+    {
+     "id": "kw_druid_forest",
+     "name": "산림",
+     "parentId": "l2_druid",
+     "tier": "3",
+     "power": 1.1165,
+     "statMod": [
+      1.4574,
+      1.0588,
+      1.0822,
+      1.1057,
+      1.0822,
+      1.0822,
+      1.0822,
+      1.1057,
+      1.1057,
+      1.0822,
+      1.0822,
+      1.1057,
+      1.0822
+     ],
+     "desc": "숲의 힘으로 버티고 회복을 숲에 맡기는",
+     "shape": "체력"
+    },
+    {
+     "id": "kw_druid_beast",
+     "name": "짐승",
+     "parentId": "l2_druid",
+     "tier": "2",
+     "power": 1.1532,
+     "statMod": [
+      1.1551,
+      1.4941,
+      1.0824,
+      1.1308,
+      1.1308,
+      1.0824,
+      1.1308,
+      1.1308,
+      1.1308,
+      1.1066,
+      1.1551,
+      1.1308,
+      1.1308
+     ],
+     "desc": "변신해 그 자리에서 가장 강한 몸이 되는",
+     "shape": "힘"
+    }
+   ]
+  },
+  {
+   "id": "l2_priest",
+   "name": "신관",
+   "stage": 2,
+   "parentId": "l1_supporter",
+   "role": "지원",
+   "lawTags": [
+    "light",
+    "water"
+   ],
+   "desc": "기도로 답을 끌어오는 직업. 믿지 않으면 답이 오지 않는다",
+   "keywords": [
+    {
+     "id": "kw_priest_aegis",
+     "name": "가호",
+     "parentId": "l2_priest",
+     "tier": "3",
+     "power": 1.1148,
+     "statMod": [
+      1.1328,
+      1.0626,
+      1.086,
+      1.1094,
+      1.1328,
+      1.484,
+      1.086,
+      1.1094,
+      0.8519,
+      1.1094,
+      1.086,
+      1.1094,
+      1.1328
+     ],
+     "desc": "성광을 퍼뜨려 아군 전체를 지키는",
+     "shape": "마법방어"
+    },
+    {
+     "id": "kw_priest_bless",
+     "name": "축복",
+     "parentId": "l2_priest",
+     "tier": "2",
+     "power": 1.183,
+     "statMod": [
+      1.1123,
+      1.1371,
+      1.1371,
+      1.1371,
+      1.2117,
+      1.1371,
+      1.1868,
+      1.1371,
+      1.1371,
+      1.162,
+      1.5098,
+      1.1371,
+      1.2365
+     ],
+     "desc": "걸어 아군의 공격을 끌어올리는",
+     "shape": "치명위력"
+    },
+    {
+     "id": "kw_priest_salvation",
+     "name": "구원",
+     "parentId": "l2_priest",
+     "tier": "1",
+     "power": 1.1719,
+     "statMod": [
+      1.1265,
+      1.1265,
+      1.1511,
+      1.1265,
+      1.1757,
+      1.1511,
+      1.1265,
+      1.1511,
+      1.1511,
+      1.1265,
+      1.1265,
+      1.1511,
+      1.5448
+     ],
+     "desc": "죽기 직전의 아군을 되살리고 대신 빚을 지는",
+     "shape": "마나"
+    }
+   ]
+  },
+  {
+   "id": "l2_monk",
+   "name": "수도사",
+   "stage": 2,
+   "parentId": "l1_supporter",
+   "role": "지원",
+   "lawTags": [
+    "light",
+    "earth"
+   ],
+   "desc": "갑옷 없이 몸만 단련하고, 갱한 것을 다시 세우는 직업",
+   "keywords": [
+    {
+     "id": "kw_monk_thousand",
+     "name": "백천공",
+     "parentId": "l2_monk",
+     "tier": "3",
+     "power": 0.9833,
+     "statMod": [
+      1.2835,
+      0.9325,
+      0.9531,
+      0.9738,
+      0.9531,
+      0.9531,
+      0.9531,
+      0.9738,
+      0.9738,
+      0.9531,
+      0.9531,
+      0.9738,
+      0.9531
+     ],
+     "desc": "뼈와 살이 함께 굳어 한 번에 꺾이지 않는",
+     "shape": "체력"
+    },
+    {
+     "id": "kw_monk_vajra",
+     "name": "금강",
+     "parentId": "l2_monk",
+     "tier": "2",
+     "power": 1.1163,
+     "statMod": [
+      1.1343,
+      1.064,
+      1.0874,
+      1.1109,
+      1.1343,
+      1.486,
+      1.0874,
+      1.1109,
+      0.853,
+      1.1109,
+      1.0874,
+      1.1109,
+      1.1343
+     ],
+     "desc": "단련한 살이 마법까지 그대로 받아내는",
+     "shape": "마법방어"
+    },
+    {
+     "id": "kw_monk_mercy",
+     "name": "자비",
+     "parentId": "l2_monk",
+     "tier": "1",
+     "power": 1.197,
+     "statMod": [
+      1.1506,
+      1.1506,
+      1.1757,
+      1.1506,
+      1.2009,
+      1.1757,
+      1.1506,
+      1.1757,
+      1.1757,
+      1.1506,
+      1.1506,
+      1.1757,
+      1.5779
+     ],
+     "desc": "갱한 곳을 다시 세워 곁의 숨을 붙여주는",
+     "shape": "마나"
+    }
+   ]
+  },
+  {
+   "id": "l2_paladin",
+   "name": "성좌기사",
+   "stage": 2,
+   "parentId": "l1_supporter",
+   "role": "지원",
+   "lawTags": [
+    "light",
+    "earth"
+   ],
+   "desc": "믿음으로 곁의 자리를 지키는 직업. 믿음이 없으면 방패가 없다",
+   "keywords": [
+    {
+     "id": "kw_paladin_bulwark",
+     "name": "성벽",
+     "parentId": "l2_paladin",
+     "tier": "3",
+     "power": 1.073,
+     "statMod": [
+      1.0973,
+      1.0297,
+      1.4353,
+      1.0747,
+      1.0522,
+      1.0522,
+      1.0522,
+      0.8269,
+      1.0747,
+      1.0747,
+      1.0522,
+      1.0747,
+      1.0522
+     ],
+     "desc": "몸을 벽 삼아 막고 그 뒤를 비워 두는",
+     "shape": "방어"
+    },
+    {
+     "id": "kw_paladin_faith",
+     "name": "신앙",
+     "parentId": "l2_paladin",
+     "tier": "2",
+     "power": 1.1109,
+     "statMod": [
+      1.1288,
+      1.0589,
+      1.0822,
+      1.1055,
+      1.1288,
+      1.4788,
+      1.0822,
+      1.1055,
+      0.8489,
+      1.1055,
+      1.0822,
+      1.1055,
+      1.1288
+     ],
+     "desc": "믿는 만큼 먼저 서서 받는",
+     "shape": "마법방어"
+    },
+    {
+     "id": "kw_paladin_escort",
+     "name": "호위",
+     "parentId": "l2_paladin",
+     "tier": "1",
+     "power": 1.1547,
+     "statMod": [
+      1.1547,
+      1.1062,
+      1.1305,
+      1.1062,
+      1.1305,
+      1.1305,
+      1.1062,
+      1.1305,
+      1.1305,
+      1.1062,
+      1.1062,
+      1.5184,
+      1.1547
+     ],
+     "desc": "곁에 서서 대신 맞고 드러나는",
+     "shape": "근성"
+    }
+   ]
+  },
+  {
+   "id": "l2_mentalist",
+   "name": "정신술사",
+   "stage": 2,
+   "parentId": "l1_supporter",
+   "role": "지원",
+   "lawTags": [
+    "dark",
+    "light"
+   ],
+   "desc": "상대와 아군의 상태를 바꾸는 직업",
+   "keywords": [
+    {
+     "id": "kw_mentalist_gnaw",
+     "name": "침식",
+     "parentId": "l2_mentalist",
+     "tier": "2",
+     "power": 1.1477,
+     "statMod": [
+      1.1162,
+      1.0921,
+      1.0921,
+      1.1162,
+      1.2367,
+      1.1162,
+      1.1644,
+      1.068,
+      1.4536,
+      1.1162,
+      1.0921,
+      1.1162,
+      1.1403
+     ],
+     "desc": "상대의 힘과 방어를 조금씩 깎아 내리는",
+     "shape": "마법관통"
+    },
+    {
+     "id": "kw_mentalist_resonate",
+     "name": "감응",
+     "parentId": "l2_mentalist",
+     "tier": "1",
+     "power": 1.18,
+     "statMod": [
+      1.1095,
+      1.1343,
+      1.1343,
+      1.1343,
+      1.2086,
+      1.1343,
+      1.1838,
+      1.1343,
+      1.1343,
+      1.159,
+      1.506,
+      1.1343,
+      1.2334
+     ],
+     "desc": "곁의 사기를 끌어올려 함께 버티게 하는",
+     "shape": "치명위력"
+    },
+    {
+     "id": "kw_mentalist_disperse",
+     "name": "발산",
+     "parentId": "l2_mentalist",
+     "tier": "3",
+     "power": 1.056,
+     "statMod": [
+      1.0372,
+      1.0151,
+      1.0372,
+      1.0372,
+      1.3699,
+      1.0372,
+      1.0151,
+      1.0372,
+      0.9929,
+      1.0151,
+      1.0151,
+      1.0372,
+      1.0816
+     ],
+     "desc": "가진 마나를 곁의에게 나눠주는",
+     "shape": "주문"
+    }
+   ]
+  },
+  {
+   "id": "l2_strategist",
+   "name": "전술가",
+   "stage": 2,
+   "parentId": "l1_supporter",
+   "role": "지원",
+   "lawTags": [
+    "wind",
+    "light"
+   ],
+   "desc": "한 명도 맞서지 않고 전장을 굴리는 직업",
+   "keywords": [
+    {
+     "id": "kw_strategist_command",
+     "name": "지휘",
+     "parentId": "l2_strategist",
+     "tier": "3",
+     "power": 1.1855,
+     "statMod": [
+      1.1146,
+      1.1395,
+      1.1395,
+      1.1395,
+      1.2142,
+      1.1395,
+      1.1893,
+      1.1395,
+      1.1395,
+      1.1644,
+      1.513,
+      1.1395,
+      1.2391
+     ],
+     "desc": "아군의 공격 방향을 지시해 화력을 모으는",
+     "shape": "치명위력"
+    },
+    {
+     "id": "kw_strategist_adjutant",
+     "name": "참모",
+     "parentId": "l2_strategist",
+     "tier": "2",
+     "power": 1.2038,
+     "statMod": [
+      1.1474,
+      1.1727,
+      1.1727,
+      1.2232,
+      1.1727,
+      1.1727,
+      1.1474,
+      1.198,
+      1.198,
+      1.5772,
+      1.1474,
+      1.1727,
+      1.1474
+     ],
+     "desc": "전장을 읽고 정보를 전달하는",
+     "shape": "회피"
+    },
+    {
+     "id": "kw_strategist_scout",
+     "name": "정찰",
+     "parentId": "l2_strategist",
+     "tier": "1",
+     "power": 1.2066,
+     "statMod": [
+      1.1664,
+      1.1664,
+      1.1664,
+      1.6225,
+      1.1664,
+      1.1664,
+      1.1563,
+      1.1918,
+      1.1918,
+      1.1664,
+      1.1664,
+      1.1918,
+      1.1664
+     ],
+     "desc": "먼저 보고 먼저 알려서 속도를 얻는",
+     "shape": "속도"
+    }
+   ]
+  },
+  {
+   "id": "l2_jobless",
+   "name": "무직",
+   "stage": 2,
+   "parentId": "l1_nameless",
+   "role": "무직",
+   "lawTags": [],
+   "desc": "아직 이름이 정해지지 않은 직업",
+   "keywords": []
+  },
+  {
+   "id": "l2_sage",
+   "name": "현자",
+   "stage": 2,
+   "parentId": "l1_nameless",
+   "role": "무직",
+   "lawTags": [
+    "void"
+   ],
+   "desc": "원소보다 마나를 먼저 보는 직업",
+   "keywords": [
+    {
+     "id": "kw_sage_greatsage",
+     "name": "대현자",
+     "parentId": "l2_sage",
+     "tier": "1",
+     "power": 1.1,
+     "statMod": [
+      1.1,
+      1.1,
+      1.1,
+      1.1,
+      1.1,
+      1.1,
+      1.1,
+      1.1,
+      1.1,
+      1.1,
+      1.1,
+      1.1,
+      1.1
+     ],
+     "desc": "방식에 담기기 전의 마나를 그대로 쓰는",
+     "nameRule": "fixed",
+     "intellectFloor": 130
+    }
+   ]
+  },
+  {
+   "id": "l3_life",
+   "name": "생활직",
+   "stage": 3,
+   "parentId": "l2_jobless",
+   "role": "생활",
+   "lawTags": [],
+   "desc": "살아가는 손을 고르는 직업",
+   "keywords": [
+    {
+     "id": "kw_life_forager",
+     "name": "채집꾼",
+     "parentId": "l3_life",
+     "tier": "2",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "들판에서 먹을 것과 약초를 찾는",
+     "domain": "생산",
+     "nameRule": "fixed"
+    },
+    {
+     "id": "kw_life_woodcutter",
+     "name": "벌목꾼",
+     "parentId": "l3_life",
+     "tier": "2",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "나무를 쓰러뜨려 목재로 바꾸는",
+     "domain": "생산",
+     "nameRule": "fixed"
+    },
+    {
+     "id": "kw_life_farmer",
+     "name": "농부",
+     "parentId": "l3_life",
+     "tier": "2",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "밭을 일구어 곡식과 약초를 얻는",
+     "domain": "생산",
+     "nameRule": "fixed"
+    },
+    {
+     "id": "kw_life_architect",
+     "name": "건축가",
+     "parentId": "l3_life",
+     "tier": "2",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "건물을 세우고 손질하는",
+     "domain": "생산",
+     "nameRule": "fixed"
+    },
+    {
+     "id": "kw_life_miner",
+     "name": "광부",
+     "parentId": "l3_life",
+     "tier": "2",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "땅속에서 광석을 캐내는",
+     "domain": "생산",
+     "nameRule": "fixed"
+    },
+    {
+     "id": "kw_life_cook",
+     "name": "요리사",
+     "parentId": "l3_life",
+     "tier": "3",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "요리해 배를 채우고 사기를 끌어올리는",
+     "domain": "회복",
+     "nameRule": "fixed"
+    },
+    {
+     "id": "kw_life_doctor",
+     "name": "의사",
+     "parentId": "l3_life",
+     "tier": "3",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "다친 사람을 묶어 두고 살리는",
+     "domain": "회복",
+     "nameRule": "fixed"
+    },
+    {
+     "id": "kw_life_scholar",
+     "name": "연구자",
+     "parentId": "l3_life",
+     "tier": "3",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "모르는 것을 적어 남기는",
+     "domain": "지식",
+     "nameRule": "fixed"
+    },
+    {
+     "id": "kw_life_alchemist",
+     "name": "조약사",
+     "parentId": "l3_life",
+     "tier": "2",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "재료를 갈아 물약을 끓이는",
+     "domain": "제작",
+     "nameRule": "fixed"
+    },
+    {
+     "id": "kw_life_smith",
+     "name": "대장장이",
+     "parentId": "l3_life",
+     "tier": "2",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "불로 금속을 두드려 겹치는",
+     "domain": "제작",
+     "nameRule": "fixed"
+    },
+    {
+     "id": "kw_life_educator",
+     "name": "교육자",
+     "parentId": "l3_life",
+     "tier": "3",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "물어보고 되받아 말하게 하는",
+     "domain": "지식",
+     "nameRule": "fixed"
+    },
+    {
+     "id": "kw_life_artist",
+     "name": "예술가",
+     "parentId": "l3_life",
+     "tier": "3",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "본 것을 남에게 보여주는",
+     "domain": "예술",
+     "nameRule": "fixed"
+    },
+    {
+     "id": "kw_life_merchant",
+     "name": "상인",
+     "parentId": "l3_life",
+     "tier": "3",
+     "power": 1.1364,
+     "statMod": [
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364,
+      1.1364
+     ],
+     "desc": "만든 것과 얻은 것을 오가는",
+     "domain": "교역",
+     "nameRule": "fixed"
+    }
+   ]
+  }
+ ]
+}

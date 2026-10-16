@@ -1,0 +1,140 @@
+{
+  "meta": {
+    "schema": "ecology-energy-channels-v1",
+    "biomes": 26,
+    "channels_per_biome": 4,
+    "note": "These are local ecological pathways in addition to each biome's root resource; links indicate compatible consumer guilds, not combat stats."
+  },
+  "biomes": [
+    {"id":"biome_plains","channels":[
+      {"id":"seed","name":"풀씨·곡립","category":"plant","description":"초본이 만든 종자와 곡립. 소형 초식종·종자식 군체의 계절 먹이.","consumerRoles":["prey","swarm"]},
+      {"id":"flower","name":"야생화 꿀·화분","category":"plant","description":"꽃이 만드는 당분·화분. 수분 곤충과 화분을 먹는 소형종을 연결.","consumerRoles":["swarm","prey"]},
+      {"id":"litter","name":"마른 풀·낙엽","category":"animal","description":"마른 초본 잔재가 쌓이는 갈색 먹이망의 시작.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"soil","name":"토양 미생물층","category":"abiotic","description":"토양의 미생물막과 무기 영양염. 생산자·분해자의 기반.","consumerRoles":["prey","scavenger"]}]},
+    {"id":"biome_forest","channels":[
+      {"id":"mast","name":"도토리·견과","category":"plant","description":"수관이 맺는 견과류. 설치류·멧돼지류의 고에너지 먹이.","consumerRoles":["prey","swarm"]},
+      {"id":"fruit","name":"수관 과실·수액","category":"plant","description":"수관의 과실과 수액. 수분자와 수목성 초식종이 이용.","consumerRoles":["prey","swarm"]},
+      {"id":"wood","name":"부후목·균사","category":"plant","description":"쓰러진 나무와 그 안의 균사·유충. 파쇄자와 분해자의 자원.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"litter","name":"낙엽 부식층","category":"animal","description":"낙엽이 미생물에 의해 분해되어 만드는 토양 먹이층.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_swamp","channels":[
+      {"id":"reed","name":"갈대·수생식물","category":"plant","description":"얕은 물의 갈대와 수생식물. 초식·군체종의 생산 기반.","consumerRoles":["prey","swarm"]},
+      {"id":"algae","name":"부유 조류막","category":"plant","description":"수면에 퍼지는 조류와 미생물막. 여과·섭식 길드의 먹이.","consumerRoles":["prey","swarm"]},
+      {"id":"detritus","name":"저층 유기물 침전","category":"animal","description":"느리게 쌓이는 잎·사체·배설물. 분해자와 청소자의 기반.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"mineral","name":"저산소 광물염","category":"abiotic","description":"환원성 습지 바닥의 광물염과 미생물막.","consumerRoles":["prey","scavenger"]}]},
+    {"id":"biome_cave","channels":[
+      {"id":"fungal","name":"그늘 균사체","category":"plant","description":"광로가 닿지 않는 틈에서 자라는 균류. 지하 먹이망의 1차 고정자.","consumerRoles":["prey","swarm"]},
+      {"id":"guano","name":"박쥐 구아노","category":"animal","description":"동굴 군락의 배설물. 곤충·균류·분해자로 이어지는 영양 유입.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"drip","name":"종유수 미생물막","category":"plant","description":"물방울이 공급하는 미생물·조류 막. 작은 섭식종과 생산자 길드가 사용.","consumerRoles":["producer","prey"]},
+      {"id":"mineral","name":"석회 미네랄 박막","category":"abiotic","description":"암벽에서 녹아나온 광물질과 암석 표면 미생물.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_ruins","channels":[
+      {"id":"stores","name":"폐허 저장식량","category":"animal","description":"무너진 저장고에 남은 곡물·건조식품. 불규칙한 인공 먹이 유입.","consumerRoles":["prey","scavenger"]},
+      {"id":"mold","name":"벽면 곰팡이막","category":"plant","description":"습한 벽·목재에 자라는 곰팡이막. 분해 먹이망을 연다.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"seed","name":"틈새 잡초 씨앗","category":"plant","description":"벽돌 틈 잡초가 맺는 씨앗. 종자식 소형종의 먹이.","consumerRoles":["prey","swarm"]},
+      {"id":"rubble","name":"목재·종이 잔해","category":"animal","description":"건축 잔재와 섬유질 찌꺼기. 파쇄·분해 길드가 회수.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_graveyard","channels":[
+      {"id":"offering","name":"제물의 곡물·과실","category":"plant","description":"묘역에 남겨진 식물성 제물. 적지만 반복적으로 유입.","consumerRoles":["prey","scavenger"]},
+      {"id":"wax","name":"향유·밀랍 잔사","category":"animal","description":"장례 향유·밀랍과 유기 잔재. 청소·분해 길드에 공급.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"lichen","name":"비석 지의류","category":"plant","description":"비석의 광물 표면에서 자라는 지의류. 느리지만 지속적인 생산층.","consumerRoles":["prey","decomposer"]},
+      {"id":"soil","name":"묘토 미생물층","category":"abiotic","description":"묘토의 미생물과 무기염 순환. 분해층을 지탱.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_mountain_range","channels":[
+      {"id":"alpine","name":"고산초·지이끼","category":"plant","description":"짧은 생육기에 자라는 고산 식물·이끼. 저밀도 초식 먹이.","consumerRoles":["prey","swarm"]},
+      {"id":"lichen","name":"암벽 지의류","category":"plant","description":"암벽에 붙어 풍화 광물을 고정하는 지의류.","consumerRoles":["prey","decomposer"]},
+      {"id":"seed","name":"바람 실려온 종자","category":"plant","description":"능선으로 유입되는 종자와 포자. 계절성 군체 먹이.","consumerRoles":["prey","swarm"]},
+      {"id":"mineral","name":"풍화 광물염","category":"abiotic","description":"풍화 암반의 무기염과 광물 표면 미생물.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_desert","channels":[
+      {"id":"cactus","name":"선인장 즙·씨앗","category":"plant","description":"수분을 저장한 줄기와 씨앗. 극한 건기의 핵심 먹이·물 공급.","consumerRoles":["prey","swarm"]},
+      {"id":"dew","name":"야간 이슬막","category":"abiotic","description":"밤에만 응결하는 수분과 미생물막. 새벽 섭식의 제한 자원.","consumerRoles":["prey","swarm"]},
+      {"id":"detritus","name":"사체·탈피각","category":"animal","description":"희소한 사체와 절지류 탈피각. 청소·분해 길드가 회수.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"lichen","name":"암반 지의류","category":"plant","description":"바위 그늘에서 자라는 느린 지의류 생산층.","consumerRoles":["prey","decomposer"]}]},
+    {"id":"biome_volcano","channels":[
+      {"id":"thermo","name":"열조류 군락","category":"plant","description":"열수와 광물 이온을 이용하는 내열 1차 생산자.","consumerRoles":["prey","swarm"]},
+      {"id":"sulfur","name":"유황 침전물","category":"abiotic","description":"열수 분출구의 유황과 독성 광물. 특화 분해자만 이용.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"ash","name":"화산재 미량염","category":"abiotic","description":"재에 포함된 무기염이 열조류·미생물의 생장을 보조.","consumerRoles":["prey","scavenger"]},
+      {"id":"carrion","name":"열수 사체 찌꺼기","category":"animal","description":"고온 틈에 남은 사체와 유기 부산물. 내열 분해 경로.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_coastal_sea","channels":[
+      {"id":"plankton","name":"연안 플랑크톤","category":"plant","description":"조수로 재공급되는 플랑크톤. 연안 먹이망의 1차 생산.","consumerRoles":["prey","swarm"]},
+      {"id":"kelp","name":"조간대 해조","category":"plant","description":"조간대 해조와 부착 조류. 초식·여과 섭식의 기반.","consumerRoles":["prey","swarm"]},
+      {"id":"drift","name":"표착 유기물","category":"animal","description":"파도에 밀려온 해초·사체·유기 부유물.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"salt","name":"조수 미네랄염","category":"abiotic","description":"조수의 염류와 표면 미생물막. 생산층에 무기 영양분 공급.","consumerRoles":["prey","scavenger"]}]},
+    {"id":"biome_deep_sea","channels":[
+      {"id":"chemo","name":"열수 화학합성막","category":"plant","description":"햇빛 대신 황화물·열수 구배로 에너지를 고정하는 생산막.","consumerRoles":["prey","swarm"]},
+      {"id":"snow","name":"해양 눈 침전","category":"animal","description":"상층에서 떨어져 내려오는 미세 사체·유기 입자.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"sulfide","name":"황화물 구배","category":"abiotic","description":"열수 주변의 환원 화학 구배. 화학합성 생태의 무기 에너지원.","consumerRoles":["prey","corruptor"]},
+      {"id":"carcass","name":"심해 사체 낙하","category":"animal","description":"상층 생물의 사체가 바닥에 도달하는 드문 대형 영양 유입.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_skyreach","channels":[
+      {"id":"windseed","name":"바람씨앗·포자","category":"plant","description":"상승기류가 운반하는 씨앗·포자. 공중 초식·군체종의 기반.","consumerRoles":["prey","swarm"]},
+      {"id":"nectar","name":"부유 꽃가루·꿀","category":"plant","description":"부유 화분과 꽃꿀. 수분 곤충의 공생 자원.","consumerRoles":["prey","swarm"]},
+      {"id":"insectfall","name":"비행곤충 낙하군","category":"animal","description":"기류에서 추락하거나 쉬어가는 곤충 무리. 비행 포식자의 먹이.","consumerRoles":["prey","hunter"]},
+      {"id":"mist","name":"구름 응결수 미생물","category":"abiotic","description":"구름의 응결수에 모이는 미생물·광물 입자.","consumerRoles":["producer","prey"]}]},
+    {"id":"biome_maze_city","channels":[
+      {"id":"market","name":"시장 잔반","category":"animal","description":"시장과 골목에서 불규칙하게 생기는 식물·동물성 잔반.","consumerRoles":["prey","scavenger"]},
+      {"id":"grain","name":"곡물가루·부스러기","category":"plant","description":"저장·운반 중 흘린 곡립과 가루. 도시 소형종의 먹이.","consumerRoles":["prey","swarm"]},
+      {"id":"gutter","name":"배수로 생물막","category":"plant","description":"배수로의 미생물·조류막. 청소·분해 경로와 연결.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"pigeon","name":"도시 조류 알·깃털 잔재","category":"animal","description":"도시 조류의 알껍질·깃털·사체 일부를 이용하는 갈색 먹이망.","consumerRoles":["predator","scavenger"]}]},
+    {"id":"biome_sewer","channels":[
+      {"id":"sludge","name":"슬러지·지방막","category":"animal","description":"관로에 축적되는 유기 슬러지와 지방. 빠른 분열종의 먹이.","consumerRoles":["prey","decomposer"]},
+      {"id":"fungus","name":"관로 균사막","category":"plant","description":"습하고 어두운 관로의 균사막. 분해자를 통해 자원을 순환.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"insect","name":"하수 곤충 군체","category":"animal","description":"유기 찌꺼기에서 번식하는 곤충 군체. 수서·지상 포식자의 먹이.","consumerRoles":["prey","swarm"]},
+      {"id":"mineral","name":"오수 무기염","category":"abiotic","description":"오수에 녹은 무기염과 생물막의 영양 기반.","consumerRoles":["prey","scavenger"]}]},
+    {"id":"biome_temple","channels":[
+      {"id":"dew","name":"성수 이슬","category":"ether","description":"제단에 맺히는 응결 마나와 물. 소량·고품질 근원자원.","consumerRoles":["prey","scavenger"]},
+      {"id":"pollen","name":"제단 화분","category":"plant","description":"제단 주변 식물의 화분·당액. 수분 곤충과 소형종의 자원.","consumerRoles":["prey","swarm"]},
+      {"id":"offering","name":"제물 섬유·곡물","category":"animal","description":"제물의 섬유·곡물 잔재. 작은 청소종이 먼저 회수.","consumerRoles":["prey","scavenger"]},
+      {"id":"moss","name":"석재 이끼막","category":"plant","description":"그늘진 제단 석재에 자라는 이끼·미생물막.","consumerRoles":["decomposer","prey"]}]},
+    {"id":"biome_jungle","channels":[
+      {"id":"fruit","name":"수관 과실","category":"plant","description":"다층 수관의 연중 과실. 수목성 초식종·군체종을 먹여 살림.","consumerRoles":["prey","swarm"]},
+      {"id":"nectar","name":"꽃꿀·수액","category":"plant","description":"열대 꽃과 수액의 당분. 수분자·수액 섭식자의 자원.","consumerRoles":["prey","swarm"]},
+      {"id":"litter","name":"낙과·낙엽 부식층","category":"animal","description":"낙과와 낙엽이 쌓여 만들어지는 갈색 먹이망.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"insect","name":"수관 곤충군","category":"animal","description":"꽃·잎·수액을 이용하는 수관 절지 군체. 양서류·조류의 먹이.","consumerRoles":["prey","hunter"]}]},
+    {"id":"biome_chasm","channels":[
+      {"id":"voiddew","name":"보이드 이슬","category":"ether","description":"심연 경계에 응결하는 불안정 마나. 특화종만 제한적으로 흡수.","consumerRoles":["prey","scavenger"]},
+      {"id":"fungus","name":"균열 균사체","category":"plant","description":"빛 없는 균열에서 광물 구배를 고정하는 균사체.","consumerRoles":["prey","decomposer"]},
+      {"id":"detritus","name":"저층 사체 침전","category":"animal","description":"심연 바닥의 사체·탈피각. 갈색 먹이망의 기반.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"mineral","name":"심연 광물 이온","category":"abiotic","description":"지맥 틈에서 새어 나오는 광물 이온과 미생물막.","consumerRoles":["prey","scavenger"]}]},
+    {"id":"biome_hell","channels":[
+      {"id":"sulfur","name":"유황 분출물","category":"abiotic","description":"독성 유황·열수의 무기 화학 에너지. 내성종만 이용.","consumerRoles":["prey","scavenger"]},
+      {"id":"firefruit","name":"불열매·씨앗","category":"plant","description":"내열 덩굴이 맺는 열매와 씨앗. 군체·초식종의 계절 자원.","consumerRoles":["prey","swarm"]},
+      {"id":"ash","name":"재·탄화 유기물","category":"animal","description":"화재 뒤 남은 탄화 유기물·사체. 분해자에게 공급.","consumerRoles":["decomposer","scavenger"]},
+      {"id":"heat","name":"열수 화학 구배","category":"abiotic","description":"고온 틈의 광물·황화물 구배를 이용하는 생산·분해 기반.","consumerRoles":["prey","scavenger"]}]},
+    {"id":"biome_archive","channels":[
+      {"id":"ink","name":"먹광·잉크 찌꺼기","category":"ether","description":"잉크·표지에서 새어 나온 마력성 유기 찌꺼기. 서고 고유 근원.","consumerRoles":["prey","scavenger"]},
+      {"id":"paper","name":"종이섬유·접착풀","category":"plant","description":"제본·표지 섬유와 접착풀. 책벌레·분해자의 먹이.","consumerRoles":["prey","decomposer"]},
+      {"id":"moth","name":"종이나방 알·유충","category":"animal","description":"종이 섬유를 먹는 나방의 알·유충. 서고 포식자 먹이.","consumerRoles":["prey","predator"]},
+      {"id":"dust","name":"서가 먼지·균사","category":"plant","description":"책장 틈에 쌓인 먼지·미생물과 균사. 청소·분해 길드에 연결.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_summit","channels":[
+      {"id":"ley","name":"근원 합류 마나","category":"ether","description":"하층 지맥에서 모이는 마나 흐름. 마력 섭식·생산자의 기반.","consumerRoles":["prey","scavenger"]},
+      {"id":"stardust","name":"별가루 침전","category":"abiotic","description":"광로 파편·응고 마나가 만든 무기 분진. 특화 섭식 경로.","consumerRoles":["prey","swarm"]},
+      {"id":"pollen","name":"광로 포자·화분","category":"plant","description":"상층 광로에 실려온 포자와 광합성 부산물.","consumerRoles":["prey","swarm"]},
+      {"id":"carrion","name":"상층 사체·탈락편","category":"animal","description":"상층 비행종의 사체·탈락편. 청소·분해 경로를 닫는다.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_frozen_ocean","channels":[
+      {"id":"iceplankton","name":"얼음 밑 플랑크톤","category":"plant","description":"광로 잔광을 받는 얇은 얼음 아래의 1차 생산층.","consumerRoles":["prey","swarm"]},
+      {"id":"krill","name":"빙하 크릴 군집","category":"animal","description":"플랑크톤을 먹는 갑각 군집. 물개·비행종의 연결 먹이.","consumerRoles":["prey","predator"]},
+      {"id":"algae","name":"빙하 눈조류","category":"plant","description":"눈과 얼음 틈에서 자라는 저온 조류·미생물.","consumerRoles":["prey","decomposer"]},
+      {"id":"snow","name":"해양 눈·사체 침전","category":"animal","description":"얼음 밑으로 가라앉는 유기 입자·사체.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_crystal_forest","channels":[
+      {"id":"sap","name":"수정 수액","category":"plant","description":"수정화된 나무가 틈새에 응결시키는 수액.","consumerRoles":["prey","swarm"]},
+      {"id":"mold","name":"결정 틈 균사","category":"plant","description":"암석·결정의 미세 틈에서 자라는 저대사 균사.","consumerRoles":["prey","decomposer"]},
+      {"id":"insect","name":"수정 수액 곤충","category":"animal","description":"수액을 찾는 곤충 군체. 새·파충 포식종의 먹이.","consumerRoles":["prey","predator"]},
+      {"id":"dust","name":"수정 풍화분","category":"abiotic","description":"풍화 결정의 미세 광물분진과 표면 미생물.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_windless_plateau","channels":[
+      {"id":"moss","name":"진동 이끼","category":"plant","description":"지면 진동을 흡수하며 생장하는 무풍 고원의 생산층.","consumerRoles":["prey","scavenger"]},
+      {"id":"insect","name":"발밑벌레 군집","category":"animal","description":"이끼·미생물을 먹는 절지류 군체. 진동 감각 포식자의 먹이.","consumerRoles":["prey","swarm"]},
+      {"id":"lichen","name":"무풍 표토 지의류","category":"plant","description":"바람 없는 표토에서 느리게 자라는 지의류.","consumerRoles":["prey","decomposer"]},
+      {"id":"detritus","name":"바위틈 탈피각·사체","category":"animal","description":"작은 종의 탈피각과 사체가 바위틈에 축적.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_glass_desert","channels":[
+      {"id":"diatom","name":"유리 모래 규조","category":"plant","description":"유리화된 모래 틈에서 번식하는 규산 껍질 미생물.","consumerRoles":["prey","scavenger"]},
+      {"id":"dew","name":"유리 틈 응결수","category":"abiotic","description":"큰 일교차로 유리 틈에 맺히는 극소량의 수분.","consumerRoles":["prey","swarm"]},
+      {"id":"beetle","name":"흑렌 갑충 군체","category":"animal","description":"절지 군체와 작은 탈피개체. 사막성 매복 포식자의 먹이.","consumerRoles":["prey","predator"]},
+      {"id":"sand","name":"규산 미분·광물염","category":"abiotic","description":"풍화 유리 모래와 미량 무기염의 얇은 층.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_shattered_skylight","channels":[
+      {"id":"gravitydust","name":"중력 먼지","category":"abiotic","description":"중력 이상 지대에 떠다니며 응집하는 무기 미립자.","consumerRoles":["prey","scavenger"]},
+      {"id":"moth","name":"어긋나개 나방 군체","category":"animal","description":"부유 씨앗·먼지 입자를 먹는 공중 곤충 무리.","consumerRoles":["prey","predator"]},
+      {"id":"seed","name":"부유 씨앗·포자","category":"plant","description":"중력 흐름을 타고 이동하는 종자·포자 공급.","consumerRoles":["prey","swarm"]},
+      {"id":"debris","name":"천창 파편 유기막","category":"animal","description":"파편 틈에 걸린 유기 잔재와 사체. 청소자·분해자의 자원.","consumerRoles":["decomposer","scavenger"]}]},
+    {"id":"biome_idea_gate","channels":[
+      {"id":"lighttrace","name":"빛결 잔향","category":"ether","description":"관문을 스치는 광로의 잔류 에너지. 생물막만 제한적으로 고정.","consumerRoles":["prey","scavenger"]},
+      {"id":"glassworm","name":"관문 유리벌레","category":"animal","description":"마지막 틈새에서 사는 작은 투명 곤충. 소수 포식종의 유일한 생물 먹이.","consumerRoles":["prey","predator"]},
+      {"id":"moss","name":"이데아 이끼 포자","category":"plant","description":"문턱의 희박한 빛결을 이용하는 극소 군락.","consumerRoles":["prey","decomposer"]},
+      {"id":"dust","name":"경계 먼지·광물막","category":"abiotic","description":"관문 표면의 무기 분진·광물막. 미세 생태만 지탱.","consumerRoles":["decomposer","scavenger"]}]}
+  ]
+}

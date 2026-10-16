@@ -1,26 +1,29 @@
 # DEV PLAN — 폰즈 (FONS) Godot 재구축 개발 플랜
 
-작성 2026-10-16. 엔진 Godot 4.7.2 stable. 원본은 비공개 레포 `haejoonlim/soul-commander` 안의 FONS (원본 미검증 — 레포 비공개로 내용 열람 불가).
+작성 2026-10-16 · **2026-10-17 갱신** (원본 대조 완료). 엔진 Godot 4.7.2 stable.
+원본은 `haejoonlim/soul-commander` 안의 FONS다. 이 문서는 그 원본을 **읽을 수 없는 상태에서** 쓰였고,
+2026-10-17에 원본을 클론해 읽으면서 §3을 포함한 수치를 전부 확정값으로 교체했다.
 
 ---
 
 ## 1. 이 문서의 지위
 
-이 문서는 **작업 순서와 검증 기준**을 정하는 문서다. 게임 내용의 기준 문서가 아니며, 내용의 기준은 원본 GDD다 (원본 미검증 — 열람 불가).
+이 문서는 **작업 순서와 검증 기준**을 정하는 문서다. 게임 내용의 기준 문서가 아니며, 내용의 기준은 원본 GDD다.
 
-SSOT 우선순위 (위가 강함. 아래 1~4는 원본 저장소 `soul-commander`의 문서·데이터이고 현재 열람 불가 — 원본 미검증. 5만 이 저장소에 있다):
+정본 우선순위 (위가 강함):
 
-1. `design-docs/GDD_v8.0_00_확정사항.md` 및 `01~09, 99` (원본 GDD, 원본 미검증)
-2. `fons-web-ver/PLAN.md` §6-2 (원본 검증 테이블, 원본 미검증)
-3. `D-265`, `D-267` 등 원본 결정 기록 (원본 미검증)
-4. `unity/Assets/Resources/Data/*.json` (설정 SSOT, 원본 미검증)
+1. 원본 GDD — `design-docs/GDD_v8.0_00_확정사항.md` 및 `01~09, 99` (원본 대조)
+2. 원본 정본 데이터 — `unity/Assets/Resources/Data/` 아래 JSON (원본 대조)
+3. 원본 결정 기록 — `design-docs/결정로그/`의 `D-*` (원본 대조)
+4. [docs/original/](original/) — 위 원본에서 뽑은 **대조 사실표 4종**. 값의 출처와 표시 규칙이 여기 있다 (원본 대조)
 5. **이 문서** (`docs/DEV_PLAN.md`)
 
 규칙:
 
 - 이 문서와 원본이 충돌하면 **원본이 이긴다.** 이 문서를 근거로 원본 수치를 바꾸지 않는다.
-- 이 문서에 적힌 원본 유래 수치는 **전부 2차 정보(손으로 옮겨 적은 메모)** 다. 원본 대조 전까지 `원본 미검증`으로 취급한다.
-- 원본을 못 읽은 상태에서 게임 내용(스토리, 몬스터, 밸런스, 스킬 수치)을 **새로 만들어 넣지 않는다.**
+- 이 문서에 적힌 수치는 근거 표시를 단다 — `(원본 대조)`는 원본에서 읽은 값, `(자체 실측)`은 이 머신에서 잰 값이다.
+- 원본에 없는 값은 **적지 않는다.** 필요하면 먼저 원본을 다시 읽는다.
+- 원본이 스스로 모순되면 한쪽을 고르지 않고 **양쪽을 병기**한다 ([docs/original/01_확정_규칙.md](original/01_확정_규칙.md) §7).
 
 ---
 
@@ -30,43 +33,133 @@ SSOT 우선순위 (위가 강함. 아래 1~4는 원본 저장소 `soul-commander
 
 | 항목 | 내용 | 출처 |
 |---|---|---|
-| 게임명 | FONS, 국문 표기 **폰즈** | 기존 문서 |
-| 원본 스택 | Unity 6 LTS + URP Full 3D + Vite/TS/Three.js 웹 시뮬레이터 | 원본 레포 구조 |
-| 원본 구조 | Unity 본편 + 웹 시뮬레이터 + macOS 런처(`fons-launcher`)가 한 레포 | 원본 레포 구조 |
-| 이관 대상 | 문서(GDD·PLAN), 설정 JSON, 시뮬레이터 숫자 로직 | 확정 |
+| 게임명 | FONS, 국문 표기 **폰즈** | 원본 README (원본 대조) |
+| 장르 | 다크 판타지 하드코어 전략 RPG — 영구사망 · 130층 탑 · 영지 경영 | 원본 `design-docs/AGENTS.md` §1 (원본 대조) |
+| 배포 형태 | 인디 · Steam 일회성 구매 · 라이브서비스·과금 없음 | 원본 `design-docs/AGENTS.md` §1 (원본 대조) |
+| 원본 스택 | Unity 6 LTS + URP Full 3D · 웹 버전은 Vite + TypeScript + Three.js | 원본 `fons-web-ver/PLAN.md` (원본 대조) |
+| 원본 구조 | Unity 본편 + 웹 시뮬레이터(`fons-web-ver/`) + macOS 런처(`fons-launcher/`)가 한 레포 | 원본 트리 (원본 대조) |
+| 원본 규모 | 파일 1,523개 · 커밋 252개 · 213MB | `git ls-files` · `git rev-list` · `du -sh` (자체 실측) |
+| 이관 대상 | 문서(GDD·PLAN·결정로그), 설정 JSON, 시뮬레이터 숫자 로직 | 확정 |
 | 재제작 대상 | 모든 아트 에셋, Unity C# 전체, 웹 표현층, 씬/프리팹 | 확정 |
-| 데이터 흐름 | Unity `Resources/Data/*.json` → (원본 `sync_web_data.py`) → 웹 시뮬 `public/data`. 폰즈에서는 `tools/sync_data.py`가 같은 역할 | 원본 스크립트 개념 |
-| 시스템 이름(부분) | 가챠(summon), 전투(combat), 영지(estate), 파티(party), 탑(tower), 경제(economy), 3D(estate3d/explore3d/monparts) | 원본 소스 파일명 |
+| 데이터 흐름 | 원본 정본(한글 키 JSON·생성기) → `sync_to_unity.py` → `unity/Assets/Resources/Data/`(snake_case) → 웹은 `sync_web_data.py`. 폰즈에서는 `tools/sync_data.py`가 마지막 단계를 대신한다 | 원본 `design-docs/_tools/sync_to_unity.py` (원본 대조) |
+| 시뮬 코어 파일 | `summon.ts` · `combat.ts` · `party.ts` · `estate.ts` · `tower.ts` · `game.ts` · `economy_snapshot.ts` · `battle3d.ts` · `summon3d.ts` · `game3d/` 6종 | 원본 `fons-web-ver/app/src/` (원본 대조) |
+| 게임 상태 전이 | `title → estate → briefing → combat → result → estate` (+ `gameover`) | 원본 `fons-web-ver/app/src/game3d/states.ts` (원본 대조) |
 
-### 2.2 미확인 사항 (원본 GDD 확인 필요)
+주의: 예전 이 문서는 시뮬 코어에 `economy.ts`가 있다고 적었다. **원본에 그런 파일은 없고** `economy_snapshot.ts`(수지표 스냅샷)가 맞다 (원본 대조).
 
-- 코어 루프의 정확한 순서와 상태 전이 규칙 (현재 `game_state.gd`의 `TITLE → SUMMON → COMBAT → RESULT → ESTATE → TOWER`는 파일명에서 유추한 **임시안**)
-- 세계관·생태계 시스템의 실제 규칙 (`ecology_codex.json`, `ecology_energy_channels.json` 내용 미확인)
-- 몬스터 수, 종족 수, 스킬 수, 장비 수, 직업 트리 깊이
-- 원소 상성 매트릭스의 실제 값
-- 세이브 포맷과 버전 관리 정책
-- 목표 플랫폼/해상도/프레임 목표의 원본 확정값
-- 출시 형태(스팀/itch 등)와 스코프
+### 2.2 원본에서 확인했고 이 플랜에 반영한 것
 
-이 항목들은 **원본 확보 후 최우선으로 채운다.** 그 전까지 관련 코드는 스텁으로 두고, 스텁에 `원본 GDD 확인 필요` 주석을 남긴다.
+- 코어 루프·상태 전이: §2.1의 `states.ts` 순서가 확정값이다. `game_state.gd`의 임시안(`TITLE → SUMMON → …`)은 폐기한다 (원본 대조).
+- 몬스터·종족·스킬·장비·직업 트리 규모: §3 표 (원본 대조).
+- 원소 상성: `elemental_matrix.json` 7원소 + 정령족·용족 14분파 + 마도사 학파 6개 — 원본에서도 **가안**이다 (원본 대조).
+- 세이브: 원본 확정 #47 = 세이브 v8, AI 스냅샷(행동 카운터·스킬 XP·문맥·연계 XP) 영구 저장 (원본 대조).
+
+### 2.3 원본에서도 아직 미정인 것 (우리가 채우면 안 되는 것)
+
+| 항목 | 상태 | 출처 |
+|---|---|---|
+| 천장 수치(70/130/5,200) | 수치는 가안 — 구조만 확정. **UI에 존재·횟수·시작점 미표기** | 확정 #33 (원본 대조) |
+| ★7 초월진화 조건 | 없음 — 재료·단계 미설계 | 확정 #미정C (원본 대조) |
+| 게이트잭팟 계수 | 75(확정 #19·확률표 각주) vs 85(D-265·D-267)가 공존 — **병기**, 폰즈가 정하지 않는다 | 원본 내부 불일치 (원본 대조) |
+| 스킬 수치 세부 | 확정 #40 = "수치는 미정K" (프레임만 확정) | 확정 #40 (원본 대조) |
+
+이 항목들은 스텁으로 두고 스텁에 `원본 GDD 확인 필요` 주석을 남긴다.
 
 ---
 
-## 3. 확정 수치·게이트 표
+## 3. 확정 수치·게이트 표 (2026-10-17 원본 대조 완료)
 
-전부 2차 정보. 원본 대조는 Phase 0의 완료 조건이다.
+이 표의 값은 전부 원본 파일에서 읽었다. 상세 근거와 원본 위치는 [docs/original/01_확정_규칙.md](original/01_확정_규칙.md)에 있다.
 
-| 수치 / 게이트 | 값 (2차 정보) | 출처 표기 | 검증 상태 |
-|---|---|---|---|
-| W0 가챠 뽑기 횟수 | 130 | PLAN.md §6-2 | 원본 미검증 |
-| 가챠 shaped 확률 | 5% (기대값 130 × 0.05 = 6.5) | PLAN.md §6-2, D-265 | 원본 미검증 |
-| legacy 커버리지 | 0.95 | D-265 | 원본 미검증 |
-| D-267 데미지 공식 | `max(1, atk - defense) * crit_mult` | D-267 | 원본 미검증 |
-| 원본 게이트 목록 | `verify_game.mjs` 22/22, `verify_w1~w4`, `verify_g0~g4`, `verify_g3scope`, `verify_direct`, `verify_battle`, `verify_assets`, `verify_fx`, `verify_monparts` | PLAN.md | 원본 미검증 |
-| 영지 하위 기능 | S2 death, S3_2 status, S3_3 HUD, S3_4 pattern | 파일명 유추 | 원본 미검증 |
-| 소환 하위 기능 | free / pity / lineage / multi, unlock / realpath / relations / reroll | 파일명 유추 | 원본 미검증 |
+### 3.1 소환
 
-**오전사 위험 관리 (원본 미검증):** 위 수치는 한 번의 세션에서 손으로 옮긴 값이다. `D-265`, `D-267`이 무엇을 결정한 사안인지조차 아직 모른다. Phase 0에서 원문을 확보하는 즉시 §3 표 전체를 원문 인용으로 교체하고, 코드 상수(`sim/gacha.py`, `godot/scripts/sim/gacha.gd`, `godot/tests/test_gacha.gd`)를 한 커밋에서 함께 고친다.
+| 항목 | 값 | 출처 (원본 대조) |
+|---|---|---|
+| 확률표 ★1~★6 | 70.04% / 20% / 8.7% / 1.2% / 0.05% / 0.01% (합 100%) | `GDD_v8.0_00_확정사항.md` #32 (원본 대조) |
+| 추첨 방식 | 단일 난수 vs 누적 밴드 — 등급마다 재추첨 금지 | 확정 #32 (원본 대조) |
+| ★4 천장 | 소프트 70회부터 +2%p/회 · 하드 130회 보장 | 확정 #32 (원본 대조) |
+| ★5+ 천장 | 하드 5,200회 · ★5:★6 = 5:1 교대 | 확정 #32 (원본 대조) |
+| 천장 공개 여부 | 전부 비공개 — 존재·횟수·소프트 시작점 UI 미표기 | 확정 #32 (원본 대조) |
+| 단가 | 티켓 1장 = 마석 130개 | 확정 #16 (원본 대조) |
+| 무료분 | 최초 10회 | 확정 #17 (원본 대조) |
+| ★7 | 뽑기 미출현 — 초월진화 전용 | 확정 #7 (원본 대조) |
+| 쿼터 기댓값 | 50층 4,049회 → E[★5] 2.02 · E[★6] 0.40 | 확정 #32 재계산표 (원본 대조) |
+
+상수 이름으로: `TICKET_COST` = 130 · `SOFT_PITY_START` = 70 · `SOFT_PITY_STEP` = 0.02 · `HARD_PITY_4` = 130 (원본 대조)
+
+### 3.2 종족
+
+| 항목 | 값 | 출처 (원본 대조) |
+|---|---|---|
+| shaped(조형생명) | 소환의 5% | 확정 #11 · D-276 (원본 대조) |
+| legacy | 기존 20종 균등 = 95% (종족당 4.75%) | 확정 #11 (원본 대조) |
+| 시작 영웅 | legacy 20종에서만 균등 선택 (shaped 제외) | 확정 #11 (원본 대조) |
+| 활성 종족 | 26종 / 7계열 / 분파 78 (모두 13의 배수) | 확정 #11 (원본 대조) |
+| 계열 해금 층 | 수인·인간·엘프·드워프 0층 · 오크 9층+ · 뱀파이어 13층+ | 확정 #50 (원본 대조) |
+
+상수 이름으로: `SHAPED_RATE` = 0.05 · `LEGACY_RATE` = 0.95 · `LEGACY_SPECIES` = 20 (원본 대조)
+
+### 3.3 전투·성장·경제
+
+| 항목 | 값 | 출처 (원본 대조) |
+|---|---|---|
+| 파티 | 5인 · 예비 없음 · 사망 시 교체불가 | 확정 #3 (원본 대조) |
+| 사망 | 영구사망 · 병원은 요양만 | 확정 #4 (원본 대조) |
+| 행동력 | AP MAX 30 · 처치 +1 · 시간회복 없음 · 일반층 2 / 게이트키퍼 3 | 확정 #5 (원본 대조) |
+| 데미지 | 감소 `DEF/(DEF+200)` · 관통 `(DEF×(1−pen))/(DEF×(1−pen)+200)` | 확정 #6 (원본 대조) |
+| 위치보정 | 측면 +10% / 배후 +25% / 고지대 +15% / 커버 ×0.75 | 확정 #6 (원본 대조) |
+| 전투 연출 | 1~3층 완전자동 / 4층+ 전술개입 (게이지 최대 100·시작 50·초당 +2·처치 +10) | 원본 `design-docs/AGENTS.md` §4 (원본 대조) |
+| 등급승수 | ★1 ×1.00 ~ ★6 ×3.71 · ★7 ×4.83 (등급당 ×1.3 복리) | `GDD_v8.0_01_등급_전투력.md` §2 (원본 대조) |
+| 레벨 | 상한 Lv130 · 계수 `1+(Lv−1)×0.05` → ×7.45 | 확정 #34 (원본 대조) |
+| 몬스터 레벨 | `Lv = round(층 × 1.3)` · 만렙 130 | 확정 #37 (원본 대조) |
+| CP | `(스탯×등급×레벨 + 장비 + 스킬) × 성격 × 상태 × 공명` | 확정 #9 (원본 대조) |
+| 던전 골드 | 층×100×(1+0.2×식민섬수) · 100층 누적 505,000G | 확정 #22 (원본 대조) |
+| 마석(층 퇴장) | 층×30마석 | 확정 #19 (원본 대조) |
+| 마석 정본 수급 | 공급 3,590,250석 · 소환 소비 3,581,500석 · 잉여 8,750석 · 소환 27,550회 | D-267 §배경 (원본 대조) |
+| 화폐 | 마석본위제 「레이」(LEY) · 환율 1마석 = 60 LEY | 확정 #45 · D-267 (원본 대조) |
+| 마나 앵커 | 1마석 = 130 MP | D-267 §3 (원본 대조) |
+| 영지 | 시설 12종(+주택·전당) · 인구 초기 30·상한 60/150/400/1300 · S2 해금 16층 | 확정 #18 · D-263 (원본 대조) |
+
+상수 이름으로: `LEY_PER_CRYSTAL` = 60 · `MP_PER_CRYSTAL` = 130 · `LEVEL_CAP` = 130 (원본 대조)
+
+### 3.4 탑·세계
+
+| 항목 | 값 | 출처 (원본 대조) |
+|---|---|---|
+| 층체계 | **130층 단일 연속** · G4 천정 101~130 신설 | 확정 #52 (원본 대조) |
+| 구간 배정 | G1 10종 1~50 · G2 9종 51~95 · G3 정점 1종 96~100 · G4 천정 6종 101~130 | `fons-web-ver/PLAN.md` §4 (원본 대조) |
+| 위험도 지수 | `D(f) = 13^((f−1)/129)` · 6등급 워드 · 지역명표 130 | 확정 #58 (원본 대조) |
+| 층 진입 | 탐험형 — 미션이 클리어 조건, 웨이브 폐지 | 확정 #41 · D-265 (원본 대조) |
+| 주 미션 | 7종 (정찰·토벌·수호·수집·정예 사냥·정화·호송) + 게이트키퍼 고정 | D-265 (원본 대조) |
+| 특수 미션 | 세계 전용 **20종 고정** · 런당 정확 20회 (8% 랜덤 폐기) | D-265 4차 · 확정 #59 (원본 대조) |
+| 층당 미션 | 부 목표 6종 별도 (층 클리어와 무관) | D-265 (원본 대조) |
+
+### 3.5 개수 정본
+
+| 항목 | 값 | 출처 (원본 대조) |
+|---|---|---|
+| 도감 | 377종 = 전투 133 + 비전투 244 | 원본 `design-docs/AGENTS.md` §2 (원본 대조) |
+| 전투 몬스터 tier 분포 | T1 18 · T2 34 · T3 34 · T4 25 · T5 22 | 원본 `design-docs/AGENTS.md` §2 (원본 대조) |
+| 비전투 앰비언트 | 244종 (일반야생 168 · 수호자 11 · 심해 65) | 원본 `design-docs/AGENTS.md` §2 (원본 대조) |
+| 바이옴 | 26종 (G1~G3 20 + G4 천정 6) | 원본 `design-docs/AGENTS.md` §2 (원본 대조) |
+| 스킬 카탈로그 | 1,300종 (D 443 · C 332 · B 278 · A 130 · S 78 · L 39) | `GDD_v8.0_09_스킬시스템.md` (원본 대조) |
+| 장비 | 39종 (12슬롯 × 3등급 + 기본 3종) | 원본 `design-docs/AGENTS.md` §2 (원본 대조) |
+| 직업 | L1 7 · L2 26 · L3 생활직 1 · 키워드 94 · L4 13장 | 확정 #39 (원본 대조) |
+| 정본 JSON | **17종** | 원본 `unity/Assets/Resources/Data/` (원본 대조) |
+
+### 3.6 폰즈가 원본과 대조해야 할 게이트
+
+| 게이트 | 원본 기록 | 비고 (원본 대조) |
+|---|---|---|
+| 소환 분포 | `verify_w1.mjs` — N=100,000 · ★4 1.5~2.5% · ★5 0.02~0.09% · ★6 ≤0.04% · 가뭄 130/5200 | 폰즈 `sim/gacha.py`가 재현 (원본 대조) |
+| 게임 루프 | `verify_game.mjs` 42/42 (최신) | 문서 이력에 22/22 → 27/27 → 42/42 (원본 대조) |
+| 전투·직접조작 | `verify_w2.mjs` VERIFY OK · `verify_direct.mjs` 16/16 | (원본 대조) |
+| 탑·영지 | `verify_w3.mjs`·`verify_w4.mjs` VERIFY OK | (원본 대조) |
+| 검증 스크립트 개수 | **15개** | "20여개"라는 표현은 원본에 근거가 없다 (원본 대조) |
+
+구체 목록과 각 스크립트의 검증 대상은 [docs/original/02_웹버전_포팅.md](original/02_웹버전_포팅.md) §3에 있다.
+
+**이 표에 없는 수치는 쓰지 않는다.** 필요하면 원본을 다시 읽고 이 표부터 늘린다.
 
 ---
 
@@ -80,7 +173,7 @@ Godot **4.7.2 stable** (이 머신에 설치·검증 완료). Unity C#은 전부
 
 `godot/project.godot`에 이미 `renderer/rendering_method="gl_compatibility"`로 설정돼 있다. 유지한다.
 
-근거: 이 머신은 macOS 12.7.6 / Intel x86_64 / i5-6500이다. macOS에는 네이티브 Vulkan이 없고 Godot의 Forward+·Mobile은 MoltenVK 경로를 탄다. Godot 4.7에서 Intel Mac + Forward+/Mobile 조합의 검은 창·Vulkan device loss 보고가 있으며, Compatibility는 RenderingDevice를 요구하지 않아 이 경로를 피한다. Godot 문서도 Compatibility를 구형 하드웨어용·최대 호환 옵션으로 설명한다.
+근거: 이 머신은 macOS 12.7.6 / Intel x86_64 / i5-6500이다. macOS에는 네이티브 Vulkan이 없고 Godot의 Forward+·Mobile은 MoltenVK 경로를 탄다. Godot 4.7에서 Intel Mac + Forward+/Mobile 조합의 검은 창·Vulkan device loss 보고가 있으며, Compatibility는 RenderingDevice를 요구하지 않아 이 경로를 피한다.
 
 **호환성 모드에서 잃는 것** (기획 시 전제로 삼는다):
 
@@ -100,16 +193,19 @@ Godot **4.7.2 stable** (이 머신에 설치·검증 완료). Unity C#은 전부
 
 **목표 60fps @ 1080p는 목표이지 보장이 아니다.** Phase 3 종료 시 익스포트 빌드로 실측한다.
 
+원본 웹 버전의 3D 실측 기준값은 참고만 한다 — S1 섬 반경 51 · 시설 프롭 14 · 도보 4.2u/s · 추적캠 뒤 10·높이 5 · 휠 6~16 · 상호작용 9m · 탐험 필드 40×28 · 접촉 1.5 · 아레나 18×13 (원본 대조). 폰즈는 Unity가 아니라 Godot이므로 이 값을 그대로 이식하지 않고 목표치의 근거로만 쓴다.
+
 ### 4.4 자산 파이프라인
 
 - Blender 4.5.14 LTS에서 **glTF/`.glb` 익스포트**가 기본 경로다. `.blend` 직접 임포트는 Blender가 설치돼 있어야 동작하는 편의 경로이므로 CI·인수인계에서는 쓰지 않는다.
-- 블렌더 소스 파일과 익스포트된 `.glb`의 정본은 어느 쪽인지 **리포 규칙으로 못박는다**(권장: `.blend`를 정본, `.glb`는 산출물로 커밋).
+- 블렌더 소스 파일과 익스포트된 `.glb` 중 무엇이 정본인지 **리포 규칙으로 못박는다**(권장: `.blend`를 정본, `.glb`는 산출물로 커밋).
 - 대용량 바이너리는 git-lfs(3.8.0, 설치 완료)로 추적한다. `.gitattributes`를 Phase 3 시작 전에 만든다.
+- 원본은 3D 에셋을 Quaternius/KayKit glTF로 조달하고 라이선스를 서드파티 고지 문서에 기록하는 규칙을 쓴다 — 같은 규칙을 따른다 (원본 대조).
 
 ### 4.5 테스트
 
 - GUT(리포 내 `godot/addons/gut`, 벤더링된 버전 9.6.1) + `.gutconfig.json` (`dirs: ["res://tests"]`, `prefix: "test_"`, `suffix: ".gd"`, `should_exit: true`).
-- 실행: **`./tools/test_godot.sh`** (임포트 → GUT → junit 검사). 이 스크립트는 테스트가 0건이면 실패로 종료한다.
+- 실행: **`./tools/test_godot.sh`** (임포트 → GUT → junit 검사). 이 스크립트는 테스트가 0건이면 실패로 종료한다. 2026-10-17 실측: 2 스크립트 / 8 테스트 / 8 통과 / 25 단언 (자체 실측).
 - **금지:** `cd godot && godot --headless -s addons/gut/gut_cmdln.gd -gexit`를 단독으로 쓰지 않는다. `.godot` 임포트 캐시가 없는 새 사본에서는 테스트를 한 건도 실행하지 않고도 exit 0을 반환한다 — 거짓 통과다(부록 A #10).
 - 파이썬 게이트: `./.venv/bin/python tools/gate_all.py`.
 
@@ -123,51 +219,58 @@ Godot **4.7.2 stable** (이 머신에 설치·검증 완료). Unity C#은 전부
 
 - `.uid` 사이드카 파일은 **커밋한다**(Godot 4.4+). 스크립트 이동 시 `.uid`도 같이 옮긴다.
 - 엔진 업그레이드 후에는 **Project > Tools > Upgrade Project Files…** 를 실행한다(4.6부터 `.tscn`의 `load_steps` 미기록·노드 고유 ID 저장으로 포맷이 바뀌어 대량 diff가 생긴다).
-- 빌드 산출물(`build/`), Godot 캐시(`.godot/`), JUnit 결과(`.gut_junit.xml`)는 커밋하지 않는다.
+- 빌드 산출물(`build/`), Godot 캐시(`.godot/`), JUnit 결과는 커밋하지 않는다.
+- Unity 잔재(`*.meta`, `ProjectSettings/`)는 이 저장소에 들어오지 않는다.
 
 ---
 
 ## 5. 마일스톤
 
-규모는 작업량 밴드(S = 며칠, M = 1~2주, L = 2주 이상)이며, **날짜는 원본 GDD로 스코프가 확정된 뒤 산정**한다. 순서는 확정이다 — 뒤 단계는 앞 단계의 게이트를 통과해야 시작한다.
+규모는 작업량 밴드(S = 며칠, M = 1~2주, L = 2주 이상)이며, **날짜는 스코프 확정 후 산정**한다. 순서는 확정이다 — 뒤 단계는 앞 단계의 게이트를 통과해야 시작한다.
 
-### Phase 0 — 원본 이관
+### Phase 0 — 원본 대조와 이관
 
-- **목표:** 원본 문서·설정을 이 리포로 옮겨 §3의 미검증 수치를 전부 사실로 바꾼다.
-- **작업:**
-  1. 원본 레포 접근 확보 (§9 참조)
-  2. `docs/gdd/`에 GDD 원문 복사 (수정 금지, 원문 그대로)
-  3. `docs/web-plan/`에 `PLAN.md`, `GAME_PLAN_3D.md` 복사 (파일명·개수 원본 미검증)
-  4. `tools/sync_data.py --src <원본>/unity/Assets/Resources/Data --dst data` 실행, 이어서 `--dst godot/data` (경로 원본 미검증 — 실제 트리 대조 후 실행)
-  5. `data/manifest.json`을 **실제 원본 파일명과 대조해** 확정 (현재 목록은 추정이다)
-  6. §3 수치 표를 원문 인용으로 교체
-- **산출물:** `docs/gdd/*`, `docs/web-plan/*`, `data/*.json`, `godot/data/*.json`, 갱신된 `data/manifest.json`, 갱신된 `docs/DEV_PLAN.md` §3
-- **완료 정의:** `./.venv/bin/python tools/check_docs.py` 통과 + `data/manifest.json`의 모든 파일이 `data/`에 존재 + §3 표에 `원본 미검증` 문구가 0건
-- **선행 조건:** 없음 (지금 차단됨 — §9)
-- **규모:** S (접근만 뚫리면 짧다)
+- **목표:** 원본 값이 이 리포에서 확정되어, 문서·코드가 근거 없는 수치를 쓰지 않는다.
+- **완료분 (2026-10-17, 자체 실측):**
+  1. 원본 접근 확보 — SSH 키 등록 후 `git clone git@github.com:haejoonlim/soul-commander.git ~/soul-commander` 성공
+  2. 원본 대조 사실표 4종 작성 — [docs/original/](original/) (`00_읽는법.md`, `01_확정_규칙.md`, `02_웹버전_포팅.md`, `03_데이터_영지_탑.md`)
+  3. §3 수치표를 확정값으로 교체 (`원본 미검증` 표기 0건)
+  4. `data/manifest.json`을 실제 원본 트리와 전수 대조 — 17종으로 확정 (이전 목록은 추정이었고 없던 파일 3개·빠진 파일 2개가 있었다)
+  5. `tools/sync_data.py`가 없는 파일을 조용히 건너뛰던 결함 수정 — 이제 하나라도 없으면 exit 1
+  6. `tools/review_docs.py`에 출처 표시 3종(`원본 미검증`·`원본 대조`·`자체 실측`) 도입
+- **남은 작업:**
+  1. `tools/sync_data.py --src ~/soul-commander/unity/Assets/Resources/Data --dst data` 실행 → `--dst godot/data` (현재 `data/`에는 README와 manifest만 있다)
+  2. GDD 원문 이관 여부 결정 — 원문 전체를 `docs/gdd/`로 복사할지, `~/soul-commander` 클론 + 사실표 네 종으로 갈음할지. 복사하면 diff·용량이 늘고, 갈음하면 원본 클론 유지가 전제가 된다
+  3. §2.3의 미정 항목이 원본에서 확정되면 이 문서와 사실표를 같은 커밋에서 갱신
+- **산출물:** `docs/original/*` (완료) · `data/*.json` (남음) · `godot/data/*.json` (남음) · 갱신된 `data/manifest.json` (완료)
+- **완료 정의:** `./.venv/bin/python tools/check_docs.py` → `DOCS OK: 29 files present` (자체 실측) + `data/manifest.json`의 모든 파일이 `data/`에 존재 + §3에 `원본 미검증` 0건
+- **규모:** S
 
 ### Phase 1 — 숫자 게이트 재현
 
 - **목표:** 게임 규칙을 엔진 없이 파이썬으로 먼저 확정한다. 여기서 숫자가 틀리면 뒤가 전부 무의미하다.
-- **작업:**
-  1. `sim/gacha.py`를 원본 규칙에 맞게 재작성 (현재는 `random() < 0.05` 단순 구현)
-  2. 원본 `verify_w1~w4`의 검증 조건을 파이썬 함수로 옮긴다
-  3. 결정론적 난수(고정 시드)로 골든 테이블을 만들고 `sim/golden/`에 저장
-  4. 코드 상수를 한 곳에서만 정의한다 (현재 `sim/gacha.py` 0.05 / `godot/scripts/sim/gacha.gd` 0.05 / `godot/tests/test_gacha.gd` 6.5로 3중 중복 → **단일 출처 위반, 수정 대상**)
-- **산출물:** `sim/gacha.py`, `sim/verify_*.py`, `sim/golden/*.json`, `sim/README.md`
-- **완료 정의:** `./.venv/bin/python sim/gacha.py` → `GATE OK`, `./.venv/bin/python tools/gate_all.py` → `GATE ALL OK`, 골든 테이블과 재실행 결과 일치
-- **선행 조건:** Phase 0
+- **완료분 (2026-10-17):** `sim/gacha.py`를 원본 확정 #32(확률표·단일 난수 누적 밴드)와 확정 #11·D-276(종족 롤)으로 재작성. 실행하면 확률표 합 100%와 표본 분포를 함께 검사하고 `GATE OK: 확정 #32 확률표·#11 종족 롤 재현 (표본 200000, seed 265)`을 출력한다 (자체 실측).
+- **남은 작업:**
+  1. 원본 `verify_w1.mjs`의 밴드(★4 1.5~2.5% · ★5 0.02~0.09% · ★6 ≤0.04% · 가뭄 130/5200)를 파이썬 게이트로 이식 (원본 대조)
+  2. 원본 `verify_w2~w4`의 검증 조건을 파이썬 함수로 옮긴다
+  3. 결정론적 난수(고정 시드)로 골든 테이블을 만들고 `sim/golden/*.json`에 저장
+  4. 상수 중복 정리 — 예전에는 `sim/gacha.py`·`godot/scripts/sim/gacha.gd`·`godot/tests/test_gacha.gd`가 같은 값을 3중으로 들고 있었다. 이제 **값이 확정됐으므로 통합이 허용된다**(§8의 순서 조건 ①대조·②확정이 끝났다). 방향: 값과 출처는 `tools/tracked_numbers.json`에 두고, 런타임 상수는 파이썬 시뮬을 기준으로 삼으며, GDScript 사본은 **드리프트 검사 도구로 잠근다**(사본을 손으로 맞추지 않는다)
+- **산출물:** `sim/gacha.py` (완료) · `sim/verify_*.py` · `sim/golden/*.json` · `sim/README.md` · 드리프트 검사 도구
+- **완료 정의:** `./.venv/bin/python sim/gacha.py` → `GATE OK` + exit 0, `./.venv/bin/python tools/gate_all.py` → `GATE ALL OK`, 골든 테이블과 재실행 결과 일치
+- **선행 조건:** Phase 0의 원본 대조 (완료)
 - **규모:** M
 
 ### Phase 2 — Godot 시뮬 코어 포팅
 
 - **목표:** 파이썬으로 확정한 숫자를 GDScript로 옮기고 GUT로 잠근다.
-- **작업 순서 (의존 순):** `combat` → `summon`(가챠) → `estate` → `party` → `tower` → `economy` → `game_state`(상태머신)
+- **작업 순서 (의존 순, 원본 파일 대응):** `combat.ts` → `summon.ts` → `party.ts` → `estate.ts` → `tower.ts` → `economy_snapshot.ts`(수지표) → 상태머신 (`game3d/states.ts`) (원본 대조)
   - 각 모듈은 `전역 상수 정의 → 순수 함수 → GUT 테스트` 순으로 만든다.
-  - `data/*.json`을 읽는 부분은 `autoload/data_loader.gd`만 창구로 쓴다(직접 `FileAccess` 금지).
-  - 상태머신은 원본 `game.ts`의 실제 전이를 확인한 뒤 확정한다 (§2.2)
-- **산출물:** `godot/scripts/sim/*.gd`, 갱신된 `game_state.gd`, `godot/tests/test_*.gd`
-- **완료 정의:** `./tools/test_godot.sh` → 전부 통과(비-0 종료 없음). **GUT 단독 실행의 exit 0은 증거로 인정하지 않는다**(부록 A #10). 파이썬 골든 테이블과 GDScript 결과 값 일치
+  - `data/*.json`을 읽는 부분은 `godot/scripts/autoload/data_loader.gd`만 창구로 쓴다(직접 `FileAccess` 금지).
+  - 상태머신은 §2.1의 `states.ts` 전이를 그대로 따른다 — `game_state.gd`의 임시안을 폐기한다 (원본 대조).
+  - **소환 13단계를 축소하지 않는다** — 원본도 웹에서 13단계를 그대로 따랐다. 줄이면 정본과 다른 영웅이 나온다 (원본 대조).
+  - 천장 구조는 원본대로 **비공개**다. 수치를 코드에 두더라도 UI에 노출하지 않는다 (원본 대조).
+- **산출물:** `godot/scripts/sim/combat.gd`(있음) · `godot/scripts/sim/gacha.gd`(있음) · 신규 시뮬 모듈 · 갱신된 `game_state.gd` · `godot/tests/test_*.gd`
+- **완료 정의:** `./tools/test_godot.sh` → 전부 통과. **GUT 단독 실행의 exit 0은 증거로 인정하지 않는다**(부록 A #10). 파이썬 골든 테이블과 GDScript 결과 값 일치
 - **선행 조건:** Phase 1
 - **규모:** L
 
@@ -175,12 +278,12 @@ Godot **4.7.2 stable** (이 머신에 설치·검증 완료). Unity C#은 전부
 
 - **목표:** 화면이 실제로 뜨고 60fps 목표가 측정 가능한 상태가 된다.
 - **작업:**
-  1. `title.tscn` — 자리표시자 생성 **완료(2026-10-16)**. Phase 3에서 정식 타이틀 화면으로 교체한다
-  2. `world/estate_3d.gd` → `explore_3d.gd` → `monparts.gd` 순으로 최소 기능
+  1. `godot/scenes/title.tscn` — 자리표시자 생성 **완료(2026-10-16)**. Phase 3에서 정식 타이틀 화면으로 교체한다
+  2. `godot/scripts/world/`에 영지 → 탐험 → 몬스터 파츠 순으로 최소 기능 (원본 대응: `game3d/estate3d.ts` → `explore3d.ts` → `monparts.ts`) (원본 대조)
   3. Blender에서 파일럿 에셋 1세트를 만들어 `.glb` 익스포트 → 임포트 경로 검증
   4. §4.3 성능 시작값으로 익스포트 빌드 실측
 - **산출물:** `godot/scenes/*.tscn`, `godot/scripts/world/*.gd`, `godot/assets/`, `godot/export_presets.cfg`, `build/FONS.app`
-- **완료 정의:** `godot --path godot --headless --import` exit 0, GUT 통과 유지, `build/FONS.app` 실행되어 타이틀 → 영지 화면까지 도달, 프레임 타임 실측치 기록
+- **완료 정의:** `godot --path godot --headless --import` exit 0, `./tools/test_godot.sh` 통과 유지, `build/FONS.app` 실행되어 타이틀 → 영지 화면까지 도달, 프레임 타임 실측치 기록
 - **선행 조건:** Phase 2
 - **규모:** L
 
@@ -189,10 +292,10 @@ Godot **4.7.2 stable** (이 머신에 설치·검증 완료). Unity C#은 전부
 - **목표:** 사람이 기억하지 않아도 검증이 돌아가게 만든다.
 - **작업:**
   1. `tools/gate_all.py`에 GUT 호출을 포함시켜 단일 진입점으로 만든다
-  2. `tools/check_docs.py`의 `REQUIRED` 목록 — **9개에서 25개로 확장 완료(2026-10-16)**. 남은 항목: `godot/export_presets.cfg`와 `.github/workflows/gate.yml`은 생성 시점에 추가한다
-  3. GitHub Actions: `chickensoft-games/setup-godot@v2` + `godot --headless --editor --path godot --import --quit` + GUT. 파이프로 출력을 거를 때는 `set -o pipefail`로 Godot의 실패 종료 코드가 묻히지 않게 한다
-  4. `tools/review_docs.py`를 **자문 단계로** 돌려 리포트를 남긴다. **하드 게이트로 연결하지 않는다** — 원본 대조 전에는 지적 대부분이 "원본 미검증 2차 정보"라서 항상 빨간불이 되고, 그러면 게이트를 끄거나 검사기를 약화시키게 된다. 승격은 원본 대조 후 `UNVERIFIED_CLAIM` 0건이 된 뒤에만 검토한다 (§7)
-- **산출물:** `.github/workflows/gate.yml`, 갱신된 `tools/*`, `docs/gdd`/`data` 정합성 리포트
+  2. `tools/check_docs.py`의 `REQUIRED` 목록 — **9개 → 25개(2026-10-16) → 29개(2026-10-17, 원본 대조 사실표 4종 추가)** 완료. 남은 항목은 생성 시점에 추가한다
+  3. GitHub Actions: `chickensoft-games/setup-godot@v2` + `--import` + GUT. 파이프로 출력을 거를 때는 `set -o pipefail`로 Godot의 실패 종료 코드가 묻히지 않게 한다
+  4. `tools/review_docs.py`를 **자문 단계로** 돌려 리포트를 남긴다. **하드 게이트로 연결하지 않는다** — 이 결정은 유지한다 (§7)
+- **산출물:** CI 워크플로 파일, 갱신된 `tools/*`
 - **완료 정의:** CI에서 docs 게이트 + 파이썬 게이트 + `./tools/test_godot.sh`가 모두 통과하고, 일부러 깨뜨린 테스트에서 CI가 **실패**하는 것을 확인. `review_docs.py`는 자문 리포트로만 첨부하며 CI 실패 조건에 넣지 않는다
 - **선행 조건:** Phase 3
 - **규모:** M
@@ -201,9 +304,9 @@ Godot **4.7.2 stable** (이 머신에 설치·검증 완료). Unity C#은 전부
 
 - **목표:** 코어 루프 한 바퀴가 세이브/로드를 포함해 끊김 없이 돈다.
 - **작업:**
-  1. 타이틀 → 소환 1회 → 파티 편성 → 전투 1회 → 결과 → 영지 진입 → 저장 → 재실행 → 이어하기
-  2. `autoload/save_manager.gd` 신규 작성, 세이브 스키마 버전 필드 포함
-  3. 슬라이스 전용 원본 게이트(`verify_game` 대응)를 GUT로 이식
+  1. 타이틀 → 소환 1회 → 파티 편성 → 전투 1회 → 결과 → 영지 진입 → 저장 → 재실행 → 이어하기 (원본 상태 전이 `title → estate → briefing → combat → result → estate`와 정합하게 배치) (원본 대조)
+  2. `godot/scripts/autoload/save_manager.gd` 신규 작성, 세이브 스키마 버전 필드 포함 — 원본 확정 #47(세이브 v8, AI 스냅샷 영구 저장)의 저장 대상 목록을 따른다 (원본 대조)
+  3. 슬라이스 전용 원본 게이트(`verify_game.mjs` 42/42 대응)를 GUT로 이식 (원본 대조)
 - **산출물:** 세이브/로드 구현, 슬라이스 시나리오 테스트, 플레이 가능한 `build/FONS.app`
 - **완료 정의:** 세이브 → 재실행 → 이어하기가 데이터 손실 없이 동작, GUT 슬라이스 테스트 통과, 실측 프레임 기록 유지
 - **선행 조건:** Phase 4
@@ -213,34 +316,35 @@ Godot **4.7.2 stable** (이 머신에 설치·검증 완료). Unity C#은 전부
 
 ## 6. 작업 분해(WBS) 요약
 
-| ID | 작업 | Phase | 선행 | 산출물 | 규모 |
-|---|---|---|---|---|---|
-| P0-1 | 원본 레포 접근 확보 | 0 | — | 접근 수단 | S |
-| P0-2 | GDD 원문 이관 | 0 | P0-1 | `docs/gdd/*` | S |
-| P0-3 | PLAN/3D 플랜 이관 | 0 | P0-1 | `docs/web-plan/*` | S |
-| P0-4 | 설정 JSON 이관 + manifest 확정 | 0 | P0-1 | `data/*.json` | S |
-| P0-5 | §3 수치표 원문 대조 교체 | 0 | P0-2 | 갱신된 DEV_PLAN | S |
-| P1-1 | 가챠 파이썬 재작성 | 1 | P0-4 | `sim/gacha.py` | M |
-| P1-2 | W1~W4 검증 이식 | 1 | P1-1 | `sim/verify_*.py` | M |
-| P1-3 | 골든 테이블 생성 | 1 | P1-2 | `sim/golden/*.json` | S |
-| P1-4 | 상수 중복 정리(대상 파일 미정 — 원본 대조 후 값 확정) | 1 | P1-1 | `data/game_const.json` (예정, 아직 없음) | S |
-| P2-1 | combat.gd + GUT (경로: `godot/scripts/sim/combat.gd`) | 2 | P1-4 | `godot/scripts/sim/combat.gd` | M |
-| P2-2 | summon.gd + GUT | 2 | P2-1 | `godot/scripts/sim/summon.gd` | L |
-| P2-3 | estate.gd + GUT | 2 | P2-2 | `godot/scripts/sim/estate.gd` | L |
-| P2-4 | party/tower/economy | 2 | P2-3 | `godot/scripts/sim/{party,tower,economy}.gd` | M |
-| P2-5 | 상태머신 확정 | 2 | P0-2 | `game_state.gd` | M |
-| P3-1 | title.tscn 정식 교체 | 3 | P2-5 | `godot/scenes/title.tscn` | S |
-| P3-2 | estate_3d 최소신 | 3 | P3-1 | `godot/scripts/world/estate_3d.gd` | L |
-| P3-3 | explore_3d 최소신 | 3 | P3-2 | `godot/scripts/world/explore_3d.gd` | L |
-| P3-4 | monparts 최소신 | 3 | P3-3 | `godot/scripts/world/monparts.gd` | M |
-| P3-5 | 파일럿 에셋 + glTF 파이프라인 | 3 | P3-1 | `assets/*.glb` | M |
-| P3-6 | 성능 실측 | 3 | P3-4 | 측정 리포트 | S |
-| P4-1 | gate_all에 GUT 통합 | 4 | P2 | `tools/gate_all.py` | S |
-| P4-2 | check_docs 목록 갱신 | 4 | P0 | `tools/check_docs.py` | S |
-| P4-3 | GitHub Actions | 4 | P4-1 | `.github/workflows/gate.yml` | M |
-| P4-4 | 문서 검수 자동화 연결 (자문 리포트 — 하드 게이트 아님) | 4 | P4-2 | `tools/review_docs.py`, `tools/gate_all.py` | M |
-| P5-1 | 저장/불러오기 | 5 | P3 | `godot/scripts/autoload/save_manager.gd` | L |
-| P5-2 | 수직 슬라이스 시나리오 | 5 | P5-1 | 테스트 + 빌드 | L |
+| ID | 작업 | Phase | 선행 | 산출물 | 규모 | 상태 (2026-10-17) |
+|---|---|---|---|---|---|---|
+| P0-1 | 원본 레포 접근 확보 | 0 | — | 접근 수단 | S | **완료** — SSH 인증 성공 (자체 실측) |
+| P0-2 | GDD 원문 이관 | 0 | P0-1 | `docs/gdd/*` | S | **복사하지 않기로 결정**(2026-10-17) — 원본 클론 `~/soul-commander` + [docs/original/](original/00_읽는법.md) 사실표로 갈음. 복사하면 정본이 둘로 갈라진다 (자체 실측) |
+| P0-3 | PLAN/3D 플랜 이관 | 0 | P0-1 | `docs/web-plan/*` | S | **복사하지 않기로 결정**(2026-10-17) — 요지만 [docs/original/02_웹버전_포팅.md](original/02_웹버전_포팅.md)에 있다 (원본 대조) |
+| P0-4 | 설정 JSON 이관 + manifest 확정 | 0 | P0-1 | `data/*.json` | S | **완료** — manifest 17종 · JSON 복사를 `data/`와 `godot/data/` 양쪽에 실행 (자체 실측) |
+| P0-5 | §3 수치표 원문 대조 교체 | 0 | P0-2 | 갱신된 DEV_PLAN | S | **완료** |
+| P0-6 | 원본 대조 사실표 작성 | 0 | P0-1 | `docs/original/*` | M | **완료** |
+| P1-1 | 가챠 파이썬 재작성 | 1 | P0-4 | `sim/gacha.py` | M | **완료** — 확정 #32·#11 재현 |
+| P1-2 | W1~W4 검증 이식 | 1 | P1-1 | `sim/verify_*.py` | M | 남음 |
+| P1-3 | 골든 테이블 생성 | 1 | P1-2 | `sim/golden/*.json` | S | 남음 |
+| P1-4 | 상수 단일화 + 드리프트 검사 | 1 | P1-1 | 검사 도구 (신규) | S | 착수 가능 — 값 확정으로 차단 해제 |
+| P2-1 | combat.gd + GUT | 2 | P1-1 | `godot/scripts/sim/combat.gd` | M | 스텁 있음 — 원본 `combat.ts` 대조 필요 |
+| P2-2 | summon.gd + GUT | 2 | P2-1 | `godot/scripts/sim/summon.gd` | L | 남음 |
+| P2-3 | estate.gd + GUT | 2 | P2-2 | `godot/scripts/sim/estate.gd` | L | 남음 |
+| P2-4 | party/tower/economy | 2 | P2-3 | `godot/scripts/sim/party.gd` 등 | M | 남음 |
+| P2-5 | 상태머신 확정 | 2 | P0-6 | `godot/scripts/autoload/game_state.gd` | M | 원본 `states.ts` 확인 완료 — 구현 남음 |
+| P3-1 | title.tscn 정식 교체 | 3 | P2-5 | `godot/scenes/title.tscn` | S | 자리표시자 있음 |
+| P3-2 | estate_3d 최소신 | 3 | P3-1 | `godot/scripts/world/estate_3d.gd` | L | 남음 |
+| P3-3 | explore_3d 최소신 | 3 | P3-2 | `godot/scripts/world/explore_3d.gd` | L | 남음 |
+| P3-4 | monparts 최소신 | 3 | P3-3 | `godot/scripts/world/monparts.gd` | M | 남음 |
+| P3-5 | 파일럿 에셋 + glTF 파이프라인 | 3 | P3-1 | `godot/assets/*.glb` | M | 남음 |
+| P3-6 | 성능 실측 | 3 | P3-4 | 측정 리포트 | S | 남음 |
+| P4-1 | gate_all에 GUT 통합 | 4 | P2 | `tools/gate_all.py` | S | 남음 |
+| P4-2 | check_docs 목록 갱신 | 4 | P0 | `tools/check_docs.py` | S | **완료** — 29개 (자체 실측) |
+| P4-3 | GitHub Actions | 4 | P4-1 | 워크플로 파일 | M | 남음 |
+| P4-4 | 문서 검수 자문 연결 (하드 게이트 아님) | 4 | P4-2 | `tools/review_docs.py` | M | 자문으로 동작 중 (자체 실측) |
+| P5-1 | 저장/불러오기 | 5 | P3 | `godot/scripts/autoload/save_manager.gd` | L | 남음 |
+| P5-2 | 수직 슬라이스 시나리오 | 5 | P5-1 | 테스트 + 빌드 | L | 남음 |
 
 ---
 
@@ -248,19 +352,21 @@ Godot **4.7.2 stable** (이 머신에 설치·검증 완료). Unity C#은 전부
 
 원칙: **명령을 실행해서 종료 코드가 0인 것만 통과로 인정한다.** 파일이 존재한다는 것, 빌드가 됐다는 것은 요청된 동작이 동작한다는 증거가 아니다.
 
-| 검증 명령 | 무엇을 증명하는가 | 통과 기준 |
-|---|---|---|
-| `./.venv/bin/python tools/check_env.py --strict` | 툴체인이 이 머신에 있다 | exit 0 |
-| `./.venv/bin/python tools/check_docs.py` | 필수 문서·스크립트 골격이 있다 | exit 0 |
-| `./.venv/bin/python sim/gacha.py` | 가챠 수치 게이트 재현 | `GATE OK` 출력 + exit 0 |
-| `./.venv/bin/python tools/gate_all.py` | docs + sim 통합 게이트 | `GATE ALL OK` + exit 0 |
-| `./tools/test_godot.sh` (임포트 → GUT → junit 검사) | GDScript 시뮬 코어의 동작 | 전부 통과 + exit 0. **GUT 단독 실행의 exit 0은 증거가 아니다** — 임포트 캐시가 없으면 테스트 0건으로도 0을 반환한다 |
-| `godot --path godot --headless --import` | 스크립트가 파싱되고 리소스가 임포트된다 | exit 0, 에러 0건 |
-| `mkdir -p build && godot --headless --path godot --export-release "macOS" build/FONS.app` | 실제 실행 파일이 만들어진다 | `build/FONS.app` 생성 |
-| `./.venv/bin/python tools/review_docs.py` | 리포 문서 간 수치·경로 모순이 없다 (**자문 검수 — 하드 게이트 아님. `tools/gate_all.py`에 연결하지 않는다**) | 목표: 지적 0건 + exit 0. 현 단계에서 지적은 곧 "원본 미검증 2차 정보" 목록이므로 **0건이 아니어도 실패로 취급하지 않는다**. 원본 대조 후 0건이 되면 그때 하드 게이트로 승격한다 |
-| (수동) 익스포트 빌드 실행 + 프레임 측정 | 성능 목표 달성 | 측정값 기록 (목표 60fps) |
+| 검증 명령 | 무엇을 증명하는가 | 통과 기준 | 2026-10-17 실측 |
+|---|---|---|---|
+| `./.venv/bin/python tools/check_env.py --strict` | 툴체인이 이 머신에 있다 | exit 0 | exit 0 (자체 실측) |
+| `./.venv/bin/python tools/check_docs.py` | 필수 문서·스크립트 골격이 있다 | exit 0 | `DOCS OK: 29 files present` (자체 실측) |
+| `./.venv/bin/python sim/gacha.py` | 소환 규칙이 원본 확정 #32·#11과 같다 | `GATE OK` 출력 + exit 0 | exit 0 · 확률표 합 100.00% · 최대 편차 0.0445%p (자체 실측) |
+| `./.venv/bin/python tools/gate_all.py` | docs + sim 통합 게이트 | `GATE ALL OK` + exit 0 | exit 0 (자체 실측) |
+| `./tools/test_godot.sh` (임포트 → GUT → junit 검사) | GDScript 시뮬 코어의 동작 | 전부 통과 + exit 0. **GUT 단독 실행의 exit 0은 증거가 아니다** — 임포트 캐시가 없으면 테스트 0건으로도 0을 반환한다 | 8 테스트 / 8 통과 / 25 단언 (자체 실측) |
+| `godot --path godot --headless --import` | 스크립트가 파싱되고 리소스가 임포트된다 | exit 0, 에러 0건 | exit 0 (자체 실측) |
+| `mkdir -p build && godot --headless --path godot --export-release "macOS" build/FONS.app` | 실제 실행 파일이 만들어진다 | `build/FONS.app` 생성 | 미실행 (Phase 3) |
+| `./.venv/bin/python tools/review_docs.py` | 리포 문서 간 수치·경로 모순이 없다 (**자문 검수 — 하드 게이트 아님. `tools/gate_all.py`에 연결하지 않는다**) | 목표: 지적 0건. **0건이 아니어도 실패로 취급하지 않는다** | 지적 0건 / 면제 1049건 / 상수 26개 대조 (자체 실측) |
+| (수동) 익스포트 빌드 실행 + 프레임 측정 | 성능 목표 달성 | 측정값 기록 (목표 60fps) | 미실행 (Phase 3) |
 
 주의: `godot ... | tee` 처럼 출력을 파이프로 거르면 Godot의 실패 종료 코드가 묻힌다. 반드시 `set -o pipefail` 또는 종료 코드 별도 캡처를 쓴다.
+
+검수기의 출처 표시 규칙 (2026-10-17 도입, 자체 실측): 원본을 언급하는 줄에 숫자를 쓰면 그 줄에 `(원본 미검증)`·`(원본 대조)`·`(자체 실측)` 중 하나를 달아야 한다. 표 행은 윗 행의 표시를 물려받지 않는다. 남은 1건은 HANDOFF의 측정 기록 줄이며, 표시를 달면 0건이 된다 — 그 뒤 하드 게이트 승격을 검토한다 (§10).
 
 ---
 
@@ -268,74 +374,71 @@ Godot **4.7.2 stable** (이 머신에 설치·검증 완료). Unity C#은 전부
 
 | 리스크 | 영향 | 완화 | 조기 경보 신호 |
 |---|---|---|---|
-| 원본 문서 접근 불가 (비공개 레포) | Phase 0~5 전부 정지. 수치·기획을 확정할 수 없다 | GitHub 연동 또는 로컬 clone 확보 (§9). 그 전까지는 원본 비의존 작업(파이프라인·툴링)만 진행 | `docs/gdd/`가 비어 있음 |
+| ~~원본 문서 접근 불가~~ | — | **해소(2026-10-17)** — §9 참조 | — |
+| 오전사 잔존 | 게임 규칙이 원본과 달라져 밸런스 전면 재작업 | 값은 §3과 [docs/original/](original/)에서만 인용한다. 새 값이 필요하면 원본을 다시 읽고 §3을 먼저 늘린다 | 문서에 근거 없는 수치가 다시 등장 |
+| 원본 내부 불일치 | 어느 값을 골라도 반쪽이 된다 | 게이트잭팟 계수(75 vs 85)처럼 원본이 어긋나는 항목은 **병기**하고 폰즈가 정하지 않는다 (원본 대조) | 같은 항목에 두 값이 인용됨 |
 | Intel macOS 렌더러 불확실성 | 검은 창·디바이스 로스로 개발 자체가 막힘 | Compatibility 고정. Forward+/Mobile은 쓰지 않는다 | 3D 신 첫 실행 시 창이 검게 뜸 |
 | 3D 성능 미검증 | 목표 프레임 미달 시 기획 축소 필요 | §4.3 시작값 + Phase 3에서 실측. 해상도가 아니라 드로우콜·그림자를 먼저 본다 | 프로파일러에서 그림자/오버드로 우세 |
-| 수치 오전사 | 게임 규칙이 원본과 달라져 밸런스 전면 재작업 | Phase 0에서 §3 표를 원문 인용으로 교체, 코드 상수와 한 커밋에서 동기화 | 원본과 대조 시 5%·130·0.95 중 하나라도 다름 |
-| 상수 3중 중복 | 한 곳만 고쳐서 게임/테스트가 서로 다른 값을 신뢰 | P1-4에서 `sim/gacha.py`·`godot/scripts/sim/gacha.gd`·`godot/tests/test_gacha.gd`의 중복 상수를 한 출처로 통합, 리뷰 게이트로 드리프트 감지 | `review_docs.py`의 CONST_DRIFT 지적 |
+| 상수 다중 중복 | 한 곳만 고쳐서 게임과 테스트가 서로 다른 값을 신뢰 | P1-4에서 통합. 값 확정이 끝났으므로 이제 통합해도 안전하다. GDScript 사본은 검사 도구로 잠근다 | 사본끼리 값이 갈라짐 — 검사 도구가 잡는다 |
 | 자산 재제작 비용 | 일정 초과 | Phase 3에서 파일럿 1세트로 파이프라인만 확정. 양산은 스코프 확정 후 | 에셋 1개 제작에 예상의 2배 이상 소요 |
 | 라이트맵 베이킹 불가 (Compatibility + Intel) | 조명 품질 저하 | 베이킹 불가 시 실시간 라이트 수를 하드 리밋으로 관리 | 베이킹 시도 시 RenderingDevice 관련 에러 |
 | `.tscn`/엔진 버전 업그레이드 대량 diff | 리뷰 불가·머지 사고 | 엔진 버전 고정(4.7.2), 업그레이드는 전용 커밋 + Upgrade Project Files | 커밋에 무관한 씬 파일 수백 개 변경 |
 
 ---
 
-## 9. 차단 사항과 해소 방법
+## 9. 차단 사항 — 해소됨 (2026-10-17)
 
-**현재 차단: 원본 문서·설정 전체에 접근할 수 없다.**
+**예전 차단:** 원본 문서·설정 전체에 접근할 수 없었다. `haejoonlim/soul-commander`는 비공개였고, 이 머신에 `gh` CLI·GitHub 자격증명·`.netrc`·키체인 항목이 없었으며, 비인증 GitHub API는 404를 반환했다 (자체 실측).
 
-- `haejoonlim/soul-commander`는 **비공개** 레포다. 비인증 GitHub API 조회는 404를 반환한다. 그 결과 원본 문서 내용은 이 머신에서 원본 미검증 상태다.
-- 이 머신에는 `gh` CLI가 없고, GitHub 자격증명·`.netrc`·키체인 항목도 없다.
-- 로컬 디스크(Desktop·Documents·Downloads·iCloud)와 Spotlight 전체 검색에서 GDD/원본 프로젝트 사본은 발견되지 않았다.
-- 이전 세션에서 GitHub 연동 도구로 읽은 것은 **디렉터리 목록 수준**이며, GDD 본문·`PLAN.md` 본문·JSON 내용은 어디에도 저장돼 있지 않다.
+**어떻게 뚫었나 (자체 실측):**
 
-해소 경로 (택 1):
+1. 이 머신에서 SSH 키 쌍을 만들고 **공개키만** GitHub 계정에 등록했다 (키 종류 = Authentication Key).
+2. `ssh -T git@github.com` → `Hi haejoonlim! You've successfully authenticated` — 인증 확인.
+3. `git clone git@github.com:haejoonlim/soul-commander.git ~/soul-commander` → 성공. 213MB / 252 커밋 / 1,523 파일 (자체 실측).
+4. 원본 문서·데이터를 읽고 사실표 4종을 만들었다 — [docs/original/](original/).
 
-1. Freebuff GitHub 연동을 연결한 뒤, 에이전트가 원본 파일을 직접 읽고 이관한다 (권장)
-2. 이 머신에 원본을 clone한다:
-   ```bash
-   git clone https://github.com/haejoonlim/soul-commander.git ~/soul-commander
-   ```
-   그 뒤 `tools/sync_data.py --src ~/soul-commander/unity/Assets/Resources/Data --dst data`
-3. 원본 문서 파일만이라도 이 리포 `docs/gdd/`에 직접 붙여 넣는다
+**주의 — 이 키의 권한:** 등록한 키는 **계정의 모든 저장소에 읽기+쓰기**다. 목적(원본 읽기)이 끝났으면 GitHub 설정에서 키를 지우고, 로컬 개인키도 삭제하는 것이 맞다. 지우면 클론된 `~/soul-commander`는 그대로 남지만 원본을 다시 받을 수는 없다.
 
-신규 원격 레포 생성도 같은 차단에 걸린다(현재 `gh` 없음). 원격 생성 명령은 `MIGRATION_PLAN.md`에 정리돼 있다.
+**남은 것:** 신규 원격 저장소 생성은 여전히 별도다 — 같은 SSH 키와 `gh` 부재 때문에 원격 생성 명령은 `MIGRATION_PLAN.md`에 정리돼 있다.
 
 ---
 
 ## 10. 다음 액션
 
-### 지금 당장 (원본 없이 가능한 것)
+### 지금 당장 (2026-10-17 기준)
 
-1. ~~메인 신 부재~~ — **완료(2026-10-16):** `godot/scenes/title.tscn` 자리표시자 생성 (부록 A #1)
-2. ~~`check_docs.py` 목록 갱신~~ — **완료(2026-10-16):** 25개 항목으로 확장 (부록 A #7)
-3. ~~상수 단일 출처 정리~~ — **의도적 보류:** 원본 대조(Phase 0) 전에 통합하면 원본 미검증 숫자를 확정 상수로 굳힌다. 순서를 지킨다 — ① 원본 대조 → ② 값 확정 → ③ 통합(`tools/tracked_numbers.json`을 추적 상수의 단일 출처로 삼는다). Phase 1-4로 미룬다 (§3, 부록 A #3)
-4. ~~`.gitignore`에 `build/` 추가~~ — **완료(2026-10-16):** `build/`·`*.app/`·`*.dmg` 추가. 남은 확인: `.uid`·`export_presets.cfg`가 무시되지 않는지 (부록 A #9)
-5. ~~`tools/review_docs.py` 게이트 연결~~ — **결정 변경:** 하드 게이트로 연결하지 않는다. 자문 도구로 돌리되, 원본 대조 후 지적 0건이 되면 승격을 검토한다 (§7)
-6. `.gitattributes` 작성 (git-lfs 대비)
+1. **`data/`에 JSON 채우기** — `tools/sync_data.py --src ~/soul-commander/unity/Assets/Resources/Data --dst data` → `--dst godot/data`. manifest가 원본과 대조됐고 스크립트가 누락 시 실패하므로 조용한 누락은 이제 불가능하다
+2. **원본 W1 밴드를 파이썬 게이트로 이식** — ★4 1.5~2.5% · ★5 0.02~0.09% · ★6 ≤0.04% · 가뭄 130/5200 (원본 대조)
+3. **상수 단일화 착수** — 값 확정이 끝났으므로 차단 해제. `tools/tracked_numbers.json`을 값·출처의 기준으로 두고 GDScript 사본은 검사 도구로 잠근다
+4. **HANDOFF의 남은 검수 지적 1건 표시** → `review_docs.py` 0건 → 하드 게이트 승격 검토
+5. ~~메인 신 부재~~ — **완료(2026-10-16):** `godot/scenes/title.tscn` 자리표시자 생성 (부록 A #1)
+6. ~~`check_docs.py` 목록 갱신~~ — **완료(2026-10-17):** 29개 (부록 A #7)
+7. ~~상수 3중 중복~~ — **차단 해제(2026-10-17):** ①원본 대조 ②값 확정이 끝났다. 통합은 P1-4
+8. `.gitattributes` 작성 (git-lfs 대비)
+9. **SSH 키 회수** — 원본 재열람이 필요 없어지면 GitHub에서 키를 지우고 로컬 개인키도 삭제 (§9)
 
-### 원본 확보 직후
+### 원본을 다시 읽어야 할 때
 
-1. Phase 0 전체 실행 — GDD·PLAN·JSON 이관, `manifest.json` 실제 파일명 대조
-2. §3 수치표를 원문 인용으로 교체하고, 코드 상수를 같은 커밋에서 동기화
-3. §2.2 미확인 항목을 채워 코어 루프와 상태 전이 확정
-4. 원본 게이트(`verify_game` 22/22 등)를 실제로 실행해 현재 리포의 파이썬/GDScript 대응물과 1:1 매핑표 확정
-5. 스코프 확정 후 Phase별 날짜 산정 (이 문서 §5에 반영)
+`~/soul-commander`가 남아 있으면 그대로 읽는다. 없어지면 §9의 클론 절차를 다시 밟는다.
+원본에서 새 값을 확인하면 **§3 표와 대응하는 `docs/original/*` 문서를 같은 커밋에서 함께 갱신**한다.
 
 ---
 
 ## 부록 A — 즉시 수정 대상으로 확인된 결함
 
-이번 검수에서 **실물 파일을 읽고** 확인한, 현재 리포 자체의 결함이다. 원본 문서와 무관하게 지금 고칠 수 있다.
+이번 검수에서 **실물 파일을 읽고** 확인한, 현재 리포 자체의 결함이다. 원본과 무관하게 지금 고칠 수 있다.
 
 | # | 위치 | 결함 | 수정 |
 |---|---|---|---|
-| 1 | `godot/project.godot` | `run/main_scene="res://scenes/title.tscn"`인데 `godot/scenes/` 디렉터리와 `title.tscn`이 없다. 실행하면 메인 신 로드 실패 | **수정 완료(2026-10-16):** 자리표시자 `title.tscn` 생성. 정식 교체는 Phase 3-1 |
-| 2 | `godot/project.godot` | `godot/data/`를 `DataLoader`가 읽도록 설계돼 있으나, 디렉터리 자체가 없다(`sync_data.py` 미실행 상태) | **수정 완료(2026-10-16):** `godot/data/README.md` 생성(자리표시자 겸 규칙 문서). JSON 내용은 Phase 0-4 후 |
-| 3 | `sim/gacha.py`(130/0.05/0.95), `godot/scripts/sim/gacha.gd`(`PULLS`/`SHAPED_BONUS`/`LEGACY_COVERAGE`), `godot/tests/test_gacha.gd`(130/6.5/0.05/0.95) | 같은 상수가 3곳에 중복 정의. 한 곳만 고치면 게임과 테스트가 다른 값을 신뢰 | **의도적 보류(2026-10-16):** 순서를 강제한다 — ① 원본 대조 → ② 값 확정 → ③ 단일 출처화. Phase 1-4에서 통합 |
+| 1 | `godot/project.godot` | `run/main_scene="res://scenes/title.tscn"`인데 `godot/scenes/` 디렉터리와 `title.tscn`이 없다. 실행하면 메인 신 로드 실패 | **수정 완료(2026-10-16):** 자리표시자 `godot/scenes/title.tscn` 생성. 정식 교체는 Phase 3-1 |
+| 2 | `godot/project.godot` | `godot/data/`를 `DataLoader`가 읽도록 설계돼 있고, 이제 JSON 17종이 들어와 있다 (자체 실측) | **해결(2026-10-17):** `tools/sync_data.py`로 17종 이관. 누락은 `tools/check_docs.py`가 잡는다 (자체 실측) |
+| 3 | `sim/gacha.py`(130/0.05/0.95), `godot/scripts/sim/gacha.gd`, `godot/tests/test_gacha.gd` | 같은 상수가 3곳에 중복 정의. **게다가 값 130은 원본에 없는 오전사였다** | **부분 수정(2026-10-17):** 세 파일 모두 확정 #32·#11 값으로 교체 — 소환 130회 게이트를 삭제하고 실제 확률표·종족 롤 게이트로 바꿨다. 중복 자체는 P1-4에서 통합 |
 | 4 | `docs/GODOT_PORTING_MAP.md` | 제목이 리포명 확정 전 표기(`fons`)로 남아 있었다 | **수정 완료(2026-10-16):** `폰즈`로 통일 |
 | 5 | `README.md` | "새 레포 구조" 예시가 `fons/`로 적혀 있고 디렉터리명은 `폰즈` — 문서와 실제 경로 불일치 | **수정(2026-10-16, coordinator)** — 이 플랜 작성자는 그 파일을 직접 확인하지 못했다(미검증) |
-| 6 | `data/manifest.json` | 원본 대조 전 추정 목록이며 `notes`에도 그렇게 적혀 있다. `game_const.json`, `races.json` 등 실재 여부 미확인 | Phase 0-4에서 확정 |
-| 7 | `tools/check_docs.py` | `REQUIRED`에 `SETUP.md`, `docs/DEV_PLAN.md`, `godot/export_presets.cfg` 등이 빠져 게이트가 실제 골격을 다 보지 못한다 | **수정 완료(2026-10-16):** 9개 → 25개 항목. `export_presets.cfg`는 Phase 3에서 생성 시 추가 |
-| 8 | `sim/gacha.py` | `random.Random(265)` 시드 기반 단순 구현이라 원본 가챠 규칙(천장·계보·다중 뽑기)과 무관. 게이트가 통과해도 아무것도 증명하지 못한다 | Phase 1-1에서 원본 규칙으로 재작성 |
-| 9 | `.gitignore` | `build/`(익스포트 산출물) 제외 규칙이 없다. 반대로 `.uid`·`export_presets.cfg`는 커밋돼야 하는데 명시가 없다 | **수정 완료(2026-10-16):** `build/`·`*.app/`·`*.dmg` 추가. `.uid`·`export_presets.cfg`는 무시되지 않음을 유지 |
-| 10 | `godot/addons/gut` 실행 경로 | `.godot` 임포트 캐시가 없는 새 사본에서 GUT 단독 실행은 테스트를 **0건 돌리고도 exit 0**을 반환한다(침묵하는 거짓 통과). 이전 세션이 보고한 "6 tests passing"은 전달된 파일만으로 재현되지 않았다 | **수정 완료(2026-10-16):** `tools/test_godot.sh`로 임포트 → GUT → junit(테스트 0건이면 실패) 순서를 고정. GUT 단독 실행 금지 |
+| 6 | `data/manifest.json` | 원본 대조 전 추정 목록이었고, 없던 파일 3개(`estate_web.json`·`state.json`·`game_const.json`)를 적고 실제 파일 2개(`scenes.json`·`world_laws.json`)를 빠뜨렸다 | **수정 완료(2026-10-17):** 원본 트리와 전수 대조해 17종으로 확정 (원본 대조) |
+| 7 | `tools/check_docs.py` | `REQUIRED`에 `SETUP.md`, `docs/DEV_PLAN.md` 등이 빠져 게이트가 실제 골격을 다 보지 못한다 | **수정 완료:** 9개 → 25개(2026-10-16) → 29개(2026-10-17). `godot/export_presets.cfg`는 Phase 3에서 생성 시 추가 |
+| 8 | `sim/gacha.py` | `random.Random(265)` 시드 기반 단순 구현이라 원본 가챠 규칙(확률표·천장·종족 롤)과 무관. 게이트가 통과해도 아무것도 증명하지 못한다 | **수정 완료(2026-10-17):** 확정 #32 확률표를 누적 밴드로 구현하고 #11 종족 롤을 함께 검사. 표본 분포를 3시그마로 검정한다 |
+| 9 | `.gitignore` | `build/`(익스포트 산출물) 제외 규칙이 없다. 반대로 `.uid`·`export_presets.cfg`는 커밋돼야 하는데 명시가 없다 | **수정 완료(2026-10-16):** `build/`·`*.app/`·`*.dmg` 추가 |
+| 10 | `godot/addons/gut` 실행 경로 | `.godot` 임포트 캐시가 없는 새 사본에서 GUT 단독 실행은 테스트를 **0건 돌리고도 exit 0**을 반환한다(침묵하는 거짓 통과) | **수정 완료(2026-10-16):** `tools/test_godot.sh`로 임포트 → GUT → junit(테스트 0건이면 실패) 순서를 고정. GUT 단독 실행 금지 |
+| 11 | `tools/review_docs.py` | (ⓐ) 출처 표시가 '미검증' 한 종류뿐이라 원본을 읽고 확인한 값에도 그 표시를 요구했다 (ⓑ) 표 행이 윗 행의 표시를 물려받아 표시 없는 주장이 면제로 샜다 (ⓒ) 상수 드리프트를 이름 **꼬리말**로 묶어 `SHAPED_RATE`=0.05와 `LEGACY_RATE`=0.95를 서로 다른 값의 드리프트로 오탐했다 (ⓓ) 상수 값 충돌을 문서 전체에서 찾아 항상 1행으로 보고했다 | **수정 완료(2026-10-17):** 출처 표시 3종 도입(ⓐ), 표 행의 상속 차단(ⓑ), 상수를 전체 이름으로 비교(ⓒ), 값 대조를 줄 단위로 바꾸고 '원본에 없음·폐기·철회' 같은 반박 줄을 면제(ⓓ). 지적 16건 → 1건 (자체 실측) |
+| 12 | `tools/sync_data.py` | manifest에 없는 파일을 **건너뛰고도 exit 0**으로 끝났다 — 데이터가 조용히 빠진 채 게이트가 통과하는 실패 모드 | **수정 완료(2026-10-17):** 하나라도 없으면 exit 1. 부분 확인은 `--allow-missing`을 명시해야 한다 |

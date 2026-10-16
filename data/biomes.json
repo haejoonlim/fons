@@ -1,0 +1,1823 @@
+{
+ "meta": {
+  "v80": "biomes v1.3 — 사용자 확정 26바이옴 지도 · 2026-09-27",
+  "structure": "하층 13세계(1~65층) → 중층 8세계(66~105층) → 상층 5세계(106~130층). 세계당 5층, 총 26세계.",
+  "slotRule": "26개 세계의 슬롯 순서는 고정 지도다. slots[0]은 블록 번호 1~26, slots[1]은 5층 폭.",
+  "spawnOverride": "B안 확정 — 일반 몬스터 편성은 biome.habitat 기반. monsters.json spawn.floors는 기록용 참조로 강등 (P2-1 편성표 폐기).",
+  "gatekeeper": "세계 전용 문지기 — name(정식 명칭) + epithet(별칭·퇴치 카드 표기). GK층 편성 시 biome.gatekeeper 참조. (26블록 §10 · #59)",
+  "categoryRule": "단일 소속 — synergy.json 우선순위(어둠>극한>혼돈>물가>평온) 적용해 정리 (2026-09-19). 지옥: dark+extreme 이중 → dark 단일 (심연층 불화 강화 우선). 사막: 누락 → extreme. 델타 조회는 biome.category 단일 키.",
+  "regions": "regions[5] = 세계의 깊이 단계(가장자리→심층) — 블록 첫층 진입 풀카드용 지역명 · D(f)=13^((f-1)/129) 위험도 지수와 세트 (#58). 26개 세계는 각 5개 지역명과 전용 문지기를 포함한다.",
+  "idCanonicalSource": "design-docs/에셋/biome_asset_manifest.json 의 biomes[].id 가 명명 정본. 2026-09-27 이전 biomes.json 은 12곳이 다른 이름을 쓰고 있었다.",
+  "tiering": "사용자 확정 26바이옴 지도 — 하층 1~13번(1~65층), 중층 14~21번(66~105층), 상층 22~26번(106~130층). 세계당 5층, 순서는 슬롯 번호 고정. 거주·정착 표는 1~21번만 포함한다.",
+  "tierGatekeepers": "계층문지기 2곳 — 65/66 경계 · 105/106 경계. 130층 이데아 관문은 계층문지기가 아니라 문(관문 그 자체)이므로 제외. 계층문지기는 그 계층 전체 규모의 상대이며 개별 세계 문지기 26명과는 난이도 축이 다르다.",
+  "namingConvention": "바이옴 표시명은 2026-09-27 사용자 확정 지도. 내부 biome id는 게임·생태 참조 호환을 위해 보존한다.",
+  "settlementScope": "정착지와 거주 분파 배치는 슬롯 1~21만 포함한다. 상층 22~26은 상주 거점 없음. 미확정 분파는 종족명·미정 상태로 표시한다.",
+  "upperEcologyStatus": "상층 슬롯 22~24는 새 세계 정체성에 맞춘 종·먹이 관계 재검토가 남아 있다. 기존 생물 데이터는 삭제하지 않고 도감에서 재검토 상태로 표시한다."
+ },
+ "groups": [
+  {
+   "id": "g1",
+   "name": "하층",
+   "floors": [
+    1,
+    65
+   ],
+   "biomes": [
+    {
+     "id": "biome_plains",
+     "name": "풀바다",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      3,
+      2,
+      1,
+      2,
+      1,
+      0,
+      0
+     ],
+     "slots": [
+      1,
+      5
+     ],
+     "habitat": [
+      "grassland",
+      "plains",
+      "meadow"
+     ],
+     "difficulty": {
+      "mult": 1.0,
+      "mods": {},
+      "note": "특수모디퍼 없음 — G1 기준 바이옴"
+     },
+     "climate": {
+      "ambient": 15,
+      "base": 18,
+      "band": [
+       0,
+       32
+      ],
+      "note": "온대 초원 — 중유럽 대초원 연평균",
+      "seasonSwing": 15,
+      "swingNote": "온대 대초원 연교차 (1월 −4℃ / 7월 +14℃ 수준, 밴드 여유에 맞춰 축소)"
+     },
+     "category": "calm",
+     "regions": [
+      "잔불의 풀밭",
+      "이슬 씨앗길",
+      "유목 목장",
+      "별빛 방목지",
+      "풀바다 심층"
+     ],
+     "gatekeeper": {
+      "name": "말 없는 목자",
+      "epithet": "풀바다의 방목자"
+     },
+     "settlements": [
+      {
+       "name": "인간 유목민",
+       "status": "종족 거점 · 분파 미정",
+       "type": "이동 목장"
+      },
+      {
+       "name": "초원 오크",
+       "status": "확정 분파",
+       "type": "정착지"
+      },
+      {
+       "name": "씨앗무늬 하프링",
+       "status": "확정 분파",
+       "type": "역참"
+      }
+     ],
+     "topologyKit": "topo_natural_surface",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_forest",
+     "name": "뿌리숲",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      3,
+      2,
+      1,
+      2,
+      2,
+      0,
+      0
+     ],
+     "slots": [
+      2,
+      5
+     ],
+     "habitat": [
+      "forest"
+     ],
+     "difficulty": {
+      "mult": 1.05,
+      "mods": {
+       "cover": 0.9
+      },
+      "note": "cover — 이 바이옴의 전면 타일 위치보정 가중치 (기본 0.75 대비)"
+     },
+     "climate": {
+      "ambient": 12,
+      "base": 16,
+      "band": [
+       -5,
+       30
+      ],
+      "note": "온대 침엽림 — 북유럽·북미 평균",
+      "seasonSwing": 16,
+      "swingNote": "온대 침엽림 연교차 — 북유럽·북미 평균"
+     },
+     "category": "calm",
+     "regions": [
+      "뿌리 가장자리",
+      "수지 오솔길",
+      "겹뿌리 숲",
+      "거목 그늘",
+      "뿌리 심층"
+     ],
+     "gatekeeper": {
+      "name": "천년 원목",
+      "epithet": "그늘의 임금"
+     },
+     "settlements": [
+      {
+       "name": "우드 엘프",
+       "status": "종족 거점 · 분파 미정",
+       "type": "수림 거점"
+      }
+     ],
+     "topologyKit": "topo_natural_surface",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_coastal_sea",
+     "name": "원천연안",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      2,
+      1,
+      2,
+      3,
+      1,
+      0,
+      0
+     ],
+     "slots": [
+      3,
+      5
+     ],
+     "habitat": [
+      "ocean",
+      "coral"
+     ],
+     "difficulty": {
+      "mult": 1.1,
+      "mods": {
+       "waterTile": 0.5
+      },
+      "note": "수역 타일 50% — 수중 지형 시스템(수해적응 크록)과 정합"
+     },
+     "climate": {
+      "ambient": 14,
+      "base": 17,
+      "band": [
+       0,
+       28
+      ],
+      "note": "온대 해안 — 북대서양 해안 평균",
+      "seasonSwing": 10,
+      "swingNote": "해양성 해안 — 열용량 큰 바다로 연교차 최소"
+     },
+     "category": "waterside",
+     "regions": [
+      "원천 물가",
+      "얕은 조수길",
+      "항해선 정박지",
+      "마나 물빛",
+      "연안 심층"
+     ],
+     "gatekeeper": {
+      "name": "원천 등불",
+      "epithet": "물빛을 노리는 자"
+     },
+     "settlements": [
+      {
+       "name": "인간 항해민",
+       "status": "종족 거점 · 분파 미정",
+       "type": "항구"
+      },
+      {
+       "name": "시 엘프",
+       "status": "종족 거점 · 분파 미정",
+       "type": "수로 마을"
+      }
+     ],
+     "topologyKit": "topo_wetland_water",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_library",
+     "name": "탑의 서고",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      3,
+      1,
+      1,
+      2,
+      1,
+      1,
+      1
+     ],
+     "slots": [
+      4,
+      5
+     ],
+     "habitat": [
+      "library"
+     ],
+     "difficulty": {
+      "mult": 1.2,
+      "mods": {
+       "mdefAura": 0.2
+      },
+      "note": "몬스터 MDEF +20% (마법 감쇠 아가 — 근접 파티 우위)"
+     },
+     "climate": {
+      "ambient": 18,
+      "base": 20,
+      "band": [
+       8,
+       26
+      ],
+      "note": "실내 서고 — 항온 서고(지상 인공 기후)",
+      "seasonSwing": 3,
+      "swingNote": "실내 항온 서고 — 외부 기후 무관"
+     },
+     "category": "calm",
+     "regions": [
+      "서고 바깥문",
+      "열린 서가",
+      "사서의 거리",
+      "색인 대열",
+      "봉인 서고"
+     ],
+     "gatekeeper": {
+      "name": "대서 웜",
+      "epithet": "지식을 삼키는 자"
+     },
+     "settlements": [
+      {
+       "name": "인간 기록자",
+       "status": "전초 · 분파 미정",
+       "type": "기록·교역소"
+      },
+      {
+       "name": "서약 엘프",
+       "status": "확정 분파",
+       "type": "교류 기록소 · 본거지는 슬롯 7"
+      }
+     ],
+     "topologyKit": "topo_urban_ruins",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_maze_city",
+     "name": "미궁도시",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      3,
+      1,
+      1,
+      2,
+      1,
+      2,
+      3
+     ],
+     "slots": [
+      5,
+      5
+     ],
+     "habitat": [
+      "dungeon",
+      "city",
+      "castle",
+      "tower"
+     ],
+     "difficulty": {
+      "mult": 1.05,
+      "mods": {
+       "maze": 1,
+       "trapDensity": 1.5
+      },
+      "note": "미로 구조 · 함정 밀도 ×1.5"
+     },
+     "climate": {
+      "ambient": 14,
+      "base": 18,
+      "band": [
+       2,
+       30
+      ],
+      "note": "지하 도시 — 피난공동체 평균",
+      "seasonSwing": 4,
+      "swingNote": "지하 도시 — 피난공동체 평균, 외부 변동 차단"
+     },
+     "category": "chaos",
+     "regions": [
+      "도시 관문",
+      "재배치 거리",
+      "길잡이 길드가",
+      "움직이는 광장",
+      "도시 심장부"
+     ],
+     "gatekeeper": {
+      "name": "재설계자",
+      "epithet": "길을 다시 짓는 자"
+     },
+     "settlements": [
+      {
+       "name": "인간 교역민",
+       "status": "전초 · 분파 미정",
+       "type": "교역 거점"
+      }
+     ],
+     "topologyKit": "topo_urban_ruins",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_skyreach",
+     "name": "증기구름층",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      2,
+      1,
+      2,
+      2,
+      2,
+      1,
+      2
+     ],
+     "slots": [
+      6,
+      5
+     ],
+     "habitat": [
+      "sky",
+      "storm"
+     ],
+     "difficulty": {
+      "mult": 1.05,
+      "mods": {
+       "gapTile": 1,
+       "lightning": 0.05
+      },
+      "note": "낙하 타일(추락 피해) · 랜덤 낙뢰 피해 5%"
+     },
+     "climate": {
+      "ambient": -12,
+      "base": -4,
+      "band": [
+       -28,
+       12
+      ],
+      "note": "고산 정상 — 에베레스트 8848m",
+      "seasonSwing": 8,
+      "swingNote": "고산 대기층 — 고도에 따른 기온 변동"
+     },
+     "category": "extreme",
+     "regions": [
+      "증기 구름바닥",
+      "부유 정원",
+      "바람씨앗 항로",
+      "폭풍 띠",
+      "구름층 심부"
+     ],
+     "gatekeeper": {
+      "name": "폭풍의 눈",
+      "epithet": "하늘을 가로막는 자"
+     },
+     "settlements": [
+      {
+       "name": "바람의 정령족",
+       "status": "확정 분파",
+       "type": "기상 관측소"
+      },
+      {
+       "name": "조인족",
+       "status": "종족 거점 · 분파 미정",
+       "type": "둥지·전령로"
+      }
+     ],
+     "topologyKit": "topo_sky_interior",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_temple",
+     "name": "서약성소",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      1,
+      1,
+      2,
+      1,
+      1,
+      2,
+      2
+     ],
+     "slots": [
+      7,
+      5
+     ],
+     "habitat": [
+      "temple",
+      "shrine"
+     ],
+     "difficulty": {
+      "mult": 1.1,
+      "mods": {
+       "holyAura": -0.1
+      },
+      "note": "어둠 계열 영웅 피해 -10% · 몬스터 방어 +10% 가안"
+     },
+     "climate": {
+      "ambient": 14,
+      "base": 17,
+      "band": [
+       2,
+       28
+      ],
+      "note": "고지 서약성소 — 고원 안식처",
+      "seasonSwing": 12,
+      "swingNote": "고지 내륙 — 계절 편차 큼"
+     },
+     "category": "calm",
+     "regions": [
+      "서약의 문",
+      "맹세 계단",
+      "여섯 계열 회랑",
+      "서약단 안뜰",
+      "성소 심부"
+     ],
+     "gatekeeper": {
+      "name": "무변의 심판",
+      "epithet": "신앙을 재는 자"
+     },
+     "settlements": [
+      {
+       "name": "서약 엘프",
+       "status": "확정 분파",
+       "type": "본거지"
+      },
+      {
+       "name": "빛의 정령족",
+       "status": "확정 분파",
+       "type": "순례 거점"
+      },
+      {
+       "name": "원맥 혈족",
+       "status": "확정 혈족",
+       "type": "혈족 본거지"
+      }
+     ],
+     "topologyKit": "topo_sacred_sanctuary",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_cave",
+     "name": "지맥굴",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      2,
+      3,
+      1,
+      3,
+      2,
+      0,
+      0
+     ],
+     "slots": [
+      8,
+      5
+     ],
+     "habitat": [
+      "cave",
+      "mine",
+      "underground",
+      "fungus"
+     ],
+     "difficulty": {
+      "mult": 1.1,
+      "mods": {
+       "light": "dark"
+      },
+      "note": "시야 단축(조명 반경 -40%) — 조명 시스템 확정 시 정합"
+     },
+     "climate": {
+      "ambient": 11,
+      "base": 13,
+      "band": [
+       4,
+       24
+      ],
+      "note": "심부 동굴 — 연중 거의 불변",
+      "seasonSwing": 2,
+      "swingNote": "동굴 — 연중 거의 불변"
+     },
+     "category": "dark",
+     "regions": [
+      "지맥굴 입구",
+      "잔불 광맥길",
+      "결정 갱도",
+      "깊은 지하수",
+      "지맥 심장"
+     ],
+     "gatekeeper": {
+      "name": "굴주 군체왕",
+      "epithet": "맥을 먹는 이빨"
+     },
+     "settlements": [
+      {
+       "name": "대지의 정령족",
+       "status": "확정 분파",
+       "type": "지맥 거점"
+      },
+      {
+       "name": "지맥 드워프",
+       "status": "확정 분파",
+       "type": "본거지"
+      }
+     ],
+     "topologyKit": "topo_rock_cavern_mountain",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_ruins",
+     "name": "잿마을",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      3,
+      2,
+      2,
+      3,
+      1,
+      0,
+      0
+     ],
+     "slots": [
+      9,
+      5
+     ],
+     "habitat": [
+      "ruins"
+     ],
+     "difficulty": {
+      "mult": 1.15,
+      "mods": {
+       "ambush": 0.15
+      },
+      "note": "선제 기습 확률 +15%p"
+     },
+     "climate": {
+      "ambient": 9,
+      "base": 14,
+      "band": [
+       -8,
+       30
+      ],
+      "note": "온대 폐허 — 야외 노출 평균",
+      "seasonSwing": 15,
+      "swingNote": "온대 내륙 폐허 — 계절 변동 큼"
+     },
+     "category": "chaos",
+     "regions": [
+      "잿마을 바깥",
+      "무너진 골목",
+      "기록자 터",
+      "재빛 광장",
+      "잔불 아래 폐허"
+     ],
+     "gatekeeper": {
+      "name": "잠든 거수",
+      "epithet": "재의 임금"
+     },
+     "settlements": [
+      {
+       "name": "산지 오크",
+       "status": "확정 분파",
+       "type": "복구 전초"
+      }
+     ],
+     "topologyKit": "topo_urban_ruins",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_deep_sea",
+     "name": "먹빛 해구",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      2,
+      2,
+      2,
+      3,
+      2,
+      1,
+      2
+     ],
+     "slots": [
+      10,
+      5
+     ],
+     "habitat": [
+      "deep_ocean",
+      "deep",
+      "trench"
+     ],
+     "difficulty": {
+      "mult": 1.0,
+      "mods": {
+       "waterTile": 0.7
+      },
+      "note": "G2 기준 바이옴 · 수역 타일 70%"
+     },
+     "climate": {
+      "ambient": 3,
+      "base": 5,
+      "band": [
+       0,
+       12
+      ],
+      "note": "심해 — 실제 심해 수온 2~5°C",
+      "seasonSwing": 1,
+      "swingNote": "심해 수온 — 표층과 단열, 연교차 거의 0"
+     },
+     "category": "waterside",
+     "regions": [
+      "먹빛 수면",
+      "밀도 경계선",
+      "잠수 항로",
+      "해구 정원",
+      "먹빛 심층"
+     ],
+     "gatekeeper": {
+      "name": "등불 어부",
+      "epithet": "빛으로 낚는 자"
+     },
+     "settlements": [
+      {
+       "name": "물의 정령족",
+       "status": "확정 분파",
+       "type": "수중 관측소"
+      },
+      {
+       "name": "시 엘프",
+       "status": "종족 거점 · 분파 미정",
+       "type": "잠수 거점"
+      }
+     ],
+     "topologyKit": "topo_underwater_specialist",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_sewer",
+     "name": "침전수로",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      1,
+      2,
+      1,
+      1,
+      1,
+      3,
+      0
+     ],
+     "slots": [
+      11,
+      5
+     ],
+     "habitat": [
+      "sewer"
+     ],
+     "difficulty": {
+      "mult": 1.1,
+      "mods": {
+       "poison": 0.15,
+       "spawnRate": 1.5
+      },
+      "note": "독 공격 +15%p · 몬스터 스폰 밀도 ×1.5 (개체 수)"
+     },
+     "climate": {
+      "ambient": 17,
+      "base": 20,
+      "band": [
+       8,
+       28
+      ],
+      "note": "하수도 — 온대 하수 평균",
+      "seasonSwing": 3,
+      "swingNote": "하수도 — 지하 온수, 안정"
+     },
+     "category": "chaos",
+     "regions": [
+      "침전 관문",
+      "첫 침전관",
+      "청소인 길드가",
+      "오염 분기",
+      "수로 종착부"
+     ],
+     "gatekeeper": {
+      "name": "관로 왕",
+      "epithet": "창자의 덩어리"
+     },
+     "settlements": [
+      {
+       "name": "흑수 노움",
+       "status": "확정 분파",
+       "type": "본거지"
+      },
+      {
+       "name": "갈빛 견인족",
+       "status": "확정 분파",
+       "type": "수로 탐색대"
+      }
+     ],
+     "topologyKit": "topo_urban_ruins",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_mountain_range",
+     "name": "지맥능선",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      3,
+      1,
+      2,
+      2,
+      2,
+      0,
+      2
+     ],
+     "slots": [
+      12,
+      5
+     ],
+     "habitat": [
+      "mountain",
+      "tundra",
+      "ice_cave"
+     ],
+     "difficulty": {
+      "mult": 1.15,
+      "mods": {
+       "highGround": 0.15
+      },
+      "note": "고지대 타일 비중 +15%p — 위치보정(고지+15%) 발동 빈도 상승"
+     },
+     "climate": {
+      "ambient": -8,
+      "base": 2,
+      "band": [
+       -28,
+       18
+      ],
+      "note": "고산 산맥 — 알프스 4000m",
+      "seasonSwing": 20,
+      "swingNote": "알프스 4000m — 고도별 기온 편차 큼"
+     },
+     "category": "extreme",
+     "regions": [
+      "지맥 기슭",
+      "결정 등반로",
+      "구름 계단",
+      "능선 관측소",
+      "지맥 정상"
+     ],
+     "gatekeeper": {
+      "name": "설왕",
+      "epithet": "능선 위의 왕"
+     },
+     "settlements": [
+      {
+       "name": "산지 오크",
+       "status": "확정 분파",
+       "type": "산악 거점"
+      },
+      {
+       "name": "앵커 드워프",
+       "status": "확정 분파",
+       "type": "등반 전초"
+      }
+     ],
+     "topologyKit": "topo_rock_cavern_mountain",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_swamp",
+     "name": "부유 이끼늪",
+     "floors": [
+      1,
+      65
+     ],
+     "floorScale": "g1",
+     "missionWeights": [
+      1,
+      2,
+      1,
+      2,
+      2,
+      3,
+      0
+     ],
+     "slots": [
+      13,
+      5
+     ],
+     "habitat": [
+      "swamp",
+      "river"
+     ],
+     "difficulty": {
+      "mult": 1.1,
+      "mods": {
+       "spd": -0.15,
+       "poison": 0.1
+      },
+      "note": "이동속도 -15% · 등장 몬스터 독 공격 확률 +10%p"
+     },
+     "climate": {
+      "ambient": 18,
+      "base": 21,
+      "band": [
+       6,
+       32
+      ],
+      "note": "온난 습지 — 동남아",
+      "seasonSwing": 12,
+      "swingNote": "온난 습지 — 증발열로 여름 편차 억제"
+     },
+     "category": "waterside",
+     "regions": [
+      "이끼섬 가장자리",
+      "부유 뿌리길",
+      "물길 교차점",
+      "늪섬 군락",
+      "부유 이끼 심층"
+     ],
+     "gatekeeper": {
+      "name": "갯골의 이빨",
+      "epithet": "오염의 모친"
+     },
+     "settlements": [
+      {
+       "name": "물숨 견인족",
+       "status": "확정 분파",
+       "type": "수상 정착지"
+      },
+      {
+       "name": "뜬뿌리 하프링",
+       "status": "확정 분파",
+       "type": "수상 마을"
+      },
+      {
+       "name": "리자드맨",
+       "status": "종족 거점 · 분파 미정",
+       "type": "수로 공동체"
+      }
+     ],
+     "topologyKit": "topo_wetland_water",
+     "ecologyStatus": "existing-species-by-habitat"
+    }
+   ]
+  },
+  {
+   "id": "g2",
+   "name": "중층",
+   "floors": [
+    66,
+    105
+   ],
+   "biomes": [
+    {
+     "id": "biome_jungle",
+     "name": "포식밀림",
+     "floors": [
+      66,
+      105
+     ],
+     "floorScale": "g2",
+     "missionWeights": [
+      2,
+      2,
+      2,
+      2,
+      3,
+      1,
+      1
+     ],
+     "slots": [
+      14,
+      5
+     ],
+     "habitat": [
+      "jungle"
+     ],
+     "difficulty": {
+      "mult": 1.15,
+      "mods": {
+       "ambush": 0.2
+      },
+      "note": "선제 기습 확률 +20%p"
+     },
+     "climate": {
+      "ambient": 27,
+      "base": 29,
+      "band": [
+       16,
+       34
+      ],
+      "note": "열대 밀림 — 아마존 연평균",
+      "seasonSwing": 7,
+      "swingNote": "열대 밀림 — 연교차 세계 최소"
+     },
+     "category": "chaos",
+     "regions": [
+      "포식 수관",
+      "덩굴길",
+      "천륜 등반로",
+      "매복 수림",
+      "밀림 심층"
+     ],
+     "gatekeeper": {
+      "name": "덩굴 임금",
+      "epithet": "천륜을 두르는 자"
+     },
+     "settlements": [
+      {
+       "name": "묘인족",
+       "status": "종족 거점 · 분파 미정",
+       "type": "수렵 거점"
+      },
+      {
+       "name": "우드 엘프",
+       "status": "전초 · 분파 미정",
+       "type": "약초 전초"
+      }
+     ],
+     "topologyKit": "topo_natural_surface",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_graveyard",
+     "name": "기억묘역",
+     "floors": [
+      66,
+      105
+     ],
+     "floorScale": "g2",
+     "missionWeights": [
+      1,
+      2,
+      2,
+      1,
+      2,
+      3,
+      0
+     ],
+     "slots": [
+      15,
+      5
+     ],
+     "habitat": [
+      "graveyard"
+     ],
+     "difficulty": {
+      "mult": 1.15,
+      "mods": {
+       "reviveOnce": 1
+      },
+      "note": "언데드 계열 1회 소생 (해골·좀비·와이트 — 소생 시 HP 30%)"
+     },
+     "climate": {
+      "ambient": 7,
+      "base": 12,
+      "band": [
+       -10,
+       26
+      ],
+      "note": "야외 묘지 — 야간 평균",
+      "seasonSwing": 16,
+      "swingNote": "야외 묘지 — 내륙 계절 전이 그대로"
+     },
+     "category": "dark",
+     "regions": [
+      "비석 숲 입구",
+      "이름 없는 길",
+      "장인 마을 앞",
+      "관리인 구역",
+      "해체의 문 앞"
+     ],
+     "gatekeeper": {
+      "name": "표리터 왕",
+      "epithet": "무덤을 훔치는 자"
+     },
+     "settlements": [
+      {
+       "name": "야록 혈족",
+       "status": "확정 혈족",
+       "type": "본거지"
+      },
+      {
+       "name": "다크 엘프",
+       "status": "종족 거점 · 분파 미정",
+       "type": "기록소"
+      }
+     ],
+     "topologyKit": "topo_sacred_sanctuary",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_volcano",
+     "name": "압력화구",
+     "floors": [
+      66,
+      105
+     ],
+     "floorScale": "g2",
+     "missionWeights": [
+      1,
+      2,
+      2,
+      2,
+      3,
+      1,
+      1
+     ],
+     "slots": [
+      16,
+      5
+     ],
+     "habitat": [
+      "volcano",
+      "lava"
+     ],
+     "difficulty": {
+      "mult": 1.2,
+      "mods": {
+       "lavaTile": 1,
+       "burnAura": 0.01
+      },
+      "note": "용암 지대 타일(발판 피해) · 화염 소스 오브젝트"
+     },
+     "climate": {
+      "ambient": 46,
+      "base": 52,
+      "band": [
+       26,
+       58
+      ],
+      "note": "용암 지대 외곽 — 내열 장비 필수(데스밸리급)",
+      "seasonSwing": 10,
+      "swingNote": "용암 지대 — 계절이 아니라 열 맥동"
+     },
+     "category": "extreme",
+     "regions": [
+      "압력 분출구",
+      "열수 대장간",
+      "화구 등반로",
+      "분기구 능선",
+      "화구 심장"
+     ],
+     "gatekeeper": {
+      "name": "화구 임금",
+      "epithet": "액화 심박"
+     },
+     "settlements": [
+      {
+       "name": "불의 정령족",
+       "status": "확정 분파",
+       "type": "열수 관측소"
+      },
+      {
+       "name": "화구 오크",
+       "status": "확정 분파",
+       "type": "정착지"
+      }
+     ],
+     "topologyKit": "topo_dry_fire",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_desert",
+     "name": "먼지벌판",
+     "floors": [
+      66,
+      105
+     ],
+     "floorScale": "g2",
+     "missionWeights": [
+      2,
+      1,
+      2,
+      1,
+      2,
+      1,
+      3
+     ],
+     "slots": [
+      17,
+      5
+     ],
+     "habitat": [
+      "desert"
+     ],
+     "difficulty": {
+      "mult": 1.1,
+      "mods": {
+       "hideRate": 0.1
+      },
+      "note": "은신 몬스터(assassin류) 비율 +10%p"
+     },
+     "climate": {
+      "ambient": 38,
+      "base": 43,
+      "band": [
+       14,
+       56
+      ],
+      "note": "사막 — 사하라 주간",
+      "seasonSwing": 18,
+      "swingNote": "사막 — 일교차 극대지만 밴드 상한에 맞춰 조정"
+     },
+     "category": "extreme",
+     "regions": [
+      "먼지 가장자리",
+      "이슬 우물길",
+      "캐러밴 항로",
+      "사구 중심",
+      "마른 벌판 심층"
+     ],
+     "gatekeeper": {
+      "name": "갈증의 우물",
+      "epithet": "잔불을 삼키는 자"
+     },
+     "settlements": [
+      {
+       "name": "인간 수렵민",
+       "status": "종족 거점 · 분파 미정",
+       "type": "계절 거점"
+      },
+      {
+       "name": "묘인족",
+       "status": "전초 · 분파 미정",
+       "type": "야간 수렵 전초"
+      },
+      {
+       "name": "리자드맨",
+       "status": "종족 거점 · 분파 미정",
+       "type": "건기 거점"
+      }
+     ],
+     "topologyKit": "topo_dry_fire",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_windless_plateau",
+     "name": "무풍고원",
+     "floors": [
+      66,
+      105
+     ],
+     "floorScale": "g2",
+     "missionWeights": [
+      3,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2
+     ],
+     "slots": [
+      18,
+      5
+     ],
+     "habitat": [
+      "windless"
+     ],
+     "difficulty": {
+      "mult": 1.0,
+      "mods": {
+       "hpRelief": 0.9
+      },
+      "note": "G4 HP 완화 10%(#54)"
+     },
+     "climate": {
+      "ambient": -32,
+      "base": -22,
+      "band": [
+       -48,
+       -6
+      ],
+      "note": "고원 한기 — 티베트 고원 겨울",
+      "seasonSwing": 16,
+      "swingNote": "티베트 고원 — 겨울 편차 크지만 밴드 하한 근접"
+     },
+     "category": "extreme",
+     "regions": [
+      "고원 가장자리",
+      "무풍의 길",
+      "손짓 수도원",
+      "소리 없는 중심",
+      "고원 심층"
+     ],
+     "gatekeeper": {
+      "name": "소리 삼키는 자",
+      "epithet": "무풍 임금"
+     },
+     "settlements": [
+      {
+       "name": "울림석 노움",
+       "status": "확정 분파",
+       "type": "본거지"
+      },
+      {
+       "name": "조인족",
+       "status": "종족 거점 · 분파 미정",
+       "type": "관측 둥지"
+      }
+     ],
+     "topologyKit": "topo_frozen_crystal",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_hell",
+     "name": "맥의 상흔",
+     "floors": [
+      66,
+      105
+     ],
+     "floorScale": "g2",
+     "missionWeights": [
+      1,
+      2,
+      3,
+      1,
+      3,
+      2,
+      0
+     ],
+     "slots": [
+      19,
+      5
+     ],
+     "habitat": [
+      "hellscape",
+      "fortress"
+     ],
+     "difficulty": {
+      "mult": 1.2,
+      "mods": {
+       "lavaTile": 1,
+       "burnAura": 0.02
+      },
+      "note": "용암 지대 · 화염 소스 오브젝트 — 화산의 G2 상위판"
+     },
+     "climate": {
+      "ambient": 52,
+      "base": 58,
+      "band": [
+       34,
+       60
+      ],
+      "note": "열공백 — 내열 장비 필수(세계 최고온)",
+      "seasonSwing": 8,
+      "swingNote": "열공백 — 계절 없음, 열 맥동만"
+     },
+     "category": "dark",
+     "regions": [
+      "상흔의 입구",
+      "지맥 균열",
+      "광물 침전대",
+      "맥열 관측소",
+      "상흔 심부"
+     ],
+     "gatekeeper": {
+      "name": "갈라진 자",
+      "epithet": "흉터를 관통하는 절망"
+     },
+     "settlements": [
+      {
+       "name": "무의 정령족",
+       "status": "확정 분파",
+       "type": "관측 거점"
+      },
+      {
+       "name": "지맥 드워프",
+       "status": "확정 분파",
+       "type": "균열 관측소"
+      }
+     ],
+     "topologyKit": "topo_dry_fire",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_chasm",
+     "name": "무광심연",
+     "floors": [
+      66,
+      105
+     ],
+     "floorScale": "g2",
+     "missionWeights": [
+      2,
+      2,
+      2,
+      1,
+      3,
+      1,
+      0
+     ],
+     "slots": [
+      20,
+      5
+     ],
+     "habitat": [
+      "abyss"
+     ],
+     "difficulty": {
+      "mult": 1.15,
+      "mods": {
+       "sanityDrain": 0.02
+      },
+      "note": "전투 종료 시 Sanity -2 — 01 문서 Sanity 시스템과 정합"
+     },
+     "climate": {
+      "ambient": -22,
+      "base": -10,
+      "band": [
+       -38,
+       14
+      ],
+      "note": "무광 심연 — 지하 균열",
+      "seasonSwing": 8,
+      "swingNote": "무광 심연 — 지하 균열, 완만한 변동"
+     },
+     "category": "dark",
+     "regions": [
+      "무광 경계",
+      "등불 없는 길",
+      "어둠의 경계",
+      "무광 심층",
+      "심연의 심장"
+     ],
+     "gatekeeper": {
+      "name": "무광의 입",
+      "epithet": "어둠을 먹는 자"
+     },
+     "settlements": [
+      {
+       "name": "어둠의 정령족",
+       "status": "확정 분파",
+       "type": "거점"
+      },
+      {
+       "name": "장야 혈족",
+       "status": "확정 혈족",
+       "type": "혈족 본거지"
+      },
+      {
+       "name": "다크 엘프",
+       "status": "종족 거점 · 분파 미정",
+       "type": "관측소"
+      }
+     ],
+     "topologyKit": "topo_rock_cavern_mountain",
+     "ecologyStatus": "existing-species-by-habitat"
+    },
+    {
+     "id": "biome_summit",
+     "name": "역류폭포",
+     "floors": [
+      66,
+      105
+     ],
+     "floorScale": "g2",
+     "missionWeights": [
+      1,
+      2,
+      2,
+      1,
+      2,
+      2,
+      2
+     ],
+     "slots": [
+      21,
+      5
+     ],
+     "habitat": [
+      "astral",
+      "dragon_lair",
+      "lair"
+     ],
+     "difficulty": {
+      "mult": 1.3,
+      "mods": {
+       "allPrev": 1,
+       "bossHp": 1.2,
+       "noRest": 1
+      },
+      "note": "G1·G2 모디퍼 전부 동시 활성 + 보스 HP ×1.2 + 휴식(회복 이벤트) 없음 — 최종 스테이지"
+     },
+     "climate": {
+      "ambient": -26,
+      "base": -16,
+      "band": [
+       -42,
+       8
+      ],
+      "note": "역류폭포 — 고원 급류 한기 집중",
+      "seasonSwing": 14,
+      "swingNote": "고원 급류 — 고지 기온 변동"
+     },
+     "category": "extreme",
+     "regions": [
+      "역류 물보라",
+      "상향 흐름길",
+      "지맥 교차로",
+      "관측대 앞",
+      "역류 폭포 심부"
+     ],
+     "gatekeeper": {
+      "name": "정점의 눈",
+      "epithet": "마지막 문지기"
+     },
+     "settlements": [
+      {
+       "name": "바람의 정령족",
+       "status": "확정 분파",
+       "type": "관측단"
+      },
+      {
+       "name": "앵커 드워프",
+       "status": "확정 분파",
+       "type": "등반 전초"
+      }
+     ],
+     "topologyKit": "topo_wetland_water",
+     "ecologyStatus": "existing-species-by-habitat"
+    }
+   ]
+  },
+  {
+   "id": "g4",
+   "name": "상층",
+   "floors": [
+    106,
+    130
+   ],
+   "biomes": [
+    {
+     "id": "biome_frozen_ocean",
+     "name": "광로들판",
+     "floors": [
+      106,
+      110
+     ],
+     "floorScale": "g4",
+     "missionWeights": [
+      2,
+      1,
+      2,
+      2,
+      1,
+      1,
+      2
+     ],
+     "slots": [
+      22,
+      5
+     ],
+     "habitat": [
+      "frostsea"
+     ],
+     "difficulty": {
+      "mult": 1.0,
+      "mods": {
+       "hpRelief": 0.9
+      },
+      "note": "G4 HP 완화 10%(#54) — sim_g4_ceiling 확정"
+     },
+     "climate": {
+      "ambient": -38,
+      "base": -30,
+      "band": [
+       -56,
+       -12
+      ],
+      "note": "빙해 외해 — 남극 해안 겨울",
+      "seasonSwing": 18,
+      "swingNote": "남극 해안 — 결빙기 편차 큼"
+     },
+     "category": "extreme",
+     "regions": [
+      "광로 들머리",
+      "빛받이 평원",
+      "밝은 이끼밭",
+      "광막 군락",
+      "광로 심층"
+     ],
+     "gatekeeper": {
+      "name": "동결 고래",
+      "epithet": "첫 파도"
+     },
+     "settlements": [],
+     "nonSettlementSites": [
+      {
+       "name": "광로 엘프 원정 관측단",
+       "status": "비정착 · 탐사/관측만",
+       "type": "탑의 서고(슬롯 4)에서 파견되는 광로 관측지"
+      }
+     ],
+     "topologyKit": "topo_sky_interior",
+     "ecologyStatus": "legacy-biome-associations-review"
+    },
+    {
+     "id": "biome_crystal_forest",
+     "name": "형상군락",
+     "floors": [
+      111,
+      115
+     ],
+     "floorScale": "g4",
+     "missionWeights": [
+      2,
+      1,
+      1,
+      3,
+      1,
+      1,
+      1
+     ],
+     "slots": [
+      23,
+      5
+     ],
+     "habitat": [
+      "crystalgrove"
+     ],
+     "difficulty": {
+      "mult": 1.0,
+      "mods": {
+       "hpRelief": 0.9
+      },
+      "note": "G4 HP 완화 10%(#54)"
+     },
+     "climate": {
+      "ambient": -30,
+      "base": -22,
+      "band": [
+       -50,
+       0
+      ],
+      "note": "고원 빙설 지대",
+      "seasonSwing": 20,
+      "swingNote": "고원 빙설 지대 —주야 편차 큼"
+     },
+     "category": "extreme",
+     "regions": [
+      "형상 군락 외곽",
+      "각질 숲길",
+      "응고 표면",
+      "탈락편 골짜기",
+      "형상 심부"
+     ],
+     "gatekeeper": {
+      "name": "결정 수호자",
+      "epithet": "수정 나무 왕"
+     },
+     "settlements": [],
+     "topologyKit": "topo_rock_cavern_mountain",
+     "ecologyStatus": "legacy-biome-associations-review"
+    },
+    {
+     "id": "biome_glass_desert",
+     "name": "마른 지맥",
+     "floors": [
+      116,
+      120
+     ],
+     "floorScale": "g4",
+     "missionWeights": [
+      2,
+      1,
+      1,
+      3,
+      2,
+      1,
+      1
+     ],
+     "slots": [
+      24,
+      5
+     ],
+     "habitat": [
+      "glassdesert"
+     ],
+     "difficulty": {
+      "mult": 1.0,
+      "mods": {
+       "hpRelief": 0.9
+      },
+      "note": "G4 HP 완화 10%(#54)"
+     },
+     "climate": {
+      "ambient": 44,
+      "base": 50,
+      "band": [
+       24,
+       58
+      ],
+      "note": "유리(현무암) 사막 — 정오 그을림(내열 필수)",
+      "seasonSwing": 14,
+      "swingNote": "유리 사막 — 정오 그을림, 밴드 상한 근접"
+     },
+     "category": "extreme",
+     "regions": [
+      "마른 맥 입구",
+      "희박한 삼출지",
+      "광물 잔맥",
+      "맥실 이끼밭",
+      "마른 지맥 심부"
+     ],
+     "gatekeeper": {
+      "name": "빛을 자르는 자",
+      "epithet": "유리 파수꾼"
+     },
+     "settlements": [],
+     "topologyKit": "topo_rock_cavern_mountain",
+     "ecologyStatus": "legacy-biome-associations-review"
+    },
+    {
+     "id": "biome_shattered_skylight",
+     "name": "찢긴 천창",
+     "floors": [
+      121,
+      125
+     ],
+     "floorScale": "g4",
+     "missionWeights": [
+      1,
+      3,
+      3,
+      1,
+      3,
+      2,
+      0
+     ],
+     "slots": [
+      25,
+      5
+     ],
+     "habitat": [
+      "skylapse"
+     ],
+     "difficulty": {
+      "mult": 1.0,
+      "mods": {
+       "hpRelief": 0.9
+      },
+      "note": "G4 HP 완화 10%(#54)"
+     },
+     "climate": {
+      "ambient": -46,
+      "base": -36,
+      "band": [
+       -64,
+       -16
+      ],
+      "note": "천창 파열 — 성층권 하단 노출",
+      "seasonSwing": 18,
+      "swingNote": "성층권 하단 — 노출면 온도 변동 큼"
+     },
+     "category": "extreme",
+     "regions": [
+      "찢긴 기저",
+      "어긋난 중력",
+      "천창 파편길",
+      "부유 구조대",
+      "천창 심장"
+     ],
+     "gatekeeper": {
+      "name": "포기한 세 번",
+      "epithet": "3인(정본 · 아크 12)"
+     },
+     "settlements": [],
+     "topologyKit": "topo_sky_interior",
+     "ecologyStatus": "legacy-biome-associations-review"
+    },
+    {
+     "id": "biome_idea_gate",
+     "name": "이데아 문턱",
+     "floors": [
+      126,
+      130
+     ],
+     "floorScale": "g4",
+     "slots": [
+      26,
+      5
+     ],
+     "habitat": [
+      "ideagate"
+     ],
+     "difficulty": {
+      "mult": 1.0,
+      "mods": {
+       "hpRelief": 0.9,
+       "noCombat": 1
+      },
+      "note": "엔딩 무대 — 일반 조우 없음(#59 미션 없음 규칙), 이벤트 전투만"
+     },
+     "climate": {
+      "ambient": -62,
+      "base": -52,
+      "band": [
+       -70,
+       -30
+      ],
+      "note": "이데아 문턱 — 세계 최저온(남극 고원 한기)",
+      "seasonSwing": 8,
+      "swingNote": "이데아 문턱 — 세계 최저온으로 밴드 하한에 붙어 있음"
+     },
+     "category": "extreme",
+     "regions": [
+      "투명해지는 벽",
+      "마지막 방",
+      "아직 새기지 않은 자리",
+      "130번째 새김 자리",
+      "이데아 문턱"
+     ],
+     "gatekeeper": {
+      "name": "무문의 파수병",
+      "epithet": "관문 자체(이벤트 전투)"
+     },
+     "settlements": [],
+     "topologyKit": "topo_frozen_crystal",
+     "ecologyStatus": "legacy-biome-associations-review"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "displayLocale": "ko-KR",
+  "laws": [
+    {
+      "id": "fire",
+      "name": "화염",
+      "meaning": "파괴와 열, 충동과 태움",
+      "manifestation": "존재가 무엇을 얼마나 강하게 밀어내는가",
+      "magicSchools": ["화염 마도사"]
+    },
+    {
+      "id": "water",
+      "name": "물",
+      "meaning": "생명, 흐름, 기억과 적응",
+      "manifestation": "존재가 어떻게 흐르고 이어지는가",
+      "magicSchools": ["물 마도사"]
+    },
+    {
+      "id": "earth",
+      "name": "대지",
+      "meaning": "육체, 물질, 경계와 인내",
+      "manifestation": "존재가 어떤 형태와 경계를 유지하는가",
+      "magicSchools": ["대지 마도사"]
+    },
+    {
+      "id": "wind",
+      "name": "바람",
+      "meaning": "운동, 자유, 선택과 변화",
+      "manifestation": "존재가 어느 방향으로 움직이고 선택하는가",
+      "magicSchools": ["바람 마도사"]
+    },
+    {
+      "id": "light",
+      "name": "빛",
+      "meaning": "질서, 영혼, 탄생과 자아",
+      "manifestation": "존재가 자신을 알고 기억하며 질서를 세우는가",
+      "magicSchools": ["빛 마도사"]
+    },
+    {
+      "id": "dark",
+      "name": "어둠",
+      "meaning": "망각, 죽음, 해체와 소멸",
+      "manifestation": "존재가 끝과 해체 너머 무엇을 남기는가",
+      "magicSchools": ["어둠 마도사"]
+    },
+    {
+      "id": "void",
+      "name": "무",
+      "meaning": "가능성, 존재 이전의 여백, 초월",
+      "manifestation": "어떤 법칙도 고정하지 않은 채 다음 존재가 될 수 있는 여백",
+      "magicSchools": ["대원소마도사"]
+    }
+  ]
+}

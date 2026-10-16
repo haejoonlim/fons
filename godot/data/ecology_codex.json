@@ -1,0 +1,7720 @@
+{
+ "entries": [
+  {
+   "id": "mon_aasimar_01",
+   "name": "아시마르",
+   "floors": [
+    56,
+    60
+   ],
+   "habitat": [
+    "temple",
+    "sky"
+   ],
+   "diet": "omnivore",
+   "role": "guardian",
+   "note": "",
+   "temp": [
+    -10,
+    40
+   ],
+   "spawnBlock": 12,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_abyssiceeel_01",
+   "name": "얼음 밑 뱀장어",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "동결 해양 신규 서식종 — 얼음 틈에 매복해 물개 새끼를 채간다 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_abyssjellylet_01",
+   "name": "심해 등 해파리",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "deep_ocean",
+    "deep",
+    "trench"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "심해 신규 서식종 — 등불 같은 심장으로 작은 물고기를 유인 (260종 확장 #63)",
+   "temp": [
+    0,
+    15
+   ],
+   "spawnBlock": 14,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_abyssmold_01",
+   "name": "심연균사",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "빛이 닿지 않는 심연 벽면의 분해 균사",
+   "temp": [
+    -38,
+    14
+   ],
+   "spawnBlock": 20,
+   "group": "중층"
+  },
+  {
+   "id": "mon_alleyrat_01",
+   "name": "골목쥐",
+   "floors": [
+    76,
+    80
+   ],
+   "habitat": [
+    "city",
+    "sewer"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "미궁도시·하수도 공유종",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_alpinebutterfly_01",
+   "name": "고산 나비",
+   "floors": [
+    26,
+    30
+   ],
+   "habitat": [
+    "mountain",
+    "tundra",
+    "ice_cave"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "산맥 신규 서식종 — 고산초 꿀을 먹는 유리 같은 날개 나비 (260종 확장 #63)",
+   "temp": [
+    -25,
+    25
+   ],
+   "spawnBlock": 6,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_altarmoth_01",
+   "name": "향유 나방",
+   "floors": [
+    56,
+    60
+   ],
+   "habitat": [
+    "temple",
+    "shrine"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "신전 신규 서식종 — 제단 향유 냄새를 좇는 창백 나방 (260종 확장 #63)",
+   "temp": [
+    0,
+    30
+   ],
+   "spawnBlock": 12,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_archgolem_01",
+   "name": "서고 골렘",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "mineral",
+   "role": "guardian",
+   "note": "책장을 지키는 석고 거체 — 서고 질서를 어지럽히는 자를 응징",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 15,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_archivist_01",
+   "name": "사서가지",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "mana",
+   "role": "hunter",
+   "note": "떠도는 책을 되감는 손으로 도깨비를 묶는다",
+   "temp": [
+    8,
+    26
+   ],
+   "spawnBlock": 4,
+   "group": "하층"
+  },
+  {
+   "id": "mon_ashbat_01",
+   "name": "재가루귀",
+   "floors": [
+    91,
+    95
+   ],
+   "habitat": [
+    "hellscape"
+   ],
+   "diet": "mineral",
+   "role": "swarm",
+   "note": "재가루 속에서만 몸을 드러내는 무리를 이루는 지옥 박쥐",
+   "temp": [
+    34,
+    60
+   ],
+   "spawnBlock": 19,
+   "group": "중층"
+  },
+  {
+   "id": "mon_ashbloom_01",
+   "name": "재 화관",
+   "floors": [
+    46,
+    50
+   ],
+   "habitat": [
+    "volcano",
+    "lava"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "화산 신규 전투종 — 화산재가 꽃처럼 피어나는 형태 (260종 확장 #63)",
+   "temp": [
+    20,
+    300
+   ],
+   "spawnBlock": 10,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_ashfly_01",
+   "name": "재 파리떼",
+   "floors": [
+    46,
+    50
+   ],
+   "habitat": [
+    "volcano",
+    "lava"
+   ],
+   "diet": "omnivore",
+   "role": "swarm",
+   "note": "화산 신규 서식종 — 화산재를 먹고 번지는 붉은 파리떼 (260종 확장 #63)",
+   "temp": [
+    20,
+    300
+   ],
+   "spawnBlock": 10,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_ashland_01",
+   "name": "요흔사슴",
+   "floors": [
+    91,
+    95
+   ],
+   "habitat": [
+    "hellscape"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "재 위에 남은 풀을 뜯어 먹는 상흔 초식종",
+   "temp": [
+    34,
+    60
+   ],
+   "spawnBlock": 19,
+   "group": "중층"
+  },
+  {
+   "id": "mon_ashmoth_01",
+   "name": "재 불꽃나방",
+   "floors": [
+    46,
+    50
+   ],
+   "habitat": [
+    "volcano",
+    "lava"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "화산 신규 전투종 — 재 구름 속에서 번지는 불씨 나방 (260종 확장 #63)",
+   "temp": [
+    20,
+    300
+   ],
+   "spawnBlock": 10,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_astralhawk_01",
+   "name": "성해매",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "astral"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "별빛 날개로 성운을 가르는 매 — 성운나방·별가루 사냥",
+   "temp": [
+    -30,
+    50
+   ],
+   "spawnBlock": 20,
+   "group": "G3 — 정점"
+  },
+  {
+   "id": "mon_astralmoss_01",
+   "name": "아스트랄 이끼",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "astral"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "정점 신전 바닥을 덮는 성역 이끼 — 흘러든 근원을 분해",
+   "temp": [
+    -35,
+    50
+   ],
+   "spawnBlock": 20,
+   "group": "G3 — 정점"
+  },
+  {
+   "id": "mon_backworm_01",
+   "name": "배수충",
+   "floors": [
+    51,
+    55
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "배수관을 지나는 붉은 가시 벌레 떼",
+   "temp": [
+    8,
+    28
+   ],
+   "spawnBlock": 11,
+   "group": "하층"
+  },
+  {
+   "id": "mon_balrog_01",
+   "name": "발록",
+   "floors": [
+    46,
+    50
+   ],
+   "habitat": [
+    "volcano",
+    "hellscape"
+   ],
+   "diet": "mana",
+   "role": "apex",
+   "note": "",
+   "temp": [
+    100,
+    500
+   ],
+   "spawnBlock": 10,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_banshee_01",
+   "name": "밴시",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "ruins",
+    "cave"
+   ],
+   "diet": "none",
+   "role": "undead",
+   "note": "",
+   "temp": [
+    -10,
+    10
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_bear_01",
+   "name": "곰",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest",
+    "mountain"
+   ],
+   "diet": "omnivore",
+   "role": "predator",
+   "note": "",
+   "temp": [
+    -5,
+    30
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_bee_01",
+   "name": "독벌",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest",
+    "meadow"
+   ],
+   "diet": "herbivore",
+   "role": "decomposer",
+   "note": "군체로 부드러운 유충·썩은 과실을 분해하는 초원 벌 — 회수 못 한 잔해를 마무리한다",
+   "temp": [
+    15,
+    38
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_beetle_01",
+   "name": "장수풍뎅이",
+   "floors": [
+    1,
+    5
+   ],
+   "habitat": [
+    "forest",
+    "grassland"
+   ],
+   "diet": "herbivore",
+   "role": "scavenger",
+   "note": "땅속 유충이 썩은 나무·사체를 가리는 초원의 청소곤충 — 사냥 잔해를 회수해 토양으로 되돌린다",
+   "temp": [
+    10,
+    35
+   ],
+   "spawnBlock": 1,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_beholder_01",
+   "name": "비홀더",
+   "floors": [
+    1,
+    130
+   ],
+   "habitat": [
+    "deep",
+    "lair"
+   ],
+   "diet": "omnivore",
+   "role": "apex",
+   "note": "",
+   "temp": [
+    5,
+    30
+   ],
+   "spawnBlock": 1,
+   "group": "?"
+  },
+  {
+   "id": "mon_blackchainbeetle_01",
+   "name": "흑렌 갑충",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "유리 사막 신규 서식종 — 낮의 빛을 흑색 껍질로 흡수하는 갑충 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_boar_01",
+   "name": "멧돼지",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest",
+    "plains"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "",
+   "temp": [
+    -5,
+    30
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_booklouse_01",
+   "name": "책등에",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "책등지에서 떨어지는 풀잎을 좁아 먹는 다람쥐 유사충",
+   "temp": [
+    8,
+    26
+   ],
+   "spawnBlock": 4,
+   "group": "하층"
+  },
+  {
+   "id": "mon_bookworm_01",
+   "name": "제책나방",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "떼бри 본을 잇는 실을 갉는 흰 나방",
+   "temp": [
+    8,
+    26
+   ],
+   "spawnBlock": 4,
+   "group": "하층"
+  },
+  {
+   "id": "mon_borderfly_01",
+   "name": "경계눈박이",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "carnivore",
+   "role": "prey",
+   "note": "경계선이 움직일 때만 깨어 나는 눈박이 떼",
+   "temp": [
+    -70,
+    -30
+   ],
+   "spawnBlock": 26,
+   "group": "상층"
+  },
+  {
+   "id": "mon_bowlbeetle_01",
+   "name": "변기개",
+   "floors": [
+    51,
+    55
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "하수구를 집으로 삼은 검은 딱정벌레",
+   "temp": [
+    8,
+    28
+   ],
+   "spawnBlock": 11,
+   "group": "하층"
+  },
+  {
+   "id": "mon_brimstonefly_01",
+   "name": "유황파리",
+   "floors": [
+    91,
+    95
+   ],
+   "habitat": [
+    "hellscape"
+   ],
+   "diet": "mineral",
+   "role": "swarm",
+   "note": "유황 결정을 갉는 파리 군체 — 불열매를 수분 (공생)",
+   "temp": [
+    80,
+    380
+   ],
+   "spawnBlock": 19,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_bugbear_01",
+   "name": "버그베어",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest",
+    "cave"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "",
+   "temp": [
+    0,
+    25
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_cactusrime_01",
+   "name": "선인장부패균",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "잘라낸 선인장의 상처면을 하얗게 덮는 부패 균사",
+   "temp": [
+    14,
+    56
+   ],
+   "spawnBlock": 17,
+   "group": "중층"
+  },
+  {
+   "id": "mon_cactworm_01",
+   "name": "선인장 벌레",
+   "floors": [
+    41,
+    45
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "사막 신규 서식종 — 마른 선인장을 갉아 분해하는 벌레 (260종 확장 #63)",
+   "temp": [
+    15,
+    50
+   ],
+   "spawnBlock": 9,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_canopyfrog_01",
+   "name": "수관 개구리",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "정글 신규 서식종 — 잎과 같은 초록의 수관 개구리 (260종 확장 #63)",
+   "temp": [
+    15,
+    40
+   ],
+   "spawnBlock": 17,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_carrionbeetle_01",
+   "name": "썩고기갑충",
+   "floors": [
+    41,
+    45
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "omnivore",
+   "role": "decomposer",
+   "note": "사체를 분해하는 갑충 — 사막의 청소부",
+   "temp": [
+    18,
+    45
+   ],
+   "spawnBlock": 9,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_cavebat_01",
+   "name": "동굴 박쥐떼",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "cave",
+    "mine",
+    "underground",
+    "fungus"
+   ],
+   "diet": "omnivore",
+   "role": "swarm",
+   "note": "동굴 신규 서식종 — 구아노 근처를 도는 박쥐떼 (260종 확장 #63)",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_cavefirefly_01",
+   "name": "동굴 반딧불이",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "cave",
+    "mine",
+    "underground",
+    "fungus"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "동굴 신규 서식종 — 광로가 닿지 않는 구간의 유일한 빛 (260종 확장 #63)",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_censerember_01",
+   "name": "향로불티",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "mana",
+   "role": "swarm",
+   "note": "무너진 향로에서 끊임없이 피어나는 불티",
+   "temp": [
+    -10,
+    26
+   ],
+   "spawnBlock": 15,
+   "group": "중층"
+  },
+  {
+   "id": "mon_cirruskite_01",
+   "name": "권운표양",
+   "floors": [
+    26,
+    30
+   ],
+   "habitat": [
+    "sky",
+    "storm"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "얇은 권운 위를 활공하며 상층 기류를 쫓는 사냥매",
+   "temp": [
+    -28,
+    12
+   ],
+   "spawnBlock": 6,
+   "group": "하층"
+  },
+  {
+   "id": "mon_cirruswarden_01",
+   "name": "권운감시자",
+   "floors": [
+    26,
+    30
+   ],
+   "habitat": [
+    "sky",
+    "storm"
+   ],
+   "diet": "wind",
+   "role": "guardian",
+   "note": "증기 구름층의 기류를 지탱하는 감시자 — 추락을 조용히 막는다",
+   "temp": [
+    -28,
+    12
+   ],
+   "spawnBlock": 6,
+   "group": "하층"
+  },
+  {
+   "id": "mon_citypigeon_01",
+   "name": "도시비둘기",
+   "floors": [
+    1,
+    130
+   ],
+   "habitat": [
+    "city"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "미궁도시 대표 소음원 — 잔반을 먹고 번식",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 1,
+   "group": "?"
+  },
+  {
+   "id": "mon_clearhawk_01",
+   "name": "투명 맹금",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "이데아 관문 신규 서식종 — 그림자만 보이는 하얀 맹금류 (260종 확장 #63)",
+   "temp": [
+    -55,
+    -5
+   ],
+   "spawnBlock": 26,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_clearmillipede_01",
+   "name": "투명 실노래기",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "이데아 관문 신규 서식종 — 빛을 갈라 먹는 실 같은 노래기 (260종 확장 #63)",
+   "temp": [
+    -55,
+    -5
+   ],
+   "spawnBlock": 26,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_cloudjumper_01",
+   "name": "구름거미",
+   "floors": [
+    26,
+    30
+   ],
+   "habitat": [
+    "sky"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "구름 섬 사이 실을 걸어 기는 도약형 거미",
+   "temp": [
+    -28,
+    12
+   ],
+   "spawnBlock": 6,
+   "group": "하층"
+  },
+  {
+   "id": "mon_cloudmoss_01",
+   "name": "구름이끼",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "astral"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "구름을 짜는 이끼 — 해충(별가루)을 가두는 생산자 가안",
+   "temp": [
+    -35,
+    50
+   ],
+   "spawnBlock": 20,
+   "group": "G3 — 정점"
+  },
+  {
+   "id": "mon_cloudseedworm_01",
+   "name": "구름 씨앗 벌레",
+   "floors": [
+    61,
+    65
+   ],
+   "habitat": [
+    "sky",
+    "storm"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "천공 신규 서식종 — 바람씨앗을 주워 먹는 부유 벌레 (260종 확장 #63)",
+   "temp": [
+    -20,
+    20
+   ],
+   "spawnBlock": 13,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_cockroach_01",
+   "name": "바퀴벌레",
+   "floors": [
+    76,
+    80
+   ],
+   "habitat": [
+    "sewer",
+    "city"
+   ],
+   "diet": "omnivore",
+   "role": "decomposer",
+   "note": "r전략종의 왕 — 도시·하수도 어디든",
+   "temp": [
+    10,
+    30
+   ],
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_coffinworm_01",
+   "name": "관 속 벌레",
+   "floors": [
+    36,
+    40
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "묘지 신규 서식종 — 관재 흙 속을 파고드는 창백한 벌레 (260종 확장 #63)",
+   "temp": [
+    -5,
+    30
+   ],
+   "spawnBlock": 8,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_collapserat_01",
+   "name": "붕괴 쥐",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "붕괴 천창 신규 서식종 — 천장과 바닥이 뒤바뀐 구간을 달리는 쥐 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_cookiewraith_01",
+   "name": "절삭 망령",
+   "floors": [
+    86,
+    90
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "심연 신규 전투종 — 큰 체적에 구멍을 파고 마나를 절삭하는 망령 (260종 확장 #63)",
+   "temp": [
+    -30,
+    30
+   ],
+   "spawnBlock": 18,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_coral_01",
+   "name": "산호초",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "none",
+   "role": "guardian",
+   "note": "",
+   "temp": [
+    18,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_crab_01",
+   "name": "거대 게",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "ocean",
+    "coral",
+    "trench"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_crackwasp_01",
+   "name": "틈새말벌",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "mana",
+   "role": "swarm",
+   "note": "문턱의 균열 사이를 드나드는 흰 줄무늬 말벌",
+   "temp": [
+    -70,
+    -30
+   ],
+   "spawnBlock": 26,
+   "group": "상층"
+  },
+  {
+   "id": "mon_creviceech_01",
+   "name": "틈새우레지",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "mineral",
+   "role": "prey",
+   "note": "바위 틈에 붙어 열수 가루를 걸러 먹는 유레지",
+   "temp": [
+    -38,
+    14
+   ],
+   "spawnBlock": 20,
+   "group": "중층"
+  },
+  {
+   "id": "mon_crow_01",
+   "name": "까마귀",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "ruins",
+    "graveyard",
+    "forest"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "",
+   "temp": [
+    -10,
+    35
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_cryobacteria_01",
+   "name": "냉각박테리아",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "빙판 밑을 녹이지 않고 먹이만 분해하는 박테리아 층",
+   "temp": [
+    -56,
+    -12
+   ],
+   "spawnBlock": 22,
+   "group": "상층"
+  },
+  {
+   "id": "mon_cryoshard_01",
+   "name": "결로 파편체",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "수정 숲 신규 전투종 — 수정 틈에 숨어 있다 방출하는 군체형 역류체 (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_crystaldeer_01",
+   "name": "수정노루",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "수정 숲 신규 서식종 — 뿔이 아직 살아 있는 수정인 노루 (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_crystalking_01",
+   "name": "결정 수호자·수정 나무 왕",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "carnivore",
+   "role": "guardian",
+   "note": "수정 숲 신규 전투종 — carnivore (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_crystalmold_01",
+   "name": "수정 균류",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "수정 숲 신규 서식종 — 죽은 수정 나무를 녹이는 결정 균사 (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_crystalsentinel_01",
+   "name": "수정 감시자",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "carnivore",
+   "role": "guardian",
+   "note": "수정 숲 신규 전투종 — 수정 나무 왕의 감시 개체 (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_crystalsquirrel_01",
+   "name": "수정 다람쥐",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "수정 숲 신규 서식종 — 수정 열매를 부수며 사는 반짝이는 다람쥐 (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_culvertcat_01",
+   "name": "수로사냥개",
+   "floors": [
+    51,
+    55
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "찬물 수로에서 딱정벌레를 쫓는 사냥개",
+   "temp": [
+    8,
+    28
+   ],
+   "spawnBlock": 11,
+   "group": "하층"
+  },
+  {
+   "id": "mon_debtavatar_01",
+   "name": "포기한 세 번",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "carnivore",
+   "role": "guardian",
+   "note": "붕괴 천창 신규 전투종 — carnivore (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_deepglow_01",
+   "name": "심연등불",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "mana",
+   "role": "swarm",
+   "note": "깊을수록 짙어지는 푸른 불빛이 모인 무리",
+   "temp": [
+    -38,
+    14
+   ],
+   "spawnBlock": 20,
+   "group": "중층"
+  },
+  {
+   "id": "mon_deepisopod_01",
+   "name": "심해 청소 등각류",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "deep_ocean",
+    "deep",
+    "trench"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "심해 신규 서식종 — 수십 년을 굶을 수 있는 깊은 바다 청소부 (260종 확장 #63)",
+   "temp": [
+    0,
+    15
+   ],
+   "spawnBlock": 14,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_deeplurker_01",
+   "name": "심해 발광 포식자",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "deep_ocean",
+    "deep",
+    "trench"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "심해 신규 전투종 — 해구의 어둠에 등불을 든 포식자 (260종 확장 #63)",
+   "temp": [
+    0,
+    15
+   ],
+   "spawnBlock": 14,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_deepplankton_01",
+   "name": "심해플랑크톤",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "deep_ocean"
+   ],
+   "diet": "omnivore",
+   "role": "swarm",
+   "note": "심해 먹이사슬의 출발점 — 발광 군체",
+   "temp": [
+    2,
+    12
+   ],
+   "spawnBlock": 14,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_desertrat_01",
+   "name": "사막쥐",
+   "floors": [
+    41,
+    45
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "선인장 즙으로 수분을 보충하는 사막의 쥐",
+   "temp": [
+    18,
+    45
+   ],
+   "spawnBlock": 9,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_dewlark_01",
+   "name": "이슬종다리",
+   "floors": [
+    1,
+    5
+   ],
+   "habitat": [
+    "grassland",
+    "plains",
+    "meadow"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "초원 신규 서식종 — 이슬 맺힌 새벽 풀을 먹는 종다리 (260종 확장 #63)",
+   "temp": [
+    0,
+    35
+   ],
+   "spawnBlock": 1,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_dire_bear_01",
+   "name": "거대 곰",
+   "floors": [
+    26,
+    30
+   ],
+   "habitat": [
+    "mountain",
+    "tundra"
+   ],
+   "diet": "carnivore",
+   "role": "apex",
+   "note": "",
+   "temp": [
+    -20,
+    15
+   ],
+   "spawnBlock": 6,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_dire_boar_01",
+   "name": "거대 멧돼지",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest",
+    "mountain"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "",
+   "temp": [
+    -10,
+    25
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_dire_wolf_01",
+   "name": "거대 늑대",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest",
+    "mountain"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "",
+   "temp": [
+    -15,
+    20
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_doppelganger_01",
+   "name": "도플갱어",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "city",
+    "ruins"
+   ],
+   "diet": "carnivore",
+   "role": "mimic",
+   "note": "전투층 중보스 (T4 모방형) — 도시에서 지나가는 사람으로 위장하는 전투 설계 존재. 생태 개체수 시뮬레이션 대상이 아니며, 고블린 사냥 관계만 참조용으로 표기.",
+   "temp": [
+    5,
+    30
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_dracolich_01",
+   "name": "드라코리치",
+   "floors": [
+    46,
+    50
+   ],
+   "habitat": [
+    "volcano",
+    "dragon_lair"
+   ],
+   "diet": "mana",
+   "role": "apex",
+   "note": "",
+   "temp": [
+    30,
+    100
+   ],
+   "spawnBlock": 10,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_dreadnought_01",
+   "name": "드레드노트",
+   "floors": [
+    1,
+    130
+   ],
+   "habitat": [
+    "fortress",
+    "deep"
+   ],
+   "diet": "mana",
+   "role": "guardian",
+   "note": "",
+   "temp": [
+    -10,
+    40
+   ],
+   "spawnBlock": 1,
+   "group": "?"
+  },
+  {
+   "id": "mon_dredgerays_01",
+   "name": "잔해 구더기",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "omnivore",
+   "role": "decomposer",
+   "note": "바닥 잔해를 저어 붕괴시켜 연안의 사체를 분해하는 구더기 군체",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_driftvulture_01",
+   "name": "표류수리",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "carnivore",
+   "role": "scavenger",
+   "note": "썰물에 밀려온 잔해를 되감아 가는 청소 수리 — 배가 고프면 뱀장어도 놓치지 않는다",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_duneant_01",
+   "name": "사막개미떼",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "omnivore",
+   "role": "swarm",
+   "note": "사낭을 실어 옮기며 벌판을 넓히는 개미 군열",
+   "temp": [
+    14,
+    56
+   ],
+   "spawnBlock": 17,
+   "group": "중층"
+  },
+  {
+   "id": "mon_dunefox_01",
+   "name": "구렁태설범",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "carnivore",
+   "role": "prey",
+   "note": "여우처럼 생긴 설범 — 초식이지만 곤충 떼를 노린다",
+   "temp": [
+    14,
+    56
+   ],
+   "spawnBlock": 17,
+   "group": "중층"
+  },
+  {
+   "id": "mon_dunelizard_01",
+   "name": "사막도마뱀",
+   "floors": [
+    41,
+    45
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "모래 아래 이동하는 도마뱀 — 전갈 독침의 주요 표적",
+   "temp": [
+    15,
+    38
+   ],
+   "spawnBlock": 9,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_dunesaguar_01",
+   "name": "사막선인장",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "말라붙은 선인장 속 수분을 저장해 새벽 이슬을 내는 사막의 저장고",
+   "temp": [
+    14,
+    56
+   ],
+   "spawnBlock": 17,
+   "group": "중층"
+  },
+  {
+   "id": "mon_dunewalker_01",
+   "name": "사막유랑자",
+   "floors": [
+    66,
+    85
+   ],
+   "habitat": [
+    "desert",
+    "jungle"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "밀림 가장자리와 모래밭을 오가는 대형 유랑 포식자 — 두 서식지를 잇는다",
+   "temp": [
+    16,
+    34
+   ],
+   "spawnBlock": 14,
+   "group": "중층"
+  },
+  {
+   "id": "mon_dunewasp_01",
+   "name": "사막말벌",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "nectar",
+   "role": "swarm",
+   "note": "꽃을 찾아 먼지벌판을 횡단하는 말벌 무리 — 수분 담당",
+   "temp": [
+    14,
+    56
+   ],
+   "spawnBlock": 17,
+   "group": "중층"
+  },
+  {
+   "id": "mon_duskhawk_01",
+   "name": "어스름매",
+   "floors": [
+    36,
+    40
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "황혼에 무덤가를 선회 — 무덤벌레·쥐를 사냥",
+   "temp": [
+    -2,
+    25
+   ],
+   "spawnBlock": 8,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_dustbug_01",
+   "name": "먼지벌레",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "ruins"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "곡물 가루를 먹는 벌레 군체 — 저장고의 1차 소비자",
+   "temp": [
+    2,
+    32
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_echoembermole_01",
+   "name": "잔향 두더지",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "이데아 관문 신규 서식종 — 빛의 잔향을 밥처럼 먹는 두더지 (260종 확장 #63)",
+   "temp": [
+    -55,
+    -5
+   ],
+   "spawnBlock": 26,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_emberhornet_01",
+   "name": "용암말벌",
+   "floors": [
+    91,
+    95
+   ],
+   "habitat": [
+    "hellscape"
+   ],
+   "diet": "mana",
+   "role": "hunter",
+   "note": "용암 웅덩이 위를 선회하며 물을 긁어 모으는 말벌",
+   "temp": [
+    34,
+    60
+   ],
+   "spawnBlock": 19,
+   "group": "중층"
+  },
+  {
+   "id": "mon_emberthorn_01",
+   "name": "골렘가시",
+   "floors": [
+    91,
+    95
+   ],
+   "habitat": [
+    "hellscape"
+   ],
+   "diet": "none",
+   "role": "ambusher",
+   "note": "뼈와 결정이 뒤엉킨 덩굴 — 밟으면 저절로 조여든다",
+   "temp": [
+    34,
+    60
+   ],
+   "spawnBlock": 19,
+   "group": "중층"
+  },
+  {
+   "id": "mon_fanbird_01",
+   "name": "부채꼬리조",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "부채꼴 꼬리를 펴 개구리 무리를 밀어 올리는 사냥꾼",
+   "temp": [
+    16,
+    34
+   ],
+   "spawnBlock": 14,
+   "group": "중층"
+  },
+  {
+   "id": "mon_fieldviper_01",
+   "name": "들뱀",
+   "floors": [
+    1,
+    5
+   ],
+   "habitat": [
+    "grassland"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "풀 결의 색과 똑같은 비늘 — 풀종다리 둥지를 기다린다",
+   "temp": [
+    8,
+    35
+   ],
+   "spawnBlock": 1,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_fireberry_01",
+   "name": "불열매덩굴",
+   "floors": [
+    91,
+    95
+   ],
+   "habitat": [
+    "hellscape"
+   ],
+   "diet": "mineral",
+   "role": "prey",
+   "note": "유황을 흡수해 매운 열매를 맺는 덩굴 — 유황파리가 수분",
+   "temp": [
+    80,
+    380
+   ],
+   "spawnBlock": 19,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_fish_01",
+   "name": "물고기",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "ocean",
+    "river",
+    "swamp"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "",
+   "temp": [
+    2,
+    35
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_flameworm_01",
+   "name": "화염벌레",
+   "floors": [
+    46,
+    50
+   ],
+   "habitat": [
+    "volcano"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "열수 파이프에 붙어 열조류를 뜯는 내열 유충",
+   "temp": [
+    40,
+    280
+   ],
+   "spawnBlock": 10,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_floatjelly_01",
+   "name": "부유 해파리",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "붕괴 천창 신규 서식종 — 공기 중을 헤엄치는 무게 없는 해파리 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_foreststagbeetle_01",
+   "name": "숲 사슴벌레",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "숲 신규 서식종 — 썩은 통나무를 갈라 청소하는 사슴벌레 (260종 확장 #63)",
+   "temp": [
+    -5,
+    35
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_frog_01",
+   "name": "개구리",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "swamp",
+    "river",
+    "forest"
+   ],
+   "diet": "carnivore",
+   "role": "prey",
+   "note": "",
+   "temp": [
+    10,
+    35
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_frostfish_01",
+   "name": "얼음 밑 심어",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "동결 해양 신규 서식종 — 얼음 밑 암류를 유영하는 은빛 소형어 — 크릴을 뜯는다 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_frostgull_01",
+   "name": "동결 갈매기",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "동결 해양 신규 서식종 — 언 파도 위를 순찰하는 흰 갈매기 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_frostlure_01",
+   "name": "등불 미끼자",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "동결 해양 신규 전투종 — 아귀형 발광 미끼로 유인하는 심해형 역류체 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_frostmoth_01",
+   "name": "서리 나방",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "수정 숲 신규 서식종 — 수정 수액 냄새를 좇는 창백한 나방 (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_frostmothswarm_01",
+   "name": "서리 나방떼",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "동결 해양 신규 전투종 — 언 파도 위에 내려앉는 서리 나방 역류체 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_frostwhale_01",
+   "name": "동결 고래·첫 파도",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "carnivore",
+   "role": "guardian",
+   "note": "동결 해양 신규 전투종 — carnivore (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_frostwoodpecker_01",
+   "name": "수정 딱따구리",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "수정 숲 신규 서식종 — 수정 껍질을 두드려 벌레를 꺼내는 새 (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_fruitflyswarm_01",
+   "name": "과실 파리떼",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "정글 신규 서식종 — 낙과 냄새에 몰려드는 과일 파리 (260종 확장 #63)",
+   "temp": [
+    15,
+    40
+   ],
+   "spawnBlock": 17,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_fungus_01",
+   "name": "포자 버섯",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "cave",
+    "fungus",
+    "swamp"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "",
+   "temp": [
+    5,
+    30
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_gardensnake_01",
+   "name": "가람뱀",
+   "floors": [
+    56,
+    60
+   ],
+   "habitat": [
+    "temple"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "기둥 그늘에 매복해 비둘기 사냥",
+   "temp": [
+    8,
+    28
+   ],
+   "spawnBlock": 12,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_gatebeetle_01",
+   "name": "관문 풍뎅이",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "이데아 관문 신규 서식종 — 비석 자리 잔해를 정리하는 풍뎅이 (260종 확장 #63)",
+   "temp": [
+    -55,
+    -5
+   ],
+   "spawnBlock": 26,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_gateherald_01",
+   "name": "관문전언자",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "soul",
+   "role": "predator",
+   "note": "문턱을 건너려는 자를 먼저 알리는 전언자 — 심판자보다 먼저 도착한다",
+   "temp": [
+    -70,
+    -30
+   ],
+   "spawnBlock": 26,
+   "group": "상층"
+  },
+  {
+   "id": "mon_giant_ant_01",
+   "name": "거대 개미",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest",
+    "underground"
+   ],
+   "diet": "omnivore",
+   "role": "swarm",
+   "note": "",
+   "temp": [
+    10,
+    35
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_giant_spider_01",
+   "name": "거대 거미",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "cave",
+    "forest"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "",
+   "temp": [
+    5,
+    30
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_glaciaribou_01",
+   "name": "얼음사슴",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "빙판 아래 플랑크톤을 뜯어 먹는 광로들판 초식종",
+   "temp": [
+    -56,
+    -12
+   ],
+   "spawnBlock": 22,
+   "group": "상층"
+  },
+  {
+   "id": "mon_glacierkrill_01",
+   "name": "빙하 크릴",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "동결 해양 신규 서식종 — 얼음 틈새를 떠도는 발광 크릴 군집 — 동결 해양 먹이그물의 바닥 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_glaciermaw_01",
+   "name": "빙하 이빨",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "동결 해양 신규 전투종 — 빙하를 통째로 씹는 심해 상위 포식자 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_glasscutter_01",
+   "name": "빛을 자르는 자·유리 파수꾼",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "carnivore",
+   "role": "guardian",
+   "note": "유리 사막 신규 전투종 — carnivore (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_glassdiatom_01",
+   "name": "유리 규각충",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "유리 사막 신규 서식종 — 모래 속에서 발광하는 단세포 군체 — 밟으면 바스락 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_glassgrub_01",
+   "name": "유리모래딱정벌레",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "mineral",
+   "role": "scavenger",
+   "note": "유리로 굳은 모래를 씹어 규조를 되돌리는 딱정벌레",
+   "temp": [
+    24,
+    58
+   ],
+   "spawnBlock": 24,
+   "group": "상층"
+  },
+  {
+   "id": "mon_glassjelly_01",
+   "name": "유리 해파리",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "동결 해양 신규 서식종 — 얼음처럼 투명한 몸 — 스스로도 자기 위치를 모른다 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_glasslizard_01",
+   "name": "유리 도마뱀",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "유리 사막 신규 서식종 — 빛을 굴절해 사라지는 투명 비늘 도마뱀 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_glassmole_01",
+   "name": "유리두더지",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "유리 사막 신규 서식종 — 유리 모래를 헤엄치듯 파고드는 두더지 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_glassmonk_01",
+   "name": "유리승려",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "mineral",
+   "role": "guardian",
+   "note": "마른 지맥의 균열을 기도로 메우는 승려 — 유리가 다시 이어진다",
+   "temp": [
+    24,
+    58
+   ],
+   "spawnBlock": 24,
+   "group": "상층"
+  },
+  {
+   "id": "mon_glassmoss_01",
+   "name": "유리 이끼",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "유리 사막 신규 서식종 — 유리 모래 표면에 사는 수정 이끼 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_glassraven_01",
+   "name": "유리 까마귀",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "유리 사막 신규 서식종 — 햇빛을 받으면 렌즈처럼 빛나는 까마귀 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_glassrefract_01",
+   "name": "굴절 망영",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "유리 사막 신규 전투종 — 빛의 굴절로 위치를 속이는 망영 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_glasssnake_01",
+   "name": "사막 유리뱀",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "유리 사막 신규 서식종 — 유리 모래 속을 유영하는 뱀 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_glassswarm_01",
+   "name": "유리 규각 군체",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "유리 사막 신규 전투종 — 유리 모래 자체가 된 군체 역류체 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_glassworm_01",
+   "name": "관문 유리벌레",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "이데아 관문 신규 서식종 — 몸이 거의 보이지 않는 유리질 벌레 (260종 확장 #63)",
+   "temp": [
+    -55,
+    -5
+   ],
+   "spawnBlock": 26,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_gloambug_01",
+   "name": "무광딱정벌레",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "mineral",
+   "role": "scavenger",
+   "note": "광물가루를 좁히며 내려가는 심연의 청소자",
+   "temp": [
+    -38,
+    14
+   ],
+   "spawnBlock": 20,
+   "group": "중층"
+  },
+  {
+   "id": "mon_glossbee_01",
+   "name": "광택벌레",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "갑옷에서 반사되는 빛을 발광하는 것으로 속아 벌집에 모이는 벌레",
+   "temp": [
+    14,
+    56
+   ],
+   "spawnBlock": 17,
+   "group": "중층"
+  },
+  {
+   "id": "mon_goblin_01",
+   "name": "고블린",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "cave",
+    "ruins"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "",
+   "temp": [
+    5,
+    30
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_grasshoppertrap_01",
+   "name": "풀 방아쇠벌레",
+   "floors": [
+    1,
+    5
+   ],
+   "habitat": [
+    "grassland",
+    "plains",
+    "meadow"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "초원 신규 서식종 — 여름 풀결을 채우는 방아쇠벌레떼 (260종 확장 #63)",
+   "temp": [
+    0,
+    35
+   ],
+   "spawnBlock": 1,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_gravefilm_01",
+   "name": "묘지이끼",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "묘비 글자를 따라 번지는 어둠의 이끼",
+   "temp": [
+    -10,
+    26
+   ],
+   "spawnBlock": 15,
+   "group": "중층"
+  },
+  {
+   "id": "mon_gravefly_01",
+   "name": "구속좀비파리",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "none",
+   "role": "swarm",
+   "note": "묶인 자를 따라다니는 흑란색 파리 떼",
+   "temp": [
+    -10,
+    26
+   ],
+   "spawnBlock": 15,
+   "group": "중층"
+  },
+  {
+   "id": "mon_graveknight_01",
+   "name": "묘비파수꾼",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "none",
+   "role": "undead",
+   "note": "쓰러진 비석을 재료로 소환하는 망령 사제 — 묘역을 다시 잠근다",
+   "temp": [
+    -10,
+    26
+   ],
+   "spawnBlock": 15,
+   "group": "중층"
+  },
+  {
+   "id": "mon_graverat_01",
+   "name": "묘지쥐",
+   "floors": [
+    36,
+    40
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "묘비 밑 굴에 사는 쥐 — 무덤벌레를 파먹고 매·까마귀의 먹이",
+   "temp": [
+    5,
+    30
+   ],
+   "spawnBlock": 8,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_gravitymoss_01",
+   "name": "중력 이끼",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "붕괴 천창 신규 서식종 — 위로 자라는 방향이 매번 다른 이끼 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_gravitymoth_01",
+   "name": "어긋나개 나방",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "붕괴 천창 신규 서식종 — 가라앉는 것으로 오르는 나방떼 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_gravityvine_01",
+   "name": "중력 매복 덩굴",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "붕괴 천창 신규 서식종 — 방향을 바꿔 감아오르는 역중력 덩굴 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_gravityworm_01",
+   "name": "천창 중력 벌레",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "붕괴 천창 신규 전투종 — 중력 자체를 사냥감처럼 다루는 벌레 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_gravmole_01",
+   "name": "무덤 두더지",
+   "floors": [
+    36,
+    40
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "묘지 신규 서식종 — 묘비 사이 흙을 파는 회색 두더지 (260종 확장 #63)",
+   "temp": [
+    -5,
+    30
+   ],
+   "spawnBlock": 8,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_grieyer_01",
+   "name": "어긋난 눈",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "붕괴 천창 신규 전투종 — 바라보는 것의 무게중심을 어긋나게 하는 눈 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_groundedspider_01",
+   "name": "무풍 매복 거미",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "무풍 고원 신규 서식종 — 이끼 색 바닥에 납작하게 붙는 거미 (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_grovelichen_01",
+   "name": "숲을 감싼 이끼",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "수정 숲 신규 서식종 — 수정 나무 껍질을 두르는 발광 이끼 (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_guanoqueen_01",
+   "name": "회로 여왕",
+   "floors": [
+    76,
+    80
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "하수도 신규 전투종 — 관로 분비 생태의 정점 암컷 역류체 (260종 확장 #63)",
+   "temp": [
+    10,
+    30
+   ],
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_guanoswarm_01",
+   "name": "회로 박쥐떼",
+   "floors": [
+    76,
+    80
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "하수도 신규 전투종 — 관로 천장 분비물에 물든 박쥐떼 역류체 (260종 확장 #63)",
+   "temp": [
+    10,
+    30
+   ],
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_guardian_spirit_01",
+   "name": "수호령",
+   "floors": [
+    56,
+    60
+   ],
+   "habitat": [
+    "temple",
+    "shrine"
+   ],
+   "diet": "mana",
+   "role": "guardian",
+   "note": "",
+   "temp": [
+    -20,
+    50
+   ],
+   "spawnBlock": 12,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_hawk_01",
+   "name": "매",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "mountain",
+    "plains",
+    "forest"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "",
+   "temp": [
+    -5,
+    35
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_hell_hound_01",
+   "name": "헬 하운드",
+   "floors": [
+    46,
+    50
+   ],
+   "habitat": [
+    "hellscape",
+    "volcano"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "",
+   "temp": [
+    30,
+    80
+   ],
+   "spawnBlock": 10,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_hellarchon_01",
+   "name": "지옥사제",
+   "floors": [
+    91,
+    95
+   ],
+   "habitat": [
+    "fortress",
+    "hellscape"
+   ],
+   "diet": "mana",
+   "role": "predator",
+   "note": "상흔에서 기도를 엮어 지옥의 판결을 내리는 사제",
+   "temp": [
+    34,
+    60
+   ],
+   "spawnBlock": 19,
+   "group": "중층"
+  },
+  {
+   "id": "mon_hellspring_01",
+   "name": "지옥수",
+   "floors": [
+    91,
+    95
+   ],
+   "habitat": [
+    "hellscape"
+   ],
+   "diet": "carnivore",
+   "role": "prey",
+   "note": "지하수를 마신 듯 맑은 물만 남은 지옥 연못",
+   "temp": [
+    34,
+    60
+   ],
+   "spawnBlock": 19,
+   "group": "중층"
+  },
+  {
+   "id": "mon_heronshrike_01",
+   "name": "물수제비 매",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "썰물에 드러난 여울을 급강하해 소어를 집어채는 초보리 매 — 지면 위에서만 사냥한다",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_hobgoblin_01",
+   "name": "흉고블린",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "ruins",
+    "forest"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "",
+   "temp": [
+    5,
+    30
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_holymoss_01",
+   "name": "성수이끼",
+   "floors": [
+    56,
+    60
+   ],
+   "habitat": [
+    "temple"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "제단을 덮는 이끼 — 성수 이슬을 흡수",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 12,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_hushspider_01",
+   "name": "침묵서고",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "소리를 삼키며 다가오는 거대한 거미",
+   "temp": [
+    -70,
+    -30
+   ],
+   "spawnBlock": 26,
+   "group": "상층"
+  },
+  {
+   "id": "mon_icecrab_01",
+   "name": "빙결 게",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "동결 해양 신규 서식종 — 갑각에 서리를 두른 청소 게 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_icepolyp_01",
+   "name": "균열 산호 폴립",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "동결 해양 신규 서식종 — 얼음 균열에 박혀 스치는 것을 붙잡는 폴립 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_iceseal_01",
+   "name": "동상 물개",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "carnivore",
+   "role": "prey",
+   "note": "동결 해양 신규 서식종 — 빙판 위에서 낮잠이 이어지는 통통한 물개 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_iceslug_01",
+   "name": "냉압 연충",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "동결 해양 신규 서식종 — 빙하 밑바닥 사체를 갉는 은백 연충 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_idealis_01",
+   "name": "관문감지기",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "soul",
+   "role": "apex",
+   "note": "통과한 모든 존재를 재로 재는 문턱의 심판자 — 탈출은 허락하지 않는다",
+   "temp": [
+    -70,
+    -30
+   ],
+   "spawnBlock": 26,
+   "group": "상층"
+  },
+  {
+   "id": "mon_ideamoss_01",
+   "name": "이데아 이끼",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "이데아 관문 신규 서식종 — 탑 벽이 투명해지는 자리에만 피는 마지막 생물 (260종 확장 #63)",
+   "temp": [
+    -55,
+    -5
+   ],
+   "spawnBlock": 26,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_ideavigil_01",
+   "name": "이데아감시자",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "mana",
+   "role": "guardian",
+   "note": "문턱의 경계를 실체화해 지켜보는 빛의 감시자",
+   "temp": [
+    -70,
+    -30
+   ],
+   "spawnBlock": 26,
+   "group": "상층"
+  },
+  {
+   "id": "mon_imp_01",
+   "name": "임프",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "hellscape",
+    "ruins"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "",
+   "temp": [
+    20,
+    80
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_incinseworm_01",
+   "name": "향 연기 벌레",
+   "floors": [
+    56,
+    60
+   ],
+   "habitat": [
+    "temple",
+    "shrine"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "신전 신규 서식종 — 향 재를 먹고 자라는 은빛 벌레 (260종 확장 #63)",
+   "temp": [
+    0,
+    30
+   ],
+   "spawnBlock": 12,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_inkcrow_01",
+   "name": "잉크까마귀",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "책장 사이를 날아 다니며 나방·쥐를 사냥",
+   "temp": [
+    5,
+    20
+   ],
+   "spawnBlock": 15,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_inkfirefly_01",
+   "name": "잉크 반딧불",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "대도서관 신규 서식종 — 책장 사이를 흐르는 푸른 반딧불 (260종 확장 #63)",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 15,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_inkrat_01",
+   "name": "먹지쥐",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "먹광이 밴 페이지를 뜯어 먹는 쥐",
+   "temp": [
+    10,
+    25
+   ],
+   "spawnBlock": 15,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_inkwingfly_01",
+   "name": "잉크 날벌레",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "대도서관 신규 서식종 — 잉크 냄새에 몰리는 검은 날벌레 (260종 확장 #63)",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 15,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_inkworm_01",
+   "name": "글자벌레",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "omnivore",
+   "role": "decomposer",
+   "note": "책 표지·접착제를 먹는 해충 — 서고 생태의 바닥",
+   "temp": [
+    10,
+    22
+   ],
+   "spawnBlock": 15,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_inkwraith_01",
+   "name": "잉크 형태",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "carnivore",
+   "role": "corruptor",
+   "note": "대도서관 신규 전투종 — 서고의 잉크가 스스로를 기억하게 된 형태 (260종 확장 #63)",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 15,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_intertidalmoss_01",
+   "name": "조간대 물이끼",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "ocean",
+    "coral"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "연해 신규 서식종 — 썰물 자리에 피는 젖은 이끼 (260종 확장 #63)",
+   "temp": [
+    0,
+    30
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_ironfist_01",
+   "name": "요흔수족",
+   "floors": [
+    91,
+    95
+   ],
+   "habitat": [
+    "hellscape"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "성벽 균열의 녹슨 쇳물을 핥아 키우는 지옥 개벌레",
+   "temp": [
+    34,
+    60
+   ],
+   "spawnBlock": 19,
+   "group": "중층"
+  },
+  {
+   "id": "mon_jamboree_01",
+   "name": "잼버들",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "열매처럼 달린 잼 덩굴이 포식자를 붙잡는다",
+   "temp": [
+    16,
+    34
+   ],
+   "spawnBlock": 14,
+   "group": "중층"
+  },
+  {
+   "id": "mon_jellyfish_01",
+   "name": "마녀 해파리",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "ocean",
+    "deep"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "",
+   "temp": [
+    2,
+    20
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_jungleboar_01",
+   "name": "정글멧돼지",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "낙과를 찾아 수릿길을 밟는 정글 멧돼지",
+   "temp": [
+    15,
+    38
+   ],
+   "spawnBlock": 17,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_junglemonkey_01",
+   "name": "원숭이",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "수관을 오르며 과실을 먹는 영장류 — 잡식",
+   "temp": [
+    18,
+    38
+   ],
+   "spawnBlock": 17,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_junglepanther_01",
+   "name": "정글 표범",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "수관 그늘을 달리는 최상위 포식자 — 원숭이·앵무떼 사냥",
+   "temp": [
+    15,
+    40
+   ],
+   "spawnBlock": 17,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_junglesentinel_01",
+   "name": "밀림감시자",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "carnivore",
+   "role": "guardian",
+   "note": "밀림 수관의 울림을 읽고 짐승의 통로를 막는 감시자",
+   "temp": [
+    16,
+    34
+   ],
+   "spawnBlock": 14,
+   "group": "중층"
+  },
+  {
+   "id": "mon_kobold_01",
+   "name": "코볼드",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "cave",
+    "mine"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_kraken_tentacle_01",
+   "name": "크라켄 촉수",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "deep",
+    "ocean"
+   ],
+   "diet": "carnivore",
+   "role": "apex",
+   "note": "",
+   "temp": [
+    0,
+    10
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_labythrower_01",
+   "name": "미궁 재배치체",
+   "floors": [
+    51,
+    55
+   ],
+   "habitat": [
+    "dungeon",
+    "city",
+    "castle",
+    "tower"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "미궁도시 신규 전투종 — 길 자체를 무기로 쓰는 미궁의 역류체 (260종 확장 #63)",
+   "temp": [
+    0,
+    30
+   ],
+   "spawnBlock": 11,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_lairmold_01",
+   "name": "용둥지 곰팡이",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "astral"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "용의 둥지 잔해를 분해하는 내열 균류",
+   "temp": [
+    0,
+    55
+   ],
+   "spawnBlock": 20,
+   "group": "G3 — 정점"
+  },
+  {
+   "id": "mon_lanternsquid_01",
+   "name": "등롱오징어",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "등롱 주머니의 푸른 점광으로 먹이를 끌어모으는 소형 유인 포식자",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_lapsebeetle_01",
+   "name": "천창 갑충",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "붕괴 천창 신규 서식종 — 떨어진 것을 주워 먹는 갑충 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_lapsehawk_01",
+   "name": "천창 갈고리 새",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "붕괴 천창 신규 서식종 — 떨어지는 사냥감을 가로채는 갈고리 부리 새 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_lastfly_01",
+   "name": "마지막 파리",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "이데아 관문 신규 서식종 — 130층에 남은 마지막 곤충떼라 불린다 (260종 확장 #63)",
+   "temp": [
+    -55,
+    -5
+   ],
+   "spawnBlock": 26,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_lavamoss_01",
+   "name": "용암 이끼",
+   "floors": [
+    46,
+    50
+   ],
+   "habitat": [
+    "volcano",
+    "lava"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "화산 신규 서식종 — 식은 용암 표면에 피는 귤빛 이끼 (260종 확장 #63)",
+   "temp": [
+    20,
+    300
+   ],
+   "spawnBlock": 10,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_leadbane_01",
+   "name": "납골벌레",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "mineral",
+   "role": "decomposer",
+   "note": "납 관의 부패를 늦추는 납골에서 번지는 딱정벌레",
+   "temp": [
+    -10,
+    26
+   ],
+   "spawnBlock": 15,
+   "group": "중층"
+  },
+  {
+   "id": "mon_lesser_demon_01",
+   "name": "레서 데몬",
+   "floors": [
+    86,
+    90
+   ],
+   "habitat": [
+    "hellscape",
+    "abyss"
+   ],
+   "diet": "soul",
+   "role": "predator",
+   "note": "",
+   "temp": [
+    30,
+    100
+   ],
+   "spawnBlock": 18,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_leviathan_01",
+   "name": "레비아탄",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "deep_ocean",
+    "abyss"
+   ],
+   "diet": "carnivore",
+   "role": "apex",
+   "note": "",
+   "temp": [
+    1,
+    8
+   ],
+   "spawnBlock": 14,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_lich_01",
+   "name": "리치",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "ruins",
+    "tower"
+   ],
+   "diet": "mana",
+   "role": "apex",
+   "note": "",
+   "temp": [
+    -20,
+    10
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_lightmoth_01",
+   "name": "빛을 먹는 나방",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "이데아 관문 신규 서식종 — 광로의 빛결을 채집하는 나방떼 (260종 확장 #63)",
+   "temp": [
+    -55,
+    -5
+   ],
+   "spawnBlock": 26,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_limestonemold_01",
+   "name": "석회 분해 균",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "cave",
+    "mine",
+    "underground",
+    "fungus"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "동굴 신규 서식종 — 석순 표면을 녹이는 흰 균 (260종 확장 #63)",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_lycanthrope_01",
+   "name": "라이칸슬로프",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest",
+    "mountain"
+   ],
+   "diet": "carnivore",
+   "role": "apex",
+   "note": "",
+   "temp": [
+    -5,
+    20
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_magmaroot_01",
+   "name": "용암지렁이",
+   "floors": [
+    91,
+    95
+   ],
+   "habitat": [
+    "hellscape"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "정맥 균열을 타고 기어가는 지옥의 분해층",
+   "temp": [
+    34,
+    60
+   ],
+   "spawnBlock": 19,
+   "group": "중층"
+  },
+  {
+   "id": "mon_mantrap_01",
+   "name": "식인 식물",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "과실 향기로 원숭이를 유인해 통째로 소화하는 매복 덩굴",
+   "temp": [
+    15,
+    40
+   ],
+   "spawnBlock": 17,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_marshleech_01",
+   "name": "늪거머리",
+   "floors": [
+    31,
+    35
+   ],
+   "habitat": [
+    "swamp"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "진흙 밑에 숨어 개구리에 붙는 거머리",
+   "temp": [
+    10,
+    30
+   ],
+   "spawnBlock": 7,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_marshmidge_01",
+   "name": "습지 모기떼",
+   "floors": [
+    31,
+    35
+   ],
+   "habitat": [
+    "swamp",
+    "river"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "습지 신규 서식종 — 얕은 물 위를 떼지어 도는 모기 (260종 확장 #63)",
+   "temp": [
+    5,
+    35
+   ],
+   "spawnBlock": 7,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_marshwarden_01",
+   "name": "늪지감시자",
+   "floors": [
+    61,
+    65
+   ],
+   "habitat": [
+    "river",
+    "swamp"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "진흙 아래서 몸을 숨긴 채 발자국 진동을 읽는 늪의 매복자",
+   "temp": [
+    6,
+    32
+   ],
+   "spawnBlock": 13,
+   "group": "하층"
+  },
+  {
+   "id": "mon_meadowlark_01",
+   "name": "풀종다리",
+   "floors": [
+    1,
+    5
+   ],
+   "habitat": [
+    "grassland"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "풀결 속에 둥지를 트는 초원 종다리 — 매·뱀의 주요 먹이",
+   "temp": [
+    5,
+    33
+   ],
+   "spawnBlock": 1,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_mindflayer_01",
+   "name": "마인드 플레이어",
+   "floors": [
+    1,
+    130
+   ],
+   "habitat": [
+    "deep",
+    "city"
+   ],
+   "diet": "brain",
+   "role": "predator",
+   "note": "",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 1,
+   "group": "?"
+  },
+  {
+   "id": "mon_mirrorwisp_01",
+   "name": "반사나방",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "mana",
+   "role": "swarm",
+   "note": "지맥에 부딪힌 빛을 되돌려 무리 지어 나는 나방",
+   "temp": [
+    24,
+    58
+   ],
+   "spawnBlock": 24,
+   "group": "상층"
+  },
+  {
+   "id": "mon_mongoose_01",
+   "name": "몽구스",
+   "floors": [
+    1,
+    5
+   ],
+   "habitat": [
+    "grassland",
+    "forest"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "",
+   "temp": [
+    10,
+    35
+   ],
+   "spawnBlock": 1,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_moonvine_01",
+   "name": "월광덩굴",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "astral"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "월광에 반짝이는 유인 덩굴 — 성운나방을 감아 삼킨다",
+   "temp": [
+    -15,
+    40
+   ],
+   "spawnBlock": 20,
+   "group": "G3 — 정점"
+  },
+  {
+   "id": "mon_mosstoad_01",
+   "name": "이끼 두꺼비",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "숲 신규 서식종 — 이끼 바위에 납작하게 붙는 두꺼비 (260종 확장 #63)",
+   "temp": [
+    -5,
+    35
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_mossviper_01",
+   "name": "이끼 뱀",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "수정 숲 신규 서식종 — 이끼 색과 똑같은 무늬의 지상 뱀 (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_moth_01",
+   "name": "박쥐나방",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest",
+    "cave"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "",
+   "temp": [
+    10,
+    30
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_musselbed_01",
+   "name": "진주살 떼",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "바위틈과 모래에 박힌 진주살 군락 — 여과 급수 하나로 몸집을 키운다",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_mutehawk_01",
+   "name": "소리 없는 매",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "무풍 고원 신규 서식종 — 울지 않는 매 — 날갯짓 소리조차 이끼가 삼킨다 (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_myrrhscent_01",
+   "name": "캄타향",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "soul",
+   "role": "predator",
+   "note": "냄새로 유인해 영혼을 취하는 심연의 포식자",
+   "temp": [
+    -38,
+    14
+   ],
+   "spawnBlock": 20,
+   "group": "중층"
+  },
+  {
+   "id": "mon_namelesspider_01",
+   "name": "무명 거미",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "이데아 관문 신규 서식종 — 이름을 기억하지 못하게 물어서 잡는 거미 (260종 확장 #63)",
+   "temp": [
+    -55,
+    -5
+   ],
+   "spawnBlock": 26,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_nebulamoth_01",
+   "name": "성운나방",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "astral"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "성운 광진을 떠먹는 부유 나방 — 정점 먹이층의 바닥",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 20,
+   "group": "G3 — 정점"
+  },
+  {
+   "id": "mon_noctis_01",
+   "name": "누비어귀",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "암흑 속에서 제 입도 밝게 떠오르는 포식자",
+   "temp": [
+    -38,
+    14
+   ],
+   "spawnBlock": 20,
+   "group": "중층"
+  },
+  {
+   "id": "mon_nullsentinel_01",
+   "name": "무문의 파수병",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "carnivore",
+   "role": "guardian",
+   "note": "이데아 관문 신규 전투종 — carnivore (260종 확장 #63)",
+   "temp": [
+    -55,
+    -5
+   ],
+   "spawnBlock": 26,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_ogre_01",
+   "name": "오거",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "plains",
+    "cave"
+   ],
+   "diet": "omnivore",
+   "role": "predator",
+   "note": "",
+   "temp": [
+    -5,
+    35
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_ooze_01",
+   "name": "오우즈",
+   "floors": [
+    31,
+    35
+   ],
+   "habitat": [
+    "swamp",
+    "sewer"
+   ],
+   "diet": "omnivore",
+   "role": "decomposer",
+   "note": "",
+   "temp": [
+    10,
+    30
+   ],
+   "spawnBlock": 7,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_orbitowl_01",
+   "name": "궤도올빼미",
+   "floors": [
+    26,
+    30
+   ],
+   "habitat": [
+    "sky"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "구름층 궤도를 한 바퀴 돌며 풍뎅이를 고르는 올빼미",
+   "temp": [
+    -28,
+    12
+   ],
+   "spawnBlock": 6,
+   "group": "하층"
+  },
+  {
+   "id": "mon_ossuaryhound_01",
+   "name": "유골수족",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "carnivore",
+   "role": "scavenger",
+   "note": "무너진 무덤뼈를 짐승처럼 두발로 걷는 흉골 수족",
+   "temp": [
+    -10,
+    26
+   ],
+   "spawnBlock": 15,
+   "group": "중층"
+  },
+  {
+   "id": "mon_pagemite_01",
+   "name": "페이지 먼지진드기",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "대도서관 신규 서식종 — 페이지 틈 먼지를 먹는 미세 진드기 (260종 확장 #63)",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 15,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_papermite_01",
+   "name": "종이개미",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "장부 표지를 뜯어 섬유를 깎는 서고의 개미",
+   "temp": [
+    8,
+    26
+   ],
+   "spawnBlock": 4,
+   "group": "하층"
+  },
+  {
+   "id": "mon_papermoth_01",
+   "name": "종이나방",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "글자벌레를 먹는 나방",
+   "temp": [
+    8,
+    22
+   ],
+   "spawnBlock": 15,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_parchmentzombie_01",
+   "name": "양피지 좀비",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "none",
+   "role": "undead",
+   "note": "낡은 원고에 남은 집필자의 집념이 걸어 다니는 형상 — 지식(영혼)을 좇는다",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 15,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_parrotswarm_01",
+   "name": "앵무떼",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "과실을 갈라 먹는 앵무새 군체 — 소란 포식",
+   "temp": [
+    18,
+    38
+   ],
+   "spawnBlock": 17,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_pipemoss_01",
+   "name": "관로 물이끼",
+   "floors": [
+    76,
+    80
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "하수도 신규 서식종 — 하수 관벽을 두르는 회청색 이끼 (260종 확장 #63)",
+   "temp": [
+    10,
+    30
+   ],
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_plainshawk_01",
+   "name": "들매",
+   "floors": [
+    1,
+    5
+   ],
+   "habitat": [
+    "grassland",
+    "meadow",
+    "plains"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "풀밭 저공을 높이 나는 초원 사냥매 — 이슬종다리와 풀 방아쇠벌레를 띄우는 자",
+   "temp": [
+    0,
+    32
+   ],
+   "spawnBlock": 1,
+   "group": "하층"
+  },
+  {
+   "id": "mon_plumed_deer_01",
+   "name": "깃털사슴",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "/liche 잎새만 먹는 우림의 초식종",
+   "temp": [
+    16,
+    34
+   ],
+   "spawnBlock": 14,
+   "group": "중층"
+  },
+  {
+   "id": "mon_pyrewisp_01",
+   "name": "화염귀",
+   "floors": [
+    91,
+    95
+   ],
+   "habitat": [
+    "hellscape"
+   ],
+   "diet": "mana",
+   "role": "predator",
+   "note": "기름 불꽃이 형체를 이룬 상흔 정점 포식자",
+   "temp": [
+    34,
+    60
+   ],
+   "spawnBlock": 19,
+   "group": "중층"
+  },
+  {
+   "id": "mon_quietbeetle_01",
+   "name": "침묵 청소 갑충",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "무풍 고원 신규 서식종 — 사체를 소리 없이 정리하는 밤색 갑충 (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_quiethare_01",
+   "name": "침묵 토끼",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "무풍 고원 신규 서식종 — 뛰어도 소리가 나지 않는 창백한 토끼 (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_rabbit_01",
+   "name": "토끼",
+   "floors": [
+    1,
+    5
+   ],
+   "habitat": [
+    "grassland",
+    "forest"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "",
+   "temp": [
+    5,
+    30
+   ],
+   "spawnBlock": 1,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_raider_01",
+   "name": "레이더",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "ruins",
+    "plains"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "",
+   "temp": [
+    0,
+    30
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_rainfrog_01",
+   "name": "열대우림개구리",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "carnivore",
+   "role": "prey",
+   "note": "빗소리에 맞춰 우는 소리를 흉내 내는 정글 개구리",
+   "temp": [
+    16,
+    34
+   ],
+   "spawnBlock": 14,
+   "group": "중층"
+  },
+  {
+   "id": "mon_rat_01",
+   "name": "쥐",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "cave",
+    "ruins",
+    "mine"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "",
+   "temp": [
+    0,
+    35
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_redcloudbat_01",
+   "name": "적운박이",
+   "floors": [
+    26,
+    30
+   ],
+   "habitat": [
+    "sky"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "적운 속 falling 잔해를 분해해 바늘처럼 내리는 박쥐",
+   "temp": [
+    -28,
+    12
+   ],
+   "spawnBlock": 6,
+   "group": "하층"
+  },
+  {
+   "id": "mon_reeddragonfly_01",
+   "name": "갈대 잠자리",
+   "floors": [
+    31,
+    35
+   ],
+   "habitat": [
+    "swamp",
+    "river"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "습지 신규 서식종 — 갈대 끝에 앉아 모기를 낚는 잠자리 (260종 확장 #63)",
+   "temp": [
+    5,
+    35
+   ],
+   "spawnBlock": 7,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_reedstork_01",
+   "name": "갈대황새",
+   "floors": [
+    31,
+    35
+   ],
+   "habitat": [
+    "swamp"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "갈대숲 얕은 물을 짚는 황새 — 개구리·거머리를 낚아챈다",
+   "temp": [
+    8,
+    32
+   ],
+   "spawnBlock": 7,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_reefneedle_01",
+   "name": "갈매기침",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "산호 틈에 몸을 붙인 채 기다리는 침예 소형 포식자",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "하층"
+  },
+  {
+   "id": "mon_reefshark_01",
+   "name": "산호상어",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "산호초 위를 가로지르는 원천연안 최상위 포식자 — 얕은 여울을 돌아다닌다",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_reefstar_01",
+   "name": "산호불개",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "carnivore",
+   "role": "scavenger",
+   "note": "진주살을 위팔로 끌어당겨 여미는 산호초의 청소자 — 다섯 팔로 느리게 돈다",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_reefwarden_01",
+   "name": "산호수호자",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "herbivore",
+   "role": "guardian",
+   "note": "산호초를 지킨다 — 문턱의 침식을 몸으로 막는 연안 수호자",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "하층"
+  },
+  {
+   "id": "mon_refrionscorpion_01",
+   "name": "굴절 전갈",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "유리 사막 신규 서식종 — 굴절로 위치를 속이는 유리 전갈 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_reliefimp_01",
+   "name": "양각도깨비",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "양각 인면에서 몸부림치며 튀어나오는 도깨비",
+   "temp": [
+    8,
+    26
+   ],
+   "spawnBlock": 4,
+   "group": "하층"
+  },
+  {
+   "id": "mon_resonancemoss_01",
+   "name": "공명이끼",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "수정 울림에 맞춰 자라는 발광 이끼",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 23,
+   "group": "상층"
+  },
+  {
+   "id": "mon_ridgewarden_01",
+   "name": "능선감시자",
+   "floors": [
+    56,
+    60
+   ],
+   "habitat": [
+    "ice_cave",
+    "mountain",
+    "tundra"
+   ],
+   "diet": "carnivore",
+   "role": "guardian",
+   "note": "능선마다 서 있는 감시자 — 산길의 길을 지키는 것이 임무다",
+   "temp": [
+    -28,
+    18
+   ],
+   "spawnBlock": 12,
+   "group": "하층"
+  },
+  {
+   "id": "mon_riftmold_01",
+   "name": "균열 분해 균",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "붕괴 천창 신규 서식종 — 탑의 균열 자체를 천천히 먹는 균 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_rimealgae_01",
+   "name": "서리 이끼",
+   "floors": [
+    101,
+    105
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "동결 해양 신규 서식종 — 얼음 밑바닥에 깔리는 청록 이끼 — 광로 빛을 먹는다 (260종 확장 #63)",
+   "temp": [
+    -45,
+    0
+   ],
+   "spawnBlock": 21,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_rimewarden_01",
+   "name": "성빙조수",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "frostsea"
+   ],
+   "diet": "mana",
+   "role": "predator",
+   "note": "얼음을 세워 눈 덩이를 만드는 광로들판 포식자",
+   "temp": [
+    -56,
+    -12
+   ],
+   "spawnBlock": 22,
+   "group": "상층"
+  },
+  {
+   "id": "mon_rockbloom_01",
+   "name": "바위 꽃",
+   "floors": [
+    26,
+    30
+   ],
+   "habitat": [
+    "mountain",
+    "tundra",
+    "ice_cave"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "산맥 신규 서식종 — 바위 틈에서만 피는 은색 꽃 (260종 확장 #63)",
+   "temp": [
+    -25,
+    25
+   ],
+   "spawnBlock": 6,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_rockmoss_01",
+   "name": "바위이끼",
+   "floors": [
+    26,
+    30
+   ],
+   "habitat": [
+    "mountain"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "바위 표면을 덮는 이끼 — 고산초를 분해해 토양을 만든다",
+   "temp": [
+    -20,
+    20
+   ],
+   "spawnBlock": 6,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_rockweed_01",
+   "name": "바위담배",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "조간대 바위에서 왕성하게 자라는 다시마 — 원천연안 먹이사슬의 출발점",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_rooftopdragonfly_01",
+   "name": "지붕잠자리",
+   "floors": [
+    51,
+    55
+   ],
+   "habitat": [
+    "dungeon",
+    "city",
+    "castle",
+    "tower"
+   ],
+   "diet": "carnivore",
+   "role": "prey",
+   "note": "미궁도시 신규 서식종 — 옥상 기와 사이를 날아다니는 잠자리 (260종 확장 #63)",
+   "temp": [
+    0,
+    30
+   ],
+   "spawnBlock": 11,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_rotfungus_01",
+   "name": "부패균",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "낙엽·과실 부스러기를 분해 — 정글 순환의 마침표",
+   "temp": [
+    18,
+    38
+   ],
+   "spawnBlock": 17,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_rotreed_01",
+   "name": "부패갈대",
+   "floors": [
+    31,
+    35
+   ],
+   "habitat": [
+    "swamp"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "썩어가는 갈대에서 자라는 부패 균사 — 습지 사체 정화",
+   "temp": [
+    8,
+    30
+   ],
+   "spawnBlock": 7,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_ruinbat_01",
+   "name": "유적 박쥐떼",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "ruins"
+   ],
+   "diet": "omnivore",
+   "role": "swarm",
+   "note": "폐허 신규 서식종 — 무너진 천장 틈에 매달리는 박쥐떼 (260종 확장 #63)",
+   "temp": [
+    0,
+    40
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_ruinbeetle_01",
+   "name": "폐허풍뎅이",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "ruins"
+   ],
+   "diet": "omnivore",
+   "role": "decomposer",
+   "note": "무너진 성벽 틈새에서 사체를 가리는 풍뎅이",
+   "temp": [
+    5,
+    38
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_ruinpig_01",
+   "name": "폐허멧돼지",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "ruins"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "버려진 식량 저장고를 뒤지는 유적 멧돼지 — 흉고블린·레이더의 수렵 대상",
+   "temp": [
+    5,
+    35
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_ruinspigeon_01",
+   "name": "비둘기",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "ruins"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "폐허 저장고를 쪼는 비둘기 — 잔량을 먹고 큰 무리를 이룬다",
+   "temp": [
+    2,
+    32
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_rustkite_01",
+   "name": "적갈래매",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "붉은 깃털로 태양을 가린 채 상승류를 타는 사막 사냥매",
+   "temp": [
+    14,
+    56
+   ],
+   "spawnBlock": 17,
+   "group": "중층"
+  },
+  {
+   "id": "mon_ruststag_01",
+   "name": "붉은사슴",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "갈라진 선인장 껍질만 먹고 사는 사막 초식종",
+   "temp": [
+    14,
+    56
+   ],
+   "spawnBlock": 17,
+   "group": "중층"
+  },
+  {
+   "id": "mon_saintkite_01",
+   "name": "성도까마귀",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "성도 유골을 물고 천천히 도는 까마귀",
+   "temp": [
+    -10,
+    26
+   ],
+   "spawnBlock": 15,
+   "group": "중층"
+  },
+  {
+   "id": "mon_sandbeetle_01",
+   "name": "모래박이",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "사체와 썩은 선인장 속을 굴러다니는 사막 청소자",
+   "temp": [
+    14,
+    56
+   ],
+   "spawnBlock": 17,
+   "group": "중층"
+  },
+  {
+   "id": "mon_sandchime_01",
+   "name": "모래 종",
+   "floors": [
+    41,
+    45
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "사막 신규 서식종 — 바람에 종처럼 울리는 모래 씨앗 떼 (260종 확장 #63)",
+   "temp": [
+    15,
+    50
+   ],
+   "spawnBlock": 9,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_sandclaw_01",
+   "name": "모래발톱",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "모래 밑에 거의 박힌 채 발톱만 밖으로 내민 매복자",
+   "temp": [
+    14,
+    56
+   ],
+   "spawnBlock": 17,
+   "group": "중층"
+  },
+  {
+   "id": "mon_sanddart_01",
+   "name": "모래사다리",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "모래 속에 몸을 파묻고 진짜 사다리처럼 곧장 솟는 소형 매복자",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_sandgnat_01",
+   "name": "모래 유리충",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "유리 사막 신규 서식종 — 유리 먼지를 먹고 사는 반짝이는 충 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_sandreaver_01",
+   "name": "모래발톱사냥꾼",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "desert"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "모래 아래 수 metre를 이동하다 발밑에서 튀어나오는 매복자",
+   "temp": [
+    14,
+    56
+   ],
+   "spawnBlock": 17,
+   "group": "중층"
+  },
+  {
+   "id": "mon_sapbee_01",
+   "name": "수액벌레",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "달콤한 수액에 몰려드는 소규모 무리",
+   "temp": [
+    16,
+    34
+   ],
+   "spawnBlock": 14,
+   "group": "중층"
+  },
+  {
+   "id": "mon_sardine_01",
+   "name": "소어 떼",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "여울을 왕복하는 소어 떼 — 산호상어·물수제비 매·조류수명이 노리는 먹이층",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_scorpion_01",
+   "name": "전갈",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "desert",
+    "cave"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "",
+   "temp": [
+    20,
+    50
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_sea_serpent_01",
+   "name": "바다 뱀",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "ocean",
+    "deep"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_sealpowder_01",
+   "name": "봉인먼지",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "dungeon"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "떠난 방의 봉인을 풀어 놓는 재가 먼지",
+   "temp": [
+    2,
+    30
+   ],
+   "spawnBlock": 5,
+   "group": "하층"
+  },
+  {
+   "id": "mon_seraph_st_01",
+   "name": "세라핌",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "soul",
+   "role": "predator",
+   "note": "기억을 먹고 자라는 묘역의 타락 수호자",
+   "temp": [
+    -10,
+    26
+   ],
+   "spawnBlock": 15,
+   "group": "중층"
+  },
+  {
+   "id": "mon_sewagemass_01",
+   "name": "침전 괴체",
+   "floors": [
+    76,
+    80
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "하수도 신규 전투종 — 관로 침전물이 응축된 분열형 역류체 (260종 확장 #63)",
+   "temp": [
+    10,
+    30
+   ],
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_sewerling_01",
+   "name": "관로 분열체",
+   "floors": [
+    76,
+    80
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "하수도 신규 전투종 — 관로 왕의 잔재가 남긴 소형 분열체 (260종 확장 #63)",
+   "temp": [
+    10,
+    30
+   ],
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_sewermoth_01",
+   "name": "하수나방",
+   "floors": [
+    76,
+    80
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "하수 가스에 물든 나방 — 뱀·트롤의 한입",
+   "temp": [
+    10,
+    28
+   ],
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_sewerslug_01",
+   "name": "슬러지 벌레",
+   "floors": [
+    76,
+    80
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "하수도 신규 서식종 — 슬러지를 걸러 먹는 연한 벌레 (260종 확장 #63)",
+   "temp": [
+    10,
+    30
+   ],
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_sewersnake_01",
+   "name": "하수뱀",
+   "floors": [
+    76,
+    80
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "수면 아래 매복 — 골목쥐·바퀴벌레 포식",
+   "temp": [
+    10,
+    25
+   ],
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_sewertroll_01",
+   "name": "하수 트롤",
+   "floors": [
+    76,
+    80
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "하수도 최상위 포식자 — 오우즈·하수뱀을 통째로 삼킨다",
+   "temp": [
+    10,
+    30
+   ],
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_shardbeetle_01",
+   "name": "수정 딱정벌레",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "수정 숲 신규 서식종 — 부서진 수정 틈을 기는 무채색 딱정벌레 (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_shelfwarden_01",
+   "name": "책장감시자",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "library"
+   ],
+   "diet": "none",
+   "role": "guardian",
+   "note": "서고의 책장 배열을 감시하는 사서 — 유목을 건드리지 않는다",
+   "temp": [
+    8,
+    26
+   ],
+   "spawnBlock": 4,
+   "group": "하층"
+  },
+  {
+   "id": "mon_shellheapsnail_01",
+   "name": "갯고둥",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "ocean",
+    "coral"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "연해 신규 서식종 — 버려진 껍데기를 짊어진 청소 고둥 (260종 확장 #63)",
+   "temp": [
+    0,
+    30
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_shorefly_01",
+   "name": "갯지렁이떼",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "ocean",
+    "coral"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "연해 신규 서식종 — 조간대 진흙 위를 도는 날벌레 (260종 확장 #63)",
+   "temp": [
+    0,
+    30
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_silencebug_01",
+   "name": "서리 방아쇠벌레",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "무풍 고원 신규 서식종 — 방아쇠를 치지만 소리가 나지 않는 벌레떼 (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_silenceking_01",
+   "name": "소리 삼키는 자·무풍 임금",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "carnivore",
+   "role": "guardian",
+   "note": "무풍 고원 신규 전투종 — carnivore (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_silentmole_01",
+   "name": "고원 두더지",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "무풍 고원 신규 서식종 — 지하 진동만으로 길을 찾는 맹목 두더지 (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_silentrodent_01",
+   "name": "침묵일자",
+   "floors": [
+    86,
+    90
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "바람 소리에 놀라지 않는 고지대 설치류",
+   "temp": [
+    -48,
+    -6
+   ],
+   "spawnBlock": 18,
+   "group": "중층"
+  },
+  {
+   "id": "mon_silentshade_01",
+   "name": "소리 삼키는 그림자",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "무풍 고원 신규 전투종 — 말이 통하지 않는 세계의 조용한 사냥꾼 (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_silentsludge_01",
+   "name": "무풍 정체체",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "carnivore",
+   "role": "corruptor",
+   "note": "무풍 고원 신규 전투종 — 고원 이끼에 스며든 소리 없는 역류체 (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_silentwarden_01",
+   "name": "무풍감시자",
+   "floors": [
+    86,
+    90
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "none",
+   "role": "guardian",
+   "note": "바람 소리를 삼킨 채 고원에 서 있는 감시자 — 소리로Communication 하지 않는다",
+   "temp": [
+    -48,
+    -6
+   ],
+   "spawnBlock": 18,
+   "group": "중층"
+  },
+  {
+   "id": "mon_silentworm_01",
+   "name": "무풍 지렁이",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "무풍 고원 신규 서식종 — 고원 표토를 고요하게 갈아엎는 지렁이 (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_silicamold_01",
+   "name": "백정 벌레",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "유리 사막 신규 서식종 — 유리화된 잔해를 갉아 무기물로 되돌리는 벌레 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_siren_01",
+   "name": "사이렌",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "노랫소리로 사냥감을 유인해 물속으로 끌어들이는 원천연안의 유인 포식자 — 제안서 §5 확정",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_skeleton_01",
+   "name": "스켈레톤",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "ruins",
+    "graveyard"
+   ],
+   "diet": "none",
+   "role": "undead",
+   "note": "",
+   "temp": [
+    -10,
+    15
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_skeleton_mage_01",
+   "name": "스켈레톤 메이지",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "ruins",
+    "library"
+   ],
+   "diet": "none",
+   "role": "undead",
+   "note": "",
+   "temp": [
+    -10,
+    20
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_skeleton_warrior_01",
+   "name": "스켈레톤 워리어",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "ruins",
+    "dungeon"
+   ],
+   "diet": "none",
+   "role": "undead",
+   "note": "",
+   "temp": [
+    -10,
+    20
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_skeleton_yaksha_01",
+   "name": "스켈레톤 야차",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "temple",
+    "ruins"
+   ],
+   "diet": "none",
+   "role": "undead",
+   "note": "",
+   "temp": [
+    -10,
+    20
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_slime_black_01",
+   "name": "블랙 슬라임",
+   "floors": [
+    86,
+    90
+   ],
+   "habitat": [
+    "abyss",
+    "deep"
+   ],
+   "diet": "mana",
+   "role": "corruptor",
+   "note": "",
+   "temp": [
+    -20,
+    10
+   ],
+   "spawnBlock": 18,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_slime_blue_01",
+   "name": "슬라임(블루)",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "ocean",
+    "cave"
+   ],
+   "diet": "omnivore",
+   "role": "decomposer",
+   "note": "",
+   "temp": [
+    0,
+    25
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_slime_green_01",
+   "name": "슬라임(그린)",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "swamp",
+    "cave"
+   ],
+   "diet": "omnivore",
+   "role": "decomposer",
+   "note": "",
+   "temp": [
+    5,
+    35
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_slime_red_01",
+   "name": "슬라임(레드)",
+   "floors": [
+    46,
+    50
+   ],
+   "habitat": [
+    "volcano",
+    "lava"
+   ],
+   "diet": "omnivore",
+   "role": "decomposer",
+   "note": "",
+   "temp": [
+    50,
+    200
+   ],
+   "spawnBlock": 10,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_snake_01",
+   "name": "독사",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "desert",
+    "forest",
+    "swamp"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "",
+   "temp": [
+    20,
+    40
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_snowsparrow_01",
+   "name": "서리 참새떼",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "수정 숲 신규 서식종 — 수정 숲 가장자리를 떼로 날아다니는 참새 (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_spider_queen_01",
+   "name": "거미 여왕",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "cave",
+    "deep"
+   ],
+   "diet": "carnivore",
+   "role": "apex",
+   "note": "",
+   "temp": [
+    5,
+    25
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_spirit_dark_01",
+   "name": "먹빛정령",
+   "floors": [
+    101,
+    102
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "무광심연 101층 dark 정령 1계급 — 약성 void, 정령기사 소환 가능",
+   "temp": [
+    -38,
+    14
+   ],
+   "spawnBlock": 0,
+   "group": "중층 — 중부 탑"
+  },
+  {
+   "id": "mon_spirit_dark_02",
+   "name": "무광대정령",
+   "floors": [
+    103,
+    103
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "무광심연 103층 dark 정령 2계급 — 약성 void, 정령기사 소환 가능",
+   "temp": [
+    -38,
+    14
+   ],
+   "spawnBlock": 0,
+   "group": "중층 — 중부 탑"
+  },
+  {
+   "id": "mon_spirit_dark_03",
+   "name": "심연정령왕",
+   "floors": [
+    104,
+    105
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "무광심연 104층 dark 정령 3계급 — 약성 void, 정령기사 소환 가능",
+   "temp": [
+    -38,
+    14
+   ],
+   "spawnBlock": 0,
+   "group": "중층 — 중부 탑"
+  },
+  {
+   "id": "mon_spirit_earth_01",
+   "name": "지맥정령",
+   "floors": [
+    61,
+    62
+   ],
+   "habitat": [
+    "cave",
+    "mine",
+    "underground",
+    "fungus"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "지맥굴 61층 earth 정령 1계급 — 약성 wind, 정령기사 소환 가능",
+   "temp": [
+    4,
+    24
+   ],
+   "spawnBlock": 0,
+   "group": "하층 — 하부 탑"
+  },
+  {
+   "id": "mon_spirit_earth_02",
+   "name": "지각대정령",
+   "floors": [
+    63,
+    63
+   ],
+   "habitat": [
+    "cave",
+    "mine",
+    "underground",
+    "fungus"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "지맥굴 63층 earth 정령 2계급 — 약성 wind, 정령기사 소환 가능",
+   "temp": [
+    4,
+    24
+   ],
+   "spawnBlock": 0,
+   "group": "하층 — 하부 탑"
+  },
+  {
+   "id": "mon_spirit_earth_03",
+   "name": "대지정령왕",
+   "floors": [
+    64,
+    65
+   ],
+   "habitat": [
+    "cave",
+    "mine",
+    "underground",
+    "fungus"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "지맥굴 64층 earth 정령 3계급 — 약성 wind, 정령기사 소환 가능",
+   "temp": [
+    4,
+    24
+   ],
+   "spawnBlock": 0,
+   "group": "하층 — 하부 탑"
+  },
+  {
+   "id": "mon_spirit_fire_01",
+   "name": "화구정령",
+   "floors": [
+    101,
+    102
+   ],
+   "habitat": [
+    "volcano",
+    "lava"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "압력화구 101층 fire 정령 1계급 — 약성 water, 정령기사 소환 가능",
+   "temp": [
+    26,
+    58
+   ],
+   "spawnBlock": 0,
+   "group": "중층 — 중부 탑"
+  },
+  {
+   "id": "mon_spirit_fire_02",
+   "name": "불꽃대정령",
+   "floors": [
+    103,
+    103
+   ],
+   "habitat": [
+    "volcano",
+    "lava"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "압력화구 103층 fire 정령 2계급 — 약성 water, 정령기사 소환 가능",
+   "temp": [
+    26,
+    58
+   ],
+   "spawnBlock": 0,
+   "group": "중층 — 중부 탑"
+  },
+  {
+   "id": "mon_spirit_fire_03",
+   "name": "용암정령왕",
+   "floors": [
+    104,
+    105
+   ],
+   "habitat": [
+    "volcano",
+    "lava"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "압력화구 104층 fire 정령 3계급 — 약성 water, 정령기사 소환 가능",
+   "temp": [
+    26,
+    58
+   ],
+   "spawnBlock": 0,
+   "group": "중층 — 중부 탑"
+  },
+  {
+   "id": "mon_spirit_light_01",
+   "name": "성광정령",
+   "floors": [
+    61,
+    62
+   ],
+   "habitat": [
+    "temple",
+    "shrine"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "서약성소 61층 light 정령 1계급 — 약성 void, 정령기사 소환 가능",
+   "temp": [
+    2,
+    28
+   ],
+   "spawnBlock": 0,
+   "group": "하층 — 하부 탑"
+  },
+  {
+   "id": "mon_spirit_light_02",
+   "name": "거광대정령",
+   "floors": [
+    63,
+    63
+   ],
+   "habitat": [
+    "temple",
+    "shrine"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "서약성소 63층 light 정령 2계급 — 약성 void, 정령기사 소환 가능",
+   "temp": [
+    2,
+    28
+   ],
+   "spawnBlock": 0,
+   "group": "하층 — 하부 탑"
+  },
+  {
+   "id": "mon_spirit_light_03",
+   "name": "무량정령왕",
+   "floors": [
+    64,
+    65
+   ],
+   "habitat": [
+    "temple",
+    "shrine"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "서약성소 64층 light 정령 3계급 — 약성 void, 정령기사 소환 가능",
+   "temp": [
+    2,
+    28
+   ],
+   "spawnBlock": 0,
+   "group": "하층 — 하부 탑"
+  },
+  {
+   "id": "mon_spirit_void_01",
+   "name": "무아정령",
+   "floors": [
+    111,
+    112
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "형상군락 111층 void 정령 1계급 — 약성 light, dark, 정령기사 소환 가능",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 0,
+   "group": "상층 — 천정"
+  },
+  {
+   "id": "mon_spirit_void_02",
+   "name": "공허대정령",
+   "floors": [
+    113,
+    113
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "형상군락 113층 void 정령 2계급 — 약성 light, dark, 정령기사 소환 가능",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 0,
+   "group": "상층 — 천정"
+  },
+  {
+   "id": "mon_spirit_void_03",
+   "name": "무상정령왕",
+   "floors": [
+    114,
+    115
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "형상군락 114층 void 정령 3계급 — 약성 light, dark, 정령기사 소환 가능",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 0,
+   "group": "상층 — 천정"
+  },
+  {
+   "id": "mon_spirit_water_01",
+   "name": "파도정령",
+   "floors": [
+    101,
+    102
+   ],
+   "habitat": [
+    "astral",
+    "dragon_lair",
+    "lair"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "역류폭포 101층 water 정령 1계급 — 약성 earth, 정령기사 소환 가능",
+   "temp": [
+    -42,
+    8
+   ],
+   "spawnBlock": 0,
+   "group": "중층 — 중부 탑"
+  },
+  {
+   "id": "mon_spirit_water_02",
+   "name": "물결대정령",
+   "floors": [
+    103,
+    103
+   ],
+   "habitat": [
+    "astral",
+    "dragon_lair",
+    "lair"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "역류폭포 103층 water 정령 2계급 — 약성 earth, 정령기사 소환 가능",
+   "temp": [
+    -42,
+    8
+   ],
+   "spawnBlock": 0,
+   "group": "중층 — 중부 탑"
+  },
+  {
+   "id": "mon_spirit_water_03",
+   "name": "해류정령왕",
+   "floors": [
+    104,
+    105
+   ],
+   "habitat": [
+    "astral",
+    "dragon_lair",
+    "lair"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "역류폭포 104층 water 정령 3계급 — 약성 earth, 정령기사 소환 가능",
+   "temp": [
+    -42,
+    8
+   ],
+   "spawnBlock": 0,
+   "group": "중층 — 중부 탑"
+  },
+  {
+   "id": "mon_spirit_wind_01",
+   "name": "들바람정령",
+   "floors": [
+    121,
+    122
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "찢긴 천창 121층 wind 정령 1계급 — 약성 fire, 정령기사 소환 가능",
+   "temp": [
+    -64,
+    -16
+   ],
+   "spawnBlock": 0,
+   "group": "상층 — 천정"
+  },
+  {
+   "id": "mon_spirit_wind_02",
+   "name": "산바람대정령",
+   "floors": [
+    123,
+    123
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "찢긴 천창 123층 wind 정령 2계급 — 약성 fire, 정령기사 소환 가능",
+   "temp": [
+    -64,
+    -16
+   ],
+   "spawnBlock": 0,
+   "group": "상층 — 천정"
+  },
+  {
+   "id": "mon_spirit_wind_03",
+   "name": "하늘바람정령왕",
+   "floors": [
+    124,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "mana",
+   "role": "elemental",
+   "note": "찢긴 천창 124층 wind 정령 3계급 — 약성 fire, 정령기사 소환 가능",
+   "temp": [
+    -64,
+    -16
+   ],
+   "spawnBlock": 0,
+   "group": "상층 — 천정"
+  },
+  {
+   "id": "mon_starbee_01",
+   "name": "성진벌",
+   "floors": [
+    26,
+    30
+   ],
+   "habitat": [
+    "sky"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "성수 이슬을 따라 층을 떠도는 발광 벌",
+   "temp": [
+    -28,
+    12
+   ],
+   "spawnBlock": 6,
+   "group": "하층"
+  },
+  {
+   "id": "mon_stardust_01",
+   "name": "별가루",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "astral"
+   ],
+   "diet": "mana",
+   "role": "swarm",
+   "note": "별빛이 응결한 가루 군체 — 정점 생태의 먹이 바닥",
+   "temp": [
+    -35,
+    50
+   ],
+   "spawnBlock": 20,
+   "group": "G3 — 정점"
+  },
+  {
+   "id": "mon_stardustshrimp_01",
+   "name": "성운 새우떼",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "astral",
+    "dragon_lair",
+    "lair"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "정점 신규 서식종 — 근원 합류 빛을 먹는 반짝이는 새우떼 (260종 확장 #63)",
+   "temp": [
+    -40,
+    60
+   ],
+   "spawnBlock": 20,
+   "group": "G3 — 정점"
+  },
+  {
+   "id": "mon_starsandworm_01",
+   "name": "별모래 벌레",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "astral",
+    "dragon_lair",
+    "lair"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "정점 신규 서식종 — 별가루가 쌓인 모래를 훑는 벌레 (260종 확장 #63)",
+   "temp": [
+    -40,
+    60
+   ],
+   "spawnBlock": 20,
+   "group": "G3 — 정점"
+  },
+  {
+   "id": "mon_stillmoss_01",
+   "name": "정상이끼",
+   "floors": [
+    86,
+    90
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "바람이 닿지 않아 천천히만 자라는 이끼",
+   "temp": [
+    -48,
+    -6
+   ],
+   "spawnBlock": 18,
+   "group": "중층"
+  },
+  {
+   "id": "mon_storm_giant_01",
+   "name": "스톰 자이언트",
+   "floors": [
+    26,
+    30
+   ],
+   "habitat": [
+    "mountain",
+    "sky"
+   ],
+   "diet": "carnivore",
+   "role": "apex",
+   "note": "",
+   "temp": [
+    -10,
+    40
+   ],
+   "spawnBlock": 6,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_stormbee_01",
+   "name": "폭풍꿀벌",
+   "floors": [
+    61,
+    65
+   ],
+   "habitat": [
+    "sky"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "바람모종 꽂가루를 모은다",
+   "temp": [
+    0,
+    15
+   ],
+   "spawnBlock": 13,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_stormbutterfly_01",
+   "name": "폭풍 나비떼",
+   "floors": [
+    61,
+    65
+   ],
+   "habitat": [
+    "sky",
+    "storm"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "천공 신규 서식종 — 바람 결을 타고 떼로 이동하는 나비 (260종 확장 #63)",
+   "temp": [
+    -20,
+    20
+   ],
+   "spawnBlock": 13,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_stormcrawler_01",
+   "name": "폭풍진딧물",
+   "floors": [
+    26,
+    30
+   ],
+   "habitat": [
+    "sky",
+    "storm"
+   ],
+   "diet": "mana",
+   "role": "swarm",
+   "note": "번개 앞뒤로 몰려다니는 진딧물 무리 — 기압계의 살아있는 눈금",
+   "temp": [
+    -28,
+    12
+   ],
+   "spawnBlock": 6,
+   "group": "하층"
+  },
+  {
+   "id": "mon_stormhawk_01",
+   "name": "폭풍매",
+   "floors": [
+    61,
+    65
+   ],
+   "habitat": [
+    "sky"
+   ],
+   "diet": "carnivore",
+   "role": "hunter",
+   "note": "폭풍 꼭대기에서 벌·모종을 사냥",
+   "temp": [
+    -10,
+    10
+   ],
+   "spawnBlock": 13,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_sulfbeetle_01",
+   "name": "유황딱정벌레",
+   "floors": [
+    91,
+    95
+   ],
+   "habitat": [
+    "hellscape"
+   ],
+   "diet": "mineral",
+   "role": "scavenger",
+   "note": "유황 결정과 주사 화석을 깎아 먹는 딱정벌레",
+   "temp": [
+    34,
+    60
+   ],
+   "spawnBlock": 19,
+   "group": "중층"
+  },
+  {
+   "id": "mon_sulfurmite_01",
+   "name": "유황 진드기",
+   "floors": [
+    46,
+    50
+   ],
+   "habitat": [
+    "volcano",
+    "lava"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "화산 신규 서식종 — 유황 결정을 핥는 노란 진드기 (260종 확장 #63)",
+   "temp": [
+    20,
+    300
+   ],
+   "spawnBlock": 10,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_sunveil_01",
+   "name": "흑렌 차양체",
+   "floors": [
+    116,
+    120
+   ],
+   "habitat": [
+    "glassdesert"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "유리 사막 신규 전투종 — 빛을 먹고 버티는 흑렌 껍질의 역류체 (260종 확장 #63)",
+   "temp": [
+    -25,
+    45
+   ],
+   "spawnBlock": 24,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_swampknight_01",
+   "name": "늪지기사",
+   "floors": [
+    61,
+    65
+   ],
+   "habitat": [
+    "river",
+    "swamp"
+   ],
+   "diet": "carnivore",
+   "role": "guardian",
+   "note": "물에 반쯤 잠겨 서는 기사 — 무너진 육교를 지킨다",
+   "temp": [
+    6,
+    32
+   ],
+   "spawnBlock": 13,
+   "group": "하층"
+  },
+  {
+   "id": "mon_swimworm_01",
+   "name": "공동 헤엄벌레",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "herbivore",
+   "role": "swarm",
+   "note": "붕괴 천창 신규 서식종 — 빈 공간을 물처럼 헤엄치는 벌레떼 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_templedove_01",
+   "name": "신전비둘기",
+   "floors": [
+    56,
+    60
+   ],
+   "habitat": [
+    "temple"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "성수를 마시고 살찌는 흰 비둘기",
+   "temp": [
+    8,
+    25
+   ],
+   "spawnBlock": 12,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_templeward_01",
+   "name": "신전 파수 이끼",
+   "floors": [
+    56,
+    60
+   ],
+   "habitat": [
+    "temple",
+    "shrine"
+   ],
+   "diet": "carnivore",
+   "role": "guardian",
+   "note": "신전 신규 전투종 — 성수 이슬을 흡수해 자란 파수 이끼 (260종 확장 #63)",
+   "temp": [
+    0,
+    30
+   ],
+   "spawnBlock": 12,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_thornviper_01",
+   "name": "가시덩굴 뱀",
+   "floors": [
+    106,
+    110
+   ],
+   "habitat": [
+    "crystalgrove"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "수정 숲 신규 서식종 — 가시와 구분 안 되는 비늘 — 노루를 기다린다 (260종 확장 #63)",
+   "temp": [
+    -35,
+    10
+   ],
+   "spawnBlock": 22,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_threshmoss_01",
+   "name": "문턱이끼",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "문턱의 빛을 먹고 자라는 발광 이끼",
+   "temp": [
+    -70,
+    -30
+   ],
+   "spawnBlock": 26,
+   "group": "상층"
+  },
+  {
+   "id": "mon_thresholdswift_01",
+   "name": "문턱순삭",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "문턱을 건너는 자만 추격하는 경계의 사냥꾼",
+   "temp": [
+    -70,
+    -30
+   ],
+   "spawnBlock": 26,
+   "group": "상층"
+  },
+  {
+   "id": "mon_tidalcrab_01",
+   "name": "조간 게",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "ocean",
+    "coral"
+   ],
+   "diet": "omnivore",
+   "role": "scavenger",
+   "note": "연해 신규 서식종 — 썰물 자리를 청소하는 작은 게 (260종 확장 #63)",
+   "temp": [
+    0,
+    30
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_tidebloom_01",
+   "name": "조석 플랑크톤",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "썰물 때마다 밀려드는 부유 광물 군체 — 물고기와 진주살의 바탕 음식",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_tideeel_01",
+   "name": "조류수명",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "들썩이는 조류에 몸을 실어 숨어 소용돌이 속에서 포식하는 물속 요정 어종",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_tidewarden_01",
+   "name": "조수감시자",
+   "floors": [
+    11,
+    15
+   ],
+   "habitat": [
+    "coral",
+    "ocean"
+   ],
+   "diet": "carnivore",
+   "role": "guardian",
+   "note": "조석을 읽어 밀려드는 물속 먹이를 미리 막는 연안 수호자",
+   "temp": [
+    0,
+    28
+   ],
+   "spawnBlock": 3,
+   "group": "하층"
+  },
+  {
+   "id": "mon_tombmoss_01",
+   "name": "비석 이끼",
+   "floors": [
+    36,
+    40
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "묘지 신규 서식종 — 비석 글자를 조용히 덮는 이끼 (260종 확장 #63)",
+   "temp": [
+    -5,
+    30
+   ],
+   "spawnBlock": 8,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_tombmoth_01",
+   "name": "무덤나방",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "무덤 입구 불빛을 따라 모이는 나방 — 무덤_two더지의 먹이가 된다",
+   "temp": [
+    -10,
+    26
+   ],
+   "spawnBlock": 15,
+   "group": "중층"
+  },
+  {
+   "id": "mon_tombsider_01",
+   "name": "무덤거미",
+   "floors": [
+    71,
+    75
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "무덤 입구를 거미줄로 가리는 매복 거미",
+   "temp": [
+    -10,
+    26
+   ],
+   "spawnBlock": 15,
+   "group": "중층"
+  },
+  {
+   "id": "mon_tombworm_01",
+   "name": "무덤벌레",
+   "floors": [
+    36,
+    40
+   ],
+   "habitat": [
+    "graveyard"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "제물 음식을 먹는 딱정벌레 — 무덤 생태의 먹이 바닥",
+   "temp": [
+    -2,
+    25
+   ],
+   "spawnBlock": 8,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_trenchlanternfish_01",
+   "name": "해구 등불어",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "deep_ocean",
+    "deep",
+    "trench"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "심해 신규 서식종 — 작은 등불로 플랑크톤을 모으는 소형어 (260종 확장 #63)",
+   "temp": [
+    0,
+    15
+   ],
+   "spawnBlock": 14,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_troll_01",
+   "name": "트롤",
+   "floors": [
+    16,
+    20
+   ],
+   "habitat": [
+    "cave",
+    "mountain"
+   ],
+   "diet": "carnivore",
+   "role": "apex",
+   "note": "",
+   "temp": [
+    -5,
+    25
+   ],
+   "spawnBlock": 4,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_venom_scorpion_01",
+   "name": "맹독 전갈",
+   "floors": [
+    31,
+    35
+   ],
+   "habitat": [
+    "desert",
+    "swamp"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "",
+   "temp": [
+    20,
+    45
+   ],
+   "spawnBlock": 7,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_vibespider_01",
+   "name": "침묵 거미",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "무풍 고원 신규 서식종 — 지면 진동만으로 사냥하는 퇴화안구 거미 (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_vibrationmoss_01",
+   "name": "진동 이끼",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "무풍 고원 신규 서식종 — 발소리를 흡수해 조용히 자라는 이끼 (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_vine_01",
+   "name": "독덩굴",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest",
+    "swamp"
+   ],
+   "diet": "none",
+   "role": "predator",
+   "note": "",
+   "temp": [
+    10,
+    35
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_vineflower_01",
+   "name": "덩굴꽃",
+   "floors": [
+    66,
+    70
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "none",
+   "role": "producer",
+   "note": "그늘을 피해 수액을 저장하는 덩굴 끝의 꽃",
+   "temp": [
+    16,
+    34
+   ],
+   "spawnBlock": 14,
+   "group": "중층"
+  },
+  {
+   "id": "mon_vinepython_01",
+   "name": "덩굴보아",
+   "floors": [
+    81,
+    85
+   ],
+   "habitat": [
+    "jungle"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "덩굴과 구분 안 되는 무늬 — 원숭이·멧돼지를 감아 조른다",
+   "temp": [
+    18,
+    36
+   ],
+   "spawnBlock": 17,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_voidclam_01",
+   "name": "무광 조개",
+   "floors": [
+    86,
+    90
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "심연 신규 서식종 — 빛 없는 심연 바닥에 붙는 검은 조개 (260종 확장 #63)",
+   "temp": [
+    -30,
+    30
+   ],
+   "spawnBlock": 18,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_voidjelly_01",
+   "name": "보이드 젤리",
+   "floors": [
+    86,
+    90
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "심연 신규 서식종 — 어둠을 먹고 몸이 조금씩 진해지는 해파리 (260종 확장 #63)",
+   "temp": [
+    -30,
+    30
+   ],
+   "spawnBlock": 18,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_voidmite_01",
+   "name": "공허먼지",
+   "floors": [
+    96,
+    100
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "심연의 낙뢰를 녹여 먼지로 되돌리는 분해층",
+   "temp": [
+    -38,
+    14
+   ],
+   "spawnBlock": 20,
+   "group": "중층"
+  },
+  {
+   "id": "mon_voidmoss_01",
+   "name": "천창 부유 이끼체",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "carnivore",
+   "role": "corruptor",
+   "note": "붕괴 천창 신규 전투종 — 중력 이끼에서 피어난 매복 역류체 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_voidworm_01",
+   "name": "심연충",
+   "floors": [
+    86,
+    90
+   ],
+   "habitat": [
+    "abyss"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "보이드 이슬을 걸러 먹는 심연의 충 — 어둠 속 먹이 바닥",
+   "temp": [
+    -25,
+    20
+   ],
+   "spawnBlock": 18,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_wastegolem_01",
+   "name": "폐기물 골렘",
+   "floors": [
+    76,
+    80
+   ],
+   "habitat": [
+    "sewer"
+   ],
+   "diet": "mineral",
+   "role": "decomposer",
+   "note": "버려진 폐기물이 뭉친 거체 — 슬러지·잔반·사체를 흡수해 정화",
+   "temp": [
+    10,
+    30
+   ],
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_watchwyrm_01",
+   "name": "문턱감시조수",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "soul",
+   "role": "predator",
+   "note": "문턱을 넘어서는 자의 영혼을 재는 감시자",
+   "temp": [
+    -70,
+    -30
+   ],
+   "spawnBlock": 26,
+   "group": "상층"
+  },
+  {
+   "id": "mon_waxworm_01",
+   "name": "향유벌레",
+   "floors": [
+    56,
+    60
+   ],
+   "habitat": [
+    "temple"
+   ],
+   "diet": "omnivore",
+   "role": "prey",
+   "note": "제단 제물의 향유를 핥는 벌레 — 가람뱀·비둘기가 좇는다",
+   "temp": [
+    8,
+    25
+   ],
+   "spawnBlock": 12,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_weightlessbug_01",
+   "name": "무게 없는 벌레",
+   "floors": [
+    121,
+    125
+   ],
+   "habitat": [
+    "skylapse"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "붕괴 천창 신규 서식종 — 걷는 게 아니라 천천히 떨어지는 벌레 (260종 확장 #63)",
+   "temp": [
+    -50,
+    0
+   ],
+   "spawnBlock": 25,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_whitelviper_01",
+   "name": "흰 유리뱀",
+   "floors": [
+    126,
+    130
+   ],
+   "habitat": [
+    "ideagate"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "이데아 관문 신규 서식종 — 빛 속에서만 보이는 하얀 뱀 (260종 확장 #63)",
+   "temp": [
+    -55,
+    -5
+   ],
+   "spawnBlock": 26,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_windlessgoat_01",
+   "name": "무풍 양",
+   "floors": [
+    111,
+    115
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "무풍 고원 신규 서식종 — 바람이 없어 털이 곱게 늘어선 양 (260종 확장 #63)",
+   "temp": [
+    -40,
+    5
+   ],
+   "spawnBlock": 23,
+   "group": "G4 — 천정"
+  },
+  {
+   "id": "mon_windlesspelt_01",
+   "name": "무풍설표범",
+   "floors": [
+    86,
+    90
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "carnivore",
+   "role": "ambusher",
+   "note": "소리를 듣지 못해 눈으로만 매복하는 표범",
+   "temp": [
+    -48,
+    -6
+   ],
+   "spawnBlock": 18,
+   "group": "중층"
+  },
+  {
+   "id": "mon_windlessrat_01",
+   "name": "무풍설쥐",
+   "floors": [
+    86,
+    90
+   ],
+   "habitat": [
+    "windless"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "바람 소리를 자기 몸의 것으로 착각해 사는 고지대 설치류",
+   "temp": [
+    -48,
+    -6
+   ],
+   "spawnBlock": 18,
+   "group": "중층"
+  },
+  {
+   "id": "mon_windmushroom_01",
+   "name": "바람버섯",
+   "floors": [
+    61,
+    65
+   ],
+   "habitat": [
+    "sky"
+   ],
+   "diet": "none",
+   "role": "decomposer",
+   "note": "상승기류에 떠서 낙하물을 분해하는 부유 균류",
+   "temp": [
+    -5,
+    10
+   ],
+   "spawnBlock": 13,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_windseedling_01",
+   "name": "바람모종",
+   "floors": [
+    61,
+    65
+   ],
+   "habitat": [
+    "sky"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "기류를 타고 떠다니는 모종 — 천공 먹이층의 바닥",
+   "temp": [
+    0,
+    15
+   ],
+   "spawnBlock": 13,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_windseedmidge_01",
+   "name": "바람모종 벌레",
+   "floors": [
+    61,
+    65
+   ],
+   "habitat": [
+    "sky",
+    "storm"
+   ],
+   "diet": "herbivore",
+   "role": "prey",
+   "note": "천공 신규 서식종 — 모종 바람에 실려 가는 솜뭉치 벌레 (260종 확장 #63)",
+   "temp": [
+    -20,
+    20
+   ],
+   "spawnBlock": 13,
+   "group": "G2 — 중부 탑"
+  },
+  {
+   "id": "mon_wolf_01",
+   "name": "늑대",
+   "floors": [
+    6,
+    10
+   ],
+   "habitat": [
+    "forest",
+    "plains"
+   ],
+   "diet": "carnivore",
+   "role": "predator",
+   "note": "",
+   "temp": [
+    -10,
+    25
+   ],
+   "spawnBlock": 2,
+   "group": "G1 — 하부 탑"
+  },
+  {
+   "id": "mon_zombie_01",
+   "name": "좀비",
+   "floors": [
+    21,
+    25
+   ],
+   "habitat": [
+    "graveyard",
+    "ruins"
+   ],
+   "diet": "none",
+   "role": "undead",
+   "note": "",
+   "temp": [
+    -10,
+    20
+   ],
+   "spawnBlock": 5,
+   "group": "G1 — 하부 탑"
+  }
+ ],
+ "meta": {
+  "v80": "ecology codex — 원천연안 13종 (사이렌 확정 포함) (총 377)",
+  "source": "monsters.json ecology + biomes.json climate"
+ }
+}

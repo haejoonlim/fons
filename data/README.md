@@ -1,33 +1,63 @@
-# data/ — 설정 SSOT 복사본
+# data/ — 원본 데이터 복사본
 
-원본: `soul-commander/unity/Assets/Resources/Data/*.json` — **원본 미검증** (레포 비공개, 이 머신에서 열람 불가)
+원본: 원본 저장소의 `unity/Assets/Resources/Data/` — 비공개 레포였지만 **2026-10-17에 클론해서 읽었다** (원본 대조).
+근거 기록은 [docs/original/03_데이터_영지_탑.md](../docs/original/03_데이터_영지_탑.md)에 있다 (원본 대조).
 
-## 이 폴더의 현재 상태 (중요)
+## 현재 상태
 
-- **`manifest.json`은 추측 목록이다.** 한 번도 원본 트리와 대조된 적이 없고, 파일 자체의 `notes` 필드가 그렇게 인정하고 있다. 작성 시점의 디렉터리 열람 기억으로 만든 목록이다.
-- 그래서 **첫 작업은 복사가 아니라 diff다.** 원본에 접근한 뒤:
-  ```bash
-  ls ../soul-commander/unity/Assets/Resources/Data/*.json | xargs -n1 basename | sort > /tmp/original_data.txt
-  python3 -c "import json;print('\n'.join(sorted(json.load(open('data/manifest.json'))['files'])))" > /tmp/manifest_data.txt
-  diff /tmp/original_data.txt /tmp/manifest_data.txt
-  ```
-  차이가 0이 될 때까지 `manifest.json`을 고친다. 그 전에 `sync_data.py`를 돌리면 **없는 파일은 조용히 건너뛰고 "missing" 한 줄만 찍고 끝난다** (exit 0).
-- `data/`에 지금 실제 JSON 파일은 **하나도 없다.** 이 폴더에는 `README.md`와 `manifest.json`만 있다.
+- `manifest.json`은 **대조를 마친 확정 목록**이다 — 2026-10-17 원본 트리와 전수 비교했고 **17종**이다 (원본 대조).
+- 대조 전의 목록은 추정이었고 실제와 달랐다: 없던 파일 3개(`estate_web.json`·`state.json`·`game_const.json`)가 들어 있고,
+  있던 파일 2개(`scenes.json`·`world_laws.json`)가 빠져 있었다 (원본 대조).
+- 2026-10-17에 복사를 실행했다: 이 폴더에 데이터 **17종**과 `manifest.json`이 있다 (자체 실측).
+
+## 가져올 파일 — 17종 (원본 대조)
+
+```
+ambient.json                  biomes.json                ecology_codex.json
+ecology_energy_channels.json  elemental_affinity.json    elemental_matrix.json
+equipment.json                estate.json                fusion_pairs.json
+job_tree.json                 monster_personality.json   monsters.json
+races.json                    scenes.json                skills_catalog.json
+synergy.json                  world_laws.json
+```
+
+## 정본은 어디인가 (원본 대조)
+
+| 파일 | 성격 |
+|---|---|
+| `skills_catalog.json` · `fusion_pairs.json` | 원본 스크립트가 **한글 키 정본에서 생성**한다 — 정본은 `design-docs/_tools/`에 있고, 생성기가 `unity/Assets/Resources/Data/`(snake_case)에 쓴다 (원본 대조) |
+| 나머지 15종 | 원본에서 **직접 저작**한 파일이다 — 생성물이 아니다 (원본 대조) |
+
+- 어느 쪽이든 **이관 원본은 `unity/Assets/Resources/Data/` 하나**다. 정본 경로와 재생성 명령은 [03_데이터_영지_탑.md](../docs/original/03_데이터_영지_탑.md) §1에 적어 뒀다 (원본 대조).
+- 원본에서 이 폴더의 JSON을 손으로 고치면 다음 동기화에 덮인다 — 수치 변경은 정본 문서·생성기에서 한다 (원본 대조).
 
 ## 규칙
 
-- 손으로 편집 금지. 원본에서 `tools/sync_data.py`로만 가져온다.
-- `.meta`, `.gitkeep`은 가져오지 않는다.
-- 밸런스 변경은 GDD 개정 + 별도 커밋으로만 한다.
-- `godot/data/`는 같은 내용의 Godot 런타임용 복사본이다 (`sync_data.py --dst godot/data`).
+- 손으로 편집 금지. `tools/sync_data.py`로만 가져온다.
+- `.meta`, `.gitkeep`은 가져오지 않는다 — Unity 전용 부산물이다.
+- 밸런스 변경은 정본(GDD) 개정 + 별도 커밋으로만 한다.
+- `godot/data/`는 같은 내용의 Godot 런타임용 복사본이다 (`--dst godot/data`).
 
-## 가져올 파일 목록 (전부 원본 미검증)
+## 복사 방법
 
-`manifest.json` 참조. 현재 들어 있는 이름:
-`ambient.json`, `biomes.json`, `ecology_codex.json`, `ecology_energy_channels.json`,
-`elemental_affinity.json`, `elemental_matrix.json`, `equipment.json`, `estate.json`,
-`fusion_pairs.json`, `job_tree.json`, `monster_personality.json`, `monsters.json`,
-`races.json`, `skills_catalog.json`, `synergy.json`, `estate_web.json`, `state.json`, `game_const.json`
+```bash
+./.venv/bin/python tools/sync_data.py --src ~/soul-commander/unity/Assets/Resources/Data --dst data
+./.venv/bin/python tools/sync_data.py --src ~/soul-commander/unity/Assets/Resources/Data --dst godot/data
+```
 
-이 중 실제로 원본에 존재하는 것이 몇 개인지는 **아직 모른다.** 대조 후 확정한다.
-(`state.json`, `game_const.json`, `estate_web.json`처럼 이름이 저장/런타임 상태를 연상시키는 항목은 설정 파일이 아닐 가능성이 있어 대조 때 특히 확인한다. 이 세 파일은 실제 존재 여부도 아직 미확인이다.)
+- `sync_data.py`는 이제 **없는 파일이 하나라도 있으면 exit 1**이다. 성공하면 `SYNC OK: <대상>`을 찍는다 (자체 실측).
+- 이전 동작은 없는 파일을 건너뛰고 "missing" 한 줄만 찍은 뒤 **exit 0으로 끝났다** — 원본 이름이 바뀌면 데이터가 조용히 빠진 채 게이트가 통과하는 실패 모드였다 (원본 대조).
+- 일부만 확인하려면 `--allow-missing`을 명시한다. 그때는 `missing` 목록을 반드시 읽는다 (자체 실측).
+
+## 다시 대조하고 싶을 때
+
+```bash
+ls ~/soul-commander/unity/Assets/Resources/Data/*.json | xargs -n1 basename | sort > /tmp/original_data.txt
+python3 -c "import json;print('\n'.join(sorted(json.load(open('data/manifest.json'))['files'])))" > /tmp/manifest_data.txt
+diff /tmp/original_data.txt /tmp/manifest_data.txt
+```
+
+## 원본이 스스로 어긋나는 곳
+
+원본 저장소 안에서도 런타임 JSON 개수 표기가 갈린다 — `unity/README.md`는 **10종**, `unity/PORTING_MAP.md`는 **13개**로 적었고 (둘 다 원본 대조),
+실제 폴더에는 **17종**이 있다 (원본 대조). 어느 문서를 믿을지 고민할 필요는 없다: **폴더 실측이 정본**이고 manifest도 그 값으로 맞췄다 (원본 대조).

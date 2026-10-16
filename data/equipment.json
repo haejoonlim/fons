@@ -1,0 +1,1099 @@
+{
+  "meta": {
+    "status": "가안",
+    "enhanceMax": 10,
+    "enhancePctPerLevel": 10,
+    "enhanceGoldCostPerNextLevel": 100,
+    "shopPriceByGrade": [
+      200,
+      800,
+      2000
+    ],
+    "note": "강화 스탯 = 기본치 × (1 + 0.10 × 강화단계) · 강화비 = 100G × 다음단계 · 상점가 하급200/중급800/상급2000G (허브 골드 구매) · 사망 시 보관함 반환 · CP E = 장비 스탯의 (1)식 합",
+    "thermal": {
+      "purpose": "06 §3.5-1 3구간(쾌적/미량/극한) 출입 임계값. biome.climate.ambient 기준으로 쾌적 이탈 시 Sanity -1, band 밖 극한 시 -2를 받는다.",
+      "zones": [
+        {
+          "id": "comfort",
+          "label": "쾌적",
+          "range": [
+            10,
+            25
+          ],
+          "gear": "없음",
+          "note": "보정 없음 · 이동속도 100%"
+        },
+        {
+          "id": "mild",
+          "label": "미량",
+          "range": [
+            -5,
+            45
+          ],
+          "gear": "1등급 경량",
+          "note": "이속 -5%"
+        },
+        {
+          "id": "extreme",
+          "label": "극한",
+          "range": [
+            -70,
+            60
+          ],
+          "gear": "2~3등급 방한·내열 필수",
+          "note": "이속 -10% + Sanity 드레인"
+        }
+      ],
+      "field": "thermal.survivable = 장비가 생존을 유지하는 기온 포락선(°C) · thermal.comfort = Sanity 무손실 구간",
+      "note": "survivable 밖(영하 70℃ 이하 / 60℃ 초과) 출입은 이 세계 어떤 등급으로도 불가 — D-277 지표 포락선과 동일. 초월(terra_nullsentinel 등 guardian)는 표 적용 예외."
+    }
+  },
+  "slotGroupOrder": [
+    "body",
+    "weapon",
+    "gear",
+    "thermal"
+  ],
+  "slotGroups": [
+    {
+      "key": "body",
+      "slots": [
+        "hat",
+        "face",
+        "top",
+        "bottom",
+        "shoes",
+        "gloves",
+        "cape"
+      ]
+    },
+    {
+      "key": "weapon",
+      "slots": [
+        "weapon"
+      ]
+    },
+    {
+      "key": "gear",
+      "slots": [
+        "earring",
+        "necklace",
+        "ring"
+      ]
+    },
+    {
+      "key": "thermal",
+      "slots": [
+        "thermal_cold",
+        "thermal_heat"
+      ]
+    }
+  ],
+  "slots": [
+    "hat",
+    "face",
+    "top",
+    "bottom",
+    "shoes",
+    "gloves",
+    "cape",
+    "weapon",
+    "earring",
+    "necklace",
+    "ring",
+    "thermal_cold",
+    "thermal_heat"
+  ],
+  "equipment": [
+    {
+      "id": "eq_weapon_1",
+      "name": "검",
+      "slot": "weapon",
+      "grade": 1,
+      "axis": null,
+      "stats": {
+        "hp": 0,
+        "atk": 5,
+        "def": 0,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "1등급 무기"
+    },
+    {
+      "id": "eq_weapon_2",
+      "name": "강검",
+      "slot": "weapon",
+      "grade": 2,
+      "axis": null,
+      "stats": {
+        "hp": 0,
+        "atk": 12,
+        "def": 0,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "2등급 무기"
+    },
+    {
+      "id": "eq_weapon_3",
+      "name": "월의 검",
+      "slot": "weapon",
+      "grade": 3,
+      "axis": null,
+      "stats": {
+        "hp": 0,
+        "atk": 25,
+        "def": 0,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "3등급 무기"
+    },
+    {
+      "id": "eq_top_1",
+      "name": "경량 상의",
+      "slot": "top",
+      "grade": 1,
+      "axis": null,
+      "stats": {
+        "hp": 40,
+        "atk": 0,
+        "def": 4,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 10
+      },
+      "thermal": null,
+      "note": "몸통 — 실루엣 중앙"
+    },
+    {
+      "id": "eq_bottom_1",
+      "name": "경량 하의",
+      "slot": "bottom",
+      "grade": 1,
+      "axis": null,
+      "stats": {
+        "hp": 24,
+        "atk": 0,
+        "def": 4,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 10
+      },
+      "thermal": null,
+      "note": "무릎 아래"
+    },
+    {
+      "id": "eq_shoes_1",
+      "name": "경량 신발",
+      "slot": "shoes",
+      "grade": 1,
+      "axis": null,
+      "stats": {
+        "hp": 12,
+        "atk": 0,
+        "def": 4,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 1,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "이동"
+    },
+    {
+      "id": "eq_top_2",
+      "name": "중급 상의",
+      "slot": "top",
+      "grade": 2,
+      "axis": null,
+      "stats": {
+        "hp": 100,
+        "atk": 0,
+        "def": 10,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 25
+      },
+      "thermal": null,
+      "note": "몸통 — 실루엣 중앙"
+    },
+    {
+      "id": "eq_bottom_2",
+      "name": "중급 하의",
+      "slot": "bottom",
+      "grade": 2,
+      "axis": null,
+      "stats": {
+        "hp": 60,
+        "atk": 0,
+        "def": 10,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 25
+      },
+      "thermal": null,
+      "note": "무릎 아래"
+    },
+    {
+      "id": "eq_shoes_2",
+      "name": "중급 신발",
+      "slot": "shoes",
+      "grade": 2,
+      "axis": null,
+      "stats": {
+        "hp": 30,
+        "atk": 0,
+        "def": 10,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 2,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "이동"
+    },
+    {
+      "id": "eq_top_3",
+      "name": "상급 상의",
+      "slot": "top",
+      "grade": 3,
+      "axis": null,
+      "stats": {
+        "hp": 200,
+        "atk": 0,
+        "def": 20,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 50
+      },
+      "thermal": null,
+      "note": "몸통 — 실루엣 중앙"
+    },
+    {
+      "id": "eq_bottom_3",
+      "name": "상급 하의",
+      "slot": "bottom",
+      "grade": 3,
+      "axis": null,
+      "stats": {
+        "hp": 120,
+        "atk": 0,
+        "def": 20,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 50
+      },
+      "thermal": null,
+      "note": "무릎 아래"
+    },
+    {
+      "id": "eq_shoes_3",
+      "name": "상급 신발",
+      "slot": "shoes",
+      "grade": 3,
+      "axis": null,
+      "stats": {
+        "hp": 60,
+        "atk": 0,
+        "def": 20,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 3,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "이동"
+    },
+    {
+      "id": "eq_top_basic",
+      "name": "내복 상의",
+      "slot": "top",
+      "grade": 0,
+      "axis": null,
+      "stats": {
+        "hp": 20,
+        "atk": 0,
+        "def": 1,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 5
+      },
+      "thermal": null,
+      "note": "영웅이 처음부터 입는다 — 상점 미판매"
+    },
+    {
+      "id": "eq_bottom_basic",
+      "name": "내복 하의",
+      "slot": "bottom",
+      "grade": 0,
+      "axis": null,
+      "stats": {
+        "hp": 20,
+        "atk": 0,
+        "def": 1,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 5
+      },
+      "thermal": null,
+      "note": "영웅이 처음부터 입는다 — 상점 미판매"
+    },
+    {
+      "id": "eq_shoes_basic",
+      "name": "여행용 신발",
+      "slot": "shoes",
+      "grade": 0,
+      "axis": null,
+      "stats": {
+        "hp": 10,
+        "atk": 0,
+        "def": 1,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 1,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "영웅이 처음부터 신는다 — 상점 미판매"
+    },
+    {
+      "id": "eq_hat_1",
+      "name": "경량 두건",
+      "slot": "hat",
+      "grade": 1,
+      "axis": null,
+      "stats": {
+        "hp": 20,
+        "atk": 0,
+        "def": 2,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "머리"
+    },
+    {
+      "id": "eq_gloves_1",
+      "name": "경량 장갑",
+      "slot": "gloves",
+      "grade": 1,
+      "axis": null,
+      "stats": {
+        "hp": 12,
+        "atk": 0,
+        "def": 2,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 1,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "손"
+    },
+    {
+      "id": "eq_cape_1",
+      "name": "경량 망토",
+      "slot": "cape",
+      "grade": 1,
+      "axis": null,
+      "stats": {
+        "hp": 16,
+        "atk": 0,
+        "def": 2,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 3
+      },
+      "thermal": null,
+      "note": "등 — 뒤"
+    },
+    {
+      "id": "eq_hat_2",
+      "name": "중급 두건",
+      "slot": "hat",
+      "grade": 2,
+      "axis": null,
+      "stats": {
+        "hp": 45,
+        "atk": 0,
+        "def": 5,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "머리"
+    },
+    {
+      "id": "eq_gloves_2",
+      "name": "중급 장갑",
+      "slot": "gloves",
+      "grade": 2,
+      "axis": null,
+      "stats": {
+        "hp": 27,
+        "atk": 0,
+        "def": 5,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 2,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "손"
+    },
+    {
+      "id": "eq_cape_2",
+      "name": "중급 망토",
+      "slot": "cape",
+      "grade": 2,
+      "axis": null,
+      "stats": {
+        "hp": 36,
+        "atk": 0,
+        "def": 5,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 6
+      },
+      "thermal": null,
+      "note": "등 — 뒤"
+    },
+    {
+      "id": "eq_hat_3",
+      "name": "상급 두건",
+      "slot": "hat",
+      "grade": 3,
+      "axis": null,
+      "stats": {
+        "hp": 90,
+        "atk": 0,
+        "def": 9,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "머리"
+    },
+    {
+      "id": "eq_gloves_3",
+      "name": "상급 장갑",
+      "slot": "gloves",
+      "grade": 3,
+      "axis": null,
+      "stats": {
+        "hp": 54,
+        "atk": 0,
+        "def": 9,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 3,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "손"
+    },
+    {
+      "id": "eq_cape_3",
+      "name": "상급 망토",
+      "slot": "cape",
+      "grade": 3,
+      "axis": null,
+      "stats": {
+        "hp": 72,
+        "atk": 0,
+        "def": 9,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 9
+      },
+      "thermal": null,
+      "note": "등 — 뒤"
+    },
+    {
+      "id": "eq_earring_1",
+      "name": "은 귀걸이",
+      "slot": "earring",
+      "grade": 1,
+      "axis": null,
+      "stats": {
+        "hp": 0,
+        "atk": 0,
+        "def": 0,
+        "aspd": 1,
+        "mag": 1,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "귀"
+    },
+    {
+      "id": "eq_necklace_1",
+      "name": "은 목걸이",
+      "slot": "necklace",
+      "grade": 1,
+      "axis": null,
+      "stats": {
+        "hp": 20,
+        "atk": 0,
+        "def": 0,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 4
+      },
+      "thermal": null,
+      "note": "목"
+    },
+    {
+      "id": "eq_ring_1",
+      "name": "은 반지",
+      "slot": "ring",
+      "grade": 1,
+      "axis": null,
+      "stats": {
+        "hp": 0,
+        "atk": 0,
+        "def": 0,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 3,
+        "cri": 1,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "손가락"
+    },
+    {
+      "id": "eq_earring_2",
+      "name": "청 귀걸이",
+      "slot": "earring",
+      "grade": 2,
+      "axis": null,
+      "stats": {
+        "hp": 0,
+        "atk": 0,
+        "def": 0,
+        "aspd": 2,
+        "mag": 3,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "귀"
+    },
+    {
+      "id": "eq_necklace_2",
+      "name": "청 목걸이",
+      "slot": "necklace",
+      "grade": 2,
+      "axis": null,
+      "stats": {
+        "hp": 40,
+        "atk": 0,
+        "def": 0,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 8
+      },
+      "thermal": null,
+      "note": "목"
+    },
+    {
+      "id": "eq_ring_2",
+      "name": "청 반지",
+      "slot": "ring",
+      "grade": 2,
+      "axis": null,
+      "stats": {
+        "hp": 0,
+        "atk": 0,
+        "def": 0,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 6,
+        "cri": 2,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "손가락"
+    },
+    {
+      "id": "eq_earring_3",
+      "name": "금 귀걸이",
+      "slot": "earring",
+      "grade": 3,
+      "axis": null,
+      "stats": {
+        "hp": 0,
+        "atk": 0,
+        "def": 0,
+        "aspd": 4,
+        "mag": 7,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "귀"
+    },
+    {
+      "id": "eq_necklace_3",
+      "name": "금 목걸이",
+      "slot": "necklace",
+      "grade": 3,
+      "axis": null,
+      "stats": {
+        "hp": 60,
+        "atk": 0,
+        "def": 0,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 12
+      },
+      "thermal": null,
+      "note": "목"
+    },
+    {
+      "id": "eq_ring_3",
+      "name": "금 반지",
+      "slot": "ring",
+      "grade": 3,
+      "axis": null,
+      "stats": {
+        "hp": 0,
+        "atk": 0,
+        "def": 0,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 9,
+        "cri": 3,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 0
+      },
+      "thermal": null,
+      "note": "손가락"
+    },
+    {
+      "id": "eq_cold_1",
+      "name": "경량 방한복",
+      "slot": "thermal_cold",
+      "grade": 1,
+      "axis": "cold",
+      "stats": {
+        "hp": 30,
+        "atk": 0,
+        "def": 3,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 10
+      },
+      "thermal": {
+        "survivable": [
+          -15,
+          45
+        ],
+        "comfort": [
+          -5,
+          38
+        ]
+      },
+      "note": "담요 두께 — 미량(-5)까지"
+    },
+    {
+      "id": "eq_cold_2",
+      "name": "중급 방한복",
+      "slot": "thermal_cold",
+      "grade": 2,
+      "axis": "cold",
+      "stats": {
+        "hp": 70,
+        "atk": 0,
+        "def": 8,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 25
+      },
+      "thermal": {
+        "survivable": [
+          -40,
+          45
+        ],
+        "comfort": [
+          -28,
+          30
+        ]
+      },
+      "note": "무풍고원(-32) · 광로들판(-38) 대응"
+    },
+    {
+      "id": "eq_cold_3",
+      "name": "상급 방한복",
+      "slot": "thermal_cold",
+      "grade": 3,
+      "axis": "cold",
+      "stats": {
+        "hp": 150,
+        "atk": 0,
+        "def": 16,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 50
+      },
+      "thermal": {
+        "survivable": [
+          -70,
+          45
+        ],
+        "comfort": [
+          -70,
+          30
+        ]
+      },
+      "note": "찢긴 천창(-46) · 이데아 문턱(-62) · 세계 최저온"
+    },
+    {
+      "id": "eq_heat_1",
+      "name": "경량 내열복",
+      "slot": "thermal_heat",
+      "grade": 1,
+      "axis": "heat",
+      "stats": {
+        "hp": 30,
+        "atk": 0,
+        "def": 3,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 10
+      },
+      "thermal": {
+        "survivable": [
+          -15,
+          45
+        ],
+        "comfort": [
+          -5,
+          38
+        ]
+      },
+      "note": "흡습 주석 — 미량(38)까지"
+    },
+    {
+      "id": "eq_heat_2",
+      "name": "중급 내열복",
+      "slot": "thermal_heat",
+      "grade": 2,
+      "axis": "heat",
+      "stats": {
+        "hp": 70,
+        "atk": 0,
+        "def": 8,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 25
+      },
+      "thermal": {
+        "survivable": [
+          -15,
+          52
+        ],
+        "comfort": [
+          5,
+          46
+        ]
+      },
+      "note": "먼지벌판(38) · 마른 지맥(44) 대응"
+    },
+    {
+      "id": "eq_heat_3",
+      "name": "상급 내열복",
+      "slot": "thermal_heat",
+      "grade": 3,
+      "axis": "heat",
+      "stats": {
+        "hp": 150,
+        "atk": 0,
+        "def": 16,
+        "aspd": 0,
+        "mag": 0,
+        "mdef": 0,
+        "pen": 0,
+        "eva": 0,
+        "cdmg": 0,
+        "cri": 0,
+        "mana": 0,
+        "spd_cast": 0,
+        "sta": 50
+      },
+      "thermal": {
+        "survivable": [
+          -15,
+          60
+        ],
+        "comfort": [
+          5,
+          55
+        ]
+      },
+      "note": "맥의 상흔(52) · 세계 최고온"
+    }
+  ]
+}
