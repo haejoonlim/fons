@@ -108,7 +108,8 @@ git remote add origin git@github.com:haejoonlim/<레포명>.git
 git push -u origin main
 ```
 
-- SSH 키(`~/.ssh/fons_soulcommander_ed25519`)가 등록돼 있으므로 push는 이 키로 가능하다 (자체 실측).
+- SSH 키(`~/.ssh/fons_soulcommander_ed25519`, 지문 `SHA256:Y68Xqccr3BHtvbL7Jv+y5tIOQC/9AmLsVmZ17EqnaZ8` — 자체 실측)가 계정에 등록돼 있으므로 push는 이 키로 가능하다.
+  다만 이 머신에는 `~/.ssh/config` 가 없어 git이 이 키를 자동으로 쓰지 않는다 — `GIT_SSH_COMMAND="ssh -i ~/.ssh/fons_soulcommander_ed25519 -o IdentitiesOnly=yes" git push -u origin main` 처럼 키를 지정하거나, `~/.ssh/config` 에 `Host github.com` + `IdentityFile` 블록을 넣는다 (자체 실측).
 - 비ASCII 레포명은 URL에서 퍼센트 인코딩될 수 있다. 표시명은 `폰즈`, 경로가 어색하면 영문 슬러그를 쓴다.
 - 원본 저장소는 private이므로 새 레포도 private을 권한다 — 미확정 계획과 원본 발췌가 들어 있다.
 

@@ -142,7 +142,7 @@ godot --headless --path godot --export-release "macOS" ../build/FONS.app
 
 ## 안 깔린 것 (필요해지면)
 
-- **Node.js / npm** — 계획에서 웹 표현층(Vite/TS)을 버렸으므로 불필요. 원본 `verify_*.mjs`(원본 미검증)는 `godot/tests/*.gd`와 `tools/` 파이썬 게이트로 승계한다.
+- **Node.js / npm** — 계획에서 웹 표현층(Vite/TS)을 버렸으므로 불필요. 원본 `verify_*.mjs` 15종(원본 대조)은 `godot/tests/*.gd`와 `tools/` 파이썬 게이트로 승계한다.
 - **Homebrew** — 이번엔 안 썼다. `/usr/local`이 root 소유라 sudo가 필요해서, `.app` 직접 설치 + `~/.local/bin` 심볼릭 링크로 처리했다. 패키지 관리가 필요해지면 그때 설치.
 - **`gh` (GitHub CLI)** — 없다. 그래서 이 머신에서는 레포 생성·푸시를 CLI로 자동화할 수 없다. 자세한 처리는 [MIGRATION_PLAN.md](MIGRATION_PLAN.md) §2.
 
@@ -163,10 +163,10 @@ godot --headless --path godot --export-release "macOS" ../build/FONS.app
 - import **후** GUT → `Scripts 2 / Tests 6 / Passing 6 / Asserts 8`, exit 0
 - import **없이** GUT만 → class_names 에러를 찍고 **exit 0** (거짓 통과). 위 "쓰는 법"의 두 단계를 반드시 지킬 것
 
-**2026-10-15 이전 세션 기록 (그 시점 값 — 위 재실측이 우선):**
+**2026-10-15 이전 세션 기록 (그 시점 값 — 위 재실측이 우선). 아래 게이트 출력의 `pulls=130`은 그때 쓰던 값이고, 2026-10-17 원본 대조에서 **원본에 없는 정의**로 확인됐다:**
 
 - `godot --headless --import` → exit 0 (스크립트 파싱 에러 없음. `res://scenes/title.tscn` 미존재 경고만)
 - GUT → `2 scripts / 6 tests / 6 passing / 8 asserts`, exit 0
 - `tools/gate_all.py` → `DOCS OK` + `GATE OK: W0 pulls=130 expected_shaped=6.5 legacy=0.95` → `GATE ALL OK`, exit 0
 
-**원본 미검증:** 이 문서가 참조하는 원본 레포(`haejoonlim/soul-commander`)의 경로·파일명은 현재 이 머신에서 읽을 수 없다(비공개 레포 + 자격증명 없음). 위 검증값은 **이 머신과 이 레포에 대한 것**만이며, 원본 수치·구조에 대한 서술은 아니다.
+**원본 대조 완료 (2026-10-17):** 이 문서가 참조하는 원본 레포(`haejoonlim/soul-commander`)는 이제 이 머신에 클론돼 있다 (`~/soul-commander` · 워킹트리 213MB · 커밋 252개 · 파일 1,523개 · 자체 실측). 원본 경로·수치의 근거는 [docs/original/](docs/original/00_읽는법.md) 사실표 4종이다. 위 검증값은 **이 머신과 이 레포에 대한 것**이고, 원본 수치·구조는 사실표를 보면 된다.

@@ -70,7 +70,7 @@
 | GUT 테스트 | **2 스크립트 / 8 테스트 / 8 통과 / 25 단언** | `./tools/test_godot.sh` → **exit 0** (자체 실측) |
 | Python 게이트 | 통과 | `./.venv/bin/python tools/gate_all.py` → exit 0 · `GATE ALL OK` (자체 실측) |
 | 필수 산출물 | **29종** 존재 검사 | `tools/check_docs.py` → `DOCS OK: 29 files present` (자체 실측) |
-| 문서 검수 도구 | 검사 7종 동작 · **발견 0건** / 면제 1049건 / 상수 26개 대조 | `tools/review_docs.py` → exit 0 (advisory, 하드 게이트 아님) (자체 실측) |
+| 문서 검수 도구 | 검사 7종 동작 · **발견 0건** / 상수 26개 대조 (면제 건수는 문서 수정마다 변한다) | `tools/review_docs.py` → exit 0 (advisory, 하드 게이트 아님) (자체 실측) |
 | 소환 규칙 게이트 | 원본 확정 #32 확률표·#11 종족 롤 **재현** | `sim/gacha.py` → `GATE OK` (표본 200000, seed 265) (자체 실측) |
 | 원본 대조 사실표 | **4종 완료** | `docs/original/` (원본 대조) |
 | Godot 시뮬 코드 | 소환 규칙은 원본값 · 전투는 스텁 | `gacha.gd`, `combat.gd` (자체 실측) |
@@ -288,8 +288,12 @@ $ ./.venv/bin/python tools/review_docs.py
   BROKEN_REFERENCE 0 / BROKEN_LINK 0 / DUPLICATE_H1 0 / DANGLING_SSOT 0
   NUMBER_CONFLICT 0 / CONST_DRIFT 0
   UNVERIFIED_CLAIM 0
-  요약: 발견 0건 / 면제 1048건 / 상수 26개 대조
+  요약: 발견 0건 / 면제 1052건 / 상수 26개 대조      ← 2026-10-17 실행 스냅샷
 ```
+
+면제 건수는 검수기가 **문서 본문의 줄을 세어** 내는 값이라, 문서를 한 줄이라도 고치면 함께 변한다.
+그래서 이 저장소는 면제 수를 “현재 참값”으로 쓰지 않고 위처럼 실행 시점 스냅샷으로만 적는다 (자체 실측).
+판정에 쓰는 불변값은 **발견 0건**과 **상수 26개 대조** 둘이다.
 
 위 네 명령의 종료 코드는 **0 / 0 / 0 / 0** 이다 (자체 실측).
 

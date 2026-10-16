@@ -361,12 +361,12 @@ Godot **4.7.2 stable** (이 머신에 설치·검증 완료). Unity C#은 전부
 | `./tools/test_godot.sh` (임포트 → GUT → junit 검사) | GDScript 시뮬 코어의 동작 | 전부 통과 + exit 0. **GUT 단독 실행의 exit 0은 증거가 아니다** — 임포트 캐시가 없으면 테스트 0건으로도 0을 반환한다 | 8 테스트 / 8 통과 / 25 단언 (자체 실측) |
 | `godot --path godot --headless --import` | 스크립트가 파싱되고 리소스가 임포트된다 | exit 0, 에러 0건 | exit 0 (자체 실측) |
 | `mkdir -p build && godot --headless --path godot --export-release "macOS" build/FONS.app` | 실제 실행 파일이 만들어진다 | `build/FONS.app` 생성 | 미실행 (Phase 3) |
-| `./.venv/bin/python tools/review_docs.py` | 리포 문서 간 수치·경로 모순이 없다 (**자문 검수 — 하드 게이트 아님. `tools/gate_all.py`에 연결하지 않는다**) | 목표: 지적 0건. **0건이 아니어도 실패로 취급하지 않는다** | 지적 0건 / 면제 1049건 / 상수 26개 대조 (자체 실측) |
+| `./.venv/bin/python tools/review_docs.py` | 리포 문서 간 수치·경로 모순이 없다 (**자문 검수 — 하드 게이트 아님. `tools/gate_all.py`에 연결하지 않는다**) | 목표: 지적 0건. **0건이 아니어도 실패로 취급하지 않는다** | 지적 0건 / 상수 26개 대조 (자체 실측). 면제 건수는 문서 본문을 고치면 함께 변하므로 고정하지 않는다 |
 | (수동) 익스포트 빌드 실행 + 프레임 측정 | 성능 목표 달성 | 측정값 기록 (목표 60fps) | 미실행 (Phase 3) |
 
 주의: `godot ... | tee` 처럼 출력을 파이프로 거르면 Godot의 실패 종료 코드가 묻힌다. 반드시 `set -o pipefail` 또는 종료 코드 별도 캡처를 쓴다.
 
-검수기의 출처 표시 규칙 (2026-10-17 도입, 자체 실측): 원본을 언급하는 줄에 숫자를 쓰면 그 줄에 `(원본 미검증)`·`(원본 대조)`·`(자체 실측)` 중 하나를 달아야 한다. 표 행은 윗 행의 표시를 물려받지 않는다. 남은 1건은 HANDOFF의 측정 기록 줄이며, 표시를 달면 0건이 된다 — 그 뒤 하드 게이트 승격을 검토한다 (§10).
+검수기의 출처 표시 규칙 (2026-10-17 도입, 자체 실측): 원본을 언급하는 줄에 숫자를 쓰면 그 줄에 `(원본 미검증)`·`(원본 대조)`·`(자체 실측)` 중 하나를 달아야 한다. 표 행은 윗 행의 표시를 물려받지 않는다. 2026-10-17 시점에 지적 0건이다(상수 26개 대조). 면제 건수는 문서 본문을 고치면 함께 변하므로 prose에 고정하지 않고 실행 출력을 본다. 하드 게이트 승격 여부는 §10에서 다룬다.
 
 ---
 
@@ -393,7 +393,9 @@ Godot **4.7.2 stable** (이 머신에 설치·검증 완료). Unity C#은 전부
 **어떻게 뚫었나 (자체 실측):**
 
 1. 이 머신에서 SSH 키 쌍을 만들고 **공개키만** GitHub 계정에 등록했다 (키 종류 = Authentication Key).
-2. `ssh -T git@github.com` → `Hi haejoonlim! You've successfully authenticated` — 인증 확인.
+   개인키 `~/.ssh/fons_soulcommander_ed25519` · 공개키 지문 `SHA256:Y68Xqccr3BHtvbL7Jv+y5tIOQC/9AmLsVmZ17EqnaZ8` (ED25519, 자체 실측).
+2. `ssh -i ~/.ssh/fons_soulcommander_ed25519 -o IdentitiesOnly=yes -T git@github.com` → `Hi haejoonlim! You've successfully authenticated` — 인증 확인 (2026-10-17 재확인).
+   **키를 명시해야 한다:** 이 머신에는 `~/.ssh/config` 가 없고 키 이름이 기본값이 아니라서, 그냥 `ssh -T git@github.com` 은 `id_rsa`·`id_ed25519` 등만 제시하고 `Permission denied (publickey)` 로 끝난다 (자체 실측).
 3. `git clone git@github.com:haejoonlim/soul-commander.git ~/soul-commander` → 성공. 213MB / 252 커밋 / 1,523 파일 (자체 실측).
 4. 원본 문서·데이터를 읽고 사실표 4종을 만들었다 — [docs/original/](original/).
 
