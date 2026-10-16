@@ -81,19 +81,26 @@
 | GitHub REST API `/repos/haejoonlim/soul-commander` | **404 Not Found** |
 | GitHub REST API `/users/haejoonlim/repos` | 같은 계정의 다른 저장소(`haejoonlim/hive`, `haejoonlim/Limagination`)는 정상 반환 → **저장소는 있으나 비공개** |
 | `gh` CLI | **설치돼 있지 않음** |
-| git 자격증명 | `~/.netrc` 없음, macOS 키체인에 github.com 항목 없음 |
+| git 자격증명 | `~/.netrc` 없음, macOS 키체인에 github.com 항목 없음. `credential.helper` 미설정, `~/.config/gh` 없음 |
+| Freebuff GitHub 연동 상태 | **`connected: false`** — 계정에 아직 붙어 있지 않음 (이번 세션에서 조회) |
+| `SSH_AUTH_SOCK` / `ssh-add -l` | 소켓은 있으나 `The agent has no identities` → **SSH 키 없음** |
+| `git ls-remote git@github.com:haejoonlim/soul-commander.git` | `Permission denied (publickey)` |
+| `FREEBUFF_GIT_DIR` | 앱에 번들된 `git` 실행 경로 — 자격증명이 아님 |
+| Freebuff GitHub 연동을 켠 뒤 재확인 | 로컬 셸은 변화 없음: `gh` 없음 · 자격증명 파일 없음 · SSH 키 없음 · API 응답도 비인증과 같음 → **연동은 계정 쪽에만 있고 셸로 자격증명이 내려오지 않는다** |
 | 로컬 클론 | 없음. Spotlight와 전체 트리 검색에서 `soul-commander`, `GDD_v8` 결과 없음 |
 | 이전 세션 대화 기록 | 원본 문서 **본문이 남아 있지 않음**. 파일 경로 참조와 새로 쓴 스캐폴드만 복구됨 |
 
-**해소 방법 (아무거나 하나)**
+**해소 방법 (아무거나 하나, 위에서부터 권장)**
 
-1. **Freebuff에서 GitHub 연동** — 이전 세션은 이 방법으로 저장소를 읽었다. 제일 빠르다.
-2. **로컬에 클론하고 경로를 알려주기**
+1. **로컬 클론 후 경로를 알려주기** — 제일 확실하다. 셸에 자격증명이 필요 없다.
    ```bash
    git clone git@github.com:haejoonlim/soul-commander.git ~/soul-commander
    ```
    그러면 `~/Desktop/폰즈`에서 바로 이관할 수 있다 (명령은 §7).
-3. **문서만 붙여주기** — GDD 00~09/99, `fons-web-ver/PLAN.md`를 채팅에 붙여도 된다 (경로·번호는 원본 미검증).
+2. **zip 우회** — GitHub 웹에서 `Code → Download ZIP`을 받아 바탕화면에 풀고 경로를 알려준다. 역시 자격증명이 필요 없다.
+3. **PAT 파일 우회** — Personal Access Token을 **채팅에 붙이지 말고 파일로 저장**한 뒤 경로만 알려준다. 그 파일로 클론한다(값은 출력하지 않는다).
+4. **Freebuff GitHub 연동** — 이전 세션은 이 방법으로 읽었다고 기록했다. 다만 이번에 측정한 사실은 표 마지막 줄과 같다: 연동을 켠 뒤에도 셸에는 자격증명이 내려오지 않았고, 이 빌드에는 저장소를 읽는 GitHub 도구도 노출되지 않았다.
+5. **문서만 붙여주기** — GDD 00~09/99, `fons-web-ver/PLAN.md`를 채팅에 붙여도 된다 (경로·번호는 원본 미검증).
 
 **해소되면**: §7 순서를 그대로 따른다. §7의 1번(manifest 대조)을 건너뛰면 안 된다.
 
