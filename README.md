@@ -16,15 +16,16 @@
 |---|---|---|
 | 개발 환경 | 설치·검증 완료 | `./.venv/bin/python tools/check_env.py --strict` → exit 0 |
 | Godot 프로젝트 | 임포트·기동 확인 | `godot --headless --import` → exit 0 |
-| GUT 테스트 | 2 스크립트 / 8 테스트 / 8 통과 / 25 단언 (자체 실측) | `./tools/test_godot.sh` → exit 0 |
+| GUT 테스트 | 5 스크립트 / 20 테스트 / 20 통과 / 49 단언 (자체 실측) | `./tools/test_godot.sh` → exit 0 |
 | 소환 숫자 게이트 | 통과 — 원본 확정 확률표 재현 (자체 실측) | `./.venv/bin/python sim/gacha.py` → exit 0 |
-| Python 게이트 | 통과 · 필수 산출물 29종 (자체 실측) | `./.venv/bin/python tools/gate_all.py` → exit 0 |
+| Python 게이트 | 통과 · 필수 산출물 52종 (자체 실측) | `./.venv/bin/python tools/gate_all.py` → exit 0 |
 | 문서 검수 도구 | 동작 (검사 7종, advisory) | `./.venv/bin/python tools/review_docs.py` |
 | 원본 클론·대조 | 완료 — `~/soul-commander` (자체 실측) | 원본에서 확인한 값은 [docs/original/](docs/original/00_읽는법.md) 4종에 있다 |
 | 런타임 데이터 이관 | 완료 — 17종 × 2 (data/ · godot/data/) (자체 실측) | `tools/sync_data.py` |
-| 3D 월드 | 없음 — 타이틀 자리표시자뿐 | `godot/scenes/title.tscn` |
+| 테스트 센터 | 동작 — 시뮬 22/22 통과 · 게이트 6종 (자체 실측) | `./.venv/bin/python sim/center/server.py 8741` → `/api/sims` 22종 |
+| 3D 월드 | 없음 — 타이틀 자리표시자뿐 | `godot/game/ui/title/title.tscn` |
 
-**되는 것**: Godot 프로젝트가 열리고, GUT 8개가 통과하고, 숫자 게이트가 원본 값으로 돈다.
+**되는 것**: Godot 프로젝트가 열리고, GUT 20개가 통과하고, 숫자 게이트가 원본 값으로 돈다.
 **안 되는 것**: 게임을 플레이할 수 없다. 데이터 17종은 들어왔지만 시뮬 코어 포팅이 아직 안 됐다 (자체 실측).
 
 ## 개발 환경
@@ -38,7 +39,13 @@ Godot 4.7.2 + Blender 4.5.14 LTS + ffmpeg 9.0.2 + GUT 9.6.1 + Python venv가 이
 ./.venv/bin/python sim/gacha.py                  # 소환 규칙 게이트 (원본 확정값 재현)
 ./.venv/bin/python tools/gate_all.py             # 문서 존재 + 소환 숫자 게이트
 ./.venv/bin/python tools/review_docs.py          # 문서 기계 검수 (advisory — 게이트 아님)
+./.venv/bin/python sim/center/server.py 8741     # 테스트 센터 → http://localhost:8741/
 ```
+
+테스트 센터는 소환·경제·생태 시뮬 22종을 브라우저에서 돌리고 초록/빨강으로 보여준다.
+폰즈 게이트(문서·소환·툴체인·Godot)도 같은 화면에서 돌아가고, 매 런이
+`tools/gate_ledger.jsonl`(gitignore)에 쌓여 [🛡 게이트 상태] 탭에 추이로 나온다.
+자세한 것은 [sim/center/README.md](sim/center/README.md).
 
 `tools/review_docs.py` 는 **advisory**다. 지적이 0이 아니어도 빌드 실패가 아니다 — 판단이 섞인 권고가 있기 때문이다.
 숫자 주장의 출처 표시(`(원본 대조)`·`(자체 실측)`·`(원본 미검증)`)는 이 검사기가 강제한다.
@@ -56,8 +63,13 @@ cd godot && godot --headless -s addons/gut/gut_cmdln.gd -gexit
 일부만 확인하려면 `--allow-missing` 을 명시한다.
 
 ```bash
-./.venv/bin/python tools/sync_data.py --src ~/soul-commander/unity/Assets/Resources/Data --dst data
+# 원본이 다시 생겼을 때만 (아래 '지금은' 참고)
+./.venv/bin/python tools/sync_data.py --src <원본 데이터 폴더> --dst data
 ```
+
+**지금은 원본 유니티 트리가 이 머신에 없다** — 2026-10-17에 로컬에서 삭제했다 (자체 실측).
+그래서 `data/` 와 `godot/data/` 가 **유일한 정본 사본**이다. 이관은 이미 끝났고(17/17),
+`tools/check_docs.py` 가 누락을 계속 감시한다. 원본에서 다시 받을 일이 생길 때만 `sync_data.py` 를 쓴다.
 
 ## 폴더 구조
 
@@ -67,33 +79,48 @@ cd godot && godot --headless -s addons/gut/gut_cmdln.gd -gexit
   HANDOFF.md          # 인수인계문서 (먼저 읽기)
   SETUP.md            # 툴체인 설치·재현
   MIGRATION_PLAN.md   # 원본 → 이 저장소 이관 계획·처분표
-  docs/
-    DEV_PLAN.md       # 게임 개발 플랜 (Phase 0~5, WBS, 게이트, 리스크)
-    DOC_REVIEW.md     # 문서 검수 기록
-    GODOT_PORTING_MAP.md  # 원본 TS/C# → GDScript 매핑표
+  docs/               # 문서 입구는 docs/README.md (지도)
+    README.md         # 어디에 뭐가 있는지
+    gdd/              # 원본 기획서 복사본 — 수정 금지
     original/         # 원본을 읽고 확인한 값의 대조 자료 (여기가 값의 근거다)
       00_읽는법.md
       01_확정_규칙.md
       02_웹버전_포팅.md
       03_데이터_영지_탑.md
+    dev/              # DEV_PLAN · GODOT_PORTING_MAP · DOC_REVIEW
+    design/           # PLAN_2D_FIRST · PROMPT_2D_FIRST
+    adr/              # 결정 기록 0001~0004 — 왜 이 구조인가
+    art/              # ART_BIBLE — 시각 규칙의 정본
+    audio/            # AUDIO_GUIDE — 포맷·믹싱 규칙의 정본
   data/
     README.md         # JSON 이관 규칙 + 현재 상태
     manifest.json     # 이관 대상 파일 목록 (원본과 전수 대조 완료)
   sim/
     README.md         # 소환 규칙 게이트 설명 + 다음 작업
     gacha.py          # 소환 게이트 — 원본 확정 규칙 재현 (에셋 없음)
+    center/           # 테스트 센터 (README.md 먼저) — 시뮬 22종 + 게이트 패널
+      server.py       # 정적 서빙 + /api/sim · /api/snapshots · /api/gates · /api/gate-ledger
+      run_snapshots.py# 전 시뮬 1회 실행 → pages/snapshots.js (SIMS 정본)
+      sims/           # 시뮬 본체 22종 (원본 design-docs/_tools 에서 이관)
+      pages/          # 탭 HTML 6종 — test_center · gacha · 생태도감 · 바이옴 여정 · 직업트리 · promotion_lab
   godot/              # Godot 4.7.2 프로젝트 (여기가 게임 본체)
     project.godot
     .gutconfig.json
-    scenes/title.tscn
-    data/             # tools/sync_data.py가 채우는 런타임용 설정 (현재 README뿐)
-    scripts/autoload/ # game_state.gd, data_loader.gd
-    scripts/sim/      # gacha.gd, combat.gd
-    tests/            # test_gacha.gd, test_combat.gd
+    autoload/         # game_state.gd · data_loader.gd (전역 시스템)
+    core/             # gacha.gd · combat.gd — 씬 없는 순수 규칙
+    game/
+      main/           # main.tscn + main.gd — 조립 루트 (2D/3D 를 모른다)
+      view/           # view_contract · view_factory · projection + view_2d/ · view_3d/
+      ui/title/       # 타이틀 자리표시자 (Phase 3 에서 교체)
+    assets/           # 여러 씬이 공유하는 런타임 에셋 (지금은 README 뿐)
+    data/             # tools/sync_data.py 가 채우는 정본 JSON 사본
+    tests/unit/       # GUT 테스트 5종
     addons/gut/       # GUT 9.6.1 (벤더링)
+  art-source/         # 아트 편집 원본 (PSD·blend) — 엔진 밖
+  audio-source/       # 사운드 편집 원본 (DAW 세션) — 엔진 밖
   tools/
     check_env.py      # 툴체인 닥터
-    check_docs.py     # 필수 산출물 29종 존재 검사
+    check_docs.py     # 필수 산출물 52종 + 구조 회귀 검사
     gate_all.py       # 문서 + 소환 게이트
     sync_data.py      # 원본 JSON → data/ 복사 (없는 파일이면 실패)
     review_docs.py    # 문서 기계 검수 (검사 7종, advisory)
@@ -105,7 +132,7 @@ cd godot && godot --headless -s addons/gut/gut_cmdln.gd -gexit
 
 **가져올 것** (경로와 존재를 원본에서 확인했다 — 원본 대조):
 정본 문서 `design-docs/GDD_v8.0_*` · 개발 기준 `design-docs/GDD_v8.0_03_개발플랜.md` ·
-결정 로그 `design-docs/결정로그/` · 런타임 데이터 `unity/Assets/Resources/Data/*.json` 17종 (원본 대조) ·
+결정 로그 `design-docs/결정로그/` · 런타임 데이터 원본 데이터 폴더의 `*.json` 17종 (원본 대조) ·
 웹 시뮬 코어 `fons-web-ver/app/src/` TS와 `fons-web-ver/verify_*.mjs` 15종 (원본 대조) ·
 `unity/PORTING_MAP.md` 의 매핑 개념 · 루트 인수인계 문서.
 
@@ -115,7 +142,7 @@ Unity의 `Assets/Art`, `Prefabs`, `Scenes`, `TextMesh Pro`, C# 스크립트 전�
 구 Godot 문서 `design-docs/archive/`(v7.12)와 `godot-ver.zip` 은 원본 저장소에도 없다 (원본 대조).
 
 자세한 처분표는 [MIGRATION_PLAN.md](MIGRATION_PLAN.md), 포팅 매핑은
-[docs/GODOT_PORTING_MAP.md](docs/GODOT_PORTING_MAP.md).
+[docs/dev/GODOT_PORTING_MAP.md](docs/dev/GODOT_PORTING_MAP.md).
 
 ## 확정 수치와 출처
 
@@ -137,7 +164,7 @@ D-265 도 소환 게이트가 아니라 층 미션 시스템이다. 값과 출�
 | `LEVEL_CAP` | 130 | 확정 #34 (원본 대조) |
 
 이 값들은 이제 밸런스 근거로 쓸 수 있다. 다만 원본이 스스로 어긋나는 항목은 양쪽을 병기해 두었다 —
-[docs/GODOT_PORTING_MAP.md](docs/GODOT_PORTING_MAP.md) §5.
+[docs/dev/GODOT_PORTING_MAP.md](docs/dev/GODOT_PORTING_MAP.md) §5.
 
 ## 렌더러 결정 (고정)
 
@@ -145,7 +172,7 @@ D-265 도 소환 게이트가 아니라 층 미션 시스템이다. 값과 출�
 MoltenVK를 거치고, Godot 4.7에서 검은 화면·Vulkan device loss 보고가 있는 경로를 피한다.
 대가는 명확하다: SDFGI, VoxelGI, SSIL, SSR, 볼류메트릭 포그, 서브서피스 스캐터링,
 데칼, DOF, 컴퓨트 셰이더, TAA/FSR2/FXAA/SMAA를 못 쓴다. SSAO와 MSAA 3D는 쓸 수 있다.
-바꾸기 전에 [docs/DEV_PLAN.md](docs/DEV_PLAN.md) §4를 읽을 것.
+바꾸기 전에 [docs/dev/DEV_PLAN.md](docs/dev/DEV_PLAN.md) §4를 읽을 것.
 
 ## 작업 순서 (요약)
 
@@ -156,4 +183,4 @@ MoltenVK를 거치고, Godot 4.7에서 검은 화면·Vulkan device loss 보고�
 4. **Phase 4** — 게이트·CI·빌드
 5. **Phase 5** — 수직 슬라이스
 
-각 Phase의 완료 정의와 검증 명령은 [docs/DEV_PLAN.md](docs/DEV_PLAN.md) §5.
+각 Phase의 완료 정의와 검증 명령은 [docs/dev/DEV_PLAN.md](docs/dev/DEV_PLAN.md) §5.

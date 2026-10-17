@@ -1,0 +1,2 @@
+# 3D 뷰 자리. 착수 시 view_3d.tscn + view_3d.gd 를 추가한다.
+# FonsViewFactory 가 경로를 이미 알고 있으므로 씬이 생기면 자동 인식된다.

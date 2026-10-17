@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>FONS · 소환제단 시뮬레이터</title>
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#12151d; --panel2:#171b26; --line:#262c3a;
+    --txt:#d8dde8; --dim:#7a8299; --gold:#e6c15a;
+    --c1:#9aa4b8; --c2:#6ec6b8; --c3:#7fa7ff; --c4:#b48cff; --c5:#ffb454; --c6:#ff5e7a; --c7:#ff2e63;
+    --rare:#ffd166; --leg:#ff8fa3;
+    --lin-human:#7fa7ff; --lin-elf:#6ec6b8; --lin-dwarf:#ffb454; --lin-beast:#a8d878; --lin-warrior:#ff8f5e; --lin-abyss:#b48cff; --lin-shaped:#c9b6ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#1a2030,var(--bg));color:var(--txt);
+       font-family:'Pretendard',system-ui,-apple-system,'Malgun Gothic',sans-serif;min-height:100vh}
+  header{padding:22px 16px 8px;text-align:center}
+  h1{margin:0;font-size:20px;letter-spacing:1px;color:var(--gold)}
+  .sub{color:var(--dim);font-size:12px;margin-top:4px}
+  .wrap{max-width:1100px;margin:16px auto;padding:0 14px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  button{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:10px;
+         padding:10px 16px;cursor:pointer;font-size:14px;transition:.15s}
+  button:hover{border-color:var(--gold);color:var(--gold)}
+  button.primary{background:linear-gradient(160deg,#2a2410,#1c1a12);border-color:var(--gold);color:var(--gold)}
+  select,input{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px}
+  .stat{color:var(--dim);font-size:12px}
+  .bar{height:8px;background:var(--panel2);border-radius:6px;overflow:hidden;margin-top:3px}
+  .bar i{display:block;height:100%}
+  /* 카드 */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:12px}
+  .card{background:var(--panel2);border:1px solid var(--line);border-left:4px solid;border-radius:10px;padding:10px 12px;position:relative;
+        animation:pop .35s ease}
+  @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .card .g{font-size:11px;font-weight:700;letter-spacing:1px}
+  .card h3{margin:4px 0 2px;font-size:16px;line-height:1.3}
+  .card .origin{font-size:10px;color:var(--dim)}
+  .card .meta{font-size:11px;color:var(--dim);margin:2px 0 6px}
+  .card .job{color:var(--txt);font-weight:600}
+  .apt{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+  .apt span{font-size:10px;padding:2px 6px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}
+  .apt span.hot{color:#0b0d12;font-weight:700}
+  /* 계열 전용 희귀 적성 — 계열 색상 테두리 칩 (2026-09-17) */
+  .apt span.linerare{border:1.5px solid var(--linc);box-shadow:0 0 6px color-mix(in srgb, var(--linc) 45%, transparent);color:var(--linc)}
+  .apt span.linerare.hot{color:#0b0d12}
+  .apt span.linerare .lrt{color:var(--linc)}
+  .meta .linlabel{color:var(--linc);font-weight:700} /* 계열 라벨 — 카드 전체 계열 정체성 (적성 칩 테두리와 동일 색 · 2026-09-18) */
+  /* P0 — 역할 칩·스탯 접기·CP 상위% (2026-09-20) */
+  .chead{display:flex;justify-content:space-between;align-items:center}
+  .rolechip{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid;cursor:help;position:relative}
+  .rolechip:hover::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);background:#0d1017;border:1px solid var(--line);color:var(--txt);font-size:11px;line-height:1.45;padding:7px 9px;border-radius:8px;white-space:nowrap;z-index:50;box-shadow:0 6px 18px #0009}
+  .stmore{all:unset;cursor:pointer;display:block;text-align:center;font-size:10px;color:var(--dim);margin-top:4px;padding:2px 0;border-top:1px dashed #2a3040}
+  .stmore:hover{color:var(--gold)}
+  .cppct{font-size:11px;font-weight:600;color:var(--dim)}
+  /* P1-F5 — 카드 상세 모달 (2026-09-20) */
+  .hmask{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px}
+  .hmodal{background:var(--panel);border:1px solid var(--line);border-radius:14px;max-width:560px;width:100%;max-height:86vh;overflow-y:auto;padding:20px 22px;box-shadow:0 20px 60px #000c}
+  .hmodal h2{margin:2px 0 2px;font-size:19px}
+  .hmodal h4{margin:14px 0 6px;font-size:12px;color:var(--gold);letter-spacing:.5px;border-bottom:1px solid var(--line);padding-bottom:4px}
+  .hclose{all:unset;cursor:pointer;float:right;font-size:18px;color:var(--dim);padding:2px 6px}
+  .hclose:hover{color:var(--gold)}
+  .hrow{font-size:12px;color:var(--dim);margin:3px 0}
+  .hrow b{color:var(--txt)}
+  .hgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 10px;font-size:11px}
+  .hgrid div{display:flex;justify-content:space-between;border-bottom:1px dashed #2a3040;padding:2px 0}
+  .hgrid b{color:var(--txt)}
+  .hfeat{font-size:11px;color:var(--dim);margin:4px 0;padding:6px 8px;background:var(--panel2);border-radius:8px;white-space:pre-line;line-height:1.55}
+  .hhiddennote{font-size:11px;color:var(--dim);opacity:.75;font-style:italic}
+  .st{display:grid;grid-template-columns:repeat(3,1fr);gap:3px 8px;margin-top:8px;font-size:10px}
+  .strest{margin-top:2px;opacity:.85}
+  .st div{display:flex;justify-content:space-between;border-bottom:1px dashed #2a3040;padding:1px 0}
+  .st b{color:var(--txt);font-weight:600}
+  .cp{text-align:right;font-size:18px;font-weight:800;margin-top:6px}
+  .cpg{display:flex;height:5px;border-radius:999px;overflow:hidden;margin-top:4px;background:var(--line)}
+  .cpg .cpgs{background:#39404f;display:block;height:100%}
+  .cpg .cpgf{background:linear-gradient(90deg,#f7d774,#c9a227);display:block;height:100%}
+  .sigbadge{display:inline-flex;align-items:center;gap:4px;margin-top:4px;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.5px;color:#0b0d12;background:linear-gradient(135deg,#f7d774,#c9a227);box-shadow:0 0 10px rgba(247,215,116,.45)}
+  /* 컴팩트 모드 (2026-09-18 12차) — ★1~4(low4) 축약: 이름·적성·CP만 · ★5+는 전체 렌더 */
+  body.dense .card{padding:8px 10px;opacity:.78}
+  body.dense .card.low4{min-height:0}
+  body.dense .card.low4 h3{font-size:12px}
+  body.dense .card.low4 .origin,body.dense .card.low4 .st,body.dense .card.low4 .cpg,body.dense .card.low4 .pick,body.dense .card.low4 .stmore,body.dense .card.low4 .strest{display:none}
+  body.dense .card.low4 .apt span{font-size:9px;padding:1px 5px}
+  /* 히든 시그니처 — 은빛 테두리 + 미광 라인 (2026-09-21 확정 · 0.5% 컬렉션 요소 — 시뮬 hidden_sig_test.py) */
+  .card.hsig{border-color:#c9d6e8 !important; box-shadow:0 0 10px rgba(201,214,232,.35), inset 0 0 6px rgba(201,214,232,.18)}
+  .card.hsig::before{content:'✧';position:absolute;top:6px;right:10px;font-size:11px;color:#c9d6e8;opacity:.85;pointer-events:none}
+  .card.hsig::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:10px 0 0 10px;
+    background:linear-gradient(180deg,transparent,#e8f0fa,#c9d6e8,transparent);opacity:.8;pointer-events:none}
+  body.dense .card.low4 .cp{font-size:12px;margin-top:2px}
+  /* 등급색 */
+  .g1{color:var(--c1)} .g2{color:var(--c2)} .g3{color:var(--c3)} .g4{color:var(--c4)}
+  .g5{color:var(--c5)} .g6{color:var(--c6)} .g7{color:var(--c7)}
+  .b1{border-left-color:var(--c1)} .b2{border-left-color:var(--c2)} .b3{border-left-color:var(--c3)}
+  .b4{border-left-color:var(--c4)} .b5{border-left-color:var(--c5);box-shadow:0 0 18px #ffb45433}
+  .b6{border-left-color:var(--c6);box-shadow:0 0 26px #ff5e7755}
+  .b7{border-left-color:var(--c7);box-shadow:0 0 30px #ff2e7788}
+  .rare-name{color:var(--rare)}
+  .rare-txt{color:var(--rare)}
+  .shine{animation:sh 1.6s ease infinite}
+  @keyframes sh{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35)}}
+  .gauge{width:100%;height:6px;background:var(--panel2);border-radius:4px;margin-top:10px}
+  .gauge i{display:block;height:100%;background:linear-gradient(90deg,var(--c3),var(--c5));border-radius:4px;transition:width .2s}
+  .log{margin-top:10px;max-height:160px;overflow:auto;font-size:11px;color:var(--dim)}
+  /* 덱 빌더 — 카드 편성 버튼 (2026-09-18) */
+  .pick{margin-top:8px;width:100%;font-size:12px;padding:6px 0;border-style:dashed}
+  .card.picked{outline:2px solid var(--gold);outline-offset:1px}
+  .card.picked .pick{border-style:solid;border-color:var(--gold);color:var(--gold)}
+  #deckCount{color:var(--gold);font-weight:700}
+  /* 덱 토스트 — alert 대체 논블로킹 알림 (2026-09-19 팔레트 정합 리터치: 골드 톤 배경·패널 라인·밝기 단계) */
+  #deckToast{
+    position:fixed;left:50%;bottom:28px;transform:translateX(-50%);
+    background:linear-gradient(160deg,#2a2410,#1c1a12);           /* button.primary 그라디언트 재사용 */
+    border:1px solid var(--gold);border-left:4px solid var(--gold);
+    color:var(--gold);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;letter-spacing:.2px;
+    z-index:99999;box-shadow:0 8px 24px rgba(0,0,0,.6);opacity:0;transition:opacity .2s;pointer-events:none;
+  }
+  .apt span[data-tip],.meta span[data-tip]{position:relative;cursor:help}
+  .meta span[data-tip]:hover{color:var(--gold)}
+  .meta span[data-tip]:hover::after{
+    content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);
+    background:#0d1017;border:1px solid var(--line);color:var(--txt);font-size:11px;line-height:1.45;
+    padding:7px 9px;border-radius:8px;white-space:nowrap;z-index:50;box-shadow:0 6px 18px #0009;
+  }
+  .apt span[data-tip]:hover::after{
+    content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);
+    background:#0d1017;border:1px solid var(--line);color:var(--txt);font-size:11px;line-height:1.55;
+    padding:7px 10px;border-radius:8px;white-space:pre-line;text-align:left;max-width:300px;width:max-content;z-index:50;box-shadow:0 6px 18px #0009;
+  }
+  .st div[data-tip]{cursor:help;position:relative}
+  .st div[data-tip]:hover::after{
+    content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);
+    background:#0d1017;border:1px solid var(--line);color:var(--txt);font-size:11px;line-height:1.45;
+    padding:7px 9px;border-radius:8px;white-space:nowrap;z-index:50;box-shadow:0 6px 18px #0009;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>《FONS》 소환제단</h1>
+  <div class="sub">영혼석 130석 = 티켓 1장 · 최초 10회 무료 · 조형생명 소환 5% · 확률표 00 확정 #32</div>
+</header>
+
+<div class="wrap">
+  <!-- 초보자 안내 오버레이 (localStorage 기억 · 최초 1회) -->
+  <div id="onbOv" style="display:none;position:fixed;inset:0;background:rgba(6,8,14,.78);z-index:100;align-items:center;justify-content:center;padding:20px">
+    <div style="background:var(--panel);border:1px solid var(--gold);border-radius:14px;max-width:480px;width:100%;padding:24px 26px;box-shadow:0 10px 40px rgba(0,0,0,.6)">
+      <h2 style="font-size:17px;color:var(--gold);margin-bottom:10px">🎲 처음 오셨나요?</h2>
+      <p style="font-size:13px;line-height:1.9;color:var(--txt)">
+        여기는 게임 설계에 담긴 <b>실제 확률</b>로 영웅을 뽑아보는 연습장입니다.
+        여기서 뭘 해도 세이브·원본 설계는 절대 안 바뀌니 마음껏 눌러보세요.
+      </p>
+      <ul style="font-size:12.5px;line-height:2;color:var(--txt);margin:12px 0;padding-left:18px">
+        <li><b style="color:var(--gold)">① 단발 소환</b> — 일단 한 번 눌러보세요. 가장 쉬운 시작입니다.</li>
+        <li><b style="color:var(--gold)">② 10연차·100연차</b> — 많이 뽑으면 확률이 눈에 보입니다 (100연차는 결과 요약표도 나옵니다).</li>
+        <li><b style="color:var(--gold)">③ 시뮬 층수</b> — 층이 오를수록 좋은 계열(전사·심연)이 등장합니다.</li>
+        <li><b style="color:var(--gold)">④ ⚔ 덱 편성</b> — 마음에 드는 영웅 5명으로 파티 꾸미기.</li>
+        <li><b style="color:var(--gold)">⑤ 카드 클릭</b> — 스탯 13종 전체·상세 설명을 볼 수 있습니다.</li>
+      </ul>
+      <p style="font-size:11.5px;color:var(--dim);margin-bottom:14px">💡 참고: ★6 확률은 0.01% — 안 나오는 게 정상입니다. 나오면 운이 아주 좋은 것!</p>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button id="onbSkip" style="background:var(--panel2);border:1px solid var(--line);color:var(--dim);padding:7px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit">그냥 쓸게요</button>
+        <button id="onbStart" style="background:var(--gold);border:none;color:#0d1117;font-weight:700;padding:7px 18px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit">🎲 첫 소환하러 가기</button>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="row">
+      <label class="stat">픽업 계열
+        <select id="pickup">
+          <option value="">없음</option>
+          <option>인간</option><option>엘프</option><option>드워프</option>
+          <option>짐승</option><option value="전사">전사 (9층+)</option><option value="심연">심연 (13층+)</option><option>조형생명</option>
+        </select>
+      </label>
+      <label class="stat">시뮬 층수 <input id="floor" type="number" value="50" min="1" max="100" style="width:64px"></label>
+      <button class="primary" id="btn1">단발 소환</button>
+      <button class="primary" id="btn10">10연차</button>
+      <button id="btn100">100연차</button>
+      <label class="stat">정렬
+        <select id="sort">
+          <option value="new">최신순</option>
+          <option value="cp">CP 높은순</option>
+        </select>
+      </label>
+      <label class="stat">표시
+        <select id="density">
+          <option value="full">전체</option>
+          <option value="compact">컴팩트 (★4↓ 축약)</option>
+        </select>
+      </label>
+      <span class="stat" id="pityStat">─</span>
+      <span class="stat" id="hsigStat" data-tip="히든 시그니처 — 시그니처 조합 0.5% 극히 낮은 확률로 걸리는 은빛 테두리 영웅 (CP ×1.07 · 컬렉션 요소)" style="cursor:help">✧ 히든 0</span>
+      <button id="btnDeck" style="margin-left:auto">⚔ 덱 편성 <span id="deckCount">0</span>/5</button>
+    </div>
+    <div class="gauge"><i id="pityBar" style="width:0%"></i></div>
+  </div>
+
+  <!-- ★6 이름 팔레트 — 신격·변형·칭호 미리보기 (2026-09-17) -->
+  <div class="panel" id="namePalette" style="margin-top:10px">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <b style="color:var(--gold);font-size:13px">★6 이름 팔레트</b>
+      <span class="stat">신격 오마주 미리보기 — 계열 선택</span>
+      <select id="palLin" style="font-size:12px;padding:4px 8px">
+        <option>인간</option><option>엘프</option><option>드워프</option>
+        <option>짐승</option><option>전사</option><option>심연</option>
+      </select>
+      <button id="palRoll" style="font-size:12px;padding:4px 10px">재추첨 🎲</button>
+      <span class="stat" id="palVarLabel" style="margin-left:auto"></span>
+    </div>
+    <div id="palGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;margin-top:8px"></div>
+  </div>
+
+  <!-- ★5 파티 캘리브레이션 시뮬 — 영지 추출→결정→승급 트랙 (04 §3.1-2 · §3.9 · 2026-09-17) -->
+  <div class="panel" style="margin-top:10px">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <b style="color:var(--gold);font-size:13px">★5 파티 캘리브레이션</b>
+      <span class="stat">뽑기+추출+승급 100층 런 · 시드</span>
+      <input id="calSeed" type="number" value="20260917" style="width:110px;font-size:12px;padding:4px 6px">
+      <button class="primary" id="calRun" style="font-size:12px;padding:5px 12px">100런 시뮬</button>
+      <span class="stat" id="calStatus" style="margin-left:auto"></span>
+    </div>
+    <div id="calOut" style="font-size:12px;line-height:1.8;margin-top:8px;color:var(--txt)"></div>
+  </div>
+
+  <!-- 개정 통합 검증 시뮬 (2026-09-18) — 등급별 특성 트리거·★6/★7 이중 특권·특성 ★ 지수 곡선·원형 풀 상호배타·몰입 등급 가중: 언제든 재검증 -->
+  <div class="panel" style="margin-top:10px">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <b style="color:var(--gold);font-size:13px">개정 통합 검증 시뮬</b>
+      <span class="stat">등급별 특성 트리거 · ★6/★7 이중 특권 · 특성 ★ 지수 곡선 · 풀 상호배타 · 몰입 가중</span>
+      <button class="primary" id="v5run" style="font-size:12px;padding:5px 12px">검증 실행</button>
+      <span class="stat" id="v5Status" style="margin-left:auto"></span>
+    </div>
+    <div id="v5Out" style="font-size:12px;line-height:1.8;margin-top:8px;color:var(--txt)"></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="panel log" id="summary" style="display:none"></div>
+</div>
+
+<script>
+// ───────── 정본 데이터 (GDD_v8.0_05 + 00 확정 #32) ─────────
+// ★4 1.2% (원신 ★5의 2배 — 2026-09-17 사용자 결정) · 잔여 1.7%는 ★3에 귀속 (합 100%)
+const RATES = {'★1':0.7004,'★2':0.20,'★3':0.087,'★4':0.012,'★5':0.0005,'★6':0.0001};
+// 천장 (비공개 — 유저에게 노출 금지 · 2026-09-17 사용자 결정)
+// ★4: 70회부터 회차당 확률 상승 → 130회 하드 보장 · ★5+: 5,200회 하드 보장 (★5·★6 교대 출연)
+const PITY4 = {softStart:70, softStep:0.02, hard:130};
+const PITY5H = 5200;
+const GM = {1:1.0,2:1.3,3:1.69,4:2.2,5:2.86,6:3.71,7:4.83}; // 등급당 ×1.3 복리 (2026-09-14 2차 개정)
+const LINEAGES = ['인간','엘프','드워프','짐승','전사','심연','조형생명'];
+const LEGACY_LINEAGES = LINEAGES.filter(l=>l!=='조형생명');
+const LEGACY_RACE_COUNT = 20;
+const SHAPED_LINEAGE_RATE = 0.05; // 전체 소환 5%, 나머지 95%는 기존 20종 종족별 균등
+const RACES = {
+  '인간':[['인간',['유목민','항해민','수렵민','개척민'],0],
+         ['정령족',['불의 정령족','물의 정령족','대지의 정령족','바람의 정령족','빛의 정령족','어둠의 정령족','무의 정령족'],0]],
+  '엘프':[['하이 엘프',['광로 엘프','서약 엘프'],0],
+         ['우드 엘프',['심림 엘프','초원 엘프','수관 엘프'],0],
+         ['다크 엘프',['지하 엘프 (드로우)','심연 엘프','맥그늘 엘프'],0],
+         ['시 엘프',['산호 엘프','폭풍 엘프','심류 엘프'],1]],
+  '드워프':[['드워프',['지맥 드워프','화로 드워프','앵커 드워프'],0],
+           ['노움',['흑수 노움','기류 노움','울림석 노움'],0],
+           ['하프링',['씨앗무늬 하프링','뜬뿌리 하프링','역참 하프링'],0]],
+  '짐승':[['묘인족',['표범 묘인족','살쾡이 묘인족','설릉 묘인족'],0],
+         ['견인족',['갈빛 견인족','물숨 견인족','산길 견인족'],0],
+         ['조인족',['독수리 조인족','까마귀 조인족','두루미 조인족'],5],
+         ['리자드맨',['늪지 리자드맨','사막 리자드맨','수림 리자드맨'],0],
+         ['물갈퀴족',['이끼등 물갈퀴족','갈대길 물갈퀴족','연해 물갈퀴족'],0],
+         ['굴길족',['잿골 굴길족','수로 굴길족','맥굴 굴길족'],0],
+         ['산양족',['능선 산양족','화구 산양족','고원 산양족'],0],
+         ['긴꼬리족',['수관 긴꼬리족','뿌리길 긴꼬리족','미궁 긴꼬리족'],0],
+         ['용족',['화염 용족','물 용족','대지 용족','바람 용족','빛 용족','어둠 용족','무 용족'],0]],
+  '전사':[['오크',['산지 오크','초원 오크','화구 오크','잿터 오크'],9]],
+  '심연':[['뱀파이어',['명맥 혈족','귀원 혈족','영야 혈족'],13]],
+  '조형생명':[['석상인',['지맥수호 석상인','능선 파수 석상인'],0],
+    ['점토생명체',['잿가마 점토인'],0],
+    ['강철각성체',['화구 강철각성체'],0],
+    ['수정핵체',['해구 수정핵체','조석유리체'],0],
+    ['룬인형족',['서고 봉인 룬인형'],0],
+    ['태엽자동인형족',['기류태엽족','미궁태엽족'],0]]
+};
+const JC = {
+  '전사':[1.2,1.0,1.0,1.0,0.5,1.0,1.05],'수호자':[1.8,0.7,1.5,0.8,0.4,1.5,1.0],
+  '암살자':[0.8,1.3,0.6,1.4,0.5,0.6,1.3],'궁수':[0.9,1.1,0.7,1.2,0.5,0.7,1.2],
+  '마법사':[0.7,0.8,0.5,0.9,1.5,1.4,1.1],'지원가':[0.9,0.6,0.8,1.1,1.2,1.2,1.0],
+  '성기사':[1.6,0.8,1.3,0.8,0.7,1.3,1.1],'드루이드':[1.0,0.7,0.9,0.9,1.3,1.3,1.0],
+  '광전사':[1.4,1.6,0.5,1.0,0.3,0.5,1.4],'심연술사':[0.8,0.9,0.6,0.9,1.8,1.6,1.2],
+  '광산기사':[1.5,1.0,1.4,0.7,0.5,1.2,1.0],'질풍사냥꾼':[1.0,1.2,0.7,1.8,0.4,0.8,1.2],
+  '현자':[0.8,0.7,0.7,0.9,1.6,1.7,1.3]};
+const RARE_JOBS = {'전사':'광전사','심연':'심연술사','드워프':'광산기사','짐승':'질풍사냥꾼','인간':'현자','엘프':'현자'};
+// 종족별 직업 가중치 (기본 1.0 — 05 §4)
+// 2026-09-20 사용자 확정: 인간=만능(무가중) · 힐러 감축 · 정체성 강화 (role_prob_verify 채택)
+// L2 키(성기사·드루이드 등)는 전직 후 표시용 — 소환 L1 롤은 L1 6종만 사용
+const RACE_JOB = {
+  '인간':{},
+  '정령족':{'마법사':2.0,'드루이드':0.8,'지원가':0.8,'전사':0.4,'수호자':0.7},
+  '하이 엘프':{'마법사':2.2,'지원가':0.7,'전사':0.3},
+  '우드 엘프':{'궁수':1.8,'드루이드':0.8,'마법사':0.7},
+  '다크 엘프':{'암살자':2.2,'마법사':1.4,'수호자':0.5},
+  '시 엘프':{'궁수':1.7,'지원가':0.8,'전사':0.6},
+  '드워프':{'수호자':1.9,'광산기사':0.8,'암살자':0.4,'마법사':0.6},
+  '노움':{'마법사':1.6,'현자':0.8,'전사':0.6},
+  '하프링':{'궁수':1.5,'지원가':0.8,'전사':0.7},
+  '묘인족':{'암살자':2.0,'궁수':1.5,'수호자':0.7},
+  '견인족':{'전사':1.6,'수호자':1.4,'마법사':0.7},
+  '조인족':{'궁수':1.8,'전사':0.8},
+  '리자드맨':{'전사':1.6,'질풍사냥꾼':1.4,'마법사':0.7},
+  '물갈퀴족':{},'굴길족':{},'산양족':{},'긴꼬리족':{},'용족':{},
+  '오크':{'전사':2.2,'수호자':1.6,'마법사':0.25,'암살자':0.5},
+  '뱀파이어':{'마법사':1.9,'암살자':1.7,'전사':0.6},
+  '석상인':{},'점토생명체':{},'강철각성체':{},'수정핵체':{},'룬인형족':{},'태엽자동인형족':{}
+};
+function weightedPick(r, items, weights){
+  let acc=0, x=r.f()*weights.reduce((a,b)=>a+b,0);
+  for(let i=0;i<items.length;i++){acc+=weights[i]; if(x<acc) return items[i];}
+  return items[items.length-1];
+}
+const RACE_SIG_MUL = {
+  '정령족':{'마법사':1.03},'하이 엘프':{'마법사':1.03},'우드 엘프':{'궁수':1.03},
+  '다크 엘프':{'암살자':1.03},'시 엘프':{'궁수':1.03},'드워프':{'수호자':1.03},
+  '노움':{'마법사':1.03},'하프링':{'궁수':1.03},'묘인족':{'암살자':1.03},
+  '견인족':{'전사':1.03},'조인족':{'궁수':1.03},'리자드맨':{'전사':1.03},
+  '오크':{'전사':1.03},'뱀파이어':{'마법사':1.03}
+};
+const COMMON_RARE = ['정교한 손끝','일사불란','암중적응','거상의 수완','상성의 통찰','실전 감각']; // 공용 특성 6 (구 희귀 적성 — 2026-09-18 개칭: 적성은 생활/시설 전용 · 희귀 등급은 ★ 표기)
+// 계열 전용 특성 7×7 — 조형생명 7개는 데이터 전용, 효과 미구현·시그니처 미지정
+const LINEAGE_RARE = {
+  '인간': ['왕의 혈맥','달의 심장','개척의 야망','조약의 언어','정령의 파트너','헌신의 깃발','대의의 방패'],
+  '엘프': ['숲의 언어','달빛 주문','영겁의 시간','정수의 화살','요정의 가호','고대의 지혜','미학의 검'],
+  '드워프': ['산맥의 뼈','대장간의 불꽃','룬 문양','금맥의 후각','발명가의 열정','토굴 적응','보석 세공'],
+  '짐승': ['무리의 본능','폭풍의 날개','야간의 눈','포식자의 본능','수중 사냥','질주의 다리','두꺼운 털가죽'],
+  '전사': ['타천의 근육','피의 격노','전장의 포효','강철 이빨','전사의 체격','약탈의 습성','두개골 토템'],
+  '심연': ['피의 기억','어둠의 포옹','심연의 속삭임','죽음의 언어','그림자 걸음','저주의 인장','불로의 갈망'],
+  '조형생명': ['층리 감각','절벽 고정','유연한 외피','열제련','핵 공명','굴절막','각인 기억']
+};
+const RARE_APT_RATE_BY_GRADE = { 3:0.03, 4:0.07, 5:0.13, 6:0.26, 7:0.26 }; // 등급별 특성 트리거 (2026-09-18 8차 — 확정 #38 · ★7=★6 연장치, 승급 도달 시점 기준 — 뽑기는 ★6까지, 01 §2)
+const RARE_APT_BONUS = 0.03;       // ★4+에서 +3% 재롤 (독립 — 특성 2개까지)
+const RARE_APT_RACE_W = 1.5; // 계열 전용 가중 — 공용 1.0 대비 1.5배 (계열 정체성 · 계열 전용 차지 비중 63.6%)
+// 특성 CP 가치표 (2026-09-18 특성 개칭과 동시 신설 — 계열전용희귀적성_밸런스기준표 §3 실질 가치 · feat_cp.py 검증)
+// 기여식: CP보정 = 가치 × 0.4% × (★-2) — ★7 표준 +12% · 시그니처(피의 기억) +20% · 성격 보정(±5%) 대비 2~4배 = 특성다운 위계
+const FEAT_VALUE = { // v2 (조형생명 7개는 데이터 가치만 설정 — 시그니처 없음)
+  '정교한 손끝':2.5,'일사불란':3.0,'암중적응':2.5,'거상의 수완':2.0,'상성의 통찰':3.0,'실전 감각':2.5,
+  '왕의 혈맥':8.0,'달의 심장':3.5,'개척의 야망':3.5,'조약의 언어':3.5,'정령의 파트너':4.0,'헌신의 깃발':3.5,'대의의 방패':3.8,
+  '숲의 언어':3.5,'달빛 주문':8.0,'영겁의 시간':3.5,'정수의 화살':4.0,'요정의 가호':3.5,'고대의 지혜':3.5,'미학의 검':3.8,
+  '산맥의 뼈':3.8,'대장간의 불꽃':3.5,'룬 문양':8.0,'금맥의 후각':4.0,'발명가의 열정':3.8,'토굴 적응':3.5,'보석 세공':3.5,
+  '무리의 본능':3.5,'폭풍의 날개':4.0,'야간의 눈':3.5,'포식자의 본능':8.0,'수중 사냥':3.5,'질주의 다리':3.5,'두꺼운 털가죽':3.5,
+  '타천의 근육':4.0,'피의 격노':3.8,'전장의 포효':3.5,'강철 이빨':3.5,'전사의 체격':3.8,'약탈의 습성':8.0,'두개골 토템':3.5,
+  '피의 기억':10.0,'어둠의 포옹':3.8,'심연의 속삭임':3.5,'죽음의 언어':4.0,'그림자 걸음':3.5,'저주의 인장':3.5,'불로의 갈망':3.8,
+  '층리 감각':3.5,'절벽 고정':3.5,'유연한 외피':3.5,'열제련':3.5,'핵 공명':3.5,'굴절막':3.5,'각인 기억':3.5
+};
+const FEAT_CP_UNIT = 0.004; // 특성 CP 단위 — 가치 1.0당 +0.4% (feat_cp.py: ★5 중위 +3.6% · ★7 시그니처 +20%)
+const SIG_VALUE = 8.0; // ✦시그니처 기준 가치 (2026-09-19 14차 재배치 — 계열당 1개씩 6종: 왕의 혈맥·달빛 주문·룬 문양·포식자의 본능·약탈의 습성·피의 기억(10.0 예외))
+const SIG_W = 1.25; // 계열 풀 내 시그니처 선택 가중 — 획득률 11% 실측 (계열 가중 1.5 × SIG_W 1.25 · party_synergy_sim/feat_cp 검증)
+// 성격 13종 (2026-09-14 4차 — 성실 신규 · 요행 삭제 · 중립→무자비 교체 · 가중치 롤)
+const PERS = ['용감','신중','냉정','난폭','헌신','교활','무자비','불굴','낭만','고집','성실','몰입','노련'];
+const PM = {'용감':1.03,'신중':1.02,'냉정':1.02,'난폭':1.04,'헌신':1.02,'교활':1.02,'무자비':1.03,'불굴':1.03,'낭만':1.01,'고집':1.02,'성실':1.02,'몰입':1.05,'노련':1.04};
+const PERS_WEIGHT = {'용감':9,'신중':9,'냉정':8,'난폭':8,'헌신':8,'교활':8,'무자비':8,'불굴':8,'낭만':7,'고집':9,'성실':8,'몰입':2};
+const PERS_STAT_MUL = {'용감':{'ATK':1.05},'신중':{'DEF':1.05},'난폭':{'ATK':1.08,'DEF':0.97},'헌신':{'MAG':1.10}};
+const PERS_STAT_PPT = {'냉정':{'CRI':3.0},'교활':{'EVA':5.0},'무자비':{'CDMG':10.0}};
+const VARIANCE = 0.07; // 개체 변량 ±7% (2026-09-14 확정)
+// ───────── 부가 성격 52종 (09 v0.6 §4-4 — MBTI형 3키워드 · CP 무영향 · 조합 13×C(52,2)=17,238) ─────────
+// gacha_test.py SUB_TRAITS·SUB_DOM_W·OPPOSITE_PAIRS와 1:1 동기 (2026-09-21 카드 미표기 결함 수복)
+const SUB_TRAITS = ['낙천','침울','유쾌','격정','온후','관조','호기심','책략','재치','세심',
+  '명석','독창','박식','꾸준','즉흥','충동','엄격','인내','성급','우직',
+  '소심','다정','관대','겸손','허세','직설','과묵','활달','명랑','다감',
+  '대담','대범','정복욕','자기애','야망','열성','몰두','무심','투기','냉담',
+  '무던','담담','느긋','소박','검소','근면','나태','이성','감성','진지','창의','탐욕'];
+const SUB_DOM_W = {
+  '낙천':['사회','회복',null],'침울':['지식','회복','사회'],'유쾌':['사회','회복','지식'],
+  '격정':['공격','기동','회복'],'온후':['회복','지원','공격'],'관조':['회복','지식','기동'],
+  '호기심':['지식','지식',null],'책략':['지식','방어·제어','공격'],'재치':['기동','사회','생산'],
+  '세심':['생산','지식',null],'명석':['지식','지식','회복'],'독창':['지식','공격','방어·제어'],
+  '박식':['지식','생산','기동'],'꾸준':['생산','생산','기동'],'즉흥':['기동','기동','생산'],
+  '충동':['공격','공격','지식'],'엄격':['지원','지원','회복'],'인내':['방어·제어','방어·제어','공격'],
+  '성급':['기동','공격','생산'],'우직':['방어·제어','생산','사회'],'소심':['기동','회복','공격'],
+  '다정':['회복','지원','공격'],'관대':['지원','사회',null],'겸손':['지식','회복','사회'],
+  '허세':['공격','사회',null],'직설':['공격','공격','사회'],'과묵':['지식','방어·제어','사회'],
+  '활달':['사회','기동','회복'],'명랑':['회복','사회','지식'],'다감':['지식','회복','공격'],
+  '대담':['공격','기동','회복'],'대범':['공격','생산','지식'],'정복욕':['공격','공격','회복'],
+  '자기애':['회복','회복','지원'],'야망':['생산','사회','회복'],'열성':['지원','사회',null],
+  '몰두':['지식','생산','사회'],'무심':['회복','회복','사회'],'투기':['기동','기동','지원'],
+  '냉담':['지식','지식','사회'],'무던':['회복','생산','방어·제어'],'담담':['방어·제어','회복','공격'],
+  '느긋':['회복','생산','기동'],'소박':['생산','회복','사회'],'검소':['생산','생산','사회'],
+  '근면':['생산','생산','회복'],'나태':['회복','회복','생산'],'이성':['지식','지식','회복'],
+  '감성':['사회','지식','방어·제어'],'진지':['지식','지원','회복'],'창의':['지식','공격','방어·제어'],
+  '탐욕':['생산','사회','지원']};
+const OPPOSITE_PAIRS = [['낙천','침울'],['유쾌','냉담'],['격정','관조'],['온후','정복욕'],
+  ['호기심','무심'],['책략','직설'],['재치','우직'],['명석','열성'],['독창','담담'],['박식','몰두'],
+  ['과묵','활달'],['명랑','진지'],['다감','야망'],['꾸준','즉흥'],['충동','인내'],['성급','느긋'],
+  ['엄격','무던'],['소심','대담'],['소박','창의'],['세심','대범'],['다정','자기애'],['관대','투기'],
+  ['겸손','허세'],['검소','탐욕'],['근면','나태'],['이성','감성']];
+const SUB_PAIR_OF = {}; OPPOSITE_PAIRS.forEach((pr,i)=>pr.forEach(n=>SUB_PAIR_OF[n]=i));
+const SUB_SLOTS = 2;      // 전 등급 2종 (2026-09-19 사용자 결정 — 1성부터 3키워드)
+const SUB_EFF_X = 1.10;   // 선호 도메인 적성 효율 (09 §4-4 ①)
+const SUB_EFF_Y = 0.95;   // 반대 성향 도메인
+const APT_DOMAIN = {'채집':'생산','벌목':'생산','농부':'생산','건축가':'생산','광부':'생산','요리':'회복','의사':'회복','연구':'지식','조약사':'지식','대장장이':'생산'};
+// 부가 성격 롤 — 시뮬 roll_subtraits와 1:1 (52종 비복원 · 대척쌍 충돌 시 1개 교체 재추첨)
+function rollSubTraits(r){
+  const pool=[...SUB_TRAITS];
+  for(let i=pool.length-1;i>0;i--){const j=r.int(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
+  const picks=pool.slice(0,SUB_SLOTS);
+  for(let _=0;_<SUB_SLOTS;_++){
+    let conflict=null;
+    for(const a of picks){ for(const b of picks){ if(a!==b&&SUB_PAIR_OF[a]===SUB_PAIR_OF[b]){conflict=a;break;} } if(conflict)break; }
+    if(!conflict) break;
+    const repl=pool.find(x=>!picks.includes(x));
+    if(!repl) break;
+    picks[picks.indexOf(conflict)]=repl;
+  }
+  return picks;
+}
+const PCT_KEYS = new Set(['CRI','EVA','PEN','CDMG']);
+// 종족·아종 statMods (races.json 정본 — %보정 가안)
+const RACE_MODS = {'인간':{},'정령족':{},'하이 엘프':{'MAG':10},'우드 엘프':{'ASPD':10},'다크 엘프':{'CRI':5,'MAG':5},'시 엘프':{'HP':5,'MAG':5},'드워프':{'DEF':10,'HP':5},'노움':{'MAG':5,'SPD_CAST':5},'하프링':{'ASPD':8,'EVA':5},'묘인족':{'ASPD':8,'CRI':3},'견인족':{'HP':5,'ATK':5},'조인족':{'ASPD':10},'리자드맨':{'DEF':8,'HP':5},'물갈퀴족':{},'굴길족':{},'산양족':{},'긴꼬리족':{},'용족':{},'오크':{'HP':8,'ATK':8},'뱀파이어':{'MAG':8,'CRI':3},'석상인':{},'점토생명체':{},'강철각성체':{},'수정핵체':{},'룬인형족':{},'태엽자동인형족':{}};
+const ACTIVE_RACE_NAMES = new Set(Object.values(RACES).flatMap(lineageRaces => lineageRaces.map(([name]) => name)));
+const ZERO_BASE_STATS = new Set(['MDEF','PEN','EVA','CDMG','CRI']);
+const SUB_MODS = {"유목민":{"ASPD":3},"항해민":{"HP":3},"수렵민":{"ATK":3},"개척민":{"HP":3},"불의 정령족":{"ATK":3},"물의 정령족":{"HP":3},"대지의 정령족":{"DEF":5},"바람의 정령족":{"ASPD":5},"빛의 정령족":{"MAG":3},"어둠의 정령족":{"MAG":3},"무의 정령족":{"MANA":3},"광로 엘프":{"MAG":3},"서약 엘프":{"SPD_CAST":3},"심림 엘프":{"ASPD":3},"초원 엘프":{"HP":3},"수관 엘프":{"ASPD":3},"지하 엘프 (드로우)":{"MAG":2},"심연 엘프":{"MAG":3},"맥그늘 엘프":{"MAG":3},"산호 엘프":{"HP":3},"폭풍 엘프":{"MAG":3},"심류 엘프":{"HP":3},"지맥 드워프":{"DEF":5},"화로 드워프":{"DEF":3},"앵커 드워프":{"HP":5},"흑수 노움":{"MAG":3},"기류 노움":{"SPD_CAST":3},"울림석 노움":{"DEF":3},"씨앗무늬 하프링":{"HP":3},"뜬뿌리 하프링":{"HP":3},"역참 하프링":{"HP":3},"표범 묘인족":{"ASPD":2},"살쾡이 묘인족":{"ASPD":3},"설릉 묘인족":{"DEF":3},"갈빛 견인족":{"ATK":3},"물숨 견인족":{"HP":3},"산길 견인족":{"ATK":3},"독수리 조인족":{"ATK":3},"까마귀 조인족":{"MAG":3},"두루미 조인족":{"SPD_CAST":3},"늪지 리자드맨":{"HP":3},"사막 리자드맨":{"ATK":3},"수림 리자드맨":{"HP":3},"이끼등 물갈퀴족":{"HP":3},"갈대길 물갈퀴족":{"ASPD":3},"연해 물갈퀴족":{"MAG":3},"잿골 굴길족":{"ASPD":3},"수로 굴길족":{"HP":3},"맥굴 굴길족":{"DEF":3},"능선 산양족":{"DEF":3},"화구 산양족":{"HP":3},"고원 산양족":{"ASPD":3},"수관 긴꼬리족":{"ASPD":3},"뿌리길 긴꼬리족":{"HP":3},"미궁 긴꼬리족":{"MAG":3},"화염 용족":{"HP":3,"ATK":5},"물 용족":{"HP":5,"DEF":3},"대지 용족":{"HP":5,"DEF":5},"바람 용족":{"ASPD":5},"빛 용족":{"MAG":5,"SPD_CAST":3},"어둠 용족":{"MAG":5,"SPD_CAST":3},"무 용족":{"MAG":3,"MANA":5},"지맥수호 석상인":{"DEF":3},"능선 파수 석상인":{"HP":3},"잿가마 점토인":{"HP":3},"화구 강철각성체":{"DEF":3},"해구 수정핵체":{"MAG":3},"조석유리체":{"ASPD":3},"서고 봉인 룬인형":{"MAG":3},"기류태엽족":{"SPD_CAST":3},"미궁태엽족":{"ASPD":3},"산지 오크":{"DEF":3},"초원 오크":{"ATK":3},"화구 오크":{"HP":3},"잿터 오크":{"DEF":3},"명맥 혈족":{"MAG":3},"귀원 혈족":{"SPD_CAST":3},"영야 혈족":{"HP":3}};
+const ACTIVE_SUBRACE_NAMES = new Set(Object.values(RACES).flatMap(lineageRaces => lineageRaces.flatMap(([, subraces]) => subraces)));
+if(ACTIVE_RACE_NAMES.size !== 26 || ACTIVE_SUBRACE_NAMES.size !== 78
+  || ACTIVE_SUBRACE_NAMES.size !== Object.keys(SUB_MODS).length
+  || [...ACTIVE_SUBRACE_NAMES].some(name => !(name in SUB_MODS)))
+  throw new Error('active race/subrace catalog keys do not match 26 races and 78 branches');
+// RACE_MAP은 Python gacha_test.py의 authoritative catalog parity gate를 따르는 미리보기 데이터다.
+// fate roll을 표시하지 않으므로 RACE_FATE는 의도적으로 미러하지 않는다.
+// 런타임과 달리 이 시뮬레이터는 전투용 파생 기준치(EVA/CRI 등)를 별도 생성한다.
+// 따라서 화면상 SUB_MODS가 적용되어도 races.json의 heroBaseStats(일부 0) 기반 런타임 결과와 차이 날 수 있다.
+// 완전한 분파 카탈로그와 제안 보정 수치의 일치 검사는 gacha_test.py에서 races.json을 기준으로 수행한다.
+const ST_DESC = {
+  'HP':'목숨 — 0이면 영구사망','ATK':'물리 피해량','MAG':'마법 피해·치유량',
+  'PEN':'관통 — DEF 경감 무시율','DEF':'물리 피해 감소 (DEF/(DEF+200))',
+  'MDEF':'마법 피해 감소','EVA':'회피 — 피해 원천 차단',
+  'ASPD':'공격속도 — 초당 공격','CDMG':'치명타 피해량 (기본 150%)',
+  'CRI':'치명타 확률','MANA':'스킬 자원 — ASPD 비율 회복',
+  'SPD_CAST':'시전속도 — 스킬 캐스팅 완료 시간','STA':'스태미너 — 전투 지속 시 감소, 낮으면 전 스탯 -10%'
+};
+// 적성 공통 10 — 생활 5 + 시설 운영 5 (05 §6 5차 · B+C 합산 2026-09-14)
+// 전투 5종(근접·원거리·마법·방어·공속)은 표시 전용이라 삭제 — 전투 정체성은 역할 태그로 대체
+// 적성 7티어 (2026-09-15 7차): 1~3 은닉 · 4 견습 · 5 숙련 · 6 장인 · 7 명장 — 등급 게이트(명장=★5+ · 장인=★4+ · 숙련=★3+)
+const APT_TIER = {1:1.00,2:1.02,3:1.06,4:1.10,5:1.30,6:1.65,7:2.30};
+const APT_TIER_NAME = {4:'견습',5:'숙련',6:'장인',7:'명장'};
+const APT_TIER_ICON = {4:'○',5:'◐',6:'●',7:'◉'}; // 티어 마커 — 은닉 다음 견습 빈원 → 숙련 반원 → 장인 풀원 → 명장 이중원 (모양 자체가 서열을 말함)
+const APT_W = [26,23,20,17,9,4,1]; // 4+ 표시권 31% · 명장은 ★5+에서만 확률 등장
+const APT_TIER_W_BY_GRADE = { // 등급별 일반 적성 티어 가중 (티어 4~7 · 2026-09-18 4차 개정) — 명장: ★1~3 0% · ★4 1% · ★5+ 점증 · 등급 간 격차 확대 (사용자 결정)
+  'def':[69,9,4,0],   // ★1~3 — 명장 0% (저등급 명장 없음) · ★3은 장인 4%가 cap 5에서 숙련으로 흡수 (이론: 견습 84.1% · 숙련 15.9%)
+  4:[40,36,23,1],     // ★4 — 견습 40% (사용자 지정) · 숙련+ 60% · 명장 1% (cap 6 → 장인 흡수, 실질 장인 24%)
+  5:[28,34,32,6],     // ★5 — 견습 28% · 숙련+ 72% · 명장 6% (★4의 6배)
+  6:[18,30,40,12]     // ★6 — 견습 18% · 숙련+ 82% · 명장 12% (★4의 12배)
+};
+const APT_APPEAR_DECAY = 0.60; // 순번 감쇠(2026-09-17): 순번마다 ×0.60 — 프로필 외 랜덤 출현 한정 스펙 유지
+const APT_APPEAR_BASE_BY_GRADE = { // 첫 주사위 등급 계수 (2026-09-18 점층 개정): ★3부터 견습 이상 출현이 점증 — ★1~2 0.60 유지 · 티어 가중·한정 스펙 철학 불변
+  'def':0.60, 3:0.66, 4:0.72, 5:0.78, 6:0.84
+};
+const LIFE_APT = ['채집','벌목','농부','건축가','광부'];
+const FACILITY_APT = ['요리','의사','연구','조약사','대장장이'];
+const COMMON_APT = [...LIFE_APT, ...FACILITY_APT];
+// 시설 5종 ↔ 영지 시설 1:1 (04 §3.2) · races.json aptitude 토큰과 동일 이름
+const FACILITY_DESC = {
+  '요리':'식당 — 버프 요리 (4:+10% · 5:+30% · 6:+65% · 7:+130%)','의사':'병원 — Sanity 요양 (4:+10% · 5:+30% · 6:+65% · 7:+130%)',
+  '연구':'연구소 — 연구 속도 (4:+10% · 5:+30% · 6:+65% · 7:+130%)','조약사':'연금술소 — 포션 제작 (4:+10% · 5:+30% · 6:+65% · 7:+130%)',
+  '대장장이':'합성소 — 합성·강화 (4:+10% · 5:+30% · 6:+65% · 7:+130%)'
+};
+// 직업 ↔ 시설·생활 프로필 (기준값 ±1 · 7스케일) — 특화직(광산기사·현자·질풍사냥꾼)은 5~7 상시 표시
+const JOB_APT = {
+  '전사':{'대장장이':3,'건축가':2}, '수호자':{'대장장이':4,'건축가':2},
+  '암살자':{'채집':4}, '궁수':{'채집':4,'벌목':3},
+  '마법사':{'연구':4,'조약사':3}, '지원가':{'의사':4,'요리':3},
+  '성기사':{'의사':4,'대장장이':3}, '드루이드':{'농부':4,'채집':3},
+  '광전사':{'광부':3,'대장장이':3}, '심연술사':{'조약사':4,'연구':3},
+  '광산기사':{'광부':6,'대장장이':4}, '질풍사냥꾼':{'채집':5,'벌목':4},
+  '현자':{'연구':6,'조약사':4}
+};
+// 종족 시설·생활 보정 (races.json aptitude 정본 → 시작 등급 +1/+2, 롤 후 clamp 1~7)
+const RACE_APT_BONUS = {
+  '인간':{}, '정령족':{'연구':1}, '하이 엘프':{'연구':1}, '우드 엘프':{'요리':1},
+  '다크 엘프':{'연구':1}, '시 엘프':{'요리':1},
+  '드워프':{'대장장이':2}, '노움':{'조약사':2,'연구':1}, '하프링':{'요리':2},
+  '묘인족':{'요리':1}, '견인족':{'의사':1}, '조인족':{},
+  '리자드맨':{'연구':1}, '물갈퀴족':{}, '굴길족':{}, '산양족':{}, '긴꼬리족':{}, '용족':{},
+  '오크':{'대장장이':1}, '뱀파이어':{'연구':1},
+  '석상인':{},'점토생명체':{},'강철각성체':{},'수정핵체':{},'룬인형족':{},'태엽자동인형족':{}
+};
+for(const [mapName, raceMap] of Object.entries({RACE_MODS, RACE_APT_BONUS, RACE_JOB})) {
+  const keys = new Set(Object.keys(raceMap));
+  if(keys.size !== ACTIVE_RACE_NAMES.size || [...ACTIVE_RACE_NAMES].some(name => !keys.has(name)))
+    throw new Error(`${mapName} race keys do not match the active catalog`);
+}
+if(Object.keys(SUB_MODS).length !== 78)
+  throw new Error(`SUB_MODS must include all 78 active branches, got ${Object.keys(SUB_MODS).length}`);
+if(LINEAGES.length !== 7 || RACES['조형생명'].length !== 6
+  || RACES['조형생명'].reduce((n, [, branches]) => n + branches.length, 0) !== 9)
+  throw new Error('active catalog must contain 7 lineages and shaped 6 races / 9 branches');
+const shapedTraits = ['층리 감각','절벽 고정','유연한 외피','열제련','핵 공명','굴절막','각인 기억'];
+if(shapedTraits.some(name => !LINEAGE_RARE['조형생명'].includes(name) || FEAT_VALUE[name] !== 3.5
+  || SIG_VALUE === FEAT_VALUE[name]))
+  throw new Error('shaped traits must be data-only values without signature tier');
+// 전투 역할 태그 — 직업 자동 산출 (RNG 낭비 0, 카드 1줄 표시) · MMO 표준 용어 (2026-09-17 개정)
+const ROLE_TAG = {
+  '전사':'딜러(근딜)', '수호자':'탱커', '암살자':'암살', '궁수':'딜러(원딜)',
+  '마법사':'마법', '지원가':'힐러', '성기사':'탱커', '드루이드':'힐러',
+  '광전사':'딜러(근딜)', '심연술사':'마법', '광산기사':'탱커', '질풍사냥꾼':'암살',
+  '현자':'마법'
+};
+const ROLE_DESC = {
+  '딜러(근딜)':'근접 지속 딜링 — 전열에서 적 제거','탱커':'도발·피해 흡수 — 아군 방어',
+  '암살':'속공 약살 — 적진 후열 침투 타격','딜러(원딜)':'원거리 지속 화력 — 안전거리 딜링',
+  '마법':'광역 마법 폭발 피해','힐러':'치유·버프 — 아군 생존 유지'
+};
+const APT_DESC = {
+  '채집':'식량·약초 수확 효율 — 티어 배율 적용','벌목':'목재 채집 효율 — 티어 배율 적용','농부':'농사 수확 효율 — 티어 배율 적용',
+  '건축가':'건설·수리 시간 경감 — 티어 배율 적용','광부':'광석 채굴 가능(필수)·효율 — 티어 배율 적용',
+  '요리':'식당 — 버프 요리 (4:+10% · 5:+30% · 6:+65% · 7:+130%)','의사':'병원 — Sanity 요양 (4:+10% · 5:+30% · 6:+65% · 7:+130%)',
+  '연구':'연구소 — 연구 속도 (4:+10% · 5:+30% · 6:+65% · 7:+130%)','조약사':'연금술소 — 포션 제작 (4:+10% · 5:+30% · 6:+65% · 7:+130%)','대장장이':'합성소 — 합성·강화 (4:+10% · 5:+30% · 6:+65% · 7:+130%)',
+  '정교한 손끝':'[공용 특성] 합성·제작 효율 ×25%/등급','일사불란':'[공용 특성] 전 아군 사기 +2%/등급',
+  '암중적응':'[공용 특성] 어둠 지형 전 스탯 +2%/등급','거상의 수완':'[공용 특성] 영지 세금 +5%/등급',
+  '상성의 통찰':'[공용 특성] 원소 상성 +5%/등급',
+  '실전 감각':'[공용 특성] 전투 경험치 +10%/등급',
+  '층리 감각':'[조형생명 전용 · 효과 미구현] 붕괴·매복 징후 감지',
+  '절벽 고정':'[조형생명 전용 · 효과 미구현] 밀쳐내기 저항',
+  '유연한 외피':'[조형생명 전용 · 효과 미구현] 첫 타격 피해 완화',
+  '열제련':'[조형생명 전용 · 효과 미구현] 화염 환경 불이익 완화',
+  '핵 공명':'[조형생명 전용 · 효과 미구현] 마력 간섭 저항',
+  '굴절막':'[조형생명 전용 · 효과 미구현] 첫 원거리 공격 회피',
+  '각인 기억':'[조형생명 전용 · 효과 미구현] 제어 상태 저항',
+  '산맥의 뼈':'[드워프 전용] DEF +3%/등급',
+  '달의 심장':'[정령족 전용] 마나 회복 +5%/등급',
+  '숲의 언어':'[엘프 전용] 자연 피해 +5%/등급',
+  '무리의 본능':'[짐승 전용] 협동 공격 +5%/등급',
+  '폭풍의 날개':'[조인 전용] 공속 +3%/등급',
+  '피의 기억':'[뱀파이어 전용] 흡혈 +10%/등급',
+  '타천의 근육':'[오크 전용] 근접 피해 +5%/등급',
+  // ── 계열 전용 희귀 7×6 (2026-09-17 재설계) ──
+  '왕의 혈맥':'[인간] 지휘력 +3%/등급','개척의 야망':'[인간] 건설 비용 -2%/등급','조약의 언어':'[인간] 외교·거래 호감도 +3%/등급','정령의 파트너':'[인간] 정령족 아군 버프 +4%/등급','헌신의 깃발':'[인간] 아군 사망 시 전체 사기 +5%/등급','대의의 방패':'[인간] 아군 피해 대신 받기 +4%/등급',
+  '달빛 주문':'[엘프] 야간 마법 피해 +5%/등급','영겁의 시간':'[엘프] 쿨타임 -2%/등급','정수의 화살':'[엘프] 마법 화살 관통 +3%/등급','요정의 가호':'[엘프] 회피 +2%/등급','고대의 지혜':'[엘프] 연구 속도 +4%/등급','미학의 검':'[엘프] 치명타 피해 +3%/등급',
+  '대장간의 불꽃':'[드워프] 제작 속도 +4%/등급','룬 문양':'[드워프] 룬 장비 효과 +5%/등급','금맥의 후각':'[드워프] 광석 발견률 +6%/등급','발명가의 열정':'[드워프] 함정·기계 피해 +4%/등급','토굴 적응':'[드워프] 지하 지형 스탯 +3%/등급','보석 세공':'[드워프] 보석 강화 성공률 +4%/등급',
+  '야간의 눈':'[짐승] 야간 명중 +5%/등급','포식자의 본능':'[짐승] 저HP 적 피해 +6%/등급','수중 사냥':'[짐승] 수중 지형 피해 +5%/등급','질주의 다리':'[짐승] 이동속도 +4%/등급','두꺼운 털가죽':'[짐승] 물리 피해 감소 +3%/등급',
+  '피의 격노':'[전사] HP 낮을수록 ATK +4%/등급','전장의 포효':'[전사] 전투 개시 적 사기 -3%/등급','강철 이빨':'[전사] 방어 무시 +3%/등급','전사의 체격':'[전사] 최대 HP +4%/등급','약탈의 습성':'[전사] 전승 처치 골드 +10%/등급','두개골 토템':'[전사] 처치마다 ATK 중첩 +2%/등급',
+  '어둠의 포옹':'[심연] 어둠 피해 +5%/등급','심연의 속삭임':'[심연] 적 혼란 확률 +3%/등급','죽음의 언어':'[심연] 언데드 계열 피해 +6%/등급','그림자 걸음':'[심연] 은신 유지 시간 +4%/등급','저주의 인장':'[심연] 디버프 지속 +1턴/등급','불로의 갈망':'[심연] HP 흡수 +3%/등급'
+};
+const LIN_DESC = {
+  '인간':'적응 계열 — 경험치 +10% · 만능','엘프':'장수 마법 계열 — 쿨타임·자연 특화',
+  '드워프':'공예 계열 — 제작·방어 특화','짐승':'야성 계열 — 물리·협동 특화',
+  '전사':'전투 계열 — 근접 극대화','심연':'금지 계열 — 어둠 특화 · 빛 약점',
+  '조형생명':'조형 재료 기반의 각성 공동체 — 특성 효과 미구현'
+};
+const RACE_DESC = {
+  '인간':'적응력 — 경험치 +10% · 전 스탯 +3%','정령족':'원소 혈통 — 아종별 원소 패시브',
+  '하이 엘프':'비전 유산 — 쿨타임 -5%','우드 엘프':'원거리 우위 — 원거리 치명 +5%',
+  '다크 엘프':'암흑 시야 — 어둠 지형 치명 +5%','시 엘프':'파도의 율동 — 수중 피해 +10%',
+  '드워프':'단단한 수공 — 대장장이++ · 제작 최상','노움':'발명 재능 — 조약사++ · 연구+',
+  '하프링':'요리 재능 — 요리++','묘인족':'야행 사냥 — 야간 전투 +',
+  '견인족':'의사 본능 — 병원 효율 +','조인족':'비행 관찰 — 사거리 보정',
+  '리자드맨':'수해 적응 — 수중 활동 보너스','오크':'전사의 피 — 근접 강함 (대장장이+)',
+  '뱀파이어':'어둠의 포옹 — 어둠 피해 +10% · 빛 약점 +10%',
+  '석상인':'암반 각성 — 종족 효과 미구현','점토생명체':'형상 재구성 — 종족 효과 미구현',
+  '강철각성체':'금속맥 각성 — 종족 효과 미구현','수정핵체':'결정핵 공명 — 종족 효과 미구현',
+  '룬인형족':'새김 기억 — 종족 효과 미구현','태엽자동인형족':'자율 태엽 — 종족 효과 미구현'
+};
+const JOB_DESC = {
+  '전사':'균형 공격가 — HP1.2·ATK1.0','수호자':'탱커 — HP1.8·DEF1.5',
+  '암살자':'속공 약살 — ATK1.3·공속1.4','궁수':'원거리 DPS',
+  '마법사':'마법 폭딜 — MAG1.5','지원가':'힐·버프 특화',
+  '성기사':'공방 탱 — HP1.6·DEF1.3','드루이드':'자연 마법 혼합',
+  '광전사':'[희귀] 근접 최강 ATK1.6','심연술사':'[희귀] 마법 최강 MAG1.8',
+  '광산기사':'[희귀] 방어 특화 DEF1.4','질풍사냥꾼':'[희귀] 공속 최강 ASPD1.8',
+  '현자':'[희귀] MAG1.6·MDEF1.7'
+};
+const PERS_DESC = {
+  '용감':'ATK +5% (P 1.03)','신중':'DEF +5% (P 1.02)','냉정':'치명 +3% (P 1.02)',
+  '난폭':'ATK +8% / DEF -3%','헌신':'치유 +10% (MAG)','교활':'회피 +5%',
+  '무자비':'치명타 피해 +10%p (P 1.03) — 약점을 순서 없이 찌른다 (2026-09-14 중립 대체 신규)',
+  '불굴':'HP30%↓ 시 방어 +10%','낭만':'사기 +20%','고집':'스트레스 -20%',
+  '성실':'경험치 +5% · 생활·시설 적성 효율 +5% — 성장 균형형 (2026-09-14 신규)',
+  '몰입':'★특성 — 성장 +15% (★4+)','노련':'★특성 — 경험치 +10% (Lv30+)'
+};
+const APT_ICON = { // 카테고리 아이콘 (시각 구분)
+  '채집':'🌿','벌목':'🪓','농부':'🌾','건축가':'🔨','광부':'⛏',
+  '요리':'🍳','의사':'⚕','연구':'📖','조약사':'⚗','대장장이':'⚒',
+  '정교한 손끝':'✋','일사불란':'⚙','암중적응':'🌑','거상의 수완':'💰','상성의 통찰':'✨',
+  '실전 감각':'🗡',  '왕의 혈맥':'👑','산맥의 뼈':'🦴','달의 심장':'🌙','숲의 언어':'🍃',
+  '층리 감각':'🪨','절벽 고정':'⛰','유연한 외피':'🧱','열제련':'🔥','핵 공명':'💠','굴절막':'🔷','각인 기억':'ᚱ',
+  '무리의 본능':'🐾','폭풍의 날개':'🌪','피의 기억':'🩸','타천의 근육':'💪',
+  // 계열 전용 희귀 7×6
+  '개척의 야망':'🏕','조약의 언어':'📜','정령의 파트너':'🧚','헌신의 깃발':'🚩','대의의 방패':'🛡',
+  '달빛 주문':'🌙','영겁의 시간':'⏳','정수의 화살':'🏹','요정의 가호':'✨','고대의 지혜':'📚','미학의 검':'🤺',
+  '대장간의 불꽃':'🔥','룬 문양':'ᚱ','금맥의 후각':'👃','발명가의 열정':'💡','토굴 적응':'🕳','보석 세공':'💎',
+  '야간의 눈':'👁','포식자의 본능':'🦈','수중 사냥':'🐟','질주의 다리':'💨','두꺼운 털가죽':'🧥',
+  '피의 격노':'😡','전장의 포효':'📢','강철 이빨':'⚙','전사의 체격':'🗿','약탈의 습성':'💰','두개골 토템':'💀',
+  '어둠의 포옹':'🌑','심연의 속삭임':'🗣','죽음의 언어':'☠','그림자 걸음':'👣','저주의 인장':'🔯','불로의 갈망':'🩸'
+};
+
+// ───────── 이름 생성 (05 §8 — L1~L3c) ─────────
+const SYLL_A = ['시','카','아','벨','미','루','카','라','브','에','타','세','이','노','유','자','그','바','오','프'];
+const SYLL_B = ['온','란','리','나','아','드','스','라','에','르','아','엔','라','엔','우','이','린','야','네','이스'];
+const RARE_PRE = ['아르','엘','발','스카','벨','모르'];
+const RARE_SUF = ['미스텔','다리온','크리드','리온','베른','스'];
+// 계열별 오마주 원형 (05 §8 — 신화 풀 · 변형 전)
+const MYTH = {
+  '인간': ['아킬레우스','페르세우스','아테나','루스탐','솔로몬'],
+  '엘프': ['쿠훌린','모르간','루크','발키리'],
+  '드워프': ['토르','오딘','지크프리트'],
+  '짐승': ['손오공','전우치','구미호','바바야가'],
+  '전사': ['지크프리트','헤라클레스','베오울프'], // 페룬은 DIVINE 전사 전용(★6 신격) — ★5/★6 풀 상호배타
+  '심연': ['코셰이','루시퍼','드라큘라'], // 아자젤은 DIVINE 심연 전용(★6 신격) — ★5/★6 풀 상호배타
+  '조형생명': ['석결','벽토','열맥','수정','각인']
+};
+const TITLE5 = { // 2026-09-18 3→10 확장 — ★5 이름 다양성 (L3b 조합수 360→1,200)
+  '인간': ['불멸의 영웅','왕좌의 후계자','천하의 지휘관','백전의 검성','황금기의 개척자','강철의 서약기사','여명을 여는 자','바다를 건너는 자','맹세의 방패','대륙의 평정자'],
+  '엘프': ['심림의 수호자','계승된 서약자','바람의 노래','별빛의 궁수','장밋빛 예언자','이슬의 대사(大使)','천년의 잠자는 자','은빛 뿔피리의 주인','무한한 발견자','숲의 노래하는 돌'],
+  '드워프': ['산맥의 대장장이','룬의 계승자','이니까 지지 않는 자','바위의 후예','화강암 심장','구리 깃발의 지휘관','대곡(大谷)의 굴착자','마그마 인도자','신석(神石)의 감정사','맥석(脈石)의 읽는 자'],
+  '짐승': ['천지의 사냥꾼','달빛 아래의 그림자','야성의 지배자','천리추적자','폭풍을 이기는 나는 자','구름을 밟는 발자국','만물의 형제자매','옛 산의 짐승우두머리','바람 이끄는 주인','호랑이 굴을 아는 자'],
+  '전사': ['부서지지 않는 대오','싸움의 화신','천지의 파도','창을 꺾지 않는 자','철퇴의 재판관','전장의 개가(凱歌)','먼저 나아가는 자','상처의 지도(地圖)','불구더러 조용히 하라는 자','최후의 결전지'],
+  '심연': ['잊혀진 서약자','심연의 지배자','타락한 별빛','이르지 못한 빛','끝내 침몰한 왕관','말없는 대기(待機)','심해의 낡은 신','균열 너머의 시선','구원받지 못한 자의 수호자','종언을 세는 자'],
+  '조형생명': ['깨어난 형상','새겨진 의지','각성핵의 후계자','오래된 재료의 기억','재구성의 맹세','잠든 광맥의 노래','균열에서 태어난 자','기억하는 껍질','천천히 빚어진 이름','형태를 지키는 자']
+};
+const DIVINE = {  // ★6 신앙 오마주 — 신격 원형 (05 §8 · 2026-09-18 9차: 계열당 5→8 · 총 48종 — 그리스·로마 편중 해소(이집트·인도·바빌론·켈트·슬라브·핀란드·베트남·수메르) + 옥좌·용왕 계열 칭호 삭제(짐승 부적합 사용자 지적)
+  '인간': ['제우스','아폴론','미트라','헤르메스','세레스','인드라','오시리스','마르두크'],
+  '엘프': ['다누','오그마','니오르드','실반누스','아이네','브리지드','마난난','프레이야'],
+  '드워프': ['발두르','시프','브라기','이발디','노른스','프타','스바로그','벨레노스'],
+  '짐승': ['서왕모','가루다','바이슈런','아누비스','세크메트','가네샤','바스테트','응룡'],
+  '전사': ['올로간','페룬','아레스','우시','엔훌','몬투','닌우르타','투리사스'],
+  '심연': ['아자젤','바엘체부','네르갈','모록','레비아탄','아포피스','티아마트','아바돈'],
+  '조형생명': ['메이커','프로메테우스','탈로스','골렘의 왕','헤파이스토스','기계장치의 신','프타','원초의 장인']
+};
+// TITLE6_2(★6 구 칭호 2벌) 삭제 — 2026-09-17 정본 GDD 05 §8 대조: 문서는 풀 내용 미규정(가안)이며
+// TITLE6_DIVINE(신격 톤)이 대체. 정본 _tools/gacha.html에는 아직 TITLE6_2가 살아있으므로 거기 동기화 시 본 히스토리 참조.
+// 계열 색상 (2026-09-17) — 계열 전용 희귀 적성 칩 테두리 + 메타 계열 라벨 공용
+const LIN_COLOR = {'인간':'var(--lin-human)','엘프':'var(--lin-elf)','드워프':'var(--lin-dwarf)','짐승':'var(--lin-beast)','전사':'var(--lin-warrior)','심연':'var(--lin-abyss)','조형생명':'var(--lin-shaped)'};
+// ★6 신격 칭호 풀 (2026-09-17 신설) — DIVINE 계열별 신격 톤에 맞춘 2벌: [사신격 칭호, 상징 칭호]
+const TITLE6_DIVINE = {
+  '인간': ['하늘의 권능','올림포스의 선포','천둥의 주인','질서의 수호신','태양신의 총애','황금빛 예언','신들의 왕좌','별을 세는 신관','낮과 밤의 문지기','다 쓴 소원의 우물'],
+  '엘프': ['영생의 시조','안개의 심장','전쟁의 여신','바다의 지배자','별이 깃드는 숲','드루이드의 어머니','무궁한 창조','첫 이슬의 기억','뿌리 아래의 왕좌','여명 전의 노래'],
+  '드워프': ['광휘의 신체','수확의 신모','시(詩)의 신관','불멸의 룬','대장간의 신','깊은 골의 파수꾼','황금 향연의 주인','불씨의 첫 잡금','모루에 깃든 의지','달에 새긴 도끼자국'],
+  '짐승': ['하늘의 위계','서쪽 천상의 모후','천지를 감싸는 날개','선계의 심판자','부화의 신비','옥좌의 수호수','무극의 기운','구름 위의 울음','만물의 이름표','겨울잠의 수호신'],
+  '전사': ['전쟁의 절대자','번개 마부(馬夫)','피의 맹약','전장의 심판','무적의 전의','철혈의 심장','전승(戰勝)의 화신','부러진 창의 왕','전장을 부르는 뿔나팔','무혈의 항복'],
+  '심연': ['허무의 계약자','파리의 왕','저승의 판결자','종말의 서명','부패의 성역','칠흑의 제단','영겁의 기아','이름 없는 무덤의 주인','마지막 기도의 듣는 이','추락한 본향의 그림자'],
+  '조형생명': ['첫 형상의 증인','재료의 수호자','각인된 서약','빛을 굴절하는 자','균열의 파수꾼','기억의 보관자','첫 태엽의 주인','마지막 조형자','깨어난 핵의 목소리','완성되지 않은 설계']
+};
+// ★7 초월 칭호 (2026-09-18 — '초월한' 접두 정비: 이름·칭호 앞에 1회 · 계열별 초월 칭호 §8 5차)
+const TITLE7 = {
+  '인간': '초월한 신들의 왕', '엘프': '초월한 숲의 시조', '드워프': '초월한 대장간의 주인',
+  '짐승': '초월한 천지의 정점', '전사': '초월한 전쟁 그 자체', '심연': '초월한 종말의 이름',
+  '조형생명': '초월한 완성형'
+};
+let used = new Set();
+used.pause=false; // 팔레트 미리보기 중 add 무시 플래그
+const _usedAdd = used.add.bind(used);
+used.add = n => { if(!used.pause) _usedAdd(n); };
+function mod(n, rng){ // R1~R4 변형 1회 이상
+  const pre=['아르','엘','발','스카'], suf=['온','란','르','드','스','베른'];
+  const t=rng.int(4);
+  if(t===0) return n+suf[rng.int(suf.length)];
+  if(t===1) return pre[rng.int(pre.length)]+n.slice(1);
+  if(t===2){ const i=1+rng.int(n.length-1); return n.slice(0,i)+suf[rng.int(suf.length)]+n.slice(i+1); }
+  return n.slice(0,-1)+suf[rng.int(suf.length)];
+}
+const VOWEL_START = n => ((n.charCodeAt(0)-0xAC00)/588|0)===11; // 초성 ㅇ=11 (ㄱ0ㄲ1ㄴ2ㄷ3ㄸ4ㄹ5ㅁ6ㅂ7ㅃ8ㅅ9ㅆ10ㅇ11) — 모음 시작(아·오·우·이·에…): 접두 충돌('스카아폴론') 판정 (2026-09-18 9차)
+const DIV_PRE=['아르','엘','발','스카'];
+function modDivine(n, rng){ // 한글 신격명 전용 변형 (2026-09-17 · 9차 2026-09-18: 축약 3음절 대응 + 모음 시작 접두 가드) — '제우드'류 훼손 원천 차단
+  // 헬퍼(abbrNick·softSuffix)는 팔레트 modDivineType과 공용 — 규칙 소스 단일화
+  const t=rng.f();
+  if(t<0.35) return n;                                        // 원형 보존 35% (3차 튜닝 유지 — 실제 뽑기 롤 전용)
+  if(t<0.65 && !VOWEL_START(n))                               // 신성 접두 20% — 모음 시작 이름은 충돌(스카아폴론)이라 접미로 폴백
+    return DIV_PRE[rng.int(4)]+n;
+  if(t<0.80) return abbrNick(n);                              // 축약 애칭 15% — 아폴론→아폴 · 미트라→미트 · 아누비스→아누비 (2음절은 원형 유지)
+  return softSuffix(n, k=>rng.int(k));                        // 완화 접미 30% — 받침 교체·모음 계열 판정 포함
+}
+function modMythElevated(n, rng){ // ★5 신화 영웅명 전용 변형 (2026-09-17) — mod()보다 원형 보존 높게 · 개선 변형 혼합 (위계: ★5 > ★4)
+  const t=rng.f();
+  if(t<0.55) return n;                                        // 원형 보존 55% (★4 대비 높음 — 전설은 이름이 알려져 있다)
+  if(t<0.75) return ['아르','엘','발','스카'][rng.int(4)]+n;   // 영웅 접두 20% — 아르손오공 · 엘아테나
+  if(t<0.90){                                                 // 완화 접미 15% — mod()의 딱딱한 꼬리 대체
+    if(/[스프른론]$/.test(n)) return n.slice(0,-1)+['시온','리온','시안'][rng.int(3)];   // 헤라클레스→헤라클레시온
+    return n+['안','란'][rng.int(2)];                          // 손오공→손오간 · 구미호→구미호란
+  }
+  return n.length>=3 ? n.slice(0,-1) : n;                      // 축약형 10% — 쿠훌 · 발키 (3음절+만)
+}
+function genName(lin, grade, rng){
+  if(grade==='★7'||grade==='★6'){
+    // ★6 신앙 오마주 — DIVINE 신격 + 신격톤 칭호 1 · 신격명 전용 변형기 적용 (2026-09-18 단순화: 칭호 2→1)
+    // 폴백 금지 (2026-09-18): DIVINE 누락 계열은 MYTH+mod() 대신 원형 보존 — '제우드'류 mod 훼손이 신격명에 닿는 경로 원천 차단
+    const pool = DIVINE[lin]||MYTH[lin];
+    const mfn = DIVINE[lin]?modDivine:(n=>n);
+    let base = mfn(pool[rng.int(pool.length)], rng);
+    let t1 = TITLE6_DIVINE[lin][rng.int(TITLE6_DIVINE[lin].length)];
+    if(grade==='★7'){ // ★7 초월 접두 정비 (05 §8 5차): 이름·칭호 앞 '초월한' — 계열별 초월 칭호가 원형 보존되도록 칭호 접두는 폐기
+      base = '초월한 '+base;
+      t1 = TITLE7[lin]||t1;
+    }
+    let n = `${base}, ${t1}`;
+    let k=0; while(used.has(n)&&k++<8) n = `${mfn(pool[rng.int(pool.length)],rng)}, ${TITLE6_DIVINE[lin][rng.int(TITLE6_DIVINE[lin].length)]}`;
+    return {name:n, origin:'L3c 신앙 오마주'};
+  }
+  if(grade==='★5'){
+    // ★5 전설 오마주 — 신화 영웅 전용 변형기 적용 (2026-09-17: mod() → modMythElevated)
+    let base = modMythElevated(MYTH[lin][rng.int(MYTH[lin].length)], rng);
+    let t = TITLE5[lin][rng.int(TITLE5[lin].length)];
+    let n = `${base}, ${t}`; let k=0; while(used.has(n)&&k++<8) n=`${modMythElevated(MYTH[lin][rng.int(MYTH[lin].length)],rng)}, ${t}`;
+    return {name:n, origin:'L3b 전설 오마주+칭호'};
+  }
+  if(grade==='★4'){
+    const r = rng.f();
+    if(r<0.20){ let n=`${mod(MYTH[lin][rng.int(MYTH[lin].length)],rng)}`; let k=0; while(used.has(n)&&k++<8)n=mod(MYTH[lin][rng.int(MYTH[lin].length)],rng); return {name:n, origin:'L3a 신화 오마주'}; }
+    if(r<0.75) return {name: mod(MYTH[lin][rng.int(MYTH[lin].length)],rng), origin:'L3a 신화 오마주(예외경로)'};
+    return {name: rng.pick(RARE_PRE)+''+SYLL_A[rng.int(SYLL_A.length)]+RARE_SUF[rng.int(RARE_SUF.length)], origin:'L2 희귀 접사'};
+  }
+  if(grade==='★3'){
+    return {name: rng.f()<0.55 ? rng.pick(RARE_PRE)+SYLL_A[rng.int(SYLL_A.length)]+SYLL_B[rng.int(SYLL_B.length)]
+                               : SYLL_A[rng.int(SYLL_A.length)]+SYLL_B[rng.int(SYLL_B.length)], origin: rng.f()<0.55?'L2 희귀 접사':'L1 음절'};
+  }
+  return {name: SYLL_A[rng.int(SYLL_A.length)]+SYLL_B[rng.int(SYLL_B.length)], origin:'L1 음절 조합'};
+}
+
+// ───────── RNG (2026-09-14: 기본 랜덤 시드 — 새로고침마다 새 결과 · 재현은 아래 seed 재설정으로) ─────────
+let seed = Math.floor(Math.random()*0xFFFFFFFF)>>>0;
+function rngClass(seed){ let s=seed>>>0;
+  const next=()=>{ s^=s<<13;s^=s>>>17;s^=s<<5;s>>>=0; return s/4294967296; };
+  return {f:next, int:n=>Math.floor(next()*n), pick:a=>a[Math.floor(next()*a.length)], weighted:(items)=>{ let acc=0, x=next()*items.reduce((a,b)=>a+b[1],0); for(const [k,w] of items){acc+=w; if(x<acc) return k;} return items[items.length-1][0]; }};
+}
+let pity4=0, pity5=0, owned={}, floorState=50, pullCount=0, usedPers=new Set();
+// 등급 추첨 — 비공개 천장 내장 (2026-09-17). 소프트 시작점·하드 횟수는 절대 UI에 표기하지 않음.
+// 자연 확률(★5 0.05%·★6 0.01%)은 유지 — 천장은 최악의 꼬리만 컷.
+function rollGrade(r){
+  pity4++; pity5++;
+  if(pity5>=PITY5H){ pity4=0; pity5=0; return ['★5','★6'][r.f()<0.8333?0:1]; }   // ★5+ 5,200 하드 (표 비율 5:1 교대)
+  if(pity4>=PITY4.hard){ pity4=0; return '★4'; }                        // ★4 130 하드
+  const b4 = pity4>=PITY4.softStart ? (pity4-PITY4.softStart+1)*PITY4.softStep : 0; // 70회부터 +2%p/회
+  const lo = {'★1':RATES['★1'],'★2':RATES['★2'],'★3':RATES['★3'],'★4':RATES['★4']+b4,'★5':RATES['★5'],'★6':RATES['★6']};
+  const sum = Object.values(lo).reduce((a,b)=>a+b,0);
+  const x=r.f(); let acc=0;
+  for(const g in lo){ acc += lo[g]/sum; if(x<acc){                       // 잔여 밴드 정규화 — 합 100% 유지
+    if(g==='★4') pity4=0; else if(g!=='★1'&&g!=='★2'&&g!=='★3'){ pity4=0; pity5=0; }
+    return g; } }
+  return '★1';
+}
+function rollPers(r, grade){
+  // 몰입 등급별 가중 (2026-09-18 D1 — 명장 곡선 정합): ★3- 0 · ★4 1.5 · ★5 2 · ★6 3 · ★7 4
+  const CW={'★4':1.5,'★5':2,'★6':3,'★7':4};
+  const gnum=parseInt(grade[1])||1;
+  const pool = Object.entries(PERS_WEIGHT).filter(([p])=>!usedPers.has(p))
+    .map(([p,w])=>[p, p==='몰입'?(CW[grade]??w):w]);
+  let pers = r.weighted(pool.length?pool:Object.entries(PERS_WEIGHT)); // 배치 중복 방지 — 풀 소진 시 원복
+  if(pers==='몰입' && gnum<4){
+    // 몰입 미달 — 중립 강제 전환 폐지, 가중치 재롤 (05 §5 4차) — ★7 포함 등급 무관 정수 판정으로 정비
+    const pool2 = pool.filter(([p])=>p!=='몰입');
+    pers = r.weighted(pool2.length?pool2:Object.entries(PERS_WEIGHT));
+  }
+  return pers;
+}
+function rollLineage(r, pickup){
+  if(r.f()<SHAPED_LINEAGE_RATE) return '조형생명';
+  // Weight lineages by their race count, then select a race uniformly within the lineage.
+  // This gives every legacy race equal probability and keeps balance/pickup state out of the 95% pool.
+  const keys = LEGACY_LINEAGES;
+  const weights = keys.map(l=>RACES[l].length);
+  const total = weights.reduce((sum, weight)=>sum+weight, 0);
+  if(total !== LEGACY_RACE_COUNT) throw new Error(`legacy race pool must contain ${LEGACY_RACE_COUNT} races, got ${total}`);
+  return r.weighted(keys.map((lineage, i)=>[lineage, weights[i]]));
+}
+function makeHero(r, pickup){
+  const legacyKeys = LEGACY_LINEAGES;
+  const lin = rollLineage(r, pickup);
+  const avail = RACES[lin];
+  const [race,subs] = r.pick(avail);
+  const subrace = r.pick(subs);
+  const grade = rollGrade(r);
+  const common = ['전사','수호자','암살자','궁수','마법사','지원가'];
+  if(legacyKeys.includes(lin) && RARE_JOBS[lin] && r.f()<0.05){ var job = RARE_JOBS[lin]; }
+  else {
+    const w = RACE_JOB[race]||{};
+    const wt = common.map(j=>w[j]||1.0);
+    var job = weightedPick(r, common, wt);
+  }
+  let pers = rollPers(r, grade);
+  const apt={};
+  const prof = JOB_APT[job]||{};
+  const raceBonus = RACE_APT_BONUS[race]||{};
+  const gnum = parseInt(grade[1]);
+  const tierCap = gnum>=5?7:(gnum===4?6:(gnum===3?5:4)); // 특성 게이트 — 특성 ★7=★5+ 유지 (4차 개정 후에도)
+  const tierCapGen = gnum>=4?7:(gnum===3?5:4); // 일반 적성 게이트 (2026-09-18 4차) — ★4부터 명장 실현 (★4 1% · 구 cap 6 흡수 폐지)
+  const rollTier = r=>{ const x=r.int(100)+1; let acc=0; for(let t=0;t<APT_W.length;t++){acc+=APT_W[t]; if(x<=acc) return t+1;} return 7; };
+  // 적성 출현 감쇠 (2026-09-17): 프로필 외 적성은 출현 주사위 — 순번마다 출현율 감쇠 → 영웅당 보유 적성 한정(전문화)
+  const aptOrder = COMMON_APT.map(k=>[r.f(),k]).sort((a,b)=>a[0]-b[0]).map(e=>e[1]); // 히어로별 순서 셔플 — 생활/시설 편향 방지
+  let aptIdx = 0;
+  aptOrder.forEach(k=>{
+    if(k in prof){ // 프로필 적성 — 상시 보유 (±1)
+      apt[k] = Math.min(tierCapGen, Math.max(1, prof[k] + (r.int(3)-1) + (raceBonus[k]||0)));
+    } else if(r.f() < (APT_APPEAR_BASE_BY_GRADE[gnum]||APT_APPEAR_BASE_BY_GRADE['def']) * Math.pow(APT_APPEAR_DECAY, aptIdx)){ // 출현 — 견습 4 보장 · 등급별 출현 계수(점층) · 등급별 숙련+ 가중 상승
+      const w4 = APT_TIER_W_BY_GRADE[gnum]||APT_TIER_W_BY_GRADE['def'];
+      const t = weightedPick(r, [4,5,6,7], w4);
+      apt[k] = Math.min(tierCapGen, Math.max(1, t + (raceBonus[k]||0)));
+    } else { // 미출현 — 은닉 확정(티어 1~3) · 훈련(XP)으로 견습 해금 가능
+      apt[k] = Math.min(3, rollTier(r));
+    }
+    aptIdx++;
+  });
+  const rareApts = [];
+  const grantRare = ()=>{ // 특성 부여 (구 희귀 적성) — 풀 = 공용 6 + 계열 7 = 13 · 계열 전용 가중 1.5 · ★5~7 · 게이트 clamp
+    const linRares = LINEAGE_RARE[lin]||[];
+    const c = COMMON_RARE.concat(linRares).filter(x=>!rareApts.includes(x));
+    if(!c.length) return;
+    // 시그니처 가중 SIG_W 1.25 (2026-09-19 14차) — 계열 풀 내 시그니처 선택률 상향 → 전체 획득률 11% (feat_cp 검증)
+    const k = weightedPick(r, c, c.map(x=>linRares.includes(x)?(RARE_APT_RACE_W*((FEAT_VALUE[x]||0)>=SIG_VALUE?SIG_W:1)):1.0));
+    rareApts.push(k);
+    const rt=r.f();
+    // ★6/★7 2차 특권 (2026-09-18 9차): 보장 특성 하한 — ★6은 ★6 20%·★7 80% / ★7은 ★6 10%·★7 90% (★7 초월 등급 전용)
+    // 트리거·재롤 신규 획득은 featTierRoll 지수 곡선 적용 (★6+ 보장분 제외)
+    apt[k]=Math.min(tierCap, gnum>=7 ? (rt<0.10?6:7) : (gnum>=6 ? (rt<0.20?6:7) : featTierRoll()));
+  };
+  // ── 특성 ★ 지수 곡선 (2026-09-18 9차, B표준 채택): ★6 가중 ×1.15 · ★7 가중 ×1.40 등급당 — ★4 기준 ★5 45/★6 35/★7 20 → 재정규화
+  // ★4는 ★7 게이트(cap 6) 흡수, ★6+ 보장분은 2차 특권 롤이므로 커브는 트리거·재롤 신규 획득에만 적용
+  const FEAT_TIER_EXP = {6:1.15, 7:1.40};
+  const featTierRoll = ()=>{ const w6=0.778*FEAT_TIER_EXP[6]**(gnum-4), w7=0.444*FEAT_TIER_EXP[7]**(gnum-4), s=1+w6+w7, rt=r.f(); return rt<1/s?5:(rt<(1+w6)/s?6:7); };
+  if(gnum>=6) grantRare(); // ★6 1차 특권 (2026-09-17 사용자 결정 — 확정 #38): 특성 1개 보장 · 2차 특권(★ 하한)은 grantRare 내 gnum>=6 분기
+  if(gnum>=3 && r.f() < RARE_APT_RATE_BY_GRADE[gnum]){ grantRare(); } // ★3+ 등급별 트리거 (확정 #38)
+  if(gnum>=4 && r.f()<RARE_APT_BONUS) grantRare(); // ★4+ 보너스 재롤 3% (독립 — 최대 2개)
+  const gm=GM[grade[1]];
+  const [hp,atk,df,as,mag,md,cri]=JC[job];
+  const st={'HP':100*hp*gm,'ATK':10*atk*gm,'MAG':10*mag*gm,
+    'PEN':2*(df-0.5)*gm,'DEF':5*df*gm,'MDEF':5*md*gm,
+    'EVA':3+2*as*gm*0.1,'ASPD':50*as*gm,'CDMG':150+10*cri*gm,
+    'CRI':5+3*(cri-1)*gm,'MANA':100*md*gm,'SPD_CAST':30*md*gm,'STA':80*hp*gm};
+  // 종족·아종 statMods + 성격 실반영 + 개체 변량 ±7% (2026-09-14 3차)
+  const mods={};
+  for(const m of [RACE_MODS[race]||{}, SUB_MODS[subrace]||{}]) for(const k in m) mods[k]=(mods[k]||0)+m[k];
+  const mul={...PERS_STAT_MUL[pers]};
+  for(const k in mods) mul[k]=(mul[k]??1)*(1+mods[k]/100);
+  for(const k in mul) if(k in st) st[k]*=mul[k];
+  for(const k in PERS_STAT_PPT[pers]||{}) if(k in st) st[k]+=PERS_STAT_PPT[pers][k];
+  for(const k in st) st[k]*=1+VARIANCE*(r.f()*2-1);
+  for(const k in st) st[k]=PCT_KEYS.has(k)?Math.round(st[k]*10)/10:Math.round(st[k]);
+  const S = st.HP*0.12+st.ATK*2+st.MAG*2+st.DEF*1.5+st.MDEF*1.5+st.ASPD*3+st.SPD_CAST*2+st.CRI*3+st.CDMG*1+st.PEN*2.5+st.EVA*2.5+st.MANA*0.05+st.STA*0.03;
+  // 특성 CP 반영 (2026-09-18 특성 개칭 동시 개정): CP = 스탯합 × 성격 × (1 + Σ 특성 기여)
+  // 기여 = FEAT_VALUE[name] × 0.4% × (★-2) — 명목 CP와 실전 CP 통일 (feat_cp.py: ★6 평균 +6.8% · ★7 시그니처 +20%)
+  const featMul = 1 + rareApts.reduce((a,k)=>a+(FEAT_VALUE[k]||3.0)*FEAT_CP_UNIT*Math.max(0,(apt[k]||5)-2),0);
+  // 종족 시그니처 +3% (2026-09-21 확정 — gacha_test.py와 동일 계수 · 시뮬 sig_bonus_test.py 검증)
+  // 히든 시그니처 — 시그니처 조합 0.5% 확률로 추가 ×1.07 (2026-09-21 확정 · hidden_sig_test.py)
+  let sigMul = (RACE_SIG_MUL[race]&&RACE_SIG_MUL[race][job])||1.0;
+  const isHiddenSig = sigMul > 1.0 && r.f() < 0.005;
+  if (isHiddenSig) sigMul *= 1.07;
+  const cp = Math.round(S*PM[pers]*featMul*sigMul);  const nameRes = genName(lin, grade, r); used.add(nameRes.name);
+  owned[lin]=(owned[lin]||0)+1;
+  // 부가 성격 — 52종 비복원 · 대척쌍 배제 (09 v0.7 전 등급 2종) + 적성 효율 실반영 (09 §4-4 ①)
+  const subTraits = rollSubTraits(r);
+  const subEff = {};
+  const prefD=new Set(), antiD=new Set();
+  for(const t of subTraits){ const [p1,p2,opp]=SUB_DOM_W[t]; prefD.add(p1); prefD.add(p2); if(opp)antiD.add(opp); }
+  for(const a of Object.keys(apt)){ const d=APT_DOMAIN[a]; if(!d){subEff[a]=1.0;continue;}
+    if(prefD.has(d)) subEff[a]=SUB_EFF_X; else if(antiD.has(d)) subEff[a]=SUB_EFF_Y; else subEff[a]=1.0; }
+  return {grade,lin,race,subrace,job,pers,subTraits,subEff,apt,name:nameRes.name,origin:nameRes.origin,st,cp,featMul,
+          role: ROLE_TAG[job]||'—',
+          isRareJob: RARE_JOBS[lin]===job, isRareApt: rareApts.length>0, rareAptName: rareApts[0]||null, rareApts,
+          hiddenSig: isHiddenSig};
+}
+
+// ───────── UI ─────────
+const grid=document.getElementById('grid'), summary=document.getElementById('summary');
+let last10=[];
+window.__hsigTotal = 0;  // 히든 시그니처 누적 카운트 (도감 요소 — 2026-09-21 확정)
+function gradeColor(g){return {'★1':'g1','★2':'g2','★3':'g3','★4':'g4','★5':'g5','★6':'g6','★7':'g7'}[g];}
+// ── 특성 상세 툴팁 (2026-09-18 10차) — APT_DESC에서 효과 기저치 파싱 + 실효값·CP 기여 동시 표시 ──
+// 실효 규칙 (05 §6-1-2 밸런스기준표): %효과 = 기저치 × 티어 배율 (★6 ×1.65 · ★7 ×2.30) · 턴·확률류는 고정 (배율 비적용)
+function featTip(k, v){
+  const d = APT_DESC[k]||'';
+  const tag = (d.match(/^\[([^\]]+)\]/)||[])[1]||'';
+  const m = d.match(/([+×-])([\d.]+)(%|턴)\/?등급/);
+  const label = d.replace(/^\[[^\]]+\]\s*/,'').replace(/\s*[+×-][\d.]+(%|턴)\/등급\s*$/,'').trim();
+  const fixed = /턴$/.test(m?m[3]:'') || /(확률|성공률|발견률)/.test(label); // 턴·확률류 고정 규칙
+  const val = FEAT_VALUE[k]||3.0;
+  const cp = (val*FEAT_CP_UNIT*(v-2)*100).toFixed(1);
+  const lines = [];
+  if(m){
+    const num = parseFloat(m[2]);
+    if(fixed) lines.push(`${label} ${m[1]}${num}${m[3]} — 고정 (배율 비적용)`);
+    else if(m[1]==='×') lines.push(`${label} ×${(1+num*APT_TIER[v]/100).toFixed(2)} (기저 ×${num}% × 티어 ${APT_TIER[v].toFixed(2)})`);
+    else lines.push(`${label} ${m[1]}${(num*APT_TIER[v]).toFixed(1)}${m[3]} (기저 ${m[1]}${num}${m[3]} × 티어 ${APT_TIER[v].toFixed(2)})`);
+  }
+  lines.push(`특성 ★${v} · ${tag?tag+' · ':''}가치 ${val.toFixed(1)}/10 — CP 기여 +${cp}% (카드 CP에 반영)`);
+  return lines.join('\n');
+}
+// ── 일반 적성 상세 툴팁 (2026-09-18 11차 — 특성 featTip과 동일 2줄 체계로 통일) ──
+// 효과 근거 GDD 04 §"특성 효율": 티어 배율 4 ×1.10 · 5 ×1.30 · 6 ×1.65 · 7 ×2.30 (05 §6 7차)
+// · 수확/시설 버프류 = (배율-1) → +10/30/65/130% (GDD 04 농부 규정과 일치)
+// · 시간 경감류(건축가) = 1-1/배율 (효율 ×배율의 시간 환산 — 명장 56.5% 경감)
+const GEN_APT_EFF = {
+  '채집': v=>`수확 효율 +${((APT_TIER[v]-1)*100).toFixed(0)}%`,
+  '벌목': v=>`목재 채집 효율 +${((APT_TIER[v]-1)*100).toFixed(0)}%`,
+  '농부': v=>`농사 수확 효율 +${((APT_TIER[v]-1)*100).toFixed(0)}%`,
+  '광부': v=>`채굴 효율 +${((APT_TIER[v]-1)*100).toFixed(0)}%`,
+  '건축가': v=>`건설·수리 시간 경감 ${((1-1/APT_TIER[v])*100).toFixed(1)}%`,
+  '요리': v=>`버프 요리 효과 +${((APT_TIER[v]-1)*100).toFixed(0)}%`,
+  '의사': v=>`Sanity 요양 효율 +${((APT_TIER[v]-1)*100).toFixed(0)}%`,
+  '연구': v=>`연구 속도 +${((APT_TIER[v]-1)*100).toFixed(0)}%`,
+  '조약사': v=>`포션 제작 효율 +${((APT_TIER[v]-1)*100).toFixed(0)}%`,
+  '대장장이': v=>`합성·강화 효율 +${((APT_TIER[v]-1)*100).toFixed(0)}%`
+};
+function genAptTip(k, v){
+  const eff = (GEN_APT_EFF[k]||(t=>k))(v);
+  const tn = APT_TIER_NAME[v]||('티어 '+v);
+  return `${eff}\n${tn} (배율 ×${(APT_TIER[v]||1).toFixed(2)}) — 시설 배치·채집 정산에 적용`;
+}
+function card(h){
+  const div=document.createElement('div');
+  div.className=`card b${h.grade[1]}`;
+  div._hero=h;   // 덱 빌더 — 카드↔영웅 객체 연결 (2026-09-18)
+  if(h.hiddenSig) div.classList.add('hsig'); // 히든 시그니처 — 은빛 테두리 (2026-09-21 확정)
+  if(h.grade<'★5') div.classList.add('low4'); // 컴팩트 모드 대상 마킹 (★1~4 — body.dense에서 축약 렌더, 2026-09-18 12차)
+  const rareCls = h.grade>='★5' ? 'rare-name shine' : (h.grade>='★4'?'rare-name':'');
+  const shown = Object.entries(h.apt).filter(([k,v])=> v>=4); // 1~3 은닉 — 카드는 ★4(견습)부터 표시 (05 §6 7차)
+  const linColor = LIN_COLOR[h.lin]||'var(--gold)';
+  // ✦시그니처 배지 (2026-09-18 11차 신설 · 12차 기준 확대) — SIG_VALUE 이상 특성 보유 시 표시
+  const sigFeats = (h.rareApts||[]).filter(k => (FEAT_VALUE[k]||0) >= SIG_VALUE);
+  const sigBadge = sigFeats.length ? `<div class="sigbadge" data-tip="✦ 시그니처 특성 — ${sigFeats.map(k=>k+' (가치 '+(FEAT_VALUE[k]||0).toFixed(1)+'/10)').join(' · ')} — 가치 ${SIG_VALUE.toFixed(1)}+ 희소">✦ 시그니처</div>` : '';
+  // CP 미니 게이지 (2026-09-18 11차) — 스탯 CP vs 특성 기여 CP 비중 (featMul-1 = 특성 기여분)
+  const featPct = Math.max(0,(h.featMul-1))*100;
+  const cpg = featPct > 0.05 ? `<div class="cpg" data-tip="CP 구성 — 스탯 ${(100-featPct).toFixed(1)}% · 특성 기여 ${featPct.toFixed(1)}% (금색 구간)"><i class="cpgs" style="width:${Math.max(0,100-featPct).toFixed(1)}%"></i><i class="cpgf" style="width:${Math.min(featPct,99).toFixed(1)}%"></i></div>` : '';
+  const aptHtml = shown.length ? shown.map(([k,v])=>{
+    const rare = (h.rareApts||[]).includes(k);
+    const linRare = rare && (LINEAGE_RARE[h.lin]||[]).includes(k); // 계열 전용 특성 → 계열 색 테두리 (구 계열 전용 희귀)
+    const tierName = rare ? '' : (APT_TIER_NAME[v]||''); // 특성(구 희귀)은 ★ 개수만 — 견습·장인 용어 분리 (2026-09-18 개칭)
+    const hot = v>=6;
+    const bg = rare ? 'var(--gold)' : (v===7?'var(--gold)':(v===6?'var(--c3)':''));
+    const tip = rare
+      ? featTip(k, v) // 10차 — 상세 툴팁 2줄 (실효 수치 + CP 기여)
+      : genAptTip(k, v); // 11차 — 일반 적성도 실효 수치 표시 (특성과 동일 2줄 체계)
+    const icon = rare ? '★'.repeat(v-3) : (v===7?'★★':(v===6?'★':''));
+    const em = APT_ICON[k]||'•';
+    const tierIcon = APT_TIER_ICON[v]||''; // 티어 마커 — 견습 ○ → 숙련 ◐ → 장인 ● → 명장 ◉ (텍스트 없이도 구별)
+    const tIconColor = hot ? 'inherit' : (v===4?'var(--dim)':(v===5?'var(--c2)':(v===6?'var(--c3)':'var(--gold)'))); // 마커 색도 서열 — 견습 회색 → 숙련 청록 → 장인 파랑 → 명장 금 · hot 칩(배경색)에선 상속으로 파랑-파랑 겹침 방지
+    const label = k + (tierName?` <i style="font-style:normal;font-size:.72em;opacity:.95;color:${tIconColor}">${tierIcon} ${tierName}</i>`:'');
+    const cls = linRare ? 'linerare' : (hot?'hot':'');
+    const style = linRare ? `--linc:${linColor}` : (hot?`background:${bg}`:'');
+    const star = rare ? ` <b style="font-weight:800"${linRare?' class="lrt"':''}>${icon}</b>` : ''; // 일반 적성 ★ 제거 — ★은 특성 전용, 티어는 ○◐●◉ 마커로 구별 (충돌 해소)
+    return `<span class="${cls}"${style?` style="${style}"`:''} data-tip="${tip}"><i style="font-style:normal;margin-right:3px;opacity:.85">${em}</i>${label}${star}</span>`;
+  }).join('') : '<span class="apt-empty" style="opacity:.45;font-style:italic">탈재능 — 훈련으로 적성 개화</span>'; // 전 적성 은닉 영웅 (2026-09-17 출현 감쇠)
+  // P0-F3 — CP 배치 상위 % (배치 세션 내 분위수 · pull()이 window.__rollPool 갱신)
+  const pool = window.__rollPool||[];
+  const below = pool.filter(c=>c<h.cp).length;
+  const pctile = pool.length>=10 ? Math.round(below/pool.length*100) : null;
+  const coreKeys = (ROLE_CORE[h.role]||Object.keys(h.st)).filter(k=>k in h.st); // 역할 핵심 6종 (P0-F2 — 시뮬 확정 조합)
+  const restKeys = Object.keys(h.st).filter(k=>!coreKeys.includes(k));
+  const stRow = (k)=>{
+    const v=h.st[k]; const pct = ['CRI','EVA','PEN','CDMG'].includes(k) ? '%' : '';
+    const key = k==='SPD_CAST'?'CAST':k;
+    return `<div data-tip="${ST_DESC[k]||k}"><span style="opacity:.8">${key}</span><b style="margin-left:auto">${v.toLocaleString()}${pct}</b></div>`;
+  };
+  const roleIcon = ROLE_ICON[h.role]||'⚔';
+  const roleColor = ROLE_CL[h.role]||'var(--c3)';
+  div.innerHTML=`
+    <div class="chead"><div class="g g${h.grade[1]}">${h.grade} ${h.grade>='★5'?'✦':''}${h.grade==='★6'?'★':'ㅤ'}</div>
+    <span class="rolechip" style="color:${roleColor};border-color:${roleColor}55" data-tip="${ROLE_DESC[h.role]||''}">${roleIcon} ${h.role}</span></div>
+    <h3 class="${rareCls}">${h.name}</h3>
+    ${sigBadge}
+    <div class="origin">${h.origin}</div>
+    <div class="meta"> <!-- P0-F4 — 2줄 재배치: 1줄 정체성(계열·종족) / 2줄 전투 정체성(직업·성격) -->
+      <span class="linlabel" style="--linc:${linColor}" data-tip="${LIN_DESC[h.lin]||''}">${h.lin}계열</span> ·
+      <span data-tip="${RACE_DESC[h.race]||''}">${h.race}</span> (${h.subrace})</div>
+    <div class="meta">
+      <span data-tip="${JOB_DESC[h.job]||''}">${h.isRareJob?'<b class="rare-txt">'+h.job+'</b>':h.job}</span> ·
+      <span data-tip="${PERS_DESC[h.pers]||''}">${h.pers}</span>
+      ${(h.subTraits&&h.subTraits.length)?` · ${h.subTraits.map(t=>`<span data-tip="부가 성격 (CP 무영향 · 적성 효율 가중)">${t}</span>`).join('·')}`:''}</div>
+    <div class="apt">${aptHtml}</div>
+    <div class="st">${coreKeys.map(stRow).join('')}</div> <!-- P0-F2 — 역할 핵심 6종만 앞면 -->
+    <button class="stmore" data-tip="나머지 ${restKeys.length}종 스탯 — 클릭해 펼침/접기 (13종 전체는 카드 클릭 상세)">+${restKeys.length} 스탯 더보기</button>
+    <div class="st strest" hidden>${restKeys.map(stRow).join('')}</div>
+    <div class="cp cp${h.grade[1]}">CP ${h.cp.toLocaleString()}${pctile!==null?` <small class="cppct" data-tip="이번 배치 ${pool.length}캐 중 상위 ${100-pctile}%">· 상위 ${100-pctile}%</small>`:''}</div>
+    ${cpg}
+    <button class="pick">＋ 편성</button>`;
+  return div;
+}
+function pull(n){
+  floorState = Math.max(1, Math.min(100, parseInt(document.getElementById('floor').value)||50));
+  const pickup = document.getElementById('pickup').value || null;
+  const r = rngClass(seed + pullCount*7919);
+  const frag = document.createDocumentFragment();
+  let got=[];
+  usedPers.clear(); // 배치 단위 성격 중복 방지 (05 §5 3차)
+  for(let i=0;i<n;i++){
+    const h = makeHero(r, pickup);
+    got.push(h); pullCount++;
+    usedPers.add(h.pers);
+    // 천장 카운터는 rollGrade 내부에서 리셋됨 (★4+ → pity4 · ★5+ → pity4+pity5)
+    frag.appendChild(card(h));
+  }
+  window.__rollPool = got.map(h=>h.cp).concat(window.__rollPool||[]).slice(0,200); // P0-F3 — 배치 최근 200캐 CP 풀 (상위% 기준선)
+  grid.prepend(frag);
+  applySort();
+  if(n<=10){ last10=got.concat(last10).slice(0,10); }
+  // 히든 시그니처 컬렉션 카운트 (2026-09-21 확정 — 도감 요소 · 세션 누적)
+  if(got.some(h=>h.hiddenSig)){
+    window.__hsigTotal = (window.__hsigTotal||0) + got.filter(h=>h.hiddenSig).length;
+    const el = document.getElementById('hsigStat');
+    if(el) el.textContent = `✧ 히든 ${window.__hsigTotal}`;
+    got.filter(h=>h.hiddenSig).forEach(h=>deckToast(`✧ 히든 시그니처 발견! ${h.name} — 은빛 테두리 (CP ×1.07)`));
+  }
+  // 천장 비공개 — 카운터·게이지 노출 제거 (2026-09-17 사용자 결정: 유저는 천장 존재를 알 수 없음)
+  document.getElementById('pityStat').textContent = '─';
+  document.getElementById('pityBar').style.width = '0%';
+  // 요약 (100연차용)
+  if(n>=100){
+    const c={}; got.forEach(h=>c[h.grade]=(c[h.grade]||0)+1);
+    summary.style.display='block';
+    summary.innerHTML = `<b>${n}연차 결과</b> · ` +
+      Object.keys(RATES).map(k=>`${k}:${c[k]||0} (기대 ${(n*RATES[k]).toFixed(1)})`).join(' · ') +
+      `<br>평균 CP ${(got.reduce((a,b)=>a+b.cp,0)/got.length).toFixed(0)} · 최고 CP ${Math.max(...got.map(h=>h.cp)).toLocaleString()}`;
+  }
+}
+function applySort(){
+  const mode = document.getElementById('sort').value;
+  const cards = [...grid.children];
+  if(mode==='cp'){
+    cards.sort((a,b)=>(parseInt(b.querySelector('.cp').textContent.replace(/[^0-9]/g,''))||0)
+                   - (parseInt(a.querySelector('.cp').textContent.replace(/[^0-9]/g,''))||0));
+    if(cards.length>100) cards.length = 100;  // CP정렬 시 TOP 100만 유지
+  }
+  grid.replaceChildren(...cards);
+}
+document.getElementById('sort').onchange=applySort;
+// P0-F2 — 스탯 접기 토글 (이벤트 위임 — 카드마다 리스너 불필요)
+grid.addEventListener('click',e=>{
+  const more=e.target.closest('.stmore'); if(!more) return;
+  const rest=more.parentElement.querySelector('.strest');
+  const open=!rest.hidden;
+  rest.hidden=open;
+  more.textContent=open?`+${rest.children.length} 스탯 더보기`:'접기';
+});
+document.getElementById('density').onchange=e=>document.body.classList.toggle('dense',e.target.value==='compact'); // 12차 — 밀도 전환 (low4 마킹+CSS라 재렌더 불필요)
+document.getElementById('btn1').onclick=()=>pull(1);
+document.getElementById('btn10').onclick=()=>pull(10);
+document.getElementById('btn100').onclick=()=>pull(100);
+
+// ───────── 덱 빌더 (2026-09-18) — 카드 선택 → 별도 창에서 레벨·승급 시뮬 (05 §7 정본) ─────────
+// 레벨계수 Lv130 ×7.45 선형(확정 #34 · 적용 5종 HP·ATK·MAG·DEF·MDEF — races.json note) · 승급 = 등급 +1 & 순수도 −0.04/회(확정 #35 · 가산 누적)
+const deck=new Set();
+function deckSync(div){
+  const btn=div.querySelector('.pick'); if(!btn) return;
+  const on=deck.has(div._hero);
+  btn.textContent=on?'✓ 편성됨 — 클릭 해제':'＋ 편성';
+  div.classList.toggle('picked',on);
+  document.getElementById('deckCount').textContent=deck.size;
+}
+function deckToast(msg){ // 논블로킹 알림 — alert은 메인 스레드를 막아 자동리로드·프리뷰가 멈춘다 (2026-09-19)
+  let t=document.getElementById('deckToast');
+  if(!t){ t=document.createElement('div'); t.id='deckToast';
+    t.style.cssText=''; t.className=''; // 인라인 스타일은 #deckToast CSS 블록(팔레트 정합, 2026-09-19)으로 이관
+    document.body.appendChild(t); }
+  t.textContent=msg; t.style.opacity='1';
+  clearTimeout(t._tm); t._tm=setTimeout(()=>{t.style.opacity='0';}, 2200);
+}
+grid.addEventListener('click',e=>{
+  if(e.target.closest('.stmore')) return; // 접기 토글은 전용 핸들러가 처리
+  const btn=e.target.closest('.pick'); if(!btn){
+    // P1-F5 — 카드 본문 클릭 = 상세 모달 (편성 버튼 제외)
+    const div=e.target.closest('.card'), h=div&&div._hero; if(h) heroModal(h);
+    return;
+  }
+  const div=btn.closest('.card'), h=div&&div._hero; if(!h) return;
+  if(deck.has(h)) deck.delete(h);
+  else if(deck.size>=5){ deckToast('덱은 최대 5명 (04 §3.2 파티 규모)'); return; }
+  else deck.add(h);
+  deckSync(div);
+});
+// ── P1-F5 카드 상세 모달 (2026-09-20) — 13종 전체·성격·특성·은닉 적성·CP 분해 ──
+function heroModal(h){
+  document.querySelector('.hmask')?.remove();
+  const linColor=LIN_COLOR[h.lin]||'var(--gold)';
+  const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  const stRows=Object.entries(h.st).map(([k,v])=>{
+    const pct=['CRI','EVA','PEN','CDMG'].includes(k)?'%':'';
+    const key=k==='SPD_CAST'?'CAST':k;
+    return `<div data-tip="${ST_DESC[k]||k}" style="cursor:help"><span style="opacity:.8">${key}</span><b>${v.toLocaleString()}${pct}</b></div>`;
+  }).join('');
+  // 은닉 적성(티어 1~3) — 상세에서만 공개 (카드는 ★4부터 · 05 §6)
+  const hiddenApts=Object.entries(h.apt).filter(([k,v])=>v<4);
+  const hiddenHtml=hiddenApts.length
+    ? hiddenApts.map(([k,v])=>`${APT_ICON[k]||'•'} ${esc(k)} <span style="opacity:.6">티어 ${v} (은닉)</span>`).join(' · ')
+    : '<span class="hhiddennote">은닉 적성 없음 — 전부 개화</span>';
+  // 특성 상세 — featTip 재사용 (10차 2줄 체계)
+  const featHtml=(h.rareApts||[]).map(k=>`<div class="hfeat">${APT_ICON[k]||'★'} <b>${esc(k)} ★${h.apt[k]||5}</b>\n${featTip(k, h.apt[k]||5)}</div>`).join('')
+    || '<div class="hhiddennote">보유 특성 없음</div>';
+  const featPct=Math.max(0,(h.featMul-1))*100;
+  const mask=document.createElement('div');
+  mask.className='hmask';
+  mask.innerHTML=`<div class="hmodal">
+    <button class="hclose" title="닫기 (ESC)">✕</button>
+    <div class="g g${h.grade[1]}" style="font-size:12px;font-weight:700">${h.grade} ${ROLE_ICON[h.role]||''} ${esc(h.role)}</div>
+    <h2 class="${h.grade>='★5'?'rare-name shine':''}">${esc(h.name)}</h2>
+    <div class="hrow"><b style="color:${linColor}">${esc(h.lin)}계열</b> · ${esc(h.race)} (${esc(h.subrace)}) · ${h.isRareJob?'<b class="rare-txt">'+esc(h.job)+'</b>':esc(h.job)} · ${esc(h.pers)}${h.subTraits&&h.subTraits.length?' · <span style="color:var(--dim)">'+h.subTraits.map(esc).join('·')+'</span>':''}</div>
+    <div class="hrow" style="opacity:.8">${esc(h.origin)}</div>
+    ${sigBadgeText(h)}
+    <h4>스탯 13종 — CP 가중 (05 §7)</h4>
+    <div class="hgrid">${stRows}</div>
+    <h4>성격 — ${esc(h.pers)}</h4>
+    <div class="hfeat">${PERS_DESC[h.pers]||'효과 없음'}</div>
+    ${(h.subTraits&&h.subTraits.length)?`<h4 style="margin-top:10px">부가 성격 — ${h.subTraits.map(esc).join(' · ')}</h4>
+    <div class="hfeat" style="color:var(--dim)">CP 무영향 · 선호 도메인 적성 효율 ×1.10 / 반대 ×0.95 (09 §4-4)${h.subEff?` — ${Object.entries(h.subEff).filter(([k,v])=>v!==1.0).map(([k,v])=>`${k} ×${v}`).join(' · ')||'공통 적성 밖 도메인만 선호 — 표시 효율 변화 없음'}`:''}</div>`:''}
+    <h4>특성 ${(h.rareApts||[]).length}종</h4>
+    ${featHtml}
+    <h4>은닉 적성 — 훈련(XP)으로 개화</h4>
+    <div class="hfeat">${hiddenHtml}</div>
+    <h4>CP 분해</h4>
+    <div class="hrow">CP 분해 <b>${h.cp.toLocaleString()}</b> = 스탯 기반 × 성격 ${PM[h.pers]?`×${PM[h.pers]}`:''} × 특성 보정 ×${(h.featMul||1).toFixed(3)}${h.hiddenSig?' × <b style=\"color:#c9d6e8\">히든 ×1.07</b>':''}</div>
+    ${h.hiddenSig?`<div class="hrow" style="color:#c9d6e8">✧ 히든 시그니처 — 종족 시그니처 조합의 0.5% 극히 낮은 확률로 걸린 컬렉션 등급 (은빛 테두리)</div>`:''}
+    <div class="hrow">특성 기여 <b>${featPct.toFixed(1)}%</b> — 금색 구간 (카드 게이지와 동일)</div>
+  </div>`;
+  mask.addEventListener('click',e=>{ if(e.target===mask||e.target.closest('.hclose')) mask.remove(); });
+  document.body.appendChild(mask);
+}
+function sigBadgeText(h){
+  const sig=(h.rareApts||[]).filter(k=>(FEAT_VALUE[k]||0)>=SIG_VALUE);
+  return sig.length?`<div class="hrow">✦ 시그니처 — <b>${sig.map(esc).join(' · ')}</b></div>`:'';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelector('.hmask')?.remove(); });
+function deckS(h){ // 카드 CP 분해용 13종 스탯합 — makeHero의 S와 동일 가중 (05 §7)
+  return h.st.HP*0.12+h.st.ATK*2+h.st.MAG*2+h.st.DEF*1.5+h.st.MDEF*1.5+h.st.ASPD*3+h.st.SPD_CAST*2+h.st.CRI*3+h.st.CDMG*1+h.st.PEN*2.5+h.st.EVA*2.5+h.st.MANA*0.05+h.st.STA*0.03;
+}
+document.getElementById('btnDeck').onclick=()=>deckOpen();
+// 전투 역할 태그(ROLE_TAG 6종 — 카드와 동일)를 덱 창에서도 사용 — 별도 재분류 없음 (정본 체계 단일화)
+const ROLE_CL={'딜러(근딜)':'#ff5e7a','탱커':'#7fa7ff','암살':'#9aa4b8','딜러(원딜)':'#ffb454','마법':'#b48cff','힐러':'#6ec6b8'};
+// 역할 아이콘+핵심 스탯 (2026-09-20 P0-F1·F2 — 시뮬 산출: 직업 배율 평균 상위 기반 · 제안서 §딥리서치 ④)
+// 핵심 6종 = 역할 정체성 배율 상위(예: 탱 HP×1.63·DEF×1.4·MDEF×1.33) + 공통 판단축(ASPD·STA·HP) 보완 — 13종 전 표시는 상세 모달로 (P1-F5)
+const ROLE_ICON={'딜러(근딜)':'⚔','탱커':'🛡','암살':'🗡','딜러(원딜)':'🎯','마법':'💥','힐러':'✚'};
+const ROLE_CORE={
+  '딜러(근딜)':['ATK','HP','CRI','ASPD','DEF','STA'],
+  '탱커':['HP','DEF','MDEF','STA','ATK','ASPD'],
+  '암살':['ASPD','ATK','CRI','EVA','PEN','HP'],
+  '딜러(원딜)':['ASPD','CRI','ATK','PEN','EVA','HP'],
+  '마법':['MAG','MDEF','CRI','MANA','SPD_CAST','HP'],
+  '힐러':['MAG','MDEF','MANA','SPD_CAST','STA','HP']};
+function deckOpen(){
+  if(!deck.size){ deckToast('먼저 카드의 ＋편성 버튼으로 영웅을 선택하세요 (1~5명)'); return; }
+  const heroes=[...deck].map(h=>({
+    grade:h.grade, name:h.name, lin:h.lin, job:h.job, role:h.role, pers:h.pers, cp0:h.cp,
+    st0:h.st, promo:0, persMul:PM[h.pers]||1,   // promo 초기화 필수 — 미초기화 시 gN(grade)+undefined=NaN (2026-09-19 수정)
+    featMul:h.featMul || h.cp/Math.max(1e-9, deckS(h)*(PM[h.pers]||1)),  // 특성보정 — makeHero 반환값 우선, 구버전 캐시는 역산
+    featPct:Math.max(0,(h.featMul||1)-1)*100,                            // 특성 기여 CP 비중 — 게이지 렌더용 (12차)
+    sig:(h.rareApts||[]).filter(k=>(FEAT_VALUE[k]||0)>=SIG_VALUE),        // 시그니처 특성 (12차 기준 확대본)
+    feats:h.rareApts||[],
+    aptTiers:Object.fromEntries((h.rareApts||[]).map(k=>[k,h.apt[k]||5]))
+  }));
+  // ── 파티 시너지 S_syn (00 #42 — 2026-09-19 정본) ──
+  // B안 확장 테이블 (2026-09-19 — synergy.json 정본 · party_synergy_sim.py와 동기화)
+  const SYN_POS={'신중|용감':.03,'교활|냉정':.03,'낭만|헌신':.03,'몰입|성실':.03,'고집|불굴':.02,'난폭|무자비':.02,'교활|몰입':.02,'고집|무자비':.02,'성실|신중':.02,'낭만|용감':.02,'냉정|무자비':.03}; // 키 정규화 — pairKey(sorted)와 동일 순서 저장 (2026-09-19 검수 수정: 미정규화 쌍 무매칭 방지)
+  const SYN_NEG={'난폭|신중':.04,'무자비|헌신':.04,'고집|교활':.03,'난폭|냉정':.02,'낭만|몰입':.02,'교활|난폭':.02,'난폭|성실':.02}; // 키 정규화 — pairKey(sorted)와 동일 순서 저장 (2026-09-19 검수 수정: 미정규화 쌍 무매칭 방지)
+  // 지역 시너지 정본 (00 #43 · synergy.json zoneRules · biomes.json category 단일 소스 — 2026-09-19)
+  const FLOOR_BANDS=[['G1',1,50,1.0],['G2',51,95,1.25],['G3',96,100,1.5]]; // [id, lo, hi, pairMultiplier]
+  // 정본 생성: data/biomes.json 의 26종 (값 = [표시명, category])
+  // 세계가 늘면 이 줄도 다시 만들어야 한다 — 아래 한 줄 명령으로 재생성:
+  //   python3 -c "import json;d=json.load(open('data/biomes.json',encoding='utf-8'));print(','.join(chr(39)+b['id']+chr(39)+':['+chr(39)+b['name']+chr(39)+','+chr(39)+b['category']+chr(39)+']' for g in d['groups'] for b in g['biomes']))"
+  const BIOMES={'biome_plains':['풀바다','calm'],'biome_forest':['뿌리숲','calm'],'biome_coastal_sea':['원천연안','waterside'],'biome_library':['탑의 서고','calm'],'biome_maze_city':['미궁도시','chaos'],'biome_skyreach':['증기구름층','extreme'],'biome_temple':['서약성소','calm'],'biome_cave':['지맥굴','dark'],'biome_ruins':['잿마을','chaos'],'biome_deep_sea':['먹빛 해구','waterside'],'biome_sewer':['침전수로','chaos'],'biome_mountain_range':['지맥능선','extreme'],'biome_swamp':['부유 이끼늪','waterside'],'biome_jungle':['포식밀림','chaos'],'biome_graveyard':['기억묘역','dark'],'biome_volcano':['압력화구','extreme'],'biome_desert':['먼지벌판','extreme'],'biome_windless_plateau':['무풍고원','extreme'],'biome_hell':['맥의 상흔','dark'],'biome_chasm':['무광심연','dark'],'biome_summit':['역류폭포','extreme'],'biome_frozen_ocean':['광로들판','extreme'],'biome_crystal_forest':['형상군락','extreme'],'biome_glass_desert':['마른 지맥','extreme'],'biome_shattered_skylight':['찢긴 천창','extreme'],'biome_idea_gate':['이데아 문턱','extreme']};
+  const CAT_DELTA={dark:[.01,.02],extreme:[0,0],waterside:[.01,0],calm:[.01,-.01],chaos:[0,.01]}; // [bioPos, bioNeg] %p
+  const ps=heroes.map(h=>h.pers), ls=heroes.map(h=>h.lin), js=heroes.map(h=>h.job);
+  const fs=heroes.map(h=>h.feats);
+  let synPosRaw=0, synNegRaw=0; const synTags=[]; // 페어 raw 합산 — 밴드 승수·바이옴 델타는 팝업 zoneCalc에서 적용 (synergy.json evaluationOrder 2~3단계)
+  const pairKey=(a,b)=>[a,b].sort().join('|');
+  for(let i=0;i<ps.length;i++) for(let j=i+1;j<ps.length;j++){
+    const k=pairKey(ps[i],ps[j]);
+    if(SYN_POS[k]){ synPosRaw+=SYN_POS[k]; synTags.push('+'+ps[i]+'×'+ps[j]); } // 인스턴스당 합산 — party_synergy_sim.py와 동일 기준
+    if(SYN_NEG[k]){ synNegRaw+=SYN_NEG[k]; synTags.push('−'+ps[i]+'×'+ps[j]); }
+  }
+  const uLin=new Set(ls).size;
+  const linDiv=uLin>=6?0.04:(uLin>=5?0.03:(uLin>=4?0.02:0));
+  if(linDiv) synTags.push('+계열다양성 '+uLin+'종');
+  const jobCnt={}; js.forEach(j=>jobCnt[j]=(jobCnt[j]||0)+1);
+  const jobDup=Object.values(jobCnt).some(n=>n>=3)?-0.02:0;
+  if(jobDup) synTags.push('−직업중복3+');
+  const fCnt={}; fs.forEach(set=>set.forEach(f=>fCnt[f]=(fCnt[f]||0)+1));
+  const featR=Math.min(0.03, 0.015*Object.values(fCnt).filter(n=>n>=2).length);
+  if(featR) synTags.push('+특성공진');
+  const synRaw=synPosRaw-synNegRaw+linDiv+jobDup+featR; // 밴드 ×1.0·중립 지형 기준 초기값 — 팝업에서 지역 재계산
+  const synVal=Math.max(-0.10, Math.min(0.15, synRaw)); // clamp 0.90~1.15
+  const synMul=1+synVal;
+  const negPairN=0; let stressN=0;
+  ps.forEach((a,i)=>ps.forEach((b,j)=>{ if(i<j&&SYN_NEG[pairKey(a,b)]) stressN++; })); // 스트레스도 인스턴스당 +25%
+  const stressNote=stressN?('귀환 시 스트레스 획득 +'+(25*stressN)+'% (불화 쌍 '+stressN+'개)'):'';
+  const CAT_LABEL={dark:'어둠·갈등증폭',extreme:'극한·중립',waterside:'물가·유대감',calm:'평온·불화완화',chaos:'혼돈·신경전'};
+  const biomeOpts=Object.entries(BIOMES).map(([id,v])=>'<option value="'+id+'">'+v[0]+'</option>').join('');
+  const w=window.open('','deckbuilder','width=1020,height=780');
+  if(!w){ deckToast('팝업이 차단됐습니다 — 팝업 허용 후 다시 시도'); return; }
+  const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  const rows=heroes.map((h,i)=>{
+    const linColor=LIN_COLOR[h.lin]||'var(--gold)';
+    const stCells=Object.entries(h.st0).map(([k,v])=>
+      '<div><span style="opacity:.8">'+(k==='SPD_CAST'?'CAST':k)+'</span><b class="v" data-k="'+k+'" style="margin-left:auto">'+v.toLocaleString()+'</b></div>').join('');
+    return '<div class="drow b'+h.grade[1]+'">'+
+      '<div class="dname"><span class="g g'+h.grade[1]+'">'+h.grade+'</span> '+esc(h.name)+
+      '<small style="color:'+linColor+'">'+esc(h.lin)+' · '+esc(h.job)+' · '+esc(h.pers)+'</small><span class="rchip" style="color:'+ROLE_CL[h.role]+';border-color:'+ROLE_CL[h.role]+'55">'+(ROLE_ICON[h.role]||'')+' '+esc(h.role)+'</span></div>'+
+      '<div class="dctl">'+
+        '<label>Lv <input type="number" class="lv" min="1" max="130" value="1" data-i="'+i+'"></label>'+
+        '<input type="range" class="lvbar" min="1" max="130" value="1" data-i="'+i+'">'+
+        '<button class="promo" data-i="'+i+'">⬆ 승급</button>'+
+        '<button class="reset" data-i="'+i+'">↺ 리셋</button>'+
+      '</div>'+
+      '<div class="dst">'+stCells+'</div>'+
+      '<div class="dcp">CP <b class="cpv">'+h.cp0.toLocaleString()+'</b><span class="meta"></span></div>'+
+      '<div class="dcpg" title="CP 구성 — 스탯 '+Math.max(0,100-h.featPct).toFixed(1)+'% · 특성 기여 '+h.featPct.toFixed(1)+'% (금색)"><i class="dcpgs" style="width:'+Math.max(0,100-h.featPct).toFixed(1)+'%"></i><i class="dcpgf" style="width:'+Math.min(h.featPct,99).toFixed(1)+'%"></i></div>'+
+      (h.sig.length?'<span class="sigchip">✦ 시그니처 — '+h.sig.map(sf=>esc(sf)+' (가치 '+(FEAT_VALUE[sf]||0).toFixed(1)+'/10)').join(' · ')+'</span>':'')+
+      (h.feats.length?'<div class="feats">특성 '+h.feats.map(sf=>esc(sf)+' ★'+h.aptTiers[sf]).join(' · ')+'</div>':'')+
+    '</div>';
+  }).join('');
+  w.document.write('<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>덱 편성 — '+heroes.length+'인</title>'+ 
+    '<style>'+
+    ':root{--bg:#0b0d12;--panel:#12151d;--panel2:#171b26;--line:#262c3a;--txt:#d8dde8;--dim:#7a8299;--gold:#e6c15a;'+
+    '--c1:#9aa4b8;--c2:#6ec6b8;--c3:#7fa7ff;--c4:#b48cff;--c5:#ffb454;--c6:#ff5e7a;--c7:#ff2e63}'+
+    '*{box-sizing:border-box}'+
+    'body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#1a2030,var(--bg));color:var(--txt);font-family:Pretendard,system-ui,"Malgun Gothic",sans-serif;padding:16px}'+
+    'h1{font-size:16px;color:var(--gold);margin:0 0 2px}'+
+    '.sub{font-size:11px;color:var(--dim);margin-bottom:4px}.tip{font-size:10px;color:var(--dim);margin-top:4px}'+
+    '.drow{background:var(--panel);border:1px solid var(--line);border-left:4px solid;border-radius:12px;padding:10px 14px;margin-top:10px}'+
+    '.dname{font-size:15px;font-weight:700}.dname small{font-weight:400;font-size:11px;margin-left:8px;opacity:.85}'+
+    '.rchip{font-size:9px;border:1px solid;border-radius:999px;padding:1px 7px;margin-left:6px;font-weight:700;vertical-align:2px}'+
+    '.dctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0}'+
+    '.dctl label{font-size:12px;color:var(--dim);display:flex;align-items:center;gap:6px}'+
+    'input[type=number]{width:64px;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:13px}'+
+    'input[type=range]{flex:1;min-width:120px;accent-color:var(--gold)}'+
+    'button{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:12px}'+
+    'button:hover{border-color:var(--gold);color:var(--gold)}button:disabled{opacity:.45;cursor:default}'+
+    '.dst{display:grid;grid-template-columns:repeat(4,1fr);gap:2px 14px;font-size:10px}'+
+    '.dst div{display:flex;justify-content:space-between;border-bottom:1px dashed #2a3040;padding:1px 0}.dst b{color:var(--txt)}'+
+    '.dcp{margin-top:6px;font-size:14px;font-weight:800;color:var(--gold)}.dcp .meta{font-size:10px;color:var(--dim);font-weight:400;margin-left:10px}'+
+    '.dcpg{display:flex;height:5px;border-radius:999px;overflow:hidden;margin-top:4px;background:#262c3a}'+
+    '.dcpg .dcpgs{background:#39404f;display:block;height:100%}.dcpg .dcpgf{background:linear-gradient(90deg,#f7d774,#c9a227);display:block;height:100%}'+
+    '.sigchip{display:inline-block;margin-top:6px;padding:2px 9px;border-radius:999px;font-size:10px;font-weight:800;color:#0b0d12;background:linear-gradient(135deg,#f7d774,#c9a227)}'+
+    '.feats{margin-top:4px;font-size:10px;color:var(--dim)}'+
+    '.deckbar{position:sticky;top:0;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--line);z-index:5}'+
+    '.sumbar{display:flex;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 14px;margin-top:10px;flex-wrap:wrap}'+
+    '.sumbar .tot{font-size:14px;font-weight:800;color:var(--gold)}'+
+    '.sumbar .tot small{font-weight:400;font-size:10px;color:var(--dim);margin-left:8px}'+
+    '.sumbar .synfx{font-size:12px;font-weight:800;padding:2px 10px;border-radius:999px;border:1px solid;background:var(--panel2)}'+
+    '.sumbar .synfx.good{color:#6ec6b8;border-color:rgba(110,198,184,.4)}.sumbar .synfx.bad{color:#ff5e7a;border-color:rgba(255,94,122,.4)}.sumbar .synfx.neut{color:var(--dim);border-color:var(--line)}'+
+    '.synbar{display:flex;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 14px;margin-top:8px;flex-wrap:wrap;font-size:12px}'+
+    '.synbar .slab{font-size:11px;color:var(--dim);font-weight:700}'+
+    '.synbar .sval{font-size:16px;font-weight:800}'+
+    '.synbar .sgood{color:#6ec6b8}.synbar .sbad{color:#ff5e7a}.synbar .sneut{color:var(--dim)}'+
+    '.synbar .stag{font-size:10px;border:1px solid var(--line);border-radius:999px;padding:2px 8px;color:var(--dim)}'+
+    '.synbar .stag.p{color:#6ec6b8;border-color:rgba(110,198,184,.4)}.synbar .stag.n{color:#ff5e7a;border-color:rgba(255,94,122,.4)}'+
+    '.synbar .sstress{font-size:10px;color:#ffb454;margin-left:auto}'+
+    '.zonebar{display:flex;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 14px;margin-top:8px;font-size:12px;flex-wrap:wrap}.zonebar label{font-size:11px;color:var(--dim)}.zonebar select{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:12px}.zmeta{font-size:10px;color:var(--dim)}'+
+    '.chip{font-size:11px;font-weight:700;border:1px solid var(--line);border-radius:999px;padding:3px 10px;margin-left:6px}'+
+    '.chip.r{color:#ff5e7a;border-color:rgba(255,94,122,.4)}.chip.t{color:#7fa7ff;border-color:rgba(127,167,255,.4)}.chip.a{color:#9aa4b8;border-color:rgba(154,164,184,.4)}.chip.o{color:#ffb454;border-color:rgba(255,180,84,.4)}.chip.m{color:#b48cff;border-color:rgba(180,140,255,.4)}.chip.h{color:#6ec6b8;border-color:rgba(110,198,184,.4)}'+
+    '.chip .n{opacity:.95;margin-left:4px}'+
+    '.b1{border-left-color:var(--c1)}.b2{border-left-color:var(--c2)}.b3{border-left-color:var(--c3)}.b4{border-left-color:var(--c4)}'+
+    '.b5{border-left-color:var(--c5)}.b6{border-left-color:var(--c6)}.b7{border-left-color:var(--c7)}'+
+    '.g1{color:var(--c1)}.g2{color:var(--c2)}.g3{color:var(--c3)}.g4{color:var(--c4)}.g5{color:var(--c5)}.g6{color:var(--c6)}.g7{color:var(--c7)}'+
+    '</style></head><body>'+
+    '<div class="deckbar"><h1>⚔ 덱 편성 시뮬 — 레벨 · 승급</h1>'+
+    '<div class="sub">레벨 1~130 (확정 #34 — Lv130 계수 ×7.45 선형) · 승급 = 등급 +1 & 순수도 −4%/회 (확정 #35) · 승급 비용 04 §3.1-2 (★4→5 결정 1,200 + 골드 2,400)</div>'+
+    '<div class="sub" style="margin-top:6px">스킬 레어도 범례 (D-269) — 각인 임계: <span class="rl" style="color:#9aa4b8">D 13~64</span> · <span class="rl" style="color:#7ee0a8">C 65~129</span> · <span class="rl" style="color:#7fa7ff">B 130~239</span> · <span class="rl" style="color:#b48cff">A 240~415</span> · <span class="rl" style="color:#ffb454">S 530~714</span> · <span class="rl" style="color:#e6c15a">L 936 (3태그+문맥)</span> — 카탈로그 1,300종 중 D 443/C 332/B 278/A 130/S 78/L 39 · 936회 만반복 시 도달 분포 34:26:21:10:6:3</div>'+
+    '<div class="tip">슬라이더·숫자로 레벨을 바꾸면 스탯·CP가 실시간 재계산됩니다. 승급은 등급승수를 올리지만 순수도 패널티가 영구 누적 — 레벨계수는 HP·ATK·MAG·DEF·MDEF 5종에만 적용 (05 §7). 역할 칩은 카드와 동일한 전투 역할 태그(딜러(근딜)·딜러(원딜)·마법·암살·탱커·힐러 — 05 §4 ROLE_TAG 2026-09-20 사용자 확정).</div>'+
+    '<div class="sumbar"><span class="tot">파티 총합 CP <b id="sumcp">—</b><small id="sumavg"></small></span><span id="sumroles"></span><span class="synfx" id="synfx"></span></div>'+
+    '<div class="zonebar"><label>🗺 현재 층</label><input id="zfloor" type="number" min="1" max="100" value="1"><label>바이옴</label><select id="zbiome">'+biomeOpts+'</select><span class="zmeta" id="zmeta"></span></div>'+
+    '<div class="synbar" id="synbar"></div></div>'+
+    '<scr'+'ipt>document.addEventListener("DOMContentLoaded",function(){'+
+    ' const ZONE={biomes:'+JSON.stringify(BIOMES)+',bands:'+JSON.stringify(FLOOR_BANDS)+',catDelta:'+JSON.stringify(CAT_DELTA)+',catLabel:'+JSON.stringify(CAT_LABEL)+'};'+
+    ' const PS_RAW='+synPosRaw.toFixed(4)+',PN_RAW='+synNegRaw.toFixed(4)+',OTHER='+(linDiv+jobDup+featR).toFixed(4)+',TAGS='+JSON.stringify(synTags)+',STRESS='+JSON.stringify(stressNote)+';'+
+    ' const bar=document.getElementById("synbar"),floorEl=document.getElementById("zfloor"),selEl=document.getElementById("zbiome"),metaEl=document.getElementById("zmeta");'+
+    ' function zoneCalc(){'+
+    '  const f=Math.min(100,Math.max(1,Math.round(+floorEl.value||1)));'+
+    '  const b=ZONE.biomes[selEl.value]||["—","extreme"];'+
+    '  const row=ZONE.bands.find(function(x){return f>=x[1]&&f<=x[2];})||ZONE.bands[2];'+
+    '  const d=ZONE.catDelta[b[1]]||[0,0];'+
+    '  const pos=PS_RAW*row[3]+d[0],neg=PN_RAW*row[3]+d[1];'+
+    '  const synV=Math.max(-0.10,Math.min(0.15,pos-neg+OTHER));'+
+    '  window.SYNMULDYN=1+synV;'+
+    '  return {bid:row[0],lo:row[1],hi:row[2],band:row[3],bname:b[0],bcat:b[1],bp:d[0],bn:d[1],synV:synV};'+
+    ' }'+
+    ' function renderZone(){'+
+    '  const z=zoneCalc();'+
+    '  const cls=z.synV>0.005?"sgood":(z.synV<-0.005?"sbad":"sneut");'+
+    '  let tags="<span class=\\\"stag "+(z.pos>0?"p":"")+"\\\">케미 +"+(z.pos*100).toFixed(1)+"%</span>";'+
+    '  if(z.neg>0)tags+="<span class=\\\"stag n\\\">불화 −"+(z.neg*100).toFixed(1)+"%</span>";'+
+    '  if(z.band!==1)tags+="<span class=\\\"stag p\\\">밴드 ×"+z.band+"</span>";'+
+    '  if(z.bp||z.bn)tags+="<span class=\\\"stag "+(z.bn>0?"n":"p")+"\\\">"+z.bname+" (케미 "+(z.bp*100>=0?"+":"")+(z.bp*100)+"%p · 불화 "+(z.bn*100>=0?"+":"")+(z.bn*100)+"%p)</span>";'+
+    '  TAGS.forEach(function(t){tags+="<span class=\\\"stag "+(t.indexOf("+")===0?"p":"n")+"\\\">"+t+"</span>";});'+
+    '  bar.innerHTML="<span class=\\\"slab\\\">파티 시너지</span><span class=\\\"sval "+cls+"\\\">"+(z.synV>=0?"+":"")+(z.synV*100).toFixed(1)+"% (×"+(1+z.synV).toFixed(3)+")</span>"+tags+(STRESS?"<span class=\\\"sstress\\\">⚠ "+STRESS+"</span>":"");'+
+    '  metaEl.textContent="밴드 "+z.bid+" ("+z.lo+"~"+z.hi+"층) ×"+z.band+" · "+z.bname+" ["+(ZONE.catLabel[z.bcat]||z.bcat)+"]";'+
+    '  const fx=document.getElementById("synfx");'+
+    '  if(fx){const m=window.SYNMULDYN||1;const pct=(m-1)*100;fx.className="synfx "+(pct>0.05?"good":(pct<-0.05?"bad":"neut"));fx.textContent="시너지 반영 CP "+(pct>=0?"+":"")+pct.toFixed(1)+"% · ×"+m.toFixed(3);fx.title="총합 CP = Σ 개인CP × 시너지(Y) — synergy.json evaluationOrder 7~8단계. 층·바이옴 변경 시 실시간 반영";}'+
+    '  if(typeof updSum==="function")updSum();'+
+    ' }'+
+    ' floorEl.oninput=renderZone; selEl.onchange=renderZone;'+
+    ' renderZone();'+
+    '});<\/scr'+'ipt>'+
+    rows+
+    '<div class="tip" style="text-align:center">CP = 13종 스탯합(등급승수 × 레벨계수 × 순수도 반영) × 성격보정 × 특성보정 × 파티시너지 — 05 §7 · 01 §3 ⑧ 정본식</div>'+
+    '<scr'+'ipt>'+
+    'const DATA='+JSON.stringify(heroes)+';'+
+    'const SYNMUL='+synMul.toFixed(4)+';'+
+    'const GM={1:1.0,2:1.3,3:1.69,4:2.2,5:2.86,6:3.71,7:4.83};'+
+    'const UP_COST={1:[25,50],2:[100,200],3:[375,750],4:[1200,2400]};'+
+    'const PCT=new Set(["CRI","EVA","PEN","CDMG"]);'+
+    'const LV_APPLY=new Set(["HP","ATK","MAG","DEF","MDEF"]);'+
+    'const lvMul=lv=>1+(7.45-1)*(Math.min(130,Math.max(1,lv))-1)/129;'+
+    'function gN(g){return +g[1];}'+
+    'function fmt(k,v){return PCT.has(k)?v.toFixed(1):v.toLocaleString();}'+
+    'function calc(i){'+
+    ' const h=DATA[i], lv=Math.min(130,Math.max(1,+document.querySelectorAll(".lv")[i].value||1));'+
+    ' const g0=gN(h.grade), g1=Math.min(7,g0+h.promo);'+
+    ' const gm=GM[g1]/GM[g0], purity=1-0.04*h.promo, L=lvMul(lv);'+
+    ' const st={};'+
+    ' for(const k in h.st0){ let v=h.st0[k]*gm; if(LV_APPLY.has(k)) v*=L; v*=purity; st[k]=PCT.has(k)?Math.round(v*10)/10:Math.round(v); }'+
+    ' const S=st.HP*0.12+st.ATK*2+st.MAG*2+st.DEF*1.5+st.MDEF*1.5+st.ASPD*3+st.SPD_CAST*2+st.CRI*3+st.CDMG*1+st.PEN*2.5+st.EVA*2.5+st.MANA*0.05+st.STA*0.03;'+
+    ' return {st,lv,g1,purity,L,cp:Math.round(S*h.persMul*h.featMul)};'+
+    '}'+
+    'function render(i){'+
+    ' const r=calc(i), h=DATA[i];'+
+    ' document.querySelectorAll(".lvbar")[i].value=r.lv;'+
+    ' const row=document.querySelectorAll(".drow")[i];'+
+    ' row.querySelectorAll(".v").forEach(b=>{b.textContent=fmt(b.dataset.k,r.st[b.dataset.k]);});'+
+    ' row.querySelector(".cpv").textContent=r.cp.toLocaleString();'+
+    ' row.querySelector(".meta").textContent="★"+r.g1+(h.promo?" (승급 "+h.promo+"회 · 순수도 "+Math.round(r.purity*100)+"%)":" (순수도 100%)")+" · 레벨계수 ×"+r.L.toFixed(3);'+
+    ' const pb=row.querySelector(".promo");'+
+    ' if(r.g1>=7){pb.disabled=true;pb.textContent="⬆ 승급 (★7 만렙)";}'+
+    ' else{const c=UP_COST[r.g1];pb.textContent=c?("⬆ 승급 — 결정 "+c[0]+" + "+c[1].toLocaleString()+"G"):"⬆ 승급";}'+
+    ' updSum();'+
+    '}'+
+    'function updSum(){'+
+    ' let tot=0; const cnt={};'+
+    ' DATA.forEach((h,i)=>{tot+=calc(i).cp; cnt[h.role]=(cnt[h.role]||0)+1;});'+
+    ' document.getElementById("sumcp").textContent=Math.round(tot*(window.SYNMULDYN||SYNMUL)).toLocaleString();'+
+    ' document.getElementById("sumavg").textContent=" · 평균 "+Math.round(tot*(window.SYNMULDYN||SYNMUL)/DATA.length).toLocaleString()+" · 시너지 ×"+(window.SYNMULDYN||SYNMUL).toFixed(3);'+
+    ' document.getElementById("sumroles").innerHTML=["딜러(근딜)","딜러(원딜)","마법","암살","탱커","힐러"].map(r=>'+
+    '  \'<span class="chip \'+({"딜러(근딜)":"r","딜러(원딜)":"o",마법:"m",암살:"a",탱커:"t",힐러:"h"}[r])+\'">\'+r+\'<span class="n">\'+(cnt[r]||0)+\'</span></span>\').join("");}'+
+    'document.querySelectorAll(".drow").forEach((row,i)=>{'+
+    ' const lvIn=row.querySelector(".lv"), bar=row.querySelector(".lvbar");'+
+    ' lvIn.oninput=()=>render(i); bar.oninput=()=>{lvIn.value=bar.value;render(i);};'+
+    ' row.querySelector(".promo").onclick=()=>{const h=DATA[i]; if(gN(h.grade)+h.promo<7){h.promo++;render(i);}};'+
+    ' row.querySelector(".reset").onclick=()=>{const h=DATA[i];h.promo=0;lvIn.value=1;bar.value=1;render(i);};'+
+    ' render(i);'+
+    '});'+
+    '<\/scr'+'ipt></body></html>');
+  w.document.close();
+}
+
+// 뽑기만이 아니라 추출(잉여→영혼 결정)·합성소 승급까지 포함한 100층 런 시뮬 — 50층 ★5 파티 완성 시점 검증용.
+// 마석: 퇴장 층×30 + 잭팟(10층 단위 f²×85) + 소형(5·15…층 5f²) → 티켓=⌊누적/130⌋ — §3.9 재계산표와 동일식 (G+E · 12층 84 · 25층 412 · 50층 3,956)
+// 추출: 1/3/10/30/100/300 × 레벨보정 ×1.1 (§3.1-2 캘리브레이션 가정값 그대로) · 추출소·합성소 30층 해금 (§3.1 시설표)
+// 승급: ★1→2 25 · ★2→3 100 · ★3→4 375 · ★4→5 1,200결정 (+50/200/750/2,400G) · 파티 5+예비 2 유지 · 잉여 전량 추출
+// ───────── ★5 파티 캘리브레이션 시뮬 — 영지 추출→결정→승급 트랙 (04 §3.1-2 · §3.9 · 2026-09-17) ─────────
+const CAL_DUST={'★1':1,'★2':3,'★3':10,'★4':30,'★5':100,'★6':300};
+const CAL_LV=1.1;                                    // 추출 레벨 보정 (04 §3.1-2 — 캘리브레이션 ×1.1)
+const CAL_UPC={1:[25,50],2:[100,200],3:[375,750],4:[1200,2400]}; // [결정, 골드]
+function calTicketsAt(f){ let gk=0,sm=0; for(let g=10;g<=f;g+=10) gk+=g*g; for(let g=5;g<f;g+=10) sm+=5*g*g; return Math.floor((15*f*(f+1)+85*gk+sm)/130); }
+function calRunOnce(runSeed){
+  const r=rngClass(runSeed), cnt={1:0,2:0,3:0,4:0,5:0,6:0}, keep=[];
+  let dust=0, gold=0, pulls=0, p4=null, p5=null, p6=null, dustAt5=0;
+  const saveP4=pity4, saveP5=pity5; pity4=0; pity5=0;   // 런 독립 — 천장 카운터 초기화
+  for(let f=1; f<=100; f++){
+    let n=calTicketsAt(f)-(f>1?calTicketsAt(f-1):0);
+    if(f===1) n+=10;                                 // 최초 10회 무료 (00 #17)
+    for(let i=0;i<n;i++){ const g=parseInt(rollGrade(r)[1]); cnt[g]++; keep.push({g}); pulls++; }
+    if(p4===null && cnt[4]+cnt[5]+cnt[6]>=5) p4=f;   // ★4 파티 — 30층 전엔 직뽑만 (합성소 30층 해금)
+    if(f>=30){                                       // 추출소·합성소 가동
+      keep.sort((a,b)=>b.g-a.g);
+      for(const h of keep.splice(7)) dust+=CAL_DUST['★'+h.g]*CAL_LV; // 파티 5+예비 2 외 전량 추출
+      for(const h of keep){                          // 승급 — 높은 등급(싼 구간)부터
+        while(h.g<5){ const [d,g]=CAL_UPC[h.g];
+          if(dust>=d && gold>=g){ dust-=d; gold-=g; cnt[h.g]--; h.g++; cnt[h.g]++; }
+          else break; }
+      }
+      if(p5===null && keep.slice(0,5).every(h=>h.g>=5)){ p5=f; dustAt5=dust; }
+    }
+    gold+=100*f;                                     // 던전 누적 수입 (§3.11 — 100층 505,000G · 건설·세금 차감 전)
+    if(p6===null && cnt[6]>=5) p6=f;
+    if(p5!==null && p6!==null) break;
+  }
+  pity4=saveP4; pity5=saveP5;
+  return {p4,p5,p6,pulls,dustAt5,dust};
+}
+function calSimulate(N){
+  const r4=[],r5=[],r6=[],pl=[]; let f5=0,f6=0,dusts=0;
+  const simSeed=(parseInt(document.getElementById('calSeed').value)||20260917)>>>0;
+  for(let i=0;i<N;i++){
+    const o=calRunOnce(simSeed+i*77);
+    pl.push(o.pulls);
+    if(o.p4!==null) r4.push(o.p4);
+    if(o.p5!==null){ r5.push(o.p5); dusts+=o.dustAt5; } else f5++;
+    if(o.p6!==null) r6.push(o.p6); else f6++;
+  }
+  const stat=xs=>{ if(!xs.length) return '—'; const s=[...xs].sort((a,b)=>a-b);
+    return `${s[0]}~${s[s.length-1]}층 (중앙 ${s[Math.floor(s.length/2)]} · 평균 ${(xs.reduce((a,b)=>a+b,0)/xs.length).toFixed(1)})`; };
+  const pct=(xs,f)=>(100*xs.filter(x=>x<=f).length/N).toFixed(0);
+  const t25=calTicketsAt(25), t50=calTicketsAt(50);
+  const E5=(t50*RATES['★5']).toFixed(2), E6=(t50*RATES['★6']).toFixed(2);
+  const spare5=(dusts/Math.max(1,r5.length)/1200).toFixed(1); // 예비 = 잔여결정 ÷ ★4→5 1,200 (04 §3.1-2 잔여 2,752=2.3명 기준)
+  document.getElementById('calOut').innerHTML = `
+    <div><span style="color:var(--dim)">정합 검증</span> — 티켓 @12층 <b>${calTicketsAt(12)}</b> · @25층 <b>${t25}</b> · @50층 <b>${t50}</b> (§3.9 재계산표 75/363/3,467) · E[★5]@50 <b>${E5}</b> · E[★6]@50 <b>${E6}</b> (확정 #32 연동)</div>
+    <div><span style="color:var(--dim)">★4 파티</span> (직뽑·30층 후 승급 합산): 25층 도달 <b>${pct(r4,25)}%</b> · 완성 ${stat(r4)}</div>
+    <div><span style="color:var(--gold)">★5 파티</span> (뽑기+추출+승급): 50층 도달 <b>${pct(r5,50)}%</b> · 55층 도달 <b>${pct(r5,55)}%</b> · 완성 ${stat(r5)} · 미완성 ${f5}/${N}</div>
+    <div><span style="color:var(--dim)">★6 파티</span>: 완성 ${stat(r6)} · 미완성 ${f6}/${N} (설계 목표 아님 — 100층 런 내 여유)</div>
+    <div><span style="color:var(--dim)">경제</span> — 평균 총 소환 <b>${Math.round(pl.reduce((a,b)=>a+b,0)/N).toLocaleString()}회</b> · ★5 완성 시점 잔여 결정 → 예비 ★5 ≈<b>${spare5}명</b> (영구사망 여유 · G-4)</div>`;
+  console.log(`[캘리브레이션 ${N}런 · 시드 ${simSeed}] ★4 ${stat(r4)} · ★5 ${stat(r5)} (50층 ${pct(r5,50)}%) · ★6 ${stat(r6)}`);
+}
+function calRunSafe(N){
+  const st=document.getElementById('calStatus'); st.textContent='시뮬 중…';
+  setTimeout(()=>{ try{ calSimulate(N); st.textContent=`${N}런 완료`; }catch(e){ console.warn('cal sim error',e); st.textContent='오류 — 콘솔 확인'; } },20);
+}
+document.getElementById('calRun').onclick=()=>calRunSafe(100);
+window.calSim=calRunSafe;                            // 콘솔에서 window.calSim(500) 확장 가능
+if(location.protocol.startsWith('http')){ calRunSafe(100); }
+
+// ───────── 5대 개정 검증 시뮬 (2026-09-18) — 등급별 희귀 트리거 · ★6 이중 특권 · 티어 가중 4차 · 풀 상호배타 · 몰입 등급 가중 ─────────
+// GDD 05 §6·§6-1-2·§8 + 확정 #38의 정합을 언제든 재검증 — 각 항목 기대치 대조 후 PASS/FAIL 판정.
+function v5Simulate(N){
+  const out=[];
+  const row=(name,got,want,ok)=>out.push({name,got,want,ok});
+  const allLin=Object.keys(LINEAGE_RARE);
+  // ── ① 등급별 희귀 트리거 + ② ★6 이중 특권 (rollGrade 강제 스텁 — 종료 시 원복) ──
+  const origGrade=window.rollGrade||rollGrade; // 프리뷰 호환 — 정본은 전역 선언이라 항상 rollGrade
+  const rareRate={};
+  const rareTierByG={}; // 등급별 ★ 집계 — 하한 판정은 각 등급 버킷만 사용 (★3~5는 정상 롤이라 ★5 존재)
+  const linShare={lin:0,com:0};
+  for(const gr of ['★3','★4','★5','★6']){
+    let hits=0, rareTotal=0;
+    const tier={5:0,6:0,7:0}; rareTierByG[gr]=tier;
+    window.rollGrade=()=>gr;
+    const r=rngClass(31337);
+    for(let i=0;i<N;i++){
+      if(i%10===0) usedPers.clear();
+      const h=makeHero(r,null);
+      hits += h.rareApts.length?1:0;
+      rareTotal += h.rareApts.length;
+      for(const k of h.rareApts){
+        linShare[(LINEAGE_RARE[h.lin]||[]).includes(k)?'lin':'com']++;
+        tier[h.apt[k]]++;
+      }
+    }
+    rareRate[gr]=hits/N;
+  }
+  window.rollGrade=origGrade;
+  // ★7은 뽑기 제외(01 §2 '초월진화 전용') — ①은 뽑기 등급 ★3~6만 집계. ★7 특성 규칙은 승급 도달 재현(②b)으로 검증
+  const W={'★3':0.03,'★4':0.07,'★5':0.13,'★6':0.26}; // RARE_APT_RATE_BY_GRADE — 실측은 재롤 유입으로 상단
+  const band={'★3':[0.03,0.05],'★4':[0.07,0.11],'★5':[0.13,0.17],'★6':[1.0,1.01]}; // ★6 = 보장 100% (하한=상한)
+  for(const gr of ['★3','★4','★5','★6']){
+    const [lo,hi]=band[gr];
+    row(`① ${gr} 특성 보유율`, (rareRate[gr]*100).toFixed(1)+'%', gr==='★6'?'100% (보장)':`${(W[gr]*100).toFixed(0)}%+재롤`, rareRate[gr]>=lo&&rareRate[gr]<=hi);
+  }
+  // ② ★6 티어 하한 — 숙련(5) 출험 0% · 장인 20%/명장 80% (일반 롤 재롤분 섞여 실측 6+7 합 100%)
+  const rareTier=rareTierByG['★6'];
+  const t6sum=rareTier[6]+rareTier[7]||1;
+  row('② ★6 특성 ★ 하한', `★5 ${rareTier[5]? '출험 ✗':'0% ✓'} · ★6 ${(rareTier[6]/t6sum*100).toFixed(0)}% · ★7 ${(rareTier[7]/t6sum*100).toFixed(0)}%`, '★5 0% · ★6 20/★7 80', rareTier[5]===0);
+  // ②b ★7 특권 (2026-09-18 9차) — 보장 하한 상향: ★6 10% / ★7 90%
+  // ②b 데이터 — ★7 승급 도달 재현: rollGrade를 '★7'로 스텁해 승급 직후 상태의 보장 특성 하한 검증 (★6 10/★7 90)
+  const rareTier7={5:0,6:0,7:0};
+  window.rollGrade=()=>'★7';
+  { const r7=rngClass(31337); for(let i=0;i<2000;i++){ if(i%10===0) usedPers.clear(); const h=makeHero(r7,null); for(const k of h.rareApts) rareTier7[h.apt[k]]++; } }
+  window.rollGrade=origGrade;
+  const t7sum=rareTier7[6]+rareTier7[7]||1;
+  row('②b ★7 특성 ★ 하한 (승급)', `★5 ${rareTier7[5]? '출험 ✗':'0% ✓'} · ★6 ${(rareTier7[6]/t7sum*100).toFixed(0)}% · ★7 ${(rareTier7[7]/t7sum*100).toFixed(0)}%`, '★5 0% · ★6 10/★7 90', rareTier7[5]===0&&Math.abs(rareTier7[6]/t7sum-0.10)<0.03);
+  // ③ 계열 전용 가중 1.5 — 차지율 63.6% 이론 (±3%p 밴드)
+  const share=linShare.lin/(linShare.lin+linShare.com||1);
+  row('③ 계열 전용 차지', (share*100).toFixed(1)+'%', '63.6% (가중 1.5)', Math.abs(share-0.636)<0.03);
+  // ── ④ 원형 풀 상호배타 (정적) + ★5/★6/★7 이름 파이프라인 ──
+  let overlap=0;
+  for(const lin of allLin) for(const n of MYTH[lin]) if((DIVINE[lin]||[]).includes(n)) overlap++;
+  row('④ MYTH∩DIVINE 상호배타', overlap+'건', '0건', overlap===0);
+  const backup=new Set(used); used.clear(); used.pause=true;
+  let n5=0,n6=0,n7=0; const R2=rngClass(4242);
+  for(let i=0;i<500;i++){ if(genName('전사','★5',R2).name.includes('페룬')||genName('심연','★5',R2).name.includes('아자젤')) n5++; }
+  for(let i=0;i<500;i++){ const n=genName('심연','★6',R2).name; if(!n.includes(', ')) n6++; }
+  for(let i=0;i<500;i++){ if(!genName('전사','★7',R2).name.startsWith('초월한 ')) n7++; }
+  used.pause=false; used.clear(); backup.forEach(n=>used.add(n));
+  row('④b ★5 신격 누출 · ★6 칭호 1 · ★7 초월 접두', `${n5}·${n6}·${n7}`, '0·0·0 (500회씩)', n5===0&&n6===0&&n7===0);
+  // ── ⑤ 몰입 등급별 가중 — rollPers 직접 (10연차 스코프) ──
+  const CW={'★4':1.5,'★5':2,'★6':3,'★7':4};
+  const cna={};
+  for(const gr of ['★3','★4','★5','★6']){
+    let c=0; const r=rngClass(55501);
+    for(let i=0;i<6000;i++){ if(i%10===0) usedPers.clear(); if(rollPers(r,gr)==='몰입') c++; }
+    cna[gr]=c/60;
+  }
+  const cnaOK = cna['★3']===0 && cna['★4']>0.8&&cna['★4']<2.2 && cna['★5']>1.3&&cna['★5']<2.7 && cna['★6']>2.1&&cna['★6']<3.9;
+  row('⑤ 몰입 등급 가중', `0·${cna['★4'].toFixed(2)}·${cna['★5'].toFixed(2)}·${cna['★6'].toFixed(2)}%`, '0·1.5·2·3% (단위: %)', cnaOK);
+  // ── ⑤b 일반 적성 티어 가중 4차 — 명장 곡선 (rollGrade 강제 · 일반 적성만 집계) ──
+  const master={};
+  for(const gr of ['★3','★4','★5','★6']){
+    window.rollGrade=()=>gr;
+    const r=rngClass(90909); let m=0, tot=0;
+    for(let i=0;i<N;i++){
+      const h=makeHero(r,null);
+      for(const [k,v] of Object.entries(h.apt)){ if(!(h.rareApts||[]).includes(k)&&v>=4){ tot++; if(v===7) m++; } }
+    }
+    master[gr]=tot?m/tot:0;
+  }
+  window.rollGrade=origGrade;
+  const mOK = master['★3']===0 && master['★4']>0.004&&master['★4']<0.05 && master['★5']>0.03&&master['★5']<0.09 && master['★6']>0.07&&master['★6']<0.16;
+  row('⑤b 명장 곡선 (일반 적성)', [3,4,5,6].map(g=>`★${g} ${(master['★'+g]*100).toFixed(1)}%`).join(' · '), '0 → 1 → 6 → 12%', mOK);
+  // ── 렌더 ──
+  const pass=out.filter(x=>x.ok).length;
+  document.getElementById('v5Out').innerHTML =
+    `<div style="margin-bottom:6px"><b style="color:${pass===out.length?'var(--c3)':'var(--c4)'}">${pass}/${out.length} PASS</b> · 표본 ★3~6 각 ${N}명 · 이름 500회×3 · 몰입 6,000회×4 · 시드 고정 (재현 가능)</div>` +
+    out.map(x=>`<div style="display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px dashed #2a3040;padding:3px 0">
+      <b style="color:${x.ok?'var(--c3)':'var(--c4)'};min-width:44px">${x.ok?'PASS':'FAIL'}</b>
+      <span style="flex:1 1 200px;color:var(--dim)">${x.name}</span>
+      <span style="flex:1 1 220px;font-weight:700">${x.got}</span>
+      <span style="flex:1 1 180px;color:var(--dim)">(기대 ${x.want})</span></div>`).join('');
+  console.log(`[5대 개정 검증] ${pass}/${out.length} PASS — 상세는 패널 참조`);
+}
+function v5RunSafe(){
+  const st=document.getElementById('v5Status'); st.textContent='검증 중…';
+  setTimeout(()=>{ try{ v5Simulate(2500); st.textContent='검증 완료'; }catch(e){ console.warn('v5 error',e); st.textContent='오류 — 콘솔 확인'; } },20);
+}
+document.getElementById('v5run').onclick=v5RunSafe;
+window.v5Sim=v5RunSafe;  // 콘솔 확장 — window.v5Sim()
+
+// ───────── ★6 이름 팔레트 — 신격·변형·칭호 미리보기 (2026-09-17) ─────────
+const palGrid=document.getElementById('palGrid'), palVarLabel=document.getElementById('palVarLabel');
+const VAR_LABEL={'접두':'신성 접두','접미':'완화 접미','축약':'축약 애칭','접접':'이중 접두'}; // 9차: 원형 카드 폐기(사용자 지적) · 이중 접두 신설 · DIV_PRE는 456행 공용
+const abbrNick = n => n.length>=4 ? n.slice(0,-1) : (n.length===3 ? n.slice(0,2) : n); // 축약 애칭 공용 — 4음절+ 말음절 제거 · 3음절 두 음절 · 2음절 불가(원형 유지)
+const softSuffix = (n, rnd) => { // 완화 접미 공용 — 받침 교체·모음 계열 판정 포함 (modDivine·팔레트 공용)
+  if(/[스프른론]$/.test(n)){
+    const b=n.slice(0,-1);
+    const sufs=['시온','리온','시안'].filter(s=>s[0]!==b[b.length-1]);
+    return b+sufs[rnd(sufs.length)];
+  }
+  if(((n.charCodeAt(n.length-1)-0xAC00)%28)>0) return n.slice(0,-1)+'시온'; // 받침 종결 — 아자젤→아자제시온
+  const lastVowel = (((n.charCodeAt(n.length-1)-0xAC00)%28)/21|0); // 모음 끝 — ㅏ 계열은 '안·란'과 겹침이라 말음절 교체 (미트라→미트란 · 아폴로→아폴로란 회피)
+  return [0,1,2,3,9,10].includes(lastVowel) ? n.slice(0,-1)+['단','란'][rnd(2)] : n+['안','란'][rnd(2)];
+};
+function modDivineType(base, variant){ // 팔레트용 — 변형 유형 강제 적용 (9차: modDivine 개선 규칙 동일 적용)
+  const R = k=>Math.floor(Math.random()*k);
+  switch(variant){
+    case '접두': return VOWEL_START(base) ? abbrNick(base) : DIV_PRE[R(4)]+base; // 모음 시작(아폴론)은 축약 폴백 — '스카아폴론' 차단
+    case '축약': return abbrNick(base); // 3음절 대응 — 아폴론→아폴 · 미트라→미트 (2음절은 원형 유지 — 이 이상 자르면 애칭이 아님)
+    case '접미': return softSuffix(base, R);
+    case '접접': // 이중 접두 — 아르+엘다누 (신성 위계 연출) · 모음 시작은 회피해 축약 폴백 ('스카아폴론' 재발 차단)
+      if(VOWEL_START(base)) return abbrNick(base);
+      return '아르' + ['엘','발','스카'][R(3)] + base;
+    default: return base;
+  }
+}
+function detectVariant(divBase, out){ // 검증기 — 팔레트 배치가 규칙대로 나왔는지 역판정 (9차: 원형 폐기 반영)
+  for(const p of DIV_PRE) if(out.startsWith(p)&&out.slice(p.length)===divBase) return '접두';
+  if(out===divBase) return '원형'; // 폴백 감지용 — 팔레트에는 미사용
+  if(divBase.length>=3 && out===divBase.slice(0,-1)) return '축약';
+  if(divBase.length===3 && out===divBase.slice(0,2)) return '축약';
+  return '접미';
+}
+function palRoll(){
+  const lin=document.getElementById('palLin').value;
+  const r=rngClass((Date.now()&0xFFFF)>>>0);
+  palGrid.replaceChildren();
+  used.pause=true; // 이름 중복 Set 오염 방지 — 팔레트는 미리보기 전용
+  const variants=['접두','접미','축약','접접']; // 9차 — 원형 제거, 이중 접두 신설 (4카드 유지)
+  const rows=[];
+  variants.forEach(v=>{
+    const dv=DIVINE[lin][r.int(DIVINE[lin].length)];
+    const name=modDivineType(dv, v);
+    const t1=TITLE6_DIVINE[lin][r.int(TITLE6_DIVINE[lin].length)];
+    rows.push({v, dv, name, full:`${name}, ${t1}`}); // 칭호 1개 (2026-09-18 단순화)
+  });
+  used.pause=false;
+  rows.forEach(row=>{
+    const d=document.createElement('div');
+    d.style.cssText='background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--c6);border-radius:8px;padding:8px 10px';
+    d.innerHTML=`<div style="font-size:10px;color:var(--dim)">${VAR_LABEL[row.v]} · 원형 <b style="color:var(--c5)">${row.dv}</b></div>
+      <div style="font-size:13px;font-weight:700;color:var(--rare);margin:3px 0">${row.full}</div>
+      <div style="font-size:10px;color:var(--dim)">L3c 신앙 오마주</div>`;
+    palGrid.appendChild(d);
+  });
+  palVarLabel.textContent=`${lin} 계열 · DIVINE ${DIVINE[lin].length}종 × 칭호 1 (TITLE6_DIVINE ${TITLE6_DIVINE[lin].length}종)`;}
+function palRollSafe(){ try{ palRoll(); }catch(e){ console.warn('palette error', e); } }
+document.getElementById('palRoll').onclick=palRollSafe;
+document.getElementById('palLin').onchange=palRollSafe;
+palRollSafe();
+
+// ───────── 숙련도 시뮬 (proficiency_test.py 미러 — 05 §6-2 · 도구 정합성) ─────────
+// Python 도구와 동일 규칙: 은닉 플랫 10 → 견습4 직행 · 등급 게이트 보류 누적 → 승급 시 반영 ·
+// 만렙 초과분 소멸 · 성실 +5% · 증축 미중복(영웅 1인 상한). RNG 스트림이 달라 분포만 비교 — 불변식(보존·게이트)은 동일.
+const XP_PROMOTE={4:20,5:50,6:120};                    // 승급 필요 XP (05 §6-2 가안)
+const XP_GOLD={6:2000,7:10000};                        // 5→6 장인 · 6→7 명장
+const XP_DAILY={'요리':5,'의사':5,'조약사':5,'대장장이':5,'연구':1.5,
+                '채집':1,'벌목':1,'광부':1,'농부':1/3,'건축가':1};  // 표준 1일 XP (연구 3XP/2일 · 농부 3일 주기)
+const XP_MINING_GATE=4;                                // 채굴은 티어 4+ (04 §3.3)
+const XP_GRADE_UP_DAYS={1:7,2:21,3:45,4:90};           // 합성소 등급 승급 주기 (가안)
+const XP_DILIGENT=1.05;                                // 성실 XP +5% (§6-2 성격 준용)
+const XP_TIER_NAME={4:'견습',5:'숙련',6:'장인',7:'명장'};
+function xpGateCap(g){ return g<=2?4:(g===3?5:(g===4?6:7)); }
+function xpBand(g){ return g<=2?'★1~2':(g>=5?'★5+':'★'+g); }
+function xpBuildState(heroes){
+  const slots={}, usedIdx=new Set();
+  FACILITY_APT.forEach(apt=>{                          // 시설 5슬롯 = 최고 티어 영웅
+    let best=-1, bt=0;
+    heroes.forEach((h,i)=>{ if(usedIdx.has(i)) return; const t=h.apt[apt]||0; if(t>bt){best=i; bt=t;} });
+    if(best>=0){ slots[best]=apt; usedIdx.add(best); }
+  });
+  return heroes.map((h,i)=>{
+    const full=h.apt, g=parseInt(h.grade[1]);
+    let track, kind;
+    if(i in slots){ track=slots[i]; kind='시설'; }
+    else{
+      const avail=LIFE_APT.filter(a=>!(a==='광부'&&(full[a]||0)<XP_MINING_GATE));
+      track=avail[0]; avail.forEach(a=>{ if((full[a]||0)>(full[track]||0)) track=a; }); // 동률 → LIFE_APT 순
+      kind='생활';
+    }
+    const tier=full[track]||1, reached={};
+    for(let t=4;t<=tier;t++) reached[t]=0;
+    return {startG:g, g, track, kind, startTier:tier, tier, xpIn:0, pending:0, peak:0, reached,
+            bonus:(h.pers==='성실')?XP_DILIGENT:1,
+            nextUp:(XP_GRADE_UP_DAYS[g]!==undefined)?XP_GRADE_UP_DAYS[g]:null};
+  });
+}
+function xpFeed(st, amount, day, acc){
+  if(st.tier>=7) return;                               // 명장 XP 정지
+  const cap=xpGateCap(st.g);
+  if(st.tier>=cap){ st.pending+=amount; if(st.pending>st.peak) st.peak=st.pending; return; }
+  st.xpIn+=amount;
+  while(st.tier<7 && st.tier<cap){
+    let need, nxt;
+    if(st.tier<4){ need=10; nxt=4; }                   // 은닉권 — 플랫 10 → 견습4 직행
+    else{ need=XP_PROMOTE[st.tier]; nxt=st.tier+1; }
+    if(st.xpIn<need) break;
+    st.xpIn-=need; st.tier=nxt;
+    acc.consumed+=need; acc.promotions[st.tier]=(acc.promotions[st.tier]||0)+1;
+    if(st.tier>=4 && !(st.tier in st.reached)) st.reached[st.tier]=day;
+    if(XP_GOLD[st.tier]){ acc.gold+=XP_GOLD[st.tier]; acc.goldN[st.tier]=(acc.goldN[st.tier]||0)+1;
+      acc.goldEvents.push([day, XP_GOLD[st.tier], st.kind]); }
+  }
+  if(st.tier>=7){ acc.voided+=st.xpIn; st.xpIn=0; return; }  // 만렙 초과분 소멸
+  if(st.tier>=cap && st.xpIn>0){ st.pending+=st.xpIn; if(st.pending>st.peak) st.peak=st.pending; st.xpIn=0; }
+}
+function xpSimulate(n, days, floor, simSeed){
+  const savedFloor=floorState; floorState=floor;       // makeHero 게이트용 — 종료 시 복원
+  const savedOwned={...owned}, savedUsed=new Set(used);
+  const r=rngClass(simSeed), heroes=[];
+  usedPers.clear();
+  for(let i=0;i<n;i++){ const h=makeHero(r,null); usedPers.add(h.pers); heroes.push(h); }
+  const st=xpBuildState(heroes);
+  const acc={earned:0, consumed:0, voided:0, gold:0, goldN:{}, goldEvents:[], promotions:{}, gradeUps:{}, viol:0};
+  for(let day=1; day<=days; day++){
+    st.forEach(s=>{                                    // ① 합성소 등급 승급 → 보류 XP 즉시 반영
+      if(s.nextUp!==null){ s.nextUp--;
+        if(s.nextUp<=0){ s.g++; s.nextUp=(XP_GRADE_UP_DAYS[s.g]!==undefined)?XP_GRADE_UP_DAYS[s.g]:null;
+          acc.gradeUps[s.g]=(acc.gradeUps[s.g]||0)+1;
+          if(s.pending>0){ const amt=s.pending; s.pending=0; xpFeed(s, amt, day, acc); } } }
+    });
+    st.forEach(s=>{ if(s.tier<7){ const gain=XP_DAILY[s.track]*s.bonus; acc.earned+=gain; xpFeed(s, gain, day, acc); } }); // ② 활동 XP
+    st.forEach(s=>{ if(s.tier>xpGateCap(s.g)) acc.viol++; });                    // ③ 게이트 위반
+  }
+  floorState=savedFloor;
+  Object.keys(owned).forEach(k=>delete owned[k]); Object.assign(owned, savedOwned);
+  used.clear(); savedUsed.forEach(x=>used.add(x));
+  return {heroes:n, st, acc};
+}
+function xpMedian(xs){ if(!xs.length) return null; const s=[...xs].sort((a,b)=>a-b); return s[Math.floor(s.length/2)]; }
+function xpReport(res, days, floor, simSeed){
+  const {st, acc}=res, label=t=>t>=4?XP_TIER_NAME[t]:'은닉', order=['은닉','견습','숙련','장인','명장'];
+  console.log(`═══ 숙련도 시뮬 [JS 미러] (${res.heroes}명 · ${days}일 · 층 ${floor} · 시드 ${simSeed}) ═══`);
+  const ops=FACILITY_APT.map(a=>{ const o=st.find(s=>s.kind==='시설'&&s.track===a); return `${a} t${o?o.tier:'—'}`; }).join(' · ');
+  const lifeC={}; st.forEach(s=>{ if(s.kind==='생활') lifeC[s.track]=(lifeC[s.track]||0)+1; });
+  console.log('운영자:', ops, '+ 생활', st.filter(s=>s.kind==='생활').length+'명',
+    '('+LIFE_APT.map(a=>a+':'+(lifeC[a]||0)).join(' · ')+')');
+  const dist=tag=>{ const c={}; st.forEach(s=>c[label(s[tag])]=(c[label(s[tag])]||0)+1);
+    return order.map(k=>`${k} ${c[k]||0}`).join(' · '); };
+  console.log('티어 분포: 시작', dist('startTier'), '→ 종료', dist('tier'));
+  ['시설','생활'].forEach(kind=>{
+    const cells=[4,5,6,7].map(T=>{ const xs=st.filter(s=>s.kind===kind&&s.startTier<T&&s.reached[T]>0).map(s=>s.reached[T]);
+      const m=xpMedian(xs); return m!==null?`${XP_TIER_NAME[T]} ${m}일(n=${xs.length})`:`${XP_TIER_NAME[T]} —`; });
+    console.log((kind==='시설'?'시설계 (5/일)':'생활계 (1/일)')+':', cells.join(' · '));
+  });
+  console.log('  (참고) 순수 XP 곡선: 은닉→명장 200 XP = 시설 40일 · 생활 200일');
+  const nost=st.filter(s=>s.startTier<7&&!(s.reached[7]>0)).length;
+  console.log(`미도달 ${nost}명 (${days}일 호라이즌 내)`);
+  ['★1~2','★3','★4'].forEach(b=>{ const grp=st.filter(s=>xpBand(s.startG)===b&&s.peak>0);
+    if(grp.length) console.log(`보류 ${b} 시작: ${grp.length}명 · 피크 중간 ${xpMedian(grp.map(s=>s.peak))} / 최대 ${Math.max(...grp.map(s=>s.peak))} XP`); });
+  const held=st.reduce((a,s)=>a+s.xpIn+s.pending,0);
+  const delta=acc.earned-(acc.consumed+held+acc.voided);
+  console.log(`검증: XP 보존 Δ ${delta.toFixed(1)} ${Math.abs(delta)<1?'✓':'✗'} · 게이트 위반 ${acc.viol}건 ${acc.viol===0?'✓':'✗'}`);
+  console.log(`골드: 장인 ×${acc.goldN[6]||0} + 명장 ×${acc.goldN[7]||0} = ${(acc.gold||0).toLocaleString()}G · `,
+    '승급:', [4,5,6,7].map(t=>`${XP_TIER_NAME[t]} ${acc.promotions[t]||0}`).join(' · '));
+  console.log('Python 동일 시드 대조: python3 proficiency_test.py 150 365 --seed '+simSeed+' (RNG 스트림 차이 — 분포·불변식 비교)');
+}
+function xpRun(){
+  const days=365, floor=parseInt(document.getElementById('floor').value)||50;
+  const res=xpSimulate(150, days, floor, seed+42);
+  xpReport(res, days, floor, seed+42);
+  return res;
+}
+window.xpSim=xpRun;                                    // 콘솔에서 window.xpSim() 재실행 가능
+if(location.protocol.startsWith('http')){ console.groupCollapsed('숙련도 시뮬 (개발자용 — proficiency_test.py 미러)'); xpRun(); console.groupEnd(); }
+
+// ───────── 자동 새로고침 (gacha_server.py 사용 시) ─────────
+// file:// 로 직접 열면 fetch가 조용히 실패해 스킵 — http.server/gacha_server 어느 쪽이든 동작.
+// ───────── 초보자 안내 오버레이 (최초 1회 · localStorage 기억) ─────────
+(function(){
+  const ov = document.getElementById('onbOv');
+  if (!ov) return;
+  const close = ()=>{ ov.style.display='none'; localStorage.setItem('gacha_onboarded','1'); };
+  document.getElementById('onbSkip').onclick = close;
+  document.getElementById('onbStart').onclick = ()=>{ close(); document.getElementById('btn1').click(); };
+  if (location.search.indexOf('onb=1') >= 0) {
+    // 테스트 센터 3분 데모에서 넘어온 경우 — 세션 안 재표시(건너뛴 것으로 기록)하고 바로 실행하지 않음
+    close();
+    return;
+  }
+  if (!localStorage.getItem('gacha_onboarded')) ov.style.display='flex';
+})();
+
+(function(){
+  if(!location.protocol.startsWith('http')) return;            // file:// 무해 스킵
+  let live=null;                                                // 마지막 확인한 해시
+  const menu=document.querySelector('.panel .row');
+  const dot=document.createElement('span');
+  dot.className='stat'; dot.textContent='· 자동리로드 대기';
+  if(menu) menu.appendChild(dot);
+  function tick(){
+    fetch('/__gacha_hash',{cache:'no-store'})
+      .then(r=>r.ok?r.json():null)
+      .then(j=>{
+        if(!j||!j.hash){ return; }
+        if(live===null){ live=j.hash; if(dot) dot.textContent='· 자동리로드 ON'; }
+        else if(j.hash!==live){
+          const editing=document.activeElement && (document.activeElement.tagName==='INPUT'||document.activeElement.tagName==='SELECT');
+          if(!editing){ location.reload(); }  // 저장 감지 → 리로드
+          else { live=j.hash; }               // 입력 중이면 다음 폴링에서
+        }
+      })
+      .catch(()=>{ if(dot) dot.textContent='· 자동리로드 꺼짐 (file:// 또는 서버 없음)'; });
+  }
+  tick(); setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>

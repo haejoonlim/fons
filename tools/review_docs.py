@@ -124,36 +124,37 @@ REFUTATION_MARKERS = ("원본에 없음", "폐기", "철회", "구값", "삭제"
 PLANNED_PATHS = (
     "docs/README.md",
     "docs/gdd",
-    "docs/web-plan",
-    "docs/handoff",
-    "docs/handoff/HANDOFF.md",
-    "docs/handoff/STATUS.md",
+    "docs/adr",
+    "docs/art",
+    "docs/audio",
     "godot/data",
-    "godot/scenes",
-    "godot/scenes/title.tscn",
+    "godot/assets",
+    "art-source",
+    "audio-source",
+    "godot/game/ui/title/title.tscn",
     "godot/export_presets.cfg",
-    "godot/scripts/autoload/save_manager.gd",
-    "godot/scripts/sim/summon.gd",
-    "godot/scripts/sim/estate.gd",
-    "godot/scripts/sim/party.gd",
-    "godot/scripts/sim/tower.gd",
-    "godot/scripts/sim/economy.gd",
-    "godot/scripts/world",
-    "godot/scripts/world/scene.gd",
-    "godot/scripts/world/estate_3d.gd",
-    "godot/scripts/world/explore_3d.gd",
-    "godot/scripts/world/monparts.gd",
-    "godot/scripts/world/title.gd",
-    "godot/tests/test_game.gd",
-    "godot/tests/test_w1.gd",
-    "godot/tests/test_w2.gd",
-    "godot/tests/test_w3.gd",
-    "godot/tests/test_w4.gd",
-    "godot/tests/test_g0.gd",
-    "godot/tests/test_g1.gd",
-    "godot/tests/test_g2.gd",
-    "godot/tests/test_g3.gd",
-    "godot/tests/test_g4.gd",
+    "godot/autoload/save_manager.gd",
+    "godot/core/summon.gd",
+    "godot/core/estate.gd",
+    "godot/core/party.gd",
+    "godot/core/tower.gd",
+    "godot/core/economy.gd",
+    "godot/game/world",
+    "godot/game/world/scene.gd",
+    "godot/game/world/estate_3d.gd",
+    "godot/game/world/explore_3d.gd",
+    "godot/game/world/monparts.gd",
+    "godot/game/world/title.gd",
+    "godot/tests/unit/test_game.gd",
+    "godot/tests/unit/test_w1.gd",
+    "godot/tests/unit/test_w2.gd",
+    "godot/tests/unit/test_w3.gd",
+    "godot/tests/unit/test_w4.gd",
+    "godot/tests/unit/test_g0.gd",
+    "godot/tests/unit/test_g1.gd",
+    "godot/tests/unit/test_g2.gd",
+    "godot/tests/unit/test_g3.gd",
+    "godot/tests/unit/test_g4.gd",
     "tools/check_unity_health.sh",
     "tools/run_editmode_tests.sh",
     "tools/edit_guard.py",
@@ -164,15 +165,23 @@ PLANNED_PATHS = (
 RESOLVE_BASES = (
     "",
     "docs/",
+    "docs/dev/",
+    "docs/design/",
+    "docs/adr/",
     "godot/",
-    "godot/scripts/",
-    "godot/scripts/sim/",
-    "godot/scripts/world/",
-    "godot/scripts/autoload/",
-    "godot/tests/",
+    "godot/core/",
+    "godot/autoload/",
+    "godot/game/",
+    "godot/game/main/",
+    "godot/game/view/",
+    "godot/game/ui/",
+    "godot/game/world/",
+    "godot/tests/unit/",
     "data/",
     "sim/",
     "tools/",
+    "art-source/",
+    "audio-source/",
 )
 
 SKIP_DIRS = {
@@ -183,6 +192,13 @@ SKIP_DIRS = {
     "node_modules",
     "build",
     "__pycache__",
+}
+
+# 원본에서 문면 그대로 복사한 문서는 이 리포의 출처 표기 규칙 대상이 아니다.
+# 고치지 않는 글이라 검사하면 지적만 쌓이고 진짜 문제가 묻힌다.
+# (docs/gdd/README.md 가 성질과 지위를 설명한다.)
+IMPORTED_DOC_DIRS = {
+    "gdd",
 }
 
 PATHY_RE = re.compile(r"^[A-Za-z0-9_][A-Za-z0-9_./-]*\.[A-Za-z0-9]+$")
@@ -330,6 +346,8 @@ def collect_docs(root, data_dir):
         except ValueError:
             continue
         if any(part in SKIP_DIRS for part in rel.parts[:-1]):
+            continue
+        if any(part in IMPORTED_DOC_DIRS for part in rel.parts[:-1]):
             continue
         out.append(p)
     data_root = root / data_dir

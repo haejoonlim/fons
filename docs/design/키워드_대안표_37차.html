@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>키워드 이름 대안표 (37차)</title>
+<style>
+  :root{
+    --bg:#12151a; --card:#1b2028; --card2:#212734; --line:#2c3542;
+    --fg:#e9edf3; --dim:#98a3b1; --accent:#7cc4ff; --accent2:#a9d4ff;
+    --warn:#f0b357; --ok:#78d18b;
+  }
+  *{box-sizing:border-box}
+  html,body{overflow-x:hidden}
+  body{margin:0;background:var(--bg);color:var(--fg);
+       font:16px/1.6 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+       padding:22px 18px 56px;max-width:760px;margin:0 auto}
+  h1{font-size:21px;line-height:1.35;margin:0 0 8px}
+  .sub{color:var(--dim);font-size:13.5px;line-height:1.6;margin-bottom:18px}
+  .sub code{background:var(--card2);padding:1px 5px;border-radius:4px;color:var(--accent);font-size:12.5px}
+
+  .legend{background:var(--card);border:1px solid var(--line);border-radius:10px;
+          padding:12px 14px;font-size:13.5px;color:#c3ccd8;margin-bottom:26px;line-height:1.65}
+  .legend b{color:var(--fg)}
+
+  h2{font-size:15px;color:var(--dim);font-weight:700;letter-spacing:.06em;
+     margin:28px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+        padding:14px 15px;margin-bottom:11px}
+  .card.rec{border-left:3px solid var(--warn)}
+
+  .top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+  .job{font-weight:700;font-size:17px}
+  .tag{font-size:11.5px;padding:1px 7px;border-radius:20px;font-weight:600;
+       border:1px solid var(--line);color:var(--dim);white-space:nowrap}
+  .tag.rec{color:var(--warn);border-color:#4a3b22;background:#241d12}
+  .tag.keep{color:var(--ok);border-color:#27402e;background:#131f18}
+
+  .cur{margin:2px 0 8px;font-size:13.5px;color:var(--dim)}
+  .cur b{color:var(--fg);font-size:19px;font-weight:700}
+  .axis{color:var(--accent);font-size:12.5px}
+
+  .desc{font-size:15.5px;color:#cdd5e0;margin:0 0 12px;line-height:1.65}
+
+  .alts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+  .alt{background:var(--card2);border:1px solid var(--line);border-radius:9px;
+       padding:9px 10px;text-align:center}
+  .alt .n{font-size:11.5px;color:var(--dim);display:block;margin-bottom:1px}
+  .alt .w{font-size:18px;font-weight:700;color:var(--accent);letter-spacing:.01em}
+  .alt.b .w{color:var(--accent2)}
+
+  .why{font-size:15px;color:#c0cad7;line-height:1.65;
+       border-top:1px dashed var(--line);padding-top:9px;margin:0}
+  .why::before{content:"왜 ";color:var(--dim);font-weight:600}
+
+  .foot{background:var(--card);border:1px solid var(--line);border-radius:10px;
+        padding:14px 16px;margin-top:26px;font-size:13.5px;line-height:1.7;color:#c3ccd8}
+  .foot b{color:var(--fg)}
+  .foot code{background:var(--card2);padding:1px 5px;border-radius:4px;font-size:12.5px}
+  .ok{color:var(--ok)} .warn{color:var(--warn)}
+
+  @media (max-width:430px){
+    body{padding:16px 12px 48px;font-size:16px}
+    .alts{grid-template-columns:1fr 1fr;gap:6px}
+  }
+</style>
+</head>
+<body>
+
+<h1>키워드 이름 대안표 — 37차 변경분</h1>
+<div class="sub">
+  축(밸런스)은 그대로 두고 <b>이름만</b> 고르는 표다 · 정본 <code>sim/center/sims/gen_career_34.py</code> · 데이터 <code>data/job_tree.json</code>
+</div>
+
+<div class="legend">
+  <b>읽는 법</b> — 카드마다 지금 이름과 하는 일이 있고, 그 아래에 대안 두 개가 있다.
+  <span class="warn">주황 띠</span>는 교체 권장, <span class="ok">초록 뱃지</span>는 지금 이름 유지 추천.
+  고를 때는 “쐐기①, 장궁②” 처럼 번호로 말하면 된다.
+</div>
+
+<h2>수호자</h2>
+
+<div class="card rec">
+  <div class="top"><span class="job">철벽기사</span><span class="tag rec">교체 권장</span></div>
+  <div class="cur">지금 <b>흘림</b> <span class="axis">방어</span></div>
+  <p class="desc">맞은 힘을 판면으로 흘려보낸다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">편향</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">경사</span></div></div>
+  <p class="why">흘림은 동작이 안 보인다. 편향=힘을 옆으로 비튼다, 경사=판을 비스듬히 세워 스쳐 가게</p>
+</div>
+
+<div class="card rec">
+  <div class="top"><span class="job">철벽기사</span><span class="tag rec">교체 권장</span></div>
+  <div class="cur">지금 <b>중갑</b> <span class="axis">체력</span></div>
+  <p class="desc">판을 겹겹이 덧대 두꺼워진다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">겹갑</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">중장</span></div></div>
+  <p class="why">중갑·중장은 같은 말이다. 겹갑이 ‘덧댄다’를 이름에 담는다</p>
+</div>
+
+<div class="card">
+  <div class="top"><span class="job">전위기사</span></div>
+  <div class="cur">지금 <b>선제</b> <span class="axis">속도</span></div>
+  <p class="desc">먼저 달려들어 싸움의 순서를 빼앗는다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">기선</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">선공</span></div></div>
+  <p class="why">기선(제압)이 한국어에서 가장 즉시 읽힌다</p>
+</div>
+
+<div class="card">
+  <div class="top"><span class="job">전위기사</span></div>
+  <div class="cur">지금 <b>압박</b> <span class="axis">힘</span></div>
+  <p class="desc">밀고 들어가 상대의 설 자리를 좁힌다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">전압</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">육박</span></div></div>
+  <p class="why">압박은 심리어로도 읽힌다. 전압=밀며 나아감</p>
+</div>
+
+<div class="card rec">
+  <div class="top"><span class="job">성좌기사</span><span class="tag rec">교체 권장</span></div>
+  <div class="cur">지금 <b>칠성</b> <span class="axis">방어</span></div>
+  <p class="desc">일곱 별을 이어 앞을 막는다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">북두</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">성벽</span></div></div>
+  <p class="why">북두칠성이 더 익숙하다. 성벽은 뜻이 제일 즉시적</p>
+</div>
+
+<div class="card rec">
+  <div class="top"><span class="job">성좌기사</span><span class="tag rec">교체 권장</span></div>
+  <div class="cur">지금 <b>천문</b> <span class="axis">마법방어</span></div>
+  <p class="desc">별자리를 읽어 주문이 닿기 전에 막는다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">관성</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">성독</span></div></div>
+  <p class="why">천문은 천문학이라 ‘막는다’가 안 보인다. 관성(觀星)이 동작을 담는다</p>
+</div>
+
+<div class="card rec">
+  <div class="top"><span class="job">성좌기사</span><span class="tag rec">교체 권장</span></div>
+  <div class="cur">지금 <b>북극성</b> <span class="axis">근성</span></div>
+  <p class="desc">하늘의 한 점처럼 자리를 뜨지 않는다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">극성</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">한별</span></div></div>
+  <p class="why">3글자라 트리에서 혼자 길다. 극성=북극성</p>
+</div>
+
+<h2>암살자</h2>
+
+<div class="card">
+  <div class="top"><span class="job">자객</span></div>
+  <div class="cur">지금 <b>연살</b> <span class="axis">속도</span></div>
+  <p class="desc">한 명을 쓰러뜨리면 흐름을 끊지 않고 다음으로 넘어간다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">연쇄</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">연계</span></div></div>
+  <p class="why">연살은 ‘연속 살해’로 읽혀 잔혹하다. 연쇄가 흐름을 담는다</p>
+</div>
+
+<div class="card">
+  <div class="top"><span class="job">맹독사</span><span class="tag keep">유지 추천</span></div>
+  <div class="cur">지금 <b>독무</b> <span class="axis">마법관통</span></div>
+  <p class="desc">독을 공기 중에 풀어 지나갈 자리를 막는다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">독안개</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">독기</span></div></div>
+  <p class="why">독무는 축약인데 안개가 안 보인다. 그래도 뜻은 서므로 유지 쪽</p>
+</div>
+
+<div class="card">
+  <div class="top"><span class="job">도적</span></div>
+  <div class="cur">지금 <b>양동</b> <span class="axis">힘</span></div>
+  <p class="desc">일부러 드러나 적의 눈을 한쪽에 붙잡아 둔다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">견제</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">허세</span></div></div>
+  <p class="why">양동은 병법 용어라 뜻을 모르면 안 읽힌다</p>
+</div>
+
+<h2>궁수</h2>
+
+<div class="card rec">
+  <div class="top"><span class="job">명사수</span><span class="tag rec">교체 권장</span></div>
+  <div class="cur">지금 <b>쐐기</b> <span class="axis">관통</span></div>
+  <p class="desc">틈에 박혀 방어를 갈라 벌린다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">균열</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">관철</span></div></div>
+  <p class="why">쐐기는 사물 이름이다. 균열은 결과(벌어진다)를 말한다</p>
+</div>
+
+<div class="card rec">
+  <div class="top"><span class="job">명사수</span><span class="tag rec">교체 권장</span></div>
+  <div class="cur">지금 <b>장궁</b> <span class="axis">치명위력</span></div>
+  <p class="desc">긴 활로 멀리 보내 끝까지 힘을 잃지 않는다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">대궁</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">원사</span></div></div>
+  <p class="why">장궁은 활 종류 이름이라 ‘무엇이 오르는지’가 없다. 원사(遠射)=멀리 쏜다</p>
+</div>
+
+<div class="card">
+  <div class="top"><span class="job">포화사수</span></div>
+  <div class="cur">지금 <b>화선</b> <span class="axis">회피</span></div>
+  <p class="desc">쏘는 선을 먼저 그어 그 앞을 막는다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">사선</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">탄막</span></div></div>
+  <p class="why">화선은 군대 ‘사격선’과 겹쳐 오해된다. 탄막이 제일 즉시적</p>
+</div>
+
+<div class="card">
+  <div class="top"><span class="job">포화사수</span><span class="tag keep">유지 추천</span></div>
+  <div class="cur">지금 <b>엄호</b> <span class="axis">방어</span></div>
+  <p class="desc">아군 앞에 화살을 뿌려 대신 맞힌다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">엄폐</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">가림</span></div></div>
+  <p class="why">엄호는 이미 좋다. 엄폐는 ‘뒤에 숨겨 준다’가 더 분명</p>
+</div>
+
+<div class="card">
+  <div class="top"><span class="job">사냥꾼</span><span class="tag keep">유지 추천</span></div>
+  <div class="cur">지금 <b>조련</b> <span class="axis">힘</span></div>
+  <p class="desc">훈련한 짐승을 앞세워 대신 서게 한다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">사역</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">야수</span></div></div>
+  <p class="why">조련은 ‘길들인다’까지다. 사역은 ‘부려 세운다’</p>
+</div>
+
+<div class="card">
+  <div class="top"><span class="job">사냥꾼</span><span class="tag keep">유지 추천</span></div>
+  <div class="cur">지금 <b>몰이</b> <span class="axis">근성</span></div>
+  <p class="desc">정해 둔 자리까지 끝까지 몰아붙인다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">몰아</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">포위</span></div></div>
+  <p class="why">몰이는 좋다. 포위는 결과가 다르지만 읽힘은 세다</p>
+</div>
+
+<div class="card">
+  <div class="top"><span class="job">마궁사</span></div>
+  <div class="cur">지금 <b>각인</b> <span class="axis">주문</span></div>
+  <p class="desc">화살 하나에 한 마법을 오래 새겨 둔다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">부여</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">새김</span></div></div>
+  <p class="why">각인은 문신·도장으로도 읽힌다. 부여가 게임 문법에 익숙</p>
+</div>
+
+<div class="card rec">
+  <div class="top"><span class="job">마궁사</span><span class="tag rec">교체 권장</span></div>
+  <div class="cur">지금 <b>분열</b> <span class="axis">마법관통</span></div>
+  <p class="desc">맞은 자리에서 한 발이 여러 갈래로 벌어진다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">확산</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">갈래</span></div></div>
+  <p class="why">분열은 ‘내부 분쟁’으로 먼저 읽힌다. 확산이 정확</p>
+</div>
+
+<div class="card">
+  <div class="top"><span class="job">마궁사</span></div>
+  <div class="cur">지금 <b>폭렬</b> <span class="axis">치명위력</span></div>
+  <p class="desc">박힌 자리에서 얹은 마법이 터진다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">작렬</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">폭발</span></div></div>
+  <p class="why">폭렬은 조어 느낌이다. 작렬이 표준어</p>
+</div>
+
+<div class="card rec">
+  <div class="top"><span class="job">소환술사</span><span class="tag rec">교체 권장</span></div>
+  <div class="cur">지금 <b>인형</b> <span class="axis">체력</span></div>
+  <p class="desc">만든 몸을 불러 대신 맞게 한다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">괴뢰</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">우상</span></div></div>
+  <p class="why">인형은 장난감으로 먼저 읽힌다. 괴뢰가 ‘대신 맞는 몸’</p>
+</div>
+
+<h2>마법</h2>
+
+<div class="card">
+  <div class="top"><span class="job">주술사</span><span class="tag keep">유지 추천</span></div>
+  <div class="cur">지금 <b>주박</b> <span class="axis">주문</span></div>
+  <p class="desc">저주를 매듭지어 풀리지 않게 한다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">봉인</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">결박</span></div></div>
+  <p class="why">주박은 좋다. 봉인은 ‘안 풀린다’가 즉시 온다</p>
+</div>
+
+<div class="card rec">
+  <div class="top"><span class="job">주술사</span><span class="tag rec">교체 권장</span></div>
+  <div class="cur">지금 <b>제물</b> <span class="axis">치명위력</span></div>
+  <p class="desc">제 몸을 바친 만큼 저주가 무거워진다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">대가</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">공물</span></div></div>
+  <p class="why">‘뭘 하는지 모르겠다’던 자리다. 대가=치르는 값</p>
+</div>
+
+<div class="card rec">
+  <div class="top"><span class="job">주술사</span><span class="tag rec">교체 권장</span></div>
+  <div class="cur">지금 <b>파멸</b> <span class="axis">마법관통</span></div>
+  <p class="desc">닿은 자리를 방어째로 바닥부터 태운다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">소멸</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">소거</span></div></div>
+  <p class="why">파멸은 ‘전부 끝난다’로 읽혀 마법관통과 안 붙는다</p>
+</div>
+
+<h2>지원가</h2>
+
+<div class="card">
+  <div class="top"><span class="job">드루이드</span></div>
+  <div class="cur">지금 <b>산림</b> <span class="axis">방어</span></div>
+  <p class="desc">숲을 세워 앞을 막고 아군을 그 안에 둔다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">수림</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">덩굴</span></div></div>
+  <p class="why">산림은 지형 명사라 동작이 없다. 덩굴이 ‘세워 막는다’를 담는다</p>
+</div>
+
+<div class="card">
+  <div class="top"><span class="job">전술가</span><span class="tag keep">유지 추천</span></div>
+  <div class="cur">지금 <b>진형</b> <span class="axis">방어</span></div>
+  <p class="desc">줄을 세워 서로를 가리게 한다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">대형</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">배열</span></div></div>
+  <p class="why">진형은 좋다. 대형이 더 흔한 말</p>
+</div>
+
+<div class="card">
+  <div class="top"><span class="job">전술가</span></div>
+  <div class="cur">지금 <b>기동</b> <span class="axis">속도</span></div>
+  <p class="desc">먼저 자리를 옮겨 싸움의 순서를 잡는다</p>
+  <div class="alts"><div class="alt"><span class="n">대안 ①</span><span class="w">선점</span></div><div class="alt b"><span class="n">대안 ②</span><span class="w">우회</span></div></div>
+  <p class="why">기동은 군대 용어다. 선점이 ‘먼저’를 담는다</p>
+</div>
+
+<div class="foot">
+  <b>판정</b><br>
+  <span class="ok">유지 추천</span> 독무 · 엄호 · 조련 · 몰이 · 주박 · 진형<br>
+  <span class="warn">교체 권장</span> 쐐기 · 장궁 · 분열 · 파멸 (사물·추상명사라 축이 안 보인다), 제물 (기능이 이름에 없다), 칠성 · 천문 · 북극성 (별자리 3장 중 둘이 2글자 제약을 못 지킨다)<br><br>
+  반영 순서 — <code>gen_career_34.py</code> L2 정의 + LEXICON 주석 → 생성기 → <code>sync_career_tables.py</code> → <code>gen_career_html.py</code> → <code>gate_all.py</code>
+</div>
+
+</body>
+</html>

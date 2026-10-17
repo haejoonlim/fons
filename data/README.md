@@ -1,6 +1,6 @@
 # data/ — 원본 데이터 복사본
 
-원본: 원본 저장소의 `unity/Assets/Resources/Data/` — 비공개 레포였지만 **2026-10-17에 클론해서 읽었다** (원본 대조).
+원본: 원본 저장소의 데이터 폴더 — 비공개 레포였지만 **2026-10-17에 클론해서 읽었다** (원본 대조).
 근거 기록은 [docs/original/03_데이터_영지_탑.md](../docs/original/03_데이터_영지_탑.md)에 있다 (원본 대조).
 
 ## 현재 상태
@@ -25,10 +25,10 @@ synergy.json                  world_laws.json
 
 | 파일 | 성격 |
 |---|---|
-| `skills_catalog.json` · `fusion_pairs.json` | 원본 스크립트가 **한글 키 정본에서 생성**한다 — 정본은 `design-docs/_tools/`에 있고, 생성기가 `unity/Assets/Resources/Data/`(snake_case)에 쓴다 (원본 대조) |
+| `skills_catalog.json` · `fusion_pairs.json` | 원본 스크립트가 **한글 키 정본에서 생성**한다 — 정본은 `design-docs/_tools/`에 있고, 생성기가 런타임 JSON(snake_case)을 만든다 (원본 대조) |
 | 나머지 15종 | 원본에서 **직접 저작**한 파일이다 — 생성물이 아니다 (원본 대조) |
 
-- 어느 쪽이든 **이관 원본은 `unity/Assets/Resources/Data/` 하나**다. 정본 경로와 재생성 명령은 [03_데이터_영지_탑.md](../docs/original/03_데이터_영지_탑.md) §1에 적어 뒀다 (원본 대조).
+- 어느 쪽이든 **이관 원본은 원본 저장소의 데이터 폴더 하나**다. 정본 경로와 재생성 명령은 [03_데이터_영지_탑.md](../docs/original/03_데이터_영지_탑.md) §1에 적어 뒀다 (원본 대조).
 - 원본에서 이 폴더의 JSON을 손으로 고치면 다음 동기화에 덮인다 — 수치 변경은 정본 문서·생성기에서 한다 (원본 대조).
 
 ## 규칙
@@ -40,9 +40,13 @@ synergy.json                  world_laws.json
 
 ## 복사 방법
 
+> **상태 (2026-10-17):** 이관 완료 — 17종이 여기와 `godot/data/` 에 있다 (자체 실측).
+> 원본 원본 에셋 트리는 그 뒤 로컬에서 삭제됐다. 아래 명령은 원본이 다시 생겼을 때의 절차다.
+> 지금 이 폴더가 **유일한 정본 사본**이므로 손으로 지우지 말 것.
+
 ```bash
-./.venv/bin/python tools/sync_data.py --src ~/soul-commander/unity/Assets/Resources/Data --dst data
-./.venv/bin/python tools/sync_data.py --src ~/soul-commander/unity/Assets/Resources/Data --dst godot/data
+./.venv/bin/python tools/sync_data.py --src <원본 데이터 폴더> --dst data
+./.venv/bin/python tools/sync_data.py --src <원본 데이터 폴더> --dst godot/data
 ```
 
 - `sync_data.py`는 이제 **없는 파일이 하나라도 있으면 exit 1**이다. 성공하면 `SYNC OK: <대상>`을 찍는다 (자체 실측).
@@ -52,7 +56,8 @@ synergy.json                  world_laws.json
 ## 다시 대조하고 싶을 때
 
 ```bash
-ls ~/soul-commander/unity/Assets/Resources/Data/*.json | xargs -n1 basename | sort > /tmp/original_data.txt
+# 원본이 있을 때만. 지금은 원본 유니티 트리가 없다 (2026-10-17 로컬 삭제, 자체 실측).
+ls <원본 데이터 폴더>/*.json | xargs -n1 basename | sort > /tmp/original_data.txt
 python3 -c "import json;print('\n'.join(sorted(json.load(open('data/manifest.json'))['files'])))" > /tmp/manifest_data.txt
 diff /tmp/original_data.txt /tmp/manifest_data.txt
 ```

@@ -416,7 +416,7 @@
     },
     {
       "id": "mon_balrog_01",
-      "name": "발록",
+      "name": "맥압각",
       "category": 6,
       "aiType": "magic",
       "tier": 4,
@@ -756,7 +756,7 @@
     },
     {
       "id": "mon_beholder_01",
-      "name": "비홀더",
+      "name": "틈새청자",
       "category": 6,
       "aiType": "magic",
       "tier": 4,
@@ -2822,7 +2822,7 @@
           "counter": "측면 이동"
         },
         {
-          "name": "가시erte 투척",
+          "name": "가시 창 투척",
           "cd": 17,
           "effect": "원거리 1.3xATK + 출혈",
           "telegraph": "발밑 그림자",
@@ -3919,7 +3919,7 @@
           "counter": "파란 방어"
         },
         {
-          "name": "경_lex 경계",
+          "name": "유리 경계",
           "cd": 28,
           "effect": "전체 1.2xATK + 침묵 4초",
           "telegraph": "소리가 유리 안에서 멈춘다",
@@ -8750,7 +8750,7 @@
           "mon_dunelizard_01",
           "mon_ruststag_01"
         ],
-        "note": "모래 아래 수 metre를 이동하다 발밑에서 튀어나오는 매복자",
+        "note": "모래 아래로 수 미터를 옮겨 다니다가 발밑에서 튀어나오는 매복자",
         "relationTypes": {
           "선인장": "grazing",
           "mon_dunelizard_01": "predation",
@@ -9838,7 +9838,7 @@
         "prey": [
           "고원 표토 이끼"
         ],
-        "note": "바람 소리를 삼킨 채 고원에 서 있는 감시자 — 소리로Communication 하지 않는다",
+        "note": "바람 소리를 삼킨 채 고원에 서 있는 감시자 — 소리로는 신호를 주고받지 않는다",
         "relationTypes": {
           "고원 표토 이끼": "grazing"
         }
@@ -13979,7 +13979,7 @@
           "꽃",
           "mon_graverat_01"
         ],
-        "note": "무덤 입구 불빛을 따라 모이는 나방 — 무덤_two더지의 먹이가 된다",
+        "note": "무덤 입구 불빛을 따라 모이는 나방 — 무덤 두더지의 먹이가 된다",
         "relationTypes": {
           "corpse": "grazing",
           "꽃": "grazing",

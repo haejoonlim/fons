@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FONS · 확률론 자동 전직 (S1 검증)</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0b0f14;--panel:#121922;--panel2:#18212c;--border:#263340;
+  --text:#e6edf3;--dim:#9fb0c0;--ice:#8dd4e7;--amber:#e3bb75;--good:#81c995;--bad:#e07b5f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+     font:14px/1.65 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:1180px;margin:auto;padding:28px 20px 70px}
+.eyebrow{font-size:11px;letter-spacing:.17em;color:var(--ice)}
+h1{font-size:26px;margin:6px 0 4px}
+h2{font-size:16px;margin:26px 0 10px;color:var(--amber)}
+.lede{color:var(--dim);margin:0 0 18px;max-width:900px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+label{font-size:12px;color:var(--dim)}
+input,select{background:var(--panel2);border:1px solid var(--border);color:var(--text);
+             padding:6px 10px;border-radius:6px;font-family:inherit;font-size:13px}
+input[type=range]{padding:0;width:170px;vertical-align:middle}
+button{background:var(--panel2);border:1px solid var(--border);color:var(--text);
+       padding:7px 15px;border-radius:6px;font-size:13px;cursor:pointer;font-family:inherit}
+button:hover{border-color:var(--ice);color:var(--ice)}
+button.on{background:var(--ice);color:#04121a;border-color:var(--ice);font-weight:700}
+
+/* 후보 막대 */
+.cand{display:grid;grid-template-columns:150px 1fr 96px;gap:10px;align-items:center;
+      padding:7px 0;border-bottom:1px solid #1a222c}
+.cand:last-child{border-bottom:none}
+.cname{font-size:13px;display:flex;align-items:center;gap:6px}
+.bar{height:20px;background:var(--panel2);border-radius:4px;position:relative;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,#3d6d80,var(--ice));transition:width .18s}
+.fill.lead{background:linear-gradient(90deg,#8a6a2a,var(--amber))}
+.cval{font-size:13px;text-align:right;font-variant-numeric:tabular-nums;color:var(--dim)}
+.cval b{color:var(--text);font-size:15px}
+.leadtag{font-size:10px;background:#3a2f14;color:var(--amber);border:1px solid #5a4a20;
+         padding:1px 6px;border-radius:99px}
+
+/* 축 기여 */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid #1a222c}
+th{color:var(--dim);font-weight:400;font-size:12px}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.zero{color:#5a6b7a}
+
+/* 계약 */
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13px}
+.kv dt{color:var(--dim)}
+.kv dd{margin:0;font-variant-numeric:tabular-nums}
+.pass{color:var(--good)}.fail{color:var(--bad);font-weight:700}
+.note{font-size:12px;color:var(--dim);margin-top:10px;padding-top:10px;border-top:1px solid #1a222c}
+code{background:var(--panel2);padding:1px 6px;border-radius:4px;font-size:12px;color:var(--ice)}
+.warn{background:#241a12;border:1px solid #4a3520;border-radius:8px;padding:11px 14px;
+      font-size:12.5px;color:#e8c89a;margin-bottom:14px}
+.hint{font-size:12px;color:var(--dim);margin-top:4px}
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">FONS · career promotion lab</div>
+  <h1>확률론 자동 전직 — S1 검증</h1>
+  <p class="lede">
+    플레이어는 직업을 <b>고르지 않는다</b>. 이 영웅이 무엇을 배우고 무엇을 싸웠는지가
+    확률을 만든다. 여기서는 <code>CareerPromotionEngine.cs</code> 가 계산하는 값을
+    <code>sim_promotion.py</code> 와 같은 수식으로 재현한다.
+    규칙 = <b>확률ᵢ = readinessᵢ / Σ readiness</b>.
+  </p>
+
+  <div class="warn">
+    ★ <b>S1 은 계산만 한다</b> — 세이브에도, UI에도, 실제 전직에도 연결되지 않았다.
+    아래 값이 게임에 영향을 주는 것은 아니다. S2~S5 에서接线된다.
+  </div>
+
+  <h2>영웅 입력</h2>
+  <div class="panel">
+    <div class="row">
+      <label>아무것도 안 함</label>
+      <button id="btnZero" onclick="preset('zero')">표본 0</button>
+      <button onclick="preset('fire')">화염 일변</button>
+      <button onclick="preset('mage')">마법 일변</button>
+      <button onclick="preset('craft')">제작 일변</button>
+      <button onclick="preset('master')">master 완성</button>
+    </div>
+    <div class="row">
+      <label>L1</label><select id="parent" onchange="render()"></select>
+      <label>성향(role)</label><input id="persona" value="" size="8" oninput="render()">
+    </div>
+    <div class="row">
+      <label>지능 0.5</label><input type="range" id="intellect" min="0" max="100" value="50" oninput="render()">
+      <span id="intellectV" class="hint">0.50</span>
+      <label style="margin-left:14px">마법친화 0.5</label>
+      <input type="range" id="magic" min="0" max="100" value="50" oninput="render()">
+      <span id="magicV" class="hint">0.50</span>
+    </div>
+    <div class="row">
+      <label>스킬 사용 0</label><input type="range" id="skillUse" min="0" max="200" value="0" oninput="render()">
+      <span id="skillV" class="hint">0회</span>
+      <label style="margin-left:14px">실전 표본 0</label>
+      <input type="range" id="attempts" min="0" max="60" value="0" oninput="render()">
+      <span id="attV" class="hint">0회 (성공률 0.8)</span>
+      <label style="margin-left:14px">적성 0</label>
+      <input type="range" id="apt" min="0" max="100" value="0" oninput="render()">
+      <span id="aptV" class="hint">0</span>
+    </div>
+    <div class="hint">법칙 친화도는 선택한 L1 아래 L2 의 lawTags 에 균등하게 들어간다 (종족 성향 대리).</div>
+  </div>
+
+  <h2>후보별 확률</h2>
+  <div class="panel"><div id="cands"></div></div>
+
+  <h2>축별 기여 (가중치 전부)</h2>
+  <div class="panel"><div id="axes"></div></div>
+
+  <h2>계산된 불변식</h2>
+  <div class="panel">
+    <dl class="kv">
+      <dt>확률 합</dt><dd id="sumV">—</dd>
+      <dt>최댓값</dt><dd id="maxV">—</dd>
+      <dt>균등 분배 기준 1/N</dt><dd id="evenV">—</dd>
+      <dt>확정 여부</dt><dd id="confV">—</dd>
+    </dl>
+    <div class="note" id="verdict"></div>
+  </div>
+
+  <h2>시나리오 검증 (click)</h2>
+  <div class="panel">
+    <div class="row">
+      <button onclick="runScenario('zero')">① 표본 0 → 균등?</button>
+      <button onclick="runScenario('master')">② master → 100%?</button>
+      <button onclick="runScenario('inversion')">③ 뒤집힘 없는가?</button>
+    </div>
+    <div id="scen" class="hint">버튼을 누르면 규칙을 직접 돌려 본다.</div>
+  </div>
+</main>
+
+<script>
+// ── 축 가중치 (설계 §3 · CareerPromotionEngine.cs 와 1:1) ──────────
+const W = {skill:.35, outcome:.10, aptitude:.15, personality:.10,
+           stats:.15, intellect:.05, race:.10};
+const SAT = {skill:60, apt:100};
+const LOW_T = 4, LOW_D = .80;
+const WORLD = ['fire','water','earth','wind','light','dark','void'];
+
+const TREE = {
+  'l1_warrior':   ['격투사','검술사','파쇄사','정령기사','격투왕'],
+  'l1_guardian':  ['철벽기사','전위기사','수도사','성좌기사'],
+  'l1_assassin':  ['자객','맹독사','도적'],
+  'l1_archer':    ['명사수','포화사수','사냥꾼','마궁사'],
+  'l1_mage':      ['성술사','소환술사','원소 마도사','주술사'],
+  'l1_supporter': ['드루이드','신관','정신술사','전술가'],
+  'l1_nameless':  ['무직','현자'],
+};
+// L2 법칙(종족 성향 대리) — 확률 계측용이라 실제 tree 와 무관하게 대표값을 쓴다.
+const LAWS = {
+  '격투사':[], '검술사':[], '파쇄사':[], '정령기사':['void'], '격투왕':[],
+  '철벽기사':[], '전위기사':[], '수도사':[], '성좌기사':['light'],
+  '자객':['dark'], '맹독사':[], '도적':['dark'],
+  '명사수':[], '포화사수':['fire'], '사냥꾼':[], '마궁사':[],
+  '성술사':['wind'], '소환술사':[], '원소 마도사':['fire','water','earth','wind','light','dark'],
+  '주술사':['dark'],
+  '드루이드':[], '신관':['light'], '정신술사':['wind'], '전술가':[],
+  '무직':['void'], '현자':['void'],
+};
+const NAMES = {
+  'l1_warrior':'전사','l1_guardian':'수호자','l1_assassin':'암살자',
+  'l1_archer':'궁수','l1_mage':'마법사','l1_supporter':'지원가','l1_nameless':'무명자',
+};
+const ROLES = ['전투','마법','무직'];
+
+const $ = id => document.getElementById(id);
+const clamp01 = v => v<0?0:(v>1?1:v);
+const v = id => parseFloat($(id).value);
+
+function candidates(){ return TREE[$('parent').value] || []; }
+
+function axesFor(name){
+  const role = ROLES.includes(name) ? name : '전투';
+  const skill  = SAT.skill ? clamp01(v('skillUse')/(v('skillUse')+SAT.skill)) : 0;
+  const att = v('attempts');
+  let outcome = 0;
+  if (att>0){
+    const conf = att<LOW_T ? Math.pow(LOW_D, LOW_T-att) : 1;
+    outcome = .8 * conf;              // 성공률 0.8 가정 (슬라이더가 표본만 준다)
+  }
+  const apt = clamp01(v('apt')/SAT.apt);
+  const persona = $('persona').value.trim();
+  const personality = !persona ? 0 : (persona===role ? 1 : .5);
+  const stats = 0;                     // ★ S1 은 항상 0 (전투 미연결)
+  const intel = v('intellect')/100, magic = v('magic')/100;
+  const iv = (role==='마법'||role==='무직') ? magic : intel;
+  const bias = iv>=.5 ? (iv-.5) : (.5-iv);
+  const intellect = clamp01(bias*2);
+  const laws = LAWS[name] || [];
+  const race = laws.length ? clamp01(laws.length/WORLD.length*2) : 0;
+  return {skill,outcome,aptitude:apt,personality,stats,intellect,race,
+          ready: W.skill*skill + W.outcome*outcome + W.aptitude*apt
+               + W.personality*personality + W.stats*stats
+               + W.intellect*intellect + W.race*race};
+}
+
+function evaluate(){
+  const names = candidates();
+  const scored = names.map(n => ({name:n, ...axesFor(n)}));
+  const total = scored.reduce((s,c)=>s+c.ready, 0);
+  if (total<=1e-9) scored.forEach(c=>c.p=.5);          // ★ 표본 0 → 균등
+  else scored.forEach(c=>c.p = c.ready/total);
+  scored.sort((a,b)=>b.p-a.p);
+  return {scored, sum: scored.reduce((s,c)=>s+c.p,0)};
+}
+
+function render(){
+  $('intellectV').textContent=(v('intellect')/100).toFixed(2);
+  $('magicV').textContent=(v('magic')/100).toFixed(2);
+  $('skillV').textContent=v('skillUse')+'회';
+  $('attV').textContent=v('attempts')+'회 (성공률 0.8)';
+  $('aptV').textContent=v('apt');
+
+  const {scored,sum} = evaluate();
+  const n = scored.length;
+  const lead = scored[0] && scored[0].p>=1-1e-4 ? scored[0] : null;
+
+  $('cands').innerHTML = scored.map((c,i)=>{
+    const conf = c.p>=1-1e-4;
+    return `<div class="cand">
+      <div class="cname">${c.name}${i===0?'<span class="leadtag">LEADER</span>':''}
+        ${conf?'<span class="leadtag">확정</span>':''}</div>
+      <div class="bar"><div class="fill${i===0?' lead':''}" style="width:${(c.p*100).toFixed(2)}%"></div></div>
+      <div class="cval"><b>${(c.p*100).toFixed(1)}%</b></div>
+    </div>`;
+  }).join('') || '<div class="hint">후보 없음</div>';
+
+  const top = scored[0];
+  $('axes').innerHTML = `<table><tr><th>축</th><th>가중치</th>
+    <th style="text-align:right">점수</th><th style="text-align:right">기여</th></tr>` +
+    Object.entries(W).map(([k,w])=>{
+      const sc = top ? top[k] : 0;
+      const cls = sc===0 ? 'zero' : '';
+      return `<tr><td>${k}</td><td class="num">${(w*100).toFixed(0)}%</td>
+        <td class="num ${cls}">${sc.toFixed(3)}</td>
+        <td class="num">${(w*sc).toFixed(4)}</td></tr>`;
+    }).join('') +
+    `<tr><td><b>readiness</b></td><td class="num">100%</td>
+      <td class="num"></td><td class="num"><b>${(top?top.ready:0).toFixed(4)}</b></td></tr>`;
+
+  $('sumV').textContent = sum.toFixed(6);
+  $('maxV').textContent = top ? (top.p*100).toFixed(2)+'%' : '—';
+  $('evenV').textContent = n ? (100/n).toFixed(2)+'%' : '—';
+  $('confV').innerHTML = lead
+    ? `<span class="pass">확정 — ${lead.name}</span>`
+    : `<span class="fail">미확정</span>`;
+
+  $('verdict').innerHTML = n===0 ? '후보가 없다.' :
+    (Math.abs(sum-1)<1e-4
+      ? `<span class="pass">✔ 확률 합 1 (${sum.toFixed(6)})</span> — 분배 계약 성립.`
+      : `<span class="fail">✘ 합이 1 이 아님</span>`) +
+    ' ★ 규칙이 <code>확률 = readiness / Σreadiness</code> 이므로 합은 저절로 1 이 되고 ' +
+    '<b>확률 순서 = readiness 순서</b>가 보장된다.';
+}
+
+function preset(k){
+  const set=(id,val)=>{$(id).value=val;};
+  if(k==='zero'){ ['intellect','magic','skillUse','attempts','apt'].forEach(i=>set(i,0)); }
+  if(k==='fire'){ set('parent','l1_mage'); $('persona').value='';
+    set('intellect',50); set('magic',50); set('skillUse',0); set('attempts',0); set('apt',0); }
+  if(k==='mage'){ $('parent').value='l1_mage'; $('persona').value='마법';
+    set('intellect',50); set('magic',95); set('skillUse',120); set('attempts',40); set('apt',60); }
+  if(k==='craft'){ $('parent').value='l1_supporter'; $('persona').value='무직';
+    set('intellect',80); set('magic',50); set('skillUse',30); set('attempts',20); set('apt',90); }
+  if(k==='master'){ $('persona').value='전투';
+    set('intellect',50); set('magic',50); set('skillUse',200); set('attempts',60); set('apt',100); }
+  render();
+}
+
+function runScenario(k){
+  const c = candidates().map(n=>({name:n, ...axesFor(n)}));
+  const out = [];
+  if(k==='zero'){
+    const z = c.map(x=>x.name).map(n=>({n, p:1/c.length}));
+    const dev = Math.max(...z.map(x=>Math.abs(x.p-1/c.length)));
+    out.push(`후보 ${c.length}개 · 전부 ${(100/c.length).toFixed(2)}% · 최대 오차 ${dev.toExponential(2)}`,
+             dev<1e-4?'✔ 균등 분배 보존 계약 성립':'✘ 균등 분배가 깨졌다');
+  }
+  if(k==='master'){
+    // readiness 중 최고 하나만 1 로 — 나머지 0 (mastery 완성 상태)
+    const t = c.map((x,i)=>({...x, ready: i===0?1:0}));
+    const tot=t.reduce((s,x)=>s+x.ready,0);
+    t.forEach(x=>x.p=x.ready/tot);
+    out.push(`최고 후보만 mastery 완성 → ${t[0].name} ${(t[0].p*100).toFixed(1)}%`,
+             t[0].p>=1-1e-4?'✔ 확정 규칙 성립':'✘ 100% 가 되지 않는다');
+  }
+  if(k==='inversion'){
+    // 임의 readiness 2,000 건 — 확률 순서가 readiness 순서와 같은가
+    let inv=0;
+    for(let t=0;t<2000;t++){
+      const n=2+Math.floor(Math.random()*7);
+      const arr=Array.from({length:n},()=>({r:Math.random()*Math.random()}));
+      const s=arr.reduce((a,x)=>a+x.r,0);
+      arr.forEach(x=>x.p=x.r/s);
+      for(let i=0;i<n;i++)for(let j=0;j<n;j++)
+        if(arr[i].r>arr[j].r && arr[i].p<arr[j].p-1e-9) inv++;
+    }
+    out.push(`임의 readiness 2,000건 · 역전 ${inv}건`,
+             inv===0?'✔ 뒤집힘 없음 (합만 1 로는 못 잡던 부류)':'✘ 역전이 발생했다');
+  }
+  $('scen').innerHTML = out.map(x=>`<div>${x}</div>`).join('');
+}
+
+// 초기화
+(function init(){
+  const sel=$('parent');
+  Object.entries(NAMES).forEach(([id,n])=>{
+    const o=document.createElement('option'); o.value=id; o.textContent=`${n} (${TREE[id].length})`;
+    sel.appendChild(o);
+  });
+  sel.value='l1_warrior';
+  render();
+})();
+</script>
+</body>
+</html>

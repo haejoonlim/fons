@@ -14,7 +14,7 @@
 
 - 에셋·Unity C#은 **다시 만든다**. 이 레포에 복사하지 않는다.
 - 문서·설정(JSON)·시뮬레이터 숫자만 남긴다.
-- JSON의 단일 출처는 원본 저장소의 `unity/Assets/Resources/Data/`이고, 이 레포는 `tools/sync_data.py`로만 가져온다.
+- JSON의 단일 출처는 원본 저장소의 원본 저장소의 데이터 폴더이고, 이 레포는 `tools/sync_data.py`로만 가져온다.
 - 숫자의 근거는 사실표다. 원본에 없는 값을 추측해서 쓰지 않는다 — 이전 판이 그 실수를 했다.
 - 웹 표현층(Vite/CSS/Three.js 씬)은 버리고, **시뮬 코어만** GDScript로 포팅한다.
 
@@ -22,7 +22,7 @@
 
 ### 1-1. 데이터 — 17종, 전부 이관 대상
 
-`unity/Assets/Resources/Data/`에 **17종**이 있다 (원본 대조). 이름은 `data/manifest.json`과 이미 일치한다.
+원본 저장소의 데이터 폴더에 **17종**이 있다 (원본 대조). 이름은 `data/manifest.json`과 이미 일치한다.
 
 ```
 ambient.json                  biomes.json                ecology_codex.json
@@ -48,12 +48,12 @@ synergy.json                  world_laws.json
 | `design-docs/설계/` · `제안서/` · `_기록/` | 확정 상세·미확정 후보·검수 기록 (원본 대조) | 정본 아님 — 인용 금지 표기와 함께 보관 |
 | `fons-web-ver/PLAN.md` · `GAME_PLAN_3D.md` | 웹 W0~W4 · 3D G0~G4 플랜과 검증표 (원본 대조) | `docs/web-plan/` |
 | `fons-web-ver/docs/` | 웹 에셋 기준·플레이테스트 기록 (원본 대조) | `docs/web-plan/` (에셋 자체는 버림) |
-| `unity/PORTING_MAP.md` | 구 Godot `.gd` 201개 참고 색인 — v8.0 리부트로 "직접 이식 대상 아님"으로 강등 (원본 대조) | `docs/GODOT_PORTING_MAP.md`로 승계 |
+| `unity/PORTING_MAP.md` | 구 Godot `.gd` 201개 참고 색인 — v8.0 리부트로 "직접 이식 대상 아님"으로 강등 (원본 대조) | `docs/dev/GODOT_PORTING_MAP.md`로 승계 |
 | `unity/README.md` | Unity 프로젝트 안내 (원본 대조) | `docs/` 발췌 |
 | `인수인계_2026-09-27.md` · `loop/` | 인수인계·오케스트레이터 정의 (원본 대조) | `docs/handoff/` 아카이브 |
 | `CLAUDE.md` · `GPT에셋발주_*.txt` | 작업 규칙 · 에셋 발주 프롬프트 **(원본 대조)** | 발주 프롬프트는 에셋 재제작 때 참고 |
 
-- 원본의 정본은 **11개 GDD 문서(00~09·99) + `unity/Assets/Resources/Data/`의 JSON**이다. `설계/`·`제안서/`·`_기록/`·`결정로그/`는 근거 자료이지 확정 규칙의 정본이 아니다 (원본 대조).
+- 원본의 정본은 **11개 GDD 문서(00~09·99) + 원본 저장소의 데이터 폴더의 JSON**이다. `설계/`·`제안서/`·`_기록/`·`결정로그/`는 근거 자료이지 확정 규칙의 정본이 아니다 (원본 대조).
 
 ### 1-3. 포팅할 것 — 시뮬레이터 소스
 
@@ -76,8 +76,8 @@ game3d/explore3d.ts  game3d/monparts.ts
 
 | 원본 경로 | 이유 |
 |---|---|
-| `unity/Assets/Scripts/**` (C#) | 전부 GDScript로 재작성 (원본 대조) |
-| `unity/Assets/Art` · `Prefabs` · `Scenes` · `Icon.png` · `TextMesh Pro` | 에셋 재제작 (원본 대조) |
+| 원본 C# 구현 전체 | 전부 GDScript로 재작성 (원본 대조) |
+| 원본 아트·프리팹·씬·폰트 | 에셋 재제작 (원본 대조) |
 | `ProjectSettings/` · 모든 `.meta` | Unity 전용 (원본 대조) |
 | `fons-web-ver/app/src/style.css` · `app/src/assets/` | 웹 표현층 (원본 대조) |
 | `fons-launcher/` | macOS 런처 — 범위 밖 (원본 대조) |
@@ -115,15 +115,18 @@ git push -u origin main
 
 ## 3. 데이터 이관 (Phase 0)
 
+> **상태 (2026-10-17)**: 이관 완료 — 17종이 `data/` 와 `godot/data/` 에 있다 (자체 실측).
+> 원본 원본 에셋 트리는 그 뒤 로컬에서 삭제됐다. 아래 명령은 원본이 다시 생겼을 때의 절차다.
+
 ```bash
 # 1) 대조 — 2026-10-17에 이미 끝났고 diff 0 이다. 재확인용으로만 쓴다.
-ls ~/soul-commander/unity/Assets/Resources/Data/*.json | xargs -n1 basename | sort > /tmp/original_data.txt
+ls <원본 데이터 폴더>/*.json | xargs -n1 basename | sort > /tmp/original_data.txt
 python3 -c "import json;print('\n'.join(sorted(json.load(open('data/manifest.json'))['files'])))" > /tmp/manifest_data.txt
 diff /tmp/original_data.txt /tmp/manifest_data.txt
 
 # 2) 복사 — 원본 저장소와 Godot 런타임 양쪽으로
-./.venv/bin/python tools/sync_data.py --src ~/soul-commander/unity/Assets/Resources/Data --dst data
-./.venv/bin/python tools/sync_data.py --src ~/soul-commander/unity/Assets/Resources/Data --dst godot/data
+./.venv/bin/python tools/sync_data.py --src <원본 데이터 폴더> --dst data
+./.venv/bin/python tools/sync_data.py --src <원본 데이터 폴더> --dst godot/data
 
 # 3) 게이트
 ./.venv/bin/python tools/check_docs.py
@@ -139,15 +142,15 @@ diff /tmp/original_data.txt /tmp/manifest_data.txt
 
 | 순서 | 원본 | 대상 | 상태 |
 |---|---|---|---|
-| 1 | `fons-web-ver/app/src/summon.ts` | `godot/scripts/sim/gacha.gd` (13단계 생성 파이프라인까지 이 파일에서 이어 간다 — 분리할 경우에만 `godot/scripts/sim/summon.gd`) | **부분 완료** — 확정 #32 확률표·#11 종족 롤을 옮겼고 게이트로 검증한다 (자체 실측). 남은 것: 13단계 생성 파이프라인·pity 카운터 |
-| 2 | `fons-web-ver/app/src/combat.ts` | `godot/scripts/sim/combat.gd` | 착수 전 — 관통식·위치보정·전술게이지 (확정 #6) (원본 대조) |
-| 3 | `fons-web-ver/app/src/party.ts` | `godot/scripts/sim/party.gd` | 착수 전 — 5인·영구사망·보상 (확정 #3·#4) (원본 대조) |
-| 4 | `fons-web-ver/app/src/estate.ts` | `godot/scripts/sim/estate.gd` | 착수 전 — 시설·인구·세금·식량 (원본 대조) |
-| 5 | `fons-web-ver/app/src/tower.ts` · `economy_snapshot.ts` | `godot/scripts/sim/tower.gd` · `economy.gd` | 착수 전 (원본 대조) |
-| 6 | `fons-web-ver/app/src/game.ts` | `godot/scripts/autoload/game_state.gd` | 부분 — 상태머신 골격만 (자체 실측) |
-| 7 | `fons-web-ver/app/src/game3d/` | `godot/scripts/world/` | 착수 전 — game3d 6종 대응 (원본 대조) |
+| 1 | `fons-web-ver/app/src/summon.ts` | `godot/core/gacha.gd` (13단계 생성 파이프라인까지 이 파일에서 이어 간다 — 분리할 경우에만 `godot/core/summon.gd`) | **부분 완료** — 확정 #32 확률표·#11 종족 롤을 옮겼고 게이트로 검증한다 (자체 실측). 남은 것: 13단계 생성 파이프라인·pity 카운터 |
+| 2 | `fons-web-ver/app/src/combat.ts` | `godot/core/combat.gd` | 착수 전 — 관통식·위치보정·전술게이지 (확정 #6) (원본 대조) |
+| 3 | `fons-web-ver/app/src/party.ts` | `godot/core/party.gd` | 착수 전 — 5인·영구사망·보상 (확정 #3·#4) (원본 대조) |
+| 4 | `fons-web-ver/app/src/estate.ts` | `godot/core/estate.gd` | 착수 전 — 시설·인구·세금·식량 (원본 대조) |
+| 5 | `fons-web-ver/app/src/tower.ts` · `economy_snapshot.ts` | `godot/core/tower.gd` · `economy.gd` | 착수 전 (원본 대조) |
+| 6 | `fons-web-ver/app/src/game.ts` | `godot/autoload/game_state.gd` | 부분 — 상태머신 골격만 (자체 실측) |
+| 7 | `fons-web-ver/app/src/game3d/` | `godot/game/world/` | 착수 전 — game3d 6종 대응 (원본 대조) |
 
-- 각 단계의 완료 조건은 `godot/tests/test_*.gd`와 `tools/gate_all.py` 통과다.
+- 각 단계의 완료 조건은 `godot/tests/unit/test_*.gd`와 `tools/gate_all.py` 통과다.
 - 원본 게이트 중 포팅할 것: `verify_w1.mjs`(소환 분포 — `N = 100000`) · `verify_w2.mjs`(전투 1런) · `verify_w3.mjs`(탑·도감) · `verify_w4.mjs`(영지 수지) — 전부 VERIFY OK 상태다 (원본 대조).
 - `verify_*.mjs`는 **15개**다. 이전 판의 "20여개"는 원본에 근거가 없었다 (원본 대조).
 - `verify_game.mjs`의 최신 기록값은 **42/42**다. 이전 판의 22/22는 낡은 이력 값이었다 (원본 대조).
@@ -155,8 +158,8 @@ diff /tmp/original_data.txt /tmp/manifest_data.txt
 
 ## 5. 버릴 것 재확인 (실수 방지)
 
-- `unity/Assets/Art`, `Prefabs`, `Scenes`, `Icon.png`, `TextMesh Pro` 복사 금지 (원본 대조)
-- `unity/Assets/Scripts` C# 복사 금지 (원본 대조)
+- 원본 아트·프리팹·씬, `Icon.png`, `TextMesh Pro` 복사 금지 (원본 대조)
+- 원본 C# 구현 복사 금지 (원본 대조)
 - `fons-web-ver/app/src/assets`, `style.css` 복사 금지 (원본 대조)
 - `ProjectSettings/`, `.meta` 복사 금지 (원본 대조)
 - **Unity 잔재(`*.meta`, `ProjectSettings/`)가 이 저장소에 들어오면 안 된다** — 들어오면 Godot 프로젝트가 오염된다 (자체 실측).
@@ -170,7 +173,7 @@ diff /tmp/original_data.txt /tmp/manifest_data.txt
 - [ ] `data/` · `godot/data/`에 17종 실제 복사 (`check_docs.py` 통과까지)
 - [x] `sim/gacha.py` 단독 실행으로 소환 확률표 재현 — 확정 #32·#11 (자체 실측)
 - [x] `godot/`가 Godot 4.7.2에서 열리고 GUT 통과 (자체 실측)
-- [x] `docs/GODOT_PORTING_MAP.md`에 TS→GDScript 매핑표 작성
+- [x] `docs/dev/GODOT_PORTING_MAP.md`에 TS→GDScript 매핑표 작성
 - [ ] 포팅 순서 2~7 착수 (§4)
 
 ## 7. 이전 판이 원본에 없다고 확인된 주장 (재발 방지용 기록)

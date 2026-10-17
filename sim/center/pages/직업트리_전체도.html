@@ -1,0 +1,727 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FONS · 직업 트리 3.4.0</title>
+<style>
+:root{color-scheme:dark;--line:#263340;--muted:#9fb0c0;--ice:#8dd4e7;--amber:#e3bb75}
+*{box-sizing:border-box}body{margin:0;background:#0b0f14;color:#edf2f7;font:15px/1.6 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:1240px;margin:auto;padding:36px 20px 80px}
+.eyebrow{font-size:11px;letter-spacing:.17em;color:var(--ice)}
+.badge{display:inline-block;border:1px solid #415362;border-radius:99px;padding:3px 11px;color:var(--amber);font-size:12px;margin:10px 0}
+h1{font-size:clamp(26px,4.2vw,42px);line-height:1.15;margin:6px 0 12px}
+.lede,.note{max-width:860px;color:#c3cfdb}.note{color:var(--muted);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}
+.stat{background:#141d26;border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:20px}.stat span{font-size:12px;color:var(--muted)}
+.axiskey{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 28px}
+.l1{margin:0 0 32px}.l1h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding-bottom:8px;border-bottom:2px solid var(--line)}
+.l1h b{font-size:24px}.l1h small{color:var(--muted);font-size:12px;margin-left:auto}
+.ldesc{color:#b8c6d3;margin:8px 0 12px}
+.role{font-size:11px;padding:2px 9px;border-radius:99px;background:#1d2731;border:1px solid #35424f}
+.job{border:1px solid var(--line);border-radius:12px;padding:14px;margin:11px 0;background:#10161d}
+.job.term{background:#171522;border-color:#4a3f5c}
+.jh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.jh b{font-size:18px}
+.jlaw{color:var(--muted);font-size:12px}.jdesc{color:#a9b8c6;margin:6px 0 12px;font-size:14px}
+.bt{font-size:11px;padding:2px 8px;border-radius:99px;background:#2a2233;border:1px solid #5b4a70;color:#d7c3ea}
+.kws{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:10px}
+.kw{border:1px solid #223040;border-radius:11px;padding:12px;background:#0e141a}
+.kh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.kname{font-size:16px;font-weight:650}
+.tier{font-size:11px;font-weight:700;padding:1px 7px;border-radius:5px;margin-left:auto}
+.t1{background:#33232a;color:#e8a0ac}.t2{background:#2b2a22;color:#d6c188}.t3{background:#24303c;color:#9fc4de}
+.axis{font-size:12px;padding:2px 8px;border-radius:6px;border:1px solid var(--c);color:var(--c)}
+.axis em{font-style:normal;font-size:10px;opacity:.72;margin-left:5px}
+.axis.term{--c:#b48dd4;border-style:dashed}
+.l3wrap{margin:0 0 34px;padding:16px;border:1px solid #3a3348;border-radius:14px;background:#0f0d16}
+.l3h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding-bottom:8px;border-bottom:2px solid #4a3f5c}
+.l3h b{font-size:22px}.l3h small{color:var(--muted);font-size:12px;margin-left:auto}
+.cond{font-size:10px;padding:1px 6px;border-radius:4px;background:#2a1f33;border:1px solid #5b4a70;color:#d7c3ea}
+.kdesc{color:#a5b4c2;margin:0 0 9px;font-size:13.5px}
+.mlab{font-size:10px;letter-spacing:.1em;color:#6d7f8f;margin-bottom:3px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:11.5px}
+th{color:#6d7f8f;font-weight:500;padding:2px 3px;text-align:right}
+td{padding:2px 3px;text-align:right;border-top:1px solid #1b2530}
+/* 35차 — 13축 표.
+   ★ 이전 정의가 두 겹으로 깨져 있었다: ① repeat(7,1fr) 인데 셀은 (이름,값) 쌍이므로
+     7칸에 3.5쌍만 들어갔다 ② tbody 에 display:contents 가 없어 tbody 가 하나의 블록으로 남아
+     카드가 아무리 좁아도 표가 밖으로 넘쳤다(문서 가로 스크롤 발생).
+   → 쌍 3개씩(=6칸) 배치하고 tbody 까지 contents 로 펴서 카드가 몇 개든 밖으로 나가지 않게 한다. */
+table.vstat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr) minmax(30px,auto));gap:1px 8px;font-size:11px}
+table.vstat tbody,table.vstat tr{display:contents}
+table.vstat th{text-align:left;padding:1px 0;border-top:1px solid #1b2530;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+table.vstat td{text-align:right;padding:1px 0;border-top:1px solid #1b2530;font-variant-numeric:tabular-nums}
+table.vstat th:first-child{color:#8fa3b8}
+td.up{color:#7fd39a}td.dn{color:#dd8b8b}td.fl{color:#5f7183}
+footer{border-top:1px solid var(--line);margin-top:30px;padding-top:12px;color:#7e8d9b;font-size:12px}
+@media(max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}.l1h small{margin-left:0;width:100%}}
+</style></head><body><main>
+<div class="eyebrow">FONS · career tree</div><span class="badge">v3.4.0 · job_tree.json 에서 자동 생성</span>
+<h1>직업은 L2 까지.<br>그 옆에 키워드 하나.</h1>
+<p class="lede">L3 층은 30차에서 없앴고, 그 자리를 키워드 94개가 대신한다. 키워드마다 스탯 13축 배율과 난이도 티어가 붙는다. L2 26종이 최종 직업이다. 카드마다 CP 배율 `power` 가 있고 (×1.00 ~ ×1.22 · 중앙 ×1.16), 키워드가 실제로 올리는 CP 가 그 값과 같다. 같은 직업 안의 차이는 어느 스탯이 오르느냐다.</p>
+<div class="stats"><div class="stat"><b>7</b><span>L1 계열</span></div><div class="stat"><b>26</b><span>L2 = 최종 직업</span></div><div class="stat"><b>1</b><span>L3 생활직</span></div><div class="stat"><b>94</b><span>키워드</span></div><div class="stat"><b>×1.16</b><span>키워드 median CP 상승</span></div></div>
+<p class="note">statMod <b>13축</b>은 HP · ATK · DEF · 공속 · MAG · MDEF · CRI · PEN · <b>MPEN</b> · <b>MS</b> · CDMG · STA · MANA. 38차에 회피율(EVA)은 없앴다 — 몸을 빼는 확률 대신 <b>민첩 = 이동속도</b>만 남겼다. 33차까지 7축이었고 eva·cdmg·spd_cast·sta 를 통째로 자르고 있었다. MPEN(마법 관통)은 34차 신설 — 마법 피해가 관통을 무시하던 것을 물리 관통과 대칭으로 되돌렸다. 35차 후속5에서 시전속도는 공속에 통합되고 마나가 정식 축이 됐다. <b>티어는 1/2/3 이며 1 이 가장 어렵다.</b> L2 전직 난이도 티어(A=쉬움)와는 별개이고 방향도 반대다. <b>스킬 상향은 33차에 삭제했다</b> — 키워드는 순수 스탯 장비다. <b>같은 L2 의 세 키워드는 축이 전부 다르다</b> — 같으면 세 갈래 중 둘이 구별되지 않는다.</p>
+<div class="axiskey">
+<span class="axis" style="--c:#e07b5f">힘<em>ATK</em></span>
+<span class="axis" style="--c:#8dd4e7">속도<em>공속</em></span>
+<span class="axis" style="--c:#f0a868">치명<em>CRI</em></span>
+<span class="axis" style="--c:#b48dd4">주문<em>MAG</em></span>
+<span class="axis" style="--c:#81c995">체력<em>HP</em></span>
+<span class="axis" style="--c:#d9724f">관통<em>PEN</em></span>
+<span class="axis" style="--c:#9b6fd4">마법관통<em>MPEN</em></span>
+<span class="axis" style="--c:#5fa87f">방어<em>DEF · PEN↓</em></span>
+<span class="axis" style="--c:#7f9ed4">마법방어<em>MDEF · MPEN↓</em></span>
+<span class="axis" style="--c:#c9c05f">민첩<em>MS</em></span>
+<span class="axis" style="--c:#e3bb75">치명위력<em>CDMG</em></span>
+<span class="axis" style="--c:#8fa3b8">근성<em>STA</em></span>
+<span class="axis" style="--c:#6fc9b0">마나<em>MANA</em></span>
+</div>
+<div class="l1">
+<div class="l1h"><b>전사</b><span class="role">선봉</span><small>법칙 화염·대지</small></div>
+<p class="ldesc">먼저 서서 버티는 직업 기술</p>
+<div class="job">
+<div class="jh"><b>파쇄사</b><span class="jlaw">화염·대지</span><span class="role">선봉</span>
+</div>
+<p class="jdesc">방어선을 부수러 앞으로 나가는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">공성</span><span class="tier t2">2</span><span class="axis" style="--c:#d9724f">관통<em>PEN</em></span></div>
+<p class="kdesc">성벽 한 곳만 골라 부수고 끝까지 버티는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.09</td></tr><tr><th>ATK</th><td class="up">1.21</td></tr><tr><th>DEF</th><td class="up">1.07</td></tr><tr><th>공속</th><td class="up">1.09</td></tr><tr><th>MAG</th><td class="up">1.07</td></tr><tr><th>MDEF</th><td class="up">1.07</td></tr><tr><th>CRI</th><td class="up">1.14</td></tr><tr><th>PEN ★</th><td class="up">1.42</td></tr><tr><th>MPEN</th><td class="up">1.04</td></tr><tr><th>MS</th><td class="up">1.09</td></tr><tr><th>CDMG</th><td class="up">1.07</td></tr><tr><th>STA</th><td class="up">1.09</td></tr><tr><th>MANA</th><td class="up">1.07</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">분쇄</span><span class="tier t3">3</span><span class="axis" style="--c:#e07b5f">힘<em>ATK</em></span></div>
+<p class="kdesc">무게로 밀어붙여 부수고 멈추지 않는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.06</td></tr><tr><th>ATK ★</th><td class="up">1.37</td></tr><tr><th>DEF</th><td class="dn">0.99</td></tr><tr><th>공속</th><td class="up">1.04</td></tr><tr><th>MAG</th><td class="up">1.04</td></tr><tr><th>MDEF</th><td class="dn">0.99</td></tr><tr><th>CRI</th><td class="up">1.04</td></tr><tr><th>PEN</th><td class="up">1.04</td></tr><tr><th>MPEN</th><td class="up">1.04</td></tr><tr><th>MS</th><td class="up">1.01</td></tr><tr><th>CDMG</th><td class="up">1.06</td></tr><tr><th>STA</th><td class="up">1.04</td></tr><tr><th>MANA</th><td class="up">1.04</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">연격</span><span class="tier t1">1</span><span class="axis" style="--c:#8dd4e7">속도<em>공속</em></span></div>
+<p class="kdesc">한 번 붙으면 끊지 않고 이어 치는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.16</td></tr><tr><th>ATK</th><td class="up">1.16</td></tr><tr><th>DEF</th><td class="up">1.16</td></tr><tr><th>공속 ★</th><td class="up">1.61</td></tr><tr><th>MAG</th><td class="up">1.16</td></tr><tr><th>MDEF</th><td class="up">1.16</td></tr><tr><th>CRI</th><td class="up">1.15</td></tr><tr><th>PEN</th><td class="up">1.19</td></tr><tr><th>MPEN</th><td class="up">1.19</td></tr><tr><th>MS</th><td class="up">1.16</td></tr><tr><th>CDMG</th><td class="up">1.16</td></tr><tr><th>STA</th><td class="up">1.19</td></tr><tr><th>MANA</th><td class="up">1.16</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>광전사</b><span class="jlaw">어둠·화염</span><span class="role">선봉</span>
+</div>
+<p class="jdesc">받은 만큼 돌려주는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">멸망</span><span class="tier t1">1</span><span class="axis" style="--c:#8dd4e7">속도<em>공속</em></span></div>
+<p class="kdesc">자기를 소모하며 점점 빨라지는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.16</td></tr><tr><th>ATK</th><td class="up">1.16</td></tr><tr><th>DEF</th><td class="up">1.16</td></tr><tr><th>공속 ★</th><td class="up">1.61</td></tr><tr><th>MAG</th><td class="up">1.16</td></tr><tr><th>MDEF</th><td class="up">1.16</td></tr><tr><th>CRI</th><td class="up">1.15</td></tr><tr><th>PEN</th><td class="up">1.19</td></tr><tr><th>MPEN</th><td class="up">1.19</td></tr><tr><th>MS</th><td class="up">1.16</td></tr><tr><th>CDMG</th><td class="up">1.16</td></tr><tr><th>STA</th><td class="up">1.19</td></tr><tr><th>MANA</th><td class="up">1.16</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">역습</span><span class="tier t2">2</span><span class="axis" style="--c:#e3bb75">치명위력<em>CDMG</em></span></div>
+<p class="kdesc">맞은 만큼 모아 한 번에 되돌려 주는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.14</td></tr><tr><th>ATK</th><td class="up">1.16</td></tr><tr><th>DEF</th><td class="up">1.16</td></tr><tr><th>공속</th><td class="up">1.16</td></tr><tr><th>MAG</th><td class="up">1.24</td></tr><tr><th>MDEF</th><td class="up">1.16</td></tr><tr><th>CRI</th><td class="up">1.21</td></tr><tr><th>PEN</th><td class="up">1.16</td></tr><tr><th>MPEN</th><td class="up">1.16</td></tr><tr><th>MS</th><td class="up">1.19</td></tr><tr><th>CDMG ★</th><td class="up">1.54</td></tr><tr><th>STA</th><td class="up">1.16</td></tr><tr><th>MANA</th><td class="up">1.26</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">소각</span><span class="tier t3">3</span><span class="axis" style="--c:#b48dd4">주문<em>MAG</em></span></div>
+<p class="kdesc">몸에 불을 입혀 주변까지 함께 태우는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.17</td></tr><tr><th>ATK</th><td class="up">1.14</td></tr><tr><th>DEF</th><td class="up">1.17</td></tr><tr><th>공속</th><td class="up">1.17</td></tr><tr><th>MAG ★</th><td class="up">1.54</td></tr><tr><th>MDEF</th><td class="up">1.17</td></tr><tr><th>CRI</th><td class="up">1.14</td></tr><tr><th>PEN</th><td class="up">1.17</td></tr><tr><th>MPEN</th><td class="up">1.12</td></tr><tr><th>MS</th><td class="up">1.14</td></tr><tr><th>CDMG</th><td class="up">1.14</td></tr><tr><th>STA</th><td class="up">1.17</td></tr><tr><th>MANA</th><td class="up">1.22</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>격투사</b><span class="jlaw">화염·바람</span><span class="role">선봉</span>
+</div>
+<p class="jdesc">거리를 지워서 붙고서 싸우는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">속격</span><span class="tier t1">1</span><span class="axis" style="--c:#8dd4e7">속도<em>공속</em></span></div>
+<p class="kdesc">빠른 손이 먼저 닿는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.17</td></tr><tr><th>ATK</th><td class="up">1.17</td></tr><tr><th>DEF</th><td class="up">1.17</td></tr><tr><th>공속 ★</th><td class="up">1.62</td></tr><tr><th>MAG</th><td class="up">1.17</td></tr><tr><th>MDEF</th><td class="up">1.17</td></tr><tr><th>CRI</th><td class="up">1.16</td></tr><tr><th>PEN</th><td class="up">1.19</td></tr><tr><th>MPEN</th><td class="up">1.19</td></tr><tr><th>MS</th><td class="up">1.17</td></tr><tr><th>CDMG</th><td class="up">1.17</td></tr><tr><th>STA</th><td class="up">1.19</td></tr><tr><th>MANA</th><td class="up">1.17</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">중격</span><span class="tier t3">3</span><span class="axis" style="--c:#e07b5f">힘<em>ATK</em></span></div>
+<p class="kdesc">한 방의 무게로 승부를 내는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.03</td></tr><tr><th>ATK ★</th><td class="up">1.34</td></tr><tr><th>DEF</th><td class="dn">0.97</td></tr><tr><th>공속</th><td class="up">1.01</td></tr><tr><th>MAG</th><td class="up">1.01</td></tr><tr><th>MDEF</th><td class="dn">0.97</td></tr><tr><th>CRI</th><td class="up">1.01</td></tr><tr><th>PEN</th><td class="up">1.01</td></tr><tr><th>MPEN</th><td class="up">1.01</td></tr><tr><th>MS</th><td class="dn">0.99</td></tr><tr><th>CDMG</th><td class="up">1.03</td></tr><tr><th>STA</th><td class="up">1.01</td></tr><tr><th>MANA</th><td class="up">1.01</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">밀착</span><span class="tier t2">2</span><span class="axis" style="--c:#81c995">체력<em>HP</em></span></div>
+<p class="kdesc">붙잡고 늘어져 상대가 못 벗어나게 하는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP ★</th><td class="up">1.40</td></tr><tr><th>ATK</th><td class="up">1.02</td></tr><tr><th>DEF</th><td class="up">1.04</td></tr><tr><th>공속</th><td class="up">1.06</td></tr><tr><th>MAG</th><td class="up">1.04</td></tr><tr><th>MDEF</th><td class="up">1.04</td></tr><tr><th>CRI</th><td class="up">1.04</td></tr><tr><th>PEN</th><td class="up">1.06</td></tr><tr><th>MPEN</th><td class="up">1.06</td></tr><tr><th>MS</th><td class="up">1.04</td></tr><tr><th>CDMG</th><td class="up">1.04</td></tr><tr><th>STA</th><td class="up">1.06</td></tr><tr><th>MANA</th><td class="up">1.04</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>검술사</b><span class="jlaw">바람·어둠</span><span class="role">선봉</span>
+</div>
+<p class="jdesc">칼이 손보다 먼저 닿는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">속검</span><span class="tier t1">1</span><span class="axis" style="--c:#8dd4e7">속도<em>공속</em></span></div>
+<p class="kdesc">잘라내는 횟수로 이기는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.18</td></tr><tr><th>ATK</th><td class="up">1.18</td></tr><tr><th>DEF</th><td class="up">1.18</td></tr><tr><th>공속 ★</th><td class="up">1.63</td></tr><tr><th>MAG</th><td class="up">1.18</td></tr><tr><th>MDEF</th><td class="up">1.18</td></tr><tr><th>CRI</th><td class="up">1.17</td></tr><tr><th>PEN</th><td class="up">1.21</td></tr><tr><th>MPEN</th><td class="up">1.21</td></tr><tr><th>MS</th><td class="up">1.18</td></tr><tr><th>CDMG</th><td class="up">1.18</td></tr><tr><th>STA</th><td class="up">1.21</td></tr><tr><th>MANA</th><td class="up">1.18</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">일섬</span><span class="tier t3">3</span><span class="axis" style="--c:#e07b5f">힘<em>ATK</em></span></div>
+<p class="kdesc">베는 횟수가 아니라 한 방으로 끝내는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.04</td></tr><tr><th>ATK ★</th><td class="up">1.34</td></tr><tr><th>DEF</th><td class="dn">0.97</td></tr><tr><th>공속</th><td class="up">1.01</td></tr><tr><th>MAG</th><td class="up">1.01</td></tr><tr><th>MDEF</th><td class="dn">0.97</td></tr><tr><th>CRI</th><td class="up">1.01</td></tr><tr><th>PEN</th><td class="up">1.01</td></tr><tr><th>MPEN</th><td class="up">1.01</td></tr><tr><th>MS</th><td class="dn">0.99</td></tr><tr><th>CDMG</th><td class="up">1.04</td></tr><tr><th>STA</th><td class="up">1.01</td></tr><tr><th>MANA</th><td class="up">1.01</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">반격</span><span class="tier t2">2</span><span class="axis" style="--c:#e3bb75">치명위력<em>CDMG</em></span></div>
+<p class="kdesc">상대 공격을 받아넘긴 자리에서 바로 베는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.15</td></tr><tr><th>ATK</th><td class="up">1.18</td></tr><tr><th>DEF</th><td class="up">1.18</td></tr><tr><th>공속</th><td class="up">1.18</td></tr><tr><th>MAG</th><td class="up">1.25</td></tr><tr><th>MDEF</th><td class="up">1.18</td></tr><tr><th>CRI</th><td class="up">1.23</td></tr><tr><th>PEN</th><td class="up">1.18</td></tr><tr><th>MPEN</th><td class="up">1.18</td></tr><tr><th>MS</th><td class="up">1.20</td></tr><tr><th>CDMG ★</th><td class="up">1.56</td></tr><tr><th>STA</th><td class="up">1.18</td></tr><tr><th>MANA</th><td class="up">1.28</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job term">
+<div class="jh"><b>정령기사</b><span class="jlaw">—</span><span class="role">선봉</span>
+<span class="bt">★ 종점</span>
+</div>
+<p class="jdesc">정령 하나와 계약해 함께 싸우는 직업</p>
+<p class="jdesc">전직 때 7정령 중 하나가 확률로 배정되고 무(空)만 가중치 0.12다. 무 정령은 마나 그 자체라 나머지보다 1.96% 로만 나온다. 이름은 <b>앞에 정령이 붙는다</b> — 화염정령기사 · 물정령기사 · 무정령기사.</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">화염정령기사<sup>*</sup></span><span class="tier t2">2</span><span class="axis" style="--c:#b48dd4">주문<em>MAG</em></span></div>
+<p class="kdesc">불을 계약해 같이 태우는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.17</td></tr><tr><th>ATK</th><td class="up">1.14</td></tr><tr><th>DEF</th><td class="up">1.17</td></tr><tr><th>공속</th><td class="up">1.17</td></tr><tr><th>MAG ★</th><td class="up">1.54</td></tr><tr><th>MDEF</th><td class="up">1.17</td></tr><tr><th>CRI</th><td class="up">1.14</td></tr><tr><th>PEN</th><td class="up">1.17</td></tr><tr><th>MPEN</th><td class="up">1.12</td></tr><tr><th>MS</th><td class="up">1.14</td></tr><tr><th>CDMG</th><td class="up">1.14</td></tr><tr><th>STA</th><td class="up">1.17</td></tr><tr><th>MANA</th><td class="up">1.22</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">물정령기사<sup>*</sup></span><span class="tier t2">2</span><span class="axis" style="--c:#7f9ed4">마법방어<em>MDEF · MPEN↓</em></span></div>
+<p class="kdesc">물을 계약해 같이 감싸는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.16</td></tr><tr><th>ATK</th><td class="up">1.09</td></tr><tr><th>DEF</th><td class="up">1.11</td></tr><tr><th>공속</th><td class="up">1.14</td></tr><tr><th>MAG</th><td class="up">1.16</td></tr><tr><th>MDEF ★</th><td class="up">1.52</td></tr><tr><th>CRI</th><td class="up">1.11</td></tr><tr><th>PEN</th><td class="up">1.14</td></tr><tr><th>MPEN</th><td class="dn">0.87</td></tr><tr><th>MS</th><td class="up">1.14</td></tr><tr><th>CDMG</th><td class="up">1.11</td></tr><tr><th>STA</th><td class="up">1.14</td></tr><tr><th>MANA</th><td class="up">1.16</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">대지정령기사<sup>*</sup></span><span class="tier t2">2</span><span class="axis" style="--c:#81c995">체력<em>HP</em></span></div>
+<p class="kdesc">땅을 계약해 같이 버티는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP ★</th><td class="up">1.37</td></tr><tr><th>ATK</th><td class="dn">0.99</td></tr><tr><th>DEF</th><td class="up">1.01</td></tr><tr><th>공속</th><td class="up">1.04</td></tr><tr><th>MAG</th><td class="up">1.01</td></tr><tr><th>MDEF</th><td class="up">1.01</td></tr><tr><th>CRI</th><td class="up">1.01</td></tr><tr><th>PEN</th><td class="up">1.04</td></tr><tr><th>MPEN</th><td class="up">1.04</td></tr><tr><th>MS</th><td class="up">1.01</td></tr><tr><th>CDMG</th><td class="up">1.01</td></tr><tr><th>STA</th><td class="up">1.04</td></tr><tr><th>MANA</th><td class="up">1.01</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">바람정령기사<sup>*</sup></span><span class="tier t1">1</span><span class="axis" style="--c:#8dd4e7">속도<em>공속</em></span></div>
+<p class="kdesc">바람을 계약해 같이 돌아가는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.16</td></tr><tr><th>ATK</th><td class="up">1.16</td></tr><tr><th>DEF</th><td class="up">1.16</td></tr><tr><th>공속 ★</th><td class="up">1.61</td></tr><tr><th>MAG</th><td class="up">1.16</td></tr><tr><th>MDEF</th><td class="up">1.16</td></tr><tr><th>CRI</th><td class="up">1.15</td></tr><tr><th>PEN</th><td class="up">1.19</td></tr><tr><th>MPEN</th><td class="up">1.19</td></tr><tr><th>MS</th><td class="up">1.16</td></tr><tr><th>CDMG</th><td class="up">1.16</td></tr><tr><th>STA</th><td class="up">1.19</td></tr><tr><th>MANA</th><td class="up">1.16</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">빛정령기사<sup>*</sup></span><span class="tier t2">2</span><span class="axis" style="--c:#f0a868">치명<em>CRI</em></span></div>
+<p class="kdesc">빛을 계약해 같이 밝히는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.09</td></tr><tr><th>ATK</th><td class="up">1.16</td></tr><tr><th>DEF</th><td class="up">1.09</td></tr><tr><th>공속</th><td class="up">1.12</td></tr><tr><th>MAG</th><td class="up">1.12</td></tr><tr><th>MDEF</th><td class="up">1.09</td></tr><tr><th>CRI ★</th><td class="up">1.50</td></tr><tr><th>PEN</th><td class="up">1.12</td></tr><tr><th>MPEN</th><td class="up">1.12</td></tr><tr><th>MS</th><td class="up">1.09</td></tr><tr><th>CDMG</th><td class="up">1.07</td></tr><tr><th>STA</th><td class="up">1.12</td></tr><tr><th>MANA</th><td class="up">1.09</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">어둠정령기사<sup>*</sup></span><span class="tier t1">1</span><span class="axis" style="--c:#8fa3b8">근성<em>STA</em></span></div>
+<p class="kdesc">어둠을 계약해 같이 숨는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.20</td></tr><tr><th>ATK</th><td class="up">1.15</td></tr><tr><th>DEF</th><td class="up">1.18</td></tr><tr><th>공속</th><td class="up">1.15</td></tr><tr><th>MAG</th><td class="up">1.18</td></tr><tr><th>MDEF</th><td class="up">1.18</td></tr><tr><th>CRI</th><td class="up">1.15</td></tr><tr><th>PEN</th><td class="up">1.18</td></tr><tr><th>MPEN</th><td class="up">1.18</td></tr><tr><th>MS</th><td class="up">1.15</td></tr><tr><th>CDMG</th><td class="up">1.15</td></tr><tr><th>STA ★</th><td class="up">1.57</td></tr><tr><th>MANA</th><td class="up">1.20</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">무정령기사<sup>*</sup></span><span class="tier t2">2</span><span class="axis" style="--c:#e3bb75">치명위력<em>CDMG</em></span></div>
+<p class="kdesc">아무것도 없는 것을 계약해 그대로 쓰는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.14</td></tr><tr><th>ATK</th><td class="up">1.16</td></tr><tr><th>DEF</th><td class="up">1.16</td></tr><tr><th>공속</th><td class="up">1.16</td></tr><tr><th>MAG</th><td class="up">1.24</td></tr><tr><th>MDEF</th><td class="up">1.16</td></tr><tr><th>CRI</th><td class="up">1.21</td></tr><tr><th>PEN</th><td class="up">1.16</td></tr><tr><th>MPEN</th><td class="up">1.16</td></tr><tr><th>MS</th><td class="up">1.19</td></tr><tr><th>CDMG ★</th><td class="up">1.54</td></tr><tr><th>STA</th><td class="up">1.16</td></tr><tr><th>MANA</th><td class="up">1.26</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>창술사</b><span class="jlaw">대지·바람</span><span class="role">선봉</span>
+</div>
+<p class="jdesc">창끝을 먼저 내밀어 거리를 지키는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">직사</span><span class="tier t2">2</span><span class="axis" style="--c:#e07b5f">힘<em>ATK</em></span></div>
+<p class="kdesc">창끝을 곧게 내질러 한 사람만 찌르는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.15</td></tr><tr><th>ATK ★</th><td class="up">1.50</td></tr><tr><th>DEF</th><td class="up">1.08</td></tr><tr><th>공속</th><td class="up">1.13</td></tr><tr><th>MAG</th><td class="up">1.13</td></tr><tr><th>MDEF</th><td class="up">1.08</td></tr><tr><th>CRI</th><td class="up">1.13</td></tr><tr><th>PEN</th><td class="up">1.13</td></tr><tr><th>MPEN</th><td class="up">1.13</td></tr><tr><th>MS</th><td class="up">1.11</td></tr><tr><th>CDMG</th><td class="up">1.15</td></tr><tr><th>STA</th><td class="up">1.13</td></tr><tr><th>MANA</th><td class="up">1.13</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">관철</span><span class="tier t3">3</span><span class="axis" style="--c:#d9724f">관통<em>PEN</em></span></div>
+<p class="kdesc">판을 뚫고 뒤에 선 것까지 꿰는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.14</td></tr><tr><th>ATK</th><td class="up">1.26</td></tr><tr><th>DEF</th><td class="up">1.11</td></tr><tr><th>공속</th><td class="up">1.14</td></tr><tr><th>MAG</th><td class="up">1.11</td></tr><tr><th>MDEF</th><td class="up">1.11</td></tr><tr><th>CRI</th><td class="up">1.18</td></tr><tr><th>PEN ★</th><td class="up">1.48</td></tr><tr><th>MPEN</th><td class="up">1.09</td></tr><tr><th>MS</th><td class="up">1.14</td></tr><tr><th>CDMG</th><td class="up">1.11</td></tr><tr><th>STA</th><td class="up">1.14</td></tr><tr><th>MANA</th><td class="up">1.11</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">항전</span><span class="tier t1">1</span><span class="axis" style="--c:#8fa3b8">근성<em>STA</em></span></div>
+<p class="kdesc">물러서지 않고 창을 세워 버티는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.19</td></tr><tr><th>ATK</th><td class="up">1.14</td></tr><tr><th>DEF</th><td class="up">1.17</td></tr><tr><th>공속</th><td class="up">1.14</td></tr><tr><th>MAG</th><td class="up">1.17</td></tr><tr><th>MDEF</th><td class="up">1.17</td></tr><tr><th>CRI</th><td class="up">1.14</td></tr><tr><th>PEN</th><td class="up">1.17</td></tr><tr><th>MPEN</th><td class="up">1.17</td></tr><tr><th>MS</th><td class="up">1.14</td></tr><tr><th>CDMG</th><td class="up">1.14</td></tr><tr><th>STA ★</th><td class="up">1.56</td></tr><tr><th>MANA</th><td class="up">1.19</td></tr></tbody></table>
+</div>
+</div></div>
+</div>
+<div class="l1">
+<div class="l1h"><b>수호자</b><span class="role">수호</span><small>법칙 대지·빛</small></div>
+<p class="ldesc">서 있기만 하면 시간이 가는 직업</p>
+<div class="job">
+<div class="jh"><b>철벽기사</b><span class="jlaw">대지·물</span><span class="role">수호</span>
+</div>
+<p class="jdesc">갑옷을 입고 제자리를 지키는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">버팀</span><span class="tier t2">2</span><span class="axis" style="--c:#5fa87f">방어<em>DEF · PEN↓</em></span></div>
+<p class="kdesc">맞는 힘을 몸이 아니라 갑옷이 받아 내는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.12</td></tr><tr><th>ATK</th><td class="up">1.05</td></tr><tr><th>DEF ★</th><td class="up">1.45</td></tr><tr><th>공속</th><td class="up">1.09</td></tr><tr><th>MAG</th><td class="up">1.07</td></tr><tr><th>MDEF</th><td class="up">1.07</td></tr><tr><th>CRI</th><td class="up">1.07</td></tr><tr><th>PEN</th><td class="dn">0.85</td></tr><tr><th>MPEN</th><td class="up">1.09</td></tr><tr><th>MS</th><td class="up">1.09</td></tr><tr><th>CDMG</th><td class="up">1.07</td></tr><tr><th>STA</th><td class="up">1.09</td></tr><tr><th>MANA</th><td class="up">1.07</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">중갑</span><span class="tier t3">3</span><span class="axis" style="--c:#81c995">체력<em>HP</em></span></div>
+<p class="kdesc">판을 겹겹이 덧대 두꺼워지는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP ★</th><td class="up">1.36</td></tr><tr><th>ATK</th><td class="dn">0.99</td></tr><tr><th>DEF</th><td class="up">1.01</td></tr><tr><th>공속</th><td class="up">1.03</td></tr><tr><th>MAG</th><td class="up">1.01</td></tr><tr><th>MDEF</th><td class="up">1.01</td></tr><tr><th>CRI</th><td class="up">1.01</td></tr><tr><th>PEN</th><td class="up">1.03</td></tr><tr><th>MPEN</th><td class="up">1.03</td></tr><tr><th>MS</th><td class="up">1.01</td></tr><tr><th>CDMG</th><td class="up">1.01</td></tr><tr><th>STA</th><td class="up">1.03</td></tr><tr><th>MANA</th><td class="up">1.01</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">요새</span><span class="tier t1">1</span><span class="axis" style="--c:#8fa3b8">근성<em>STA</em></span></div>
+<p class="kdesc">발을 내딛지 않아 밀려오지 않는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.19</td></tr><tr><th>ATK</th><td class="up">1.14</td></tr><tr><th>DEF</th><td class="up">1.17</td></tr><tr><th>공속</th><td class="up">1.14</td></tr><tr><th>MAG</th><td class="up">1.17</td></tr><tr><th>MDEF</th><td class="up">1.17</td></tr><tr><th>CRI</th><td class="up">1.14</td></tr><tr><th>PEN</th><td class="up">1.17</td></tr><tr><th>MPEN</th><td class="up">1.17</td></tr><tr><th>MS</th><td class="up">1.14</td></tr><tr><th>CDMG</th><td class="up">1.14</td></tr><tr><th>STA ★</th><td class="up">1.56</td></tr><tr><th>MANA</th><td class="up">1.19</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>전위기사</b><span class="jlaw">대지·빛</span><span class="role">수호</span>
+</div>
+<p class="jdesc">서 있는 대신 앞으로 밀고 나가는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">연타</span><span class="tier t1">1</span><span class="axis" style="--c:#8dd4e7">속도<em>공속</em></span></div>
+<p class="kdesc">앞에 선 것을 쉬지 않고 연달아 때리는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.17</td></tr><tr><th>ATK</th><td class="up">1.17</td></tr><tr><th>DEF</th><td class="up">1.17</td></tr><tr><th>공속 ★</th><td class="up">1.61</td></tr><tr><th>MAG</th><td class="up">1.17</td></tr><tr><th>MDEF</th><td class="up">1.17</td></tr><tr><th>CRI</th><td class="up">1.16</td></tr><tr><th>PEN</th><td class="up">1.19</td></tr><tr><th>MPEN</th><td class="up">1.19</td></tr><tr><th>MS</th><td class="up">1.17</td></tr><tr><th>CDMG</th><td class="up">1.17</td></tr><tr><th>STA</th><td class="up">1.19</td></tr><tr><th>MANA</th><td class="up">1.17</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">쇄도</span><span class="tier t3">3</span><span class="axis" style="--c:#e07b5f">힘<em>ATK</em></span></div>
+<p class="kdesc">한꺼번에 몰려들어 설 자리를 밀어내는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.11</td></tr><tr><th>ATK ★</th><td class="up">1.45</td></tr><tr><th>DEF</th><td class="up">1.04</td></tr><tr><th>공속</th><td class="up">1.09</td></tr><tr><th>MAG</th><td class="up">1.09</td></tr><tr><th>MDEF</th><td class="up">1.04</td></tr><tr><th>CRI</th><td class="up">1.09</td></tr><tr><th>PEN</th><td class="up">1.09</td></tr><tr><th>MPEN</th><td class="up">1.09</td></tr><tr><th>MS</th><td class="up">1.07</td></tr><tr><th>CDMG</th><td class="up">1.11</td></tr><tr><th>STA</th><td class="up">1.09</td></tr><tr><th>MANA</th><td class="up">1.09</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">돌파</span><span class="tier t2">2</span><span class="axis" style="--c:#c9c05f">민첩<em>MS</em></span></div>
+<p class="kdesc">앞에 선 것을 밀치고 저 너머로 나가는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.06</td></tr><tr><th>ATK</th><td class="up">1.09</td></tr><tr><th>DEF</th><td class="up">1.09</td></tr><tr><th>공속</th><td class="up">1.14</td></tr><tr><th>MAG</th><td class="up">1.09</td></tr><tr><th>MDEF</th><td class="up">1.09</td></tr><tr><th>CRI</th><td class="up">1.06</td></tr><tr><th>PEN</th><td class="up">1.11</td></tr><tr><th>MPEN</th><td class="up">1.11</td></tr><tr><th>MS ★</th><td class="up">1.48</td></tr><tr><th>CDMG</th><td class="up">1.06</td></tr><tr><th>STA</th><td class="up">1.09</td></tr><tr><th>MANA</th><td class="up">1.06</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>성기사</b><span class="jlaw">빛·대지</span><span class="role">수호</span>
+</div>
+<p class="jdesc">성스러운 힘을 갑옷에 새겨 그 자리를 지키는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">성역</span><span class="tier t2">2</span><span class="axis" style="--c:#5fa87f">방어<em>DEF · PEN↓</em></span></div>
+<p class="kdesc">발밑을 성스러운 땅으로 만들어 들어오지 못하게 하는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.19</td></tr><tr><th>ATK</th><td class="up">1.11</td></tr><tr><th>DEF ★</th><td class="up">1.54</td></tr><tr><th>공속</th><td class="up">1.16</td></tr><tr><th>MAG</th><td class="up">1.14</td></tr><tr><th>MDEF</th><td class="up">1.14</td></tr><tr><th>CRI</th><td class="up">1.14</td></tr><tr><th>PEN</th><td class="dn">0.90</td></tr><tr><th>MPEN</th><td class="up">1.16</td></tr><tr><th>MS</th><td class="up">1.16</td></tr><tr><th>CDMG</th><td class="up">1.14</td></tr><tr><th>STA</th><td class="up">1.16</td></tr><tr><th>MANA</th><td class="up">1.14</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">축성</span><span class="tier t3">3</span><span class="axis" style="--c:#7f9ed4">마법방어<em>MDEF · MPEN↓</em></span></div>
+<p class="kdesc">아군의 갑옷에 성수를 발라 함께 지키는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.14</td></tr><tr><th>ATK</th><td class="up">1.07</td></tr><tr><th>DEF</th><td class="up">1.09</td></tr><tr><th>공속</th><td class="up">1.12</td></tr><tr><th>MAG</th><td class="up">1.14</td></tr><tr><th>MDEF ★</th><td class="up">1.49</td></tr><tr><th>CRI</th><td class="up">1.09</td></tr><tr><th>PEN</th><td class="up">1.12</td></tr><tr><th>MPEN</th><td class="dn">0.86</td></tr><tr><th>MS</th><td class="up">1.12</td></tr><tr><th>CDMG</th><td class="up">1.09</td></tr><tr><th>STA</th><td class="up">1.12</td></tr><tr><th>MANA</th><td class="up">1.14</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">헌신</span><span class="tier t1">1</span><span class="axis" style="--c:#81c995">체력<em>HP</em></span></div>
+<p class="kdesc">곁의 사람 대신 맞고 그 몫까지 서 있는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP ★</th><td class="up">1.55</td></tr><tr><th>ATK</th><td class="up">1.13</td></tr><tr><th>DEF</th><td class="up">1.15</td></tr><tr><th>공속</th><td class="up">1.18</td></tr><tr><th>MAG</th><td class="up">1.15</td></tr><tr><th>MDEF</th><td class="up">1.15</td></tr><tr><th>CRI</th><td class="up">1.15</td></tr><tr><th>PEN</th><td class="up">1.18</td></tr><tr><th>MPEN</th><td class="up">1.18</td></tr><tr><th>MS</th><td class="up">1.15</td></tr><tr><th>CDMG</th><td class="up">1.15</td></tr><tr><th>STA</th><td class="up">1.18</td></tr><tr><th>MANA</th><td class="up">1.15</td></tr></tbody></table>
+</div>
+</div></div>
+</div>
+<div class="l1">
+<div class="l1h"><b>암살자</b><span class="role">암살</span><small>법칙 어둠·바람</small></div>
+<p class="ldesc">보이지 않는 쪽이 되는 직업</p>
+<div class="job">
+<div class="jh"><b>자객</b><span class="jlaw">어둠·바람</span><span class="role">암살</span>
+</div>
+<p class="jdesc">보이지 않는 쪽에서 먼저 끝내는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">기습</span><span class="tier t3">3</span><span class="axis" style="--c:#e3bb75">치명위력<em>CDMG</em></span></div>
+<p class="kdesc">매복했다가 한 방에 끝내는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="dn">0.95</td></tr><tr><th>ATK</th><td class="dn">0.97</td></tr><tr><th>DEF</th><td class="dn">0.97</td></tr><tr><th>공속</th><td class="dn">0.97</td></tr><tr><th>MAG</th><td class="up">1.03</td></tr><tr><th>MDEF</th><td class="dn">0.97</td></tr><tr><th>CRI</th><td class="up">1.01</td></tr><tr><th>PEN</th><td class="dn">0.97</td></tr><tr><th>MPEN</th><td class="dn">0.97</td></tr><tr><th>MS</th><td class="dn">0.99</td></tr><tr><th>CDMG ★</th><td class="up">1.29</td></tr><tr><th>STA</th><td class="dn">0.97</td></tr><tr><th>MANA</th><td class="up">1.06</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">은밀</span><span class="tier t2">2</span><span class="axis" style="--c:#c9c05f">민첩<em>MS</em></span></div>
+<p class="kdesc">기척 없이 다가가 먼저 닿는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.10</td></tr><tr><th>ATK</th><td class="up">1.12</td></tr><tr><th>DEF</th><td class="up">1.12</td></tr><tr><th>공속</th><td class="up">1.17</td></tr><tr><th>MAG</th><td class="up">1.12</td></tr><tr><th>MDEF</th><td class="up">1.12</td></tr><tr><th>CRI</th><td class="up">1.10</td></tr><tr><th>PEN</th><td class="up">1.15</td></tr><tr><th>MPEN</th><td class="up">1.15</td></tr><tr><th>MS ★</th><td class="up">1.52</td></tr><tr><th>CDMG</th><td class="up">1.10</td></tr><tr><th>STA</th><td class="up">1.12</td></tr><tr><th>MANA</th><td class="up">1.10</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">연살</span><span class="tier t1">1</span><span class="axis" style="--c:#8dd4e7">속도<em>공속</em></span></div>
+<p class="kdesc">한 명을 쓰러뜨리면 그 흐름을 끊지 않고 다음으로 넘어가는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.18</td></tr><tr><th>ATK</th><td class="up">1.18</td></tr><tr><th>DEF</th><td class="up">1.18</td></tr><tr><th>공속 ★</th><td class="up">1.63</td></tr><tr><th>MAG</th><td class="up">1.18</td></tr><tr><th>MDEF</th><td class="up">1.18</td></tr><tr><th>CRI</th><td class="up">1.17</td></tr><tr><th>PEN</th><td class="up">1.20</td></tr><tr><th>MPEN</th><td class="up">1.20</td></tr><tr><th>MS</th><td class="up">1.18</td></tr><tr><th>CDMG</th><td class="up">1.18</td></tr><tr><th>STA</th><td class="up">1.20</td></tr><tr><th>MANA</th><td class="up">1.18</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>맹독사</b><span class="jlaw">물·어둠</span><span class="role">암살</span>
+</div>
+<p class="jdesc">독을 넣고, 쌓고, 갉아 내는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">급독</span><span class="tier t2">2</span><span class="axis" style="--c:#c9c05f">민첩<em>MS</em></span></div>
+<p class="kdesc">독을 한 번에 깊게 넣고 바로 빠지는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.09</td></tr><tr><th>ATK</th><td class="up">1.12</td></tr><tr><th>DEF</th><td class="up">1.12</td></tr><tr><th>공속</th><td class="up">1.17</td></tr><tr><th>MAG</th><td class="up">1.12</td></tr><tr><th>MDEF</th><td class="up">1.12</td></tr><tr><th>CRI</th><td class="up">1.09</td></tr><tr><th>PEN</th><td class="up">1.14</td></tr><tr><th>MPEN</th><td class="up">1.14</td></tr><tr><th>MS ★</th><td class="up">1.52</td></tr><tr><th>CDMG</th><td class="up">1.09</td></tr><tr><th>STA</th><td class="up">1.12</td></tr><tr><th>MANA</th><td class="up">1.09</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">중독</span><span class="tier t1">1</span><span class="axis" style="--c:#b48dd4">주문<em>MAG</em></span></div>
+<p class="kdesc">독을 겹겹이 쌓아 천천히 죽이는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.20</td></tr><tr><th>ATK</th><td class="up">1.17</td></tr><tr><th>DEF</th><td class="up">1.20</td></tr><tr><th>공속</th><td class="up">1.20</td></tr><tr><th>MAG ★</th><td class="up">1.57</td></tr><tr><th>MDEF</th><td class="up">1.20</td></tr><tr><th>CRI</th><td class="up">1.17</td></tr><tr><th>PEN</th><td class="up">1.20</td></tr><tr><th>MPEN</th><td class="up">1.15</td></tr><tr><th>MS</th><td class="up">1.17</td></tr><tr><th>CDMG</th><td class="up">1.17</td></tr><tr><th>STA</th><td class="up">1.20</td></tr><tr><th>MANA</th><td class="up">1.25</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">부식</span><span class="tier t3">3</span><span class="axis" style="--c:#9b6fd4">마법관통<em>MPEN</em></span></div>
+<p class="kdesc">독이 갑옷을 갉아 방어를 지나 안쪽까지 드는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.16</td></tr><tr><th>ATK</th><td class="up">1.13</td></tr><tr><th>DEF</th><td class="up">1.13</td></tr><tr><th>공속</th><td class="up">1.16</td></tr><tr><th>MAG</th><td class="up">1.28</td></tr><tr><th>MDEF</th><td class="up">1.16</td></tr><tr><th>CRI</th><td class="up">1.21</td></tr><tr><th>PEN</th><td class="up">1.11</td></tr><tr><th>MPEN ★</th><td class="up">1.51</td></tr><tr><th>MS</th><td class="up">1.16</td></tr><tr><th>CDMG</th><td class="up">1.13</td></tr><tr><th>STA</th><td class="up">1.16</td></tr><tr><th>MANA</th><td class="up">1.18</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>도적</b><span class="jlaw">어둠·화염</span><span class="role">암살</span>
+</div>
+<p class="jdesc">죽이러 오는 게 아니라 뺏으러 오는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">절도</span><span class="tier t1">1</span><span class="axis" style="--c:#8dd4e7">속도<em>공속</em></span></div>
+<p class="kdesc">상대 것을 훔쳐 가며 싸우는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.17</td></tr><tr><th>ATK</th><td class="up">1.17</td></tr><tr><th>DEF</th><td class="up">1.17</td></tr><tr><th>공속 ★</th><td class="up">1.62</td></tr><tr><th>MAG</th><td class="up">1.17</td></tr><tr><th>MDEF</th><td class="up">1.17</td></tr><tr><th>CRI</th><td class="up">1.16</td></tr><tr><th>PEN</th><td class="up">1.20</td></tr><tr><th>MPEN</th><td class="up">1.20</td></tr><tr><th>MS</th><td class="up">1.17</td></tr><tr><th>CDMG</th><td class="up">1.17</td></tr><tr><th>STA</th><td class="up">1.20</td></tr><tr><th>MANA</th><td class="up">1.17</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">견제</span><span class="tier t3">3</span><span class="axis" style="--c:#e07b5f">힘<em>ATK</em></span></div>
+<p class="kdesc">한쪽을 건드려 시선을 그쪽에 붙잡아 두는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="dn">0.99</td></tr><tr><th>ATK ★</th><td class="up">1.29</td></tr><tr><th>DEF</th><td class="dn">0.93</td></tr><tr><th>공속</th><td class="dn">0.97</td></tr><tr><th>MAG</th><td class="dn">0.97</td></tr><tr><th>MDEF</th><td class="dn">0.93</td></tr><tr><th>CRI</th><td class="dn">0.97</td></tr><tr><th>PEN</th><td class="dn">0.97</td></tr><tr><th>MPEN</th><td class="dn">0.97</td></tr><tr><th>MS</th><td class="dn">0.95</td></tr><tr><th>CDMG</th><td class="dn">0.99</td></tr><tr><th>STA</th><td class="dn">0.97</td></tr><tr><th>MANA</th><td class="dn">0.97</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">잠입</span><span class="tier t2">2</span><span class="axis" style="--c:#c9c05f">민첩<em>MS</em></span></div>
+<p class="kdesc">빈틈으로 들어가 몰래 움직이는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.09</td></tr><tr><th>ATK</th><td class="up">1.11</td></tr><tr><th>DEF</th><td class="up">1.11</td></tr><tr><th>공속</th><td class="up">1.16</td></tr><tr><th>MAG</th><td class="up">1.11</td></tr><tr><th>MDEF</th><td class="up">1.11</td></tr><tr><th>CRI</th><td class="up">1.09</td></tr><tr><th>PEN</th><td class="up">1.14</td></tr><tr><th>MPEN</th><td class="up">1.14</td></tr><tr><th>MS ★</th><td class="up">1.51</td></tr><tr><th>CDMG</th><td class="up">1.09</td></tr><tr><th>STA</th><td class="up">1.11</td></tr><tr><th>MANA</th><td class="up">1.09</td></tr></tbody></table>
+</div>
+</div></div>
+</div>
+<div class="l1">
+<div class="l1h"><b>궁수</b><span class="role">포격</span><small>법칙 바람·대지</small></div>
+<p class="ldesc">거리만을 방패로 삼는 직업</p>
+<div class="job">
+<div class="jh"><b>명사수</b><span class="jlaw">바람·빛</span><span class="role">포격</span>
+</div>
+<p class="jdesc">멀리서 한 점만 겨누는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">정밀</span><span class="tier t2">2</span><span class="axis" style="--c:#f0a868">치명<em>CRI</em></span></div>
+<p class="kdesc">같은 자리를 거듭 겨누어 빗나가면 다시 조준하는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.05</td></tr><tr><th>ATK</th><td class="up">1.12</td></tr><tr><th>DEF</th><td class="up">1.05</td></tr><tr><th>공속</th><td class="up">1.07</td></tr><tr><th>MAG</th><td class="up">1.07</td></tr><tr><th>MDEF</th><td class="up">1.05</td></tr><tr><th>CRI ★</th><td class="up">1.44</td></tr><tr><th>PEN</th><td class="up">1.07</td></tr><tr><th>MPEN</th><td class="up">1.07</td></tr><tr><th>MS</th><td class="up">1.05</td></tr><tr><th>CDMG</th><td class="up">1.03</td></tr><tr><th>STA</th><td class="up">1.07</td></tr><tr><th>MANA</th><td class="up">1.05</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">급소</span><span class="tier t3">3</span><span class="axis" style="--c:#d9724f">관통<em>PEN</em></span></div>
+<p class="kdesc">방어가 얇은 곳만 골라 꿰뚫는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.05</td></tr><tr><th>ATK</th><td class="up">1.17</td></tr><tr><th>DEF</th><td class="up">1.03</td></tr><tr><th>공속</th><td class="up">1.05</td></tr><tr><th>MAG</th><td class="up">1.03</td></tr><tr><th>MDEF</th><td class="up">1.03</td></tr><tr><th>CRI</th><td class="up">1.10</td></tr><tr><th>PEN ★</th><td class="up">1.38</td></tr><tr><th>MPEN</th><td class="up">1.01</td></tr><tr><th>MS</th><td class="up">1.05</td></tr><tr><th>CDMG</th><td class="up">1.03</td></tr><tr><th>STA</th><td class="up">1.05</td></tr><tr><th>MANA</th><td class="up">1.03</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">원사</span><span class="tier t1">1</span><span class="axis" style="--c:#e3bb75">치명위력<em>CDMG</em></span></div>
+<p class="kdesc">멀리 보낼수록 화살이 더 깊이 박히는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.13</td></tr><tr><th>ATK</th><td class="up">1.16</td></tr><tr><th>DEF</th><td class="up">1.16</td></tr><tr><th>공속</th><td class="up">1.16</td></tr><tr><th>MAG</th><td class="up">1.23</td></tr><tr><th>MDEF</th><td class="up">1.16</td></tr><tr><th>CRI</th><td class="up">1.21</td></tr><tr><th>PEN</th><td class="up">1.16</td></tr><tr><th>MPEN</th><td class="up">1.16</td></tr><tr><th>MS</th><td class="up">1.18</td></tr><tr><th>CDMG ★</th><td class="up">1.53</td></tr><tr><th>STA</th><td class="up">1.16</td></tr><tr><th>MANA</th><td class="up">1.26</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>포화사수</b><span class="jlaw">화염·바람</span><span class="role">포격</span>
+</div>
+<p class="jdesc">한 발이 아니라 한 번의 사격으로 싸우는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">속사</span><span class="tier t1">1</span><span class="axis" style="--c:#8dd4e7">속도<em>공속</em></span></div>
+<p class="kdesc">쉬지 않고 계속 쏘아 끊김 없는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.19</td></tr><tr><th>ATK</th><td class="up">1.19</td></tr><tr><th>DEF</th><td class="up">1.19</td></tr><tr><th>공속 ★</th><td class="up">1.65</td></tr><tr><th>MAG</th><td class="up">1.19</td></tr><tr><th>MDEF</th><td class="up">1.19</td></tr><tr><th>CRI</th><td class="up">1.18</td></tr><tr><th>PEN</th><td class="up">1.22</td></tr><tr><th>MPEN</th><td class="up">1.22</td></tr><tr><th>MS</th><td class="up">1.19</td></tr><tr><th>CDMG</th><td class="up">1.19</td></tr><tr><th>STA</th><td class="up">1.22</td></tr><tr><th>MANA</th><td class="up">1.19</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">선회</span><span class="tier t2">2</span><span class="axis" style="--c:#c9c05f">민첩<em>MS</em></span></div>
+<p class="kdesc">돌며 쏘아 매번 각도를 바꾸는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.11</td></tr><tr><th>ATK</th><td class="up">1.14</td></tr><tr><th>DEF</th><td class="up">1.14</td></tr><tr><th>공속</th><td class="up">1.19</td></tr><tr><th>MAG</th><td class="up">1.14</td></tr><tr><th>MDEF</th><td class="up">1.14</td></tr><tr><th>CRI</th><td class="up">1.11</td></tr><tr><th>PEN</th><td class="up">1.16</td></tr><tr><th>MPEN</th><td class="up">1.16</td></tr><tr><th>MS ★</th><td class="up">1.54</td></tr><tr><th>CDMG</th><td class="up">1.11</td></tr><tr><th>STA</th><td class="up">1.14</td></tr><tr><th>MANA</th><td class="up">1.11</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">제압</span><span class="tier t3">3</span><span class="axis" style="--c:#e07b5f">힘<em>ATK</em></span></div>
+<p class="kdesc">쏟아부어 고개를 못 들게 하는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.17</td></tr><tr><th>ATK ★</th><td class="up">1.52</td></tr><tr><th>DEF</th><td class="up">1.10</td></tr><tr><th>공속</th><td class="up">1.15</td></tr><tr><th>MAG</th><td class="up">1.15</td></tr><tr><th>MDEF</th><td class="up">1.10</td></tr><tr><th>CRI</th><td class="up">1.15</td></tr><tr><th>PEN</th><td class="up">1.15</td></tr><tr><th>MPEN</th><td class="up">1.15</td></tr><tr><th>MS</th><td class="up">1.12</td></tr><tr><th>CDMG</th><td class="up">1.17</td></tr><tr><th>STA</th><td class="up">1.15</td></tr><tr><th>MANA</th><td class="up">1.15</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>사역사</b><span class="jlaw">대지·물</span><span class="role">포격</span>
+</div>
+<p class="jdesc">짐승에게 일을 맡기고 그 뒤에 붙어 함께 움직이는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">물기</span><span class="tier t2">2</span><span class="axis" style="--c:#e07b5f">힘<em>ATK</em></span></div>
+<p class="kdesc">늑대가 목덜미를 물어 상대를 붙잡고 있는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.19</td></tr><tr><th>ATK ★</th><td class="up">1.54</td></tr><tr><th>DEF</th><td class="up">1.11</td></tr><tr><th>공속</th><td class="up">1.16</td></tr><tr><th>MAG</th><td class="up">1.16</td></tr><tr><th>MDEF</th><td class="up">1.11</td></tr><tr><th>CRI</th><td class="up">1.16</td></tr><tr><th>PEN</th><td class="up">1.16</td></tr><tr><th>MPEN</th><td class="up">1.16</td></tr><tr><th>MS</th><td class="up">1.14</td></tr><tr><th>CDMG</th><td class="up">1.19</td></tr><tr><th>STA</th><td class="up">1.16</td></tr><tr><th>MANA</th><td class="up">1.16</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">몰이</span><span class="tier t3">3</span><span class="axis" style="--c:#c9c05f">민첩<em>MS</em></span></div>
+<p class="kdesc">들매를 띄워 도망갈 길을 미리 막아 두는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="dn">0.92</td></tr><tr><th>ATK</th><td class="dn">0.94</td></tr><tr><th>DEF</th><td class="dn">0.94</td></tr><tr><th>공속</th><td class="dn">0.98</td></tr><tr><th>MAG</th><td class="dn">0.94</td></tr><tr><th>MDEF</th><td class="dn">0.94</td></tr><tr><th>CRI</th><td class="dn">0.92</td></tr><tr><th>PEN</th><td class="dn">0.96</td></tr><tr><th>MPEN</th><td class="dn">0.96</td></tr><tr><th>MS ★</th><td class="up">1.28</td></tr><tr><th>CDMG</th><td class="dn">0.92</td></tr><tr><th>STA</th><td class="dn">0.94</td></tr><tr><th>MANA</th><td class="dn">0.92</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">등짐</span><span class="tier t1">1</span><span class="axis" style="--c:#8fa3b8">근성<em>STA</em></span></div>
+<p class="kdesc">수리가 건져 울린 것을 지고도 걸음을 놓지 않는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.23</td></tr><tr><th>ATK</th><td class="up">1.18</td></tr><tr><th>DEF</th><td class="up">1.20</td></tr><tr><th>공속</th><td class="up">1.18</td></tr><tr><th>MAG</th><td class="up">1.20</td></tr><tr><th>MDEF</th><td class="up">1.20</td></tr><tr><th>CRI</th><td class="up">1.18</td></tr><tr><th>PEN</th><td class="up">1.20</td></tr><tr><th>MPEN</th><td class="up">1.20</td></tr><tr><th>MS</th><td class="up">1.18</td></tr><tr><th>CDMG</th><td class="up">1.18</td></tr><tr><th>STA ★</th><td class="up">1.60</td></tr><tr><th>MANA</th><td class="up">1.23</td></tr></tbody></table>
+</div>
+</div></div>
+</div>
+<div class="l1">
+<div class="l1h"><b>마법사</b><span class="role">마법</span><small>법칙 화염·물</small></div>
+<p class="ldesc">먼저 원소가 정해지고, 정해진 원소의 마법 L2 로 바로 등장한다</p>
+<div class="job">
+<div class="jh"><b>성술사</b><span class="jlaw">빛·물</span><span class="role">마법</span>
+</div>
+<p class="jdesc">빛으로 밀어내고 지켜내는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">광명</span><span class="tier t3">3</span><span class="axis" style="--c:#b48dd4">주문<em>MAG</em></span></div>
+<p class="kdesc">빛으로 충격을 주며 밀어내고 태우는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.02</td></tr><tr><th>ATK</th><td class="fl">1.00</td></tr><tr><th>DEF</th><td class="up">1.02</td></tr><tr><th>공속</th><td class="up">1.02</td></tr><tr><th>MAG ★</th><td class="up">1.34</td></tr><tr><th>MDEF</th><td class="up">1.02</td></tr><tr><th>CRI</th><td class="fl">1.00</td></tr><tr><th>PEN</th><td class="up">1.02</td></tr><tr><th>MPEN</th><td class="dn">0.98</td></tr><tr><th>MS</th><td class="fl">1.00</td></tr><tr><th>CDMG</th><td class="fl">1.00</td></tr><tr><th>STA</th><td class="up">1.02</td></tr><tr><th>MANA</th><td class="up">1.06</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">결계</span><span class="tier t2">2</span><span class="axis" style="--c:#7f9ed4">마법방어<em>MDEF · MPEN↓</em></span></div>
+<p class="kdesc">보호막을 먼저 세워 아군을 지키는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.12</td></tr><tr><th>ATK</th><td class="up">1.05</td></tr><tr><th>DEF</th><td class="up">1.07</td></tr><tr><th>공속</th><td class="up">1.09</td></tr><tr><th>MAG</th><td class="up">1.12</td></tr><tr><th>MDEF ★</th><td class="up">1.46</td></tr><tr><th>CRI</th><td class="up">1.07</td></tr><tr><th>PEN</th><td class="up">1.09</td></tr><tr><th>MPEN</th><td class="dn">0.84</td></tr><tr><th>MS</th><td class="up">1.09</td></tr><tr><th>CDMG</th><td class="up">1.07</td></tr><tr><th>STA</th><td class="up">1.09</td></tr><tr><th>MANA</th><td class="up">1.12</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">치유</span><span class="tier t1">1</span><span class="axis" style="--c:#6fc9b0">마나<em>MANA</em></span></div>
+<p class="kdesc">회복량보다 회복이 이어지는 시간을 늘리는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.16</td></tr><tr><th>ATK</th><td class="up">1.16</td></tr><tr><th>DEF</th><td class="up">1.18</td></tr><tr><th>공속</th><td class="up">1.16</td></tr><tr><th>MAG</th><td class="up">1.21</td></tr><tr><th>MDEF</th><td class="up">1.18</td></tr><tr><th>CRI</th><td class="up">1.16</td></tr><tr><th>PEN</th><td class="up">1.18</td></tr><tr><th>MPEN</th><td class="up">1.18</td></tr><tr><th>MS</th><td class="up">1.16</td></tr><tr><th>CDMG</th><td class="up">1.16</td></tr><tr><th>STA</th><td class="up">1.18</td></tr><tr><th>MANA ★</th><td class="up">1.58</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>소환술사</b><span class="jlaw">무·바람</span><span class="role">마법</span>
+</div>
+<p class="jdesc">혼자 싸우지 않고 부르는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">골렘</span><span class="tier t1">1</span><span class="axis" style="--c:#81c995">체력<em>HP</em></span></div>
+<p class="kdesc">돌과 흙을 빚어 대신 맞는 몸을 세우는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP ★</th><td class="up">1.52</td></tr><tr><th>ATK</th><td class="up">1.11</td></tr><tr><th>DEF</th><td class="up">1.13</td></tr><tr><th>공속</th><td class="up">1.16</td></tr><tr><th>MAG</th><td class="up">1.13</td></tr><tr><th>MDEF</th><td class="up">1.13</td></tr><tr><th>CRI</th><td class="up">1.13</td></tr><tr><th>PEN</th><td class="up">1.16</td></tr><tr><th>MPEN</th><td class="up">1.16</td></tr><tr><th>MS</th><td class="up">1.13</td></tr><tr><th>CDMG</th><td class="up">1.13</td></tr><tr><th>STA</th><td class="up">1.16</td></tr><tr><th>MANA</th><td class="up">1.13</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">망령</span><span class="tier t3">3</span><span class="axis" style="--c:#9b6fd4">마법관통<em>MPEN</em></span></div>
+<p class="kdesc">죽은 자를 불러 싸우게 하되 대가를 치르는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.09</td></tr><tr><th>ATK</th><td class="up">1.06</td></tr><tr><th>DEF</th><td class="up">1.06</td></tr><tr><th>공속</th><td class="up">1.09</td></tr><tr><th>MAG</th><td class="up">1.20</td></tr><tr><th>MDEF</th><td class="up">1.09</td></tr><tr><th>CRI</th><td class="up">1.13</td></tr><tr><th>PEN</th><td class="up">1.04</td></tr><tr><th>MPEN ★</th><td class="up">1.42</td></tr><tr><th>MS</th><td class="up">1.09</td></tr><tr><th>CDMG</th><td class="up">1.06</td></tr><tr><th>STA</th><td class="up">1.09</td></tr><tr><th>MANA</th><td class="up">1.11</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">정령</span><span class="tier t2">2</span><span class="axis" style="--c:#e3bb75">치명위력<em>CDMG</em></span></div>
+<p class="kdesc">혼자서는 못 잡을 것을 불러 세우는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.10</td></tr><tr><th>ATK</th><td class="up">1.13</td></tr><tr><th>DEF</th><td class="up">1.13</td></tr><tr><th>공속</th><td class="up">1.13</td></tr><tr><th>MAG</th><td class="up">1.20</td></tr><tr><th>MDEF</th><td class="up">1.13</td></tr><tr><th>CRI</th><td class="up">1.18</td></tr><tr><th>PEN</th><td class="up">1.13</td></tr><tr><th>MPEN</th><td class="up">1.13</td></tr><tr><th>MS</th><td class="up">1.15</td></tr><tr><th>CDMG ★</th><td class="up">1.49</td></tr><tr><th>STA</th><td class="up">1.13</td></tr><tr><th>MANA</th><td class="up">1.22</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job term">
+<div class="jh"><b>원소 마도사</b><span class="jlaw">—</span><span class="role">마법</span>
+</div>
+<p class="jdesc">원소 여섯을 손에 넣고 쓰는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">화염마도사<sup>*</sup></span><span class="tier t2">2</span><span class="axis" style="--c:#b48dd4">주문<em>MAG</em></span></div>
+<p class="kdesc">타는 것을 더 태우는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.01</td></tr><tr><th>ATK</th><td class="dn">0.99</td></tr><tr><th>DEF</th><td class="up">1.01</td></tr><tr><th>공속</th><td class="up">1.01</td></tr><tr><th>MAG ★</th><td class="up">1.33</td></tr><tr><th>MDEF</th><td class="up">1.01</td></tr><tr><th>CRI</th><td class="dn">0.99</td></tr><tr><th>PEN</th><td class="up">1.01</td></tr><tr><th>MPEN</th><td class="dn">0.97</td></tr><tr><th>MS</th><td class="dn">0.99</td></tr><tr><th>CDMG</th><td class="dn">0.99</td></tr><tr><th>STA</th><td class="up">1.01</td></tr><tr><th>MANA</th><td class="up">1.05</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">물마도사<sup>*</sup></span><span class="tier t2">2</span><span class="axis" style="--c:#7f9ed4">마법방어<em>MDEF · MPEN↓</em></span></div>
+<p class="kdesc">흐르는 것을 더 끌어당기는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.12</td></tr><tr><th>ATK</th><td class="up">1.05</td></tr><tr><th>DEF</th><td class="up">1.07</td></tr><tr><th>공속</th><td class="up">1.10</td></tr><tr><th>MAG</th><td class="up">1.12</td></tr><tr><th>MDEF ★</th><td class="up">1.47</td></tr><tr><th>CRI</th><td class="up">1.07</td></tr><tr><th>PEN</th><td class="up">1.10</td></tr><tr><th>MPEN</th><td class="dn">0.84</td></tr><tr><th>MS</th><td class="up">1.10</td></tr><tr><th>CDMG</th><td class="up">1.07</td></tr><tr><th>STA</th><td class="up">1.10</td></tr><tr><th>MANA</th><td class="up">1.12</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">대지마도사<sup>*</sup></span><span class="tier t2">2</span><span class="axis" style="--c:#81c995">체력<em>HP</em></span></div>
+<p class="kdesc">무너지는 것을 더 받쳐 주는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP ★</th><td class="up">1.52</td></tr><tr><th>ATK</th><td class="up">1.11</td></tr><tr><th>DEF</th><td class="up">1.13</td></tr><tr><th>공속</th><td class="up">1.16</td></tr><tr><th>MAG</th><td class="up">1.13</td></tr><tr><th>MDEF</th><td class="up">1.13</td></tr><tr><th>CRI</th><td class="up">1.13</td></tr><tr><th>PEN</th><td class="up">1.16</td></tr><tr><th>MPEN</th><td class="up">1.16</td></tr><tr><th>MS</th><td class="up">1.13</td></tr><tr><th>CDMG</th><td class="up">1.13</td></tr><tr><th>STA</th><td class="up">1.16</td></tr><tr><th>MANA</th><td class="up">1.13</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">바람마도사<sup>*</sup></span><span class="tier t1">1</span><span class="axis" style="--c:#8dd4e7">속도<em>공속</em></span></div>
+<p class="kdesc">늦은 것을 더 앞당기는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.17</td></tr><tr><th>ATK</th><td class="up">1.17</td></tr><tr><th>DEF</th><td class="up">1.17</td></tr><tr><th>공속 ★</th><td class="up">1.63</td></tr><tr><th>MAG</th><td class="up">1.17</td></tr><tr><th>MDEF</th><td class="up">1.17</td></tr><tr><th>CRI</th><td class="up">1.16</td></tr><tr><th>PEN</th><td class="up">1.20</td></tr><tr><th>MPEN</th><td class="up">1.20</td></tr><tr><th>MS</th><td class="up">1.17</td></tr><tr><th>CDMG</th><td class="up">1.17</td></tr><tr><th>STA</th><td class="up">1.20</td></tr><tr><th>MANA</th><td class="up">1.17</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">빛마도사<sup>*</sup></span><span class="tier t2">2</span><span class="axis" style="--c:#f0a868">치명<em>CRI</em></span></div>
+<p class="kdesc">가려진 것을 밝히는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.10</td></tr><tr><th>ATK</th><td class="up">1.17</td></tr><tr><th>DEF</th><td class="up">1.10</td></tr><tr><th>공속</th><td class="up">1.12</td></tr><tr><th>MAG</th><td class="up">1.12</td></tr><tr><th>MDEF</th><td class="up">1.10</td></tr><tr><th>CRI ★</th><td class="up">1.50</td></tr><tr><th>PEN</th><td class="up">1.12</td></tr><tr><th>MPEN</th><td class="up">1.12</td></tr><tr><th>MS</th><td class="up">1.10</td></tr><tr><th>CDMG</th><td class="up">1.07</td></tr><tr><th>STA</th><td class="up">1.12</td></tr><tr><th>MANA</th><td class="up">1.10</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">어둠마도사<sup>*</sup></span><span class="tier t1">1</span><span class="axis" style="--c:#8fa3b8">근성<em>STA</em></span></div>
+<p class="kdesc">보이지 않는 곳에 손을 거는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.22</td></tr><tr><th>ATK</th><td class="up">1.17</td></tr><tr><th>DEF</th><td class="up">1.19</td></tr><tr><th>공속</th><td class="up">1.17</td></tr><tr><th>MAG</th><td class="up">1.19</td></tr><tr><th>MDEF</th><td class="up">1.19</td></tr><tr><th>CRI</th><td class="up">1.17</td></tr><tr><th>PEN</th><td class="up">1.19</td></tr><tr><th>MPEN</th><td class="up">1.19</td></tr><tr><th>MS</th><td class="up">1.17</td></tr><tr><th>CDMG</th><td class="up">1.17</td></tr><tr><th>STA ★</th><td class="up">1.59</td></tr><tr><th>MANA</th><td class="up">1.22</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">대원소마도사</span><span class="tier t2">2</span><span class="axis" style="--c:#e3bb75">치명위력<em>CDMG</em></span><span class="cond">6원소 전부</span></div>
+<p class="kdesc">여섯을 다 써서 무엇이든 한 번에 태우는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.10</td></tr><tr><th>ATK</th><td class="up">1.13</td></tr><tr><th>DEF</th><td class="up">1.13</td></tr><tr><th>공속</th><td class="up">1.13</td></tr><tr><th>MAG</th><td class="up">1.20</td></tr><tr><th>MDEF</th><td class="up">1.13</td></tr><tr><th>CRI</th><td class="up">1.17</td></tr><tr><th>PEN</th><td class="up">1.13</td></tr><tr><th>MPEN</th><td class="up">1.13</td></tr><tr><th>MS</th><td class="up">1.15</td></tr><tr><th>CDMG ★</th><td class="up">1.49</td></tr><tr><th>STA</th><td class="up">1.13</td></tr><tr><th>MANA</th><td class="up">1.22</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>주술사</b><span class="jlaw">어둠·무</span><span class="role">마법</span>
+</div>
+<p class="jdesc">적에게 낙인을 남기고, 값을 치러 키운 뒤, 한 번에 터뜨리는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">낙인</span><span class="tier t2">2</span><span class="axis" style="--c:#b48dd4">주문<em>MAG</em></span></div>
+<p class="kdesc">적 몸에 저주 표식을 태워 남기는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.13</td></tr><tr><th>ATK</th><td class="up">1.10</td></tr><tr><th>DEF</th><td class="up">1.13</td></tr><tr><th>공속</th><td class="up">1.13</td></tr><tr><th>MAG ★</th><td class="up">1.48</td></tr><tr><th>MDEF</th><td class="up">1.13</td></tr><tr><th>CRI</th><td class="up">1.10</td></tr><tr><th>PEN</th><td class="up">1.13</td></tr><tr><th>MPEN</th><td class="up">1.08</td></tr><tr><th>MS</th><td class="up">1.10</td></tr><tr><th>CDMG</th><td class="up">1.10</td></tr><tr><th>STA</th><td class="up">1.13</td></tr><tr><th>MANA</th><td class="up">1.17</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">대가</span><span class="tier t1">1</span><span class="axis" style="--c:#e3bb75">치명위력<em>CDMG</em></span></div>
+<p class="kdesc">제 몸을 깎아 표식을 키우는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.10</td></tr><tr><th>ATK</th><td class="up">1.13</td></tr><tr><th>DEF</th><td class="up">1.13</td></tr><tr><th>공속</th><td class="up">1.13</td></tr><tr><th>MAG</th><td class="up">1.20</td></tr><tr><th>MDEF</th><td class="up">1.13</td></tr><tr><th>CRI</th><td class="up">1.18</td></tr><tr><th>PEN</th><td class="up">1.13</td></tr><tr><th>MPEN</th><td class="up">1.13</td></tr><tr><th>MS</th><td class="up">1.15</td></tr><tr><th>CDMG ★</th><td class="up">1.49</td></tr><tr><th>STA</th><td class="up">1.13</td></tr><tr><th>MANA</th><td class="up">1.23</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">해봉</span><span class="tier t3">3</span><span class="axis" style="--c:#9b6fd4">마법관통<em>MPEN</em></span></div>
+<p class="kdesc">묶어 둔 표식을 한 번에 풀어 터뜨리는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="dn">0.99</td></tr><tr><th>ATK</th><td class="dn">0.96</td></tr><tr><th>DEF</th><td class="dn">0.96</td></tr><tr><th>공속</th><td class="dn">0.99</td></tr><tr><th>MAG</th><td class="up">1.09</td></tr><tr><th>MDEF</th><td class="dn">0.99</td></tr><tr><th>CRI</th><td class="up">1.03</td></tr><tr><th>PEN</th><td class="dn">0.94</td></tr><tr><th>MPEN ★</th><td class="up">1.29</td></tr><tr><th>MS</th><td class="dn">0.99</td></tr><tr><th>CDMG</th><td class="dn">0.96</td></tr><tr><th>STA</th><td class="dn">0.99</td></tr><tr><th>MANA</th><td class="up">1.01</td></tr></tbody></table>
+</div>
+</div></div>
+</div>
+<div class="l1">
+<div class="l1h"><b>지원가</b><span class="role">지원</span><small>법칙 빛·물</small></div>
+<p class="ldesc">믿음(신앙) 또는 자연친화가 먼저 정해지고, 그 계열의 L2 로 바로 등장한다</p>
+<div class="job">
+<div class="jh"><b>드루이드</b><span class="jlaw">물·대지</span><span class="role">지원</span>
+</div>
+<p class="jdesc">숲과 통하는 자. 자연친화가 없으면 힘이 나오지 않는다</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">수맥</span><span class="tier t1">1</span><span class="axis" style="--c:#6fc9b0">마나<em>MANA</em></span></div>
+<p class="kdesc">발밑의 땅을 타고 흐르는 기운을 끌어올리는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.17</td></tr><tr><th>ATK</th><td class="up">1.17</td></tr><tr><th>DEF</th><td class="up">1.20</td></tr><tr><th>공속</th><td class="up">1.17</td></tr><tr><th>MAG</th><td class="up">1.22</td></tr><tr><th>MDEF</th><td class="up">1.20</td></tr><tr><th>CRI</th><td class="up">1.17</td></tr><tr><th>PEN</th><td class="up">1.20</td></tr><tr><th>MPEN</th><td class="up">1.20</td></tr><tr><th>MS</th><td class="up">1.17</td></tr><tr><th>CDMG</th><td class="up">1.17</td></tr><tr><th>STA</th><td class="up">1.20</td></tr><tr><th>MANA ★</th><td class="up">1.60</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">산림</span><span class="tier t2">2</span><span class="axis" style="--c:#5fa87f">방어<em>DEF · PEN↓</em></span></div>
+<p class="kdesc">숲을 세워 앞을 막고 아군을 그 안에 두는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.17</td></tr><tr><th>ATK</th><td class="up">1.10</td></tr><tr><th>DEF ★</th><td class="up">1.52</td></tr><tr><th>공속</th><td class="up">1.15</td></tr><tr><th>MAG</th><td class="up">1.12</td></tr><tr><th>MDEF</th><td class="up">1.12</td></tr><tr><th>CRI</th><td class="up">1.12</td></tr><tr><th>PEN</th><td class="dn">0.89</td></tr><tr><th>MPEN</th><td class="up">1.15</td></tr><tr><th>MS</th><td class="up">1.15</td></tr><tr><th>CDMG</th><td class="up">1.12</td></tr><tr><th>STA</th><td class="up">1.15</td></tr><tr><th>MANA</th><td class="up">1.12</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">변신</span><span class="tier t3">3</span><span class="axis" style="--c:#e07b5f">힘<em>ATK</em></span></div>
+<p class="kdesc">그 자리에서 가장 강한 몸이 되는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.15</td></tr><tr><th>ATK ★</th><td class="up">1.49</td></tr><tr><th>DEF</th><td class="up">1.07</td></tr><tr><th>공속</th><td class="up">1.12</td></tr><tr><th>MAG</th><td class="up">1.12</td></tr><tr><th>MDEF</th><td class="up">1.07</td></tr><tr><th>CRI</th><td class="up">1.12</td></tr><tr><th>PEN</th><td class="up">1.12</td></tr><tr><th>MPEN</th><td class="up">1.12</td></tr><tr><th>MS</th><td class="up">1.10</td></tr><tr><th>CDMG</th><td class="up">1.15</td></tr><tr><th>STA</th><td class="up">1.12</td></tr><tr><th>MANA</th><td class="up">1.12</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>신관</b><span class="jlaw">빛·물</span><span class="role">지원</span>
+</div>
+<p class="jdesc">기도로 답을 끌어오는 직업. 믿지 않으면 답이 오지 않는다</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">가호</span><span class="tier t3">3</span><span class="axis" style="--c:#7f9ed4">마법방어<em>MDEF · MPEN↓</em></span></div>
+<p class="kdesc">성광을 퍼뜨려 아군 전체를 지키는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.13</td></tr><tr><th>ATK</th><td class="up">1.06</td></tr><tr><th>DEF</th><td class="up">1.09</td></tr><tr><th>공속</th><td class="up">1.11</td></tr><tr><th>MAG</th><td class="up">1.13</td></tr><tr><th>MDEF ★</th><td class="up">1.49</td></tr><tr><th>CRI</th><td class="up">1.09</td></tr><tr><th>PEN</th><td class="up">1.11</td></tr><tr><th>MPEN</th><td class="dn">0.85</td></tr><tr><th>MS</th><td class="up">1.11</td></tr><tr><th>CDMG</th><td class="up">1.09</td></tr><tr><th>STA</th><td class="up">1.11</td></tr><tr><th>MANA</th><td class="up">1.13</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">축복</span><span class="tier t2">2</span><span class="axis" style="--c:#e3bb75">치명위력<em>CDMG</em></span></div>
+<p class="kdesc">걸어 아군의 공격을 끌어올리는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.13</td></tr><tr><th>ATK</th><td class="up">1.15</td></tr><tr><th>DEF</th><td class="up">1.15</td></tr><tr><th>공속</th><td class="up">1.15</td></tr><tr><th>MAG</th><td class="up">1.23</td></tr><tr><th>MDEF</th><td class="up">1.15</td></tr><tr><th>CRI</th><td class="up">1.20</td></tr><tr><th>PEN</th><td class="up">1.15</td></tr><tr><th>MPEN</th><td class="up">1.15</td></tr><tr><th>MS</th><td class="up">1.18</td></tr><tr><th>CDMG ★</th><td class="up">1.53</td></tr><tr><th>STA</th><td class="up">1.15</td></tr><tr><th>MANA</th><td class="up">1.25</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">구원</span><span class="tier t1">1</span><span class="axis" style="--c:#6fc9b0">마나<em>MANA</em></span></div>
+<p class="kdesc">죽기 직전의 아군을 되살리고 대신 빚을 지는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.17</td></tr><tr><th>ATK</th><td class="up">1.17</td></tr><tr><th>DEF</th><td class="up">1.20</td></tr><tr><th>공속</th><td class="up">1.17</td></tr><tr><th>MAG</th><td class="up">1.22</td></tr><tr><th>MDEF</th><td class="up">1.20</td></tr><tr><th>CRI</th><td class="up">1.17</td></tr><tr><th>PEN</th><td class="up">1.20</td></tr><tr><th>MPEN</th><td class="up">1.20</td></tr><tr><th>MS</th><td class="up">1.17</td></tr><tr><th>CDMG</th><td class="up">1.17</td></tr><tr><th>STA</th><td class="up">1.20</td></tr><tr><th>MANA ★</th><td class="up">1.60</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>수도사</b><span class="jlaw">빛·대지</span><span class="role">지원</span>
+</div>
+<p class="jdesc">갑옷 없이 몸만 단련하고, 갱한 것을 다시 세우는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">백천공</span><span class="tier t3">3</span><span class="axis" style="--c:#81c995">체력<em>HP</em></span></div>
+<p class="kdesc">뼈와 살이 함께 굳어 한 번에 꺾이지 않는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP ★</th><td class="up">1.42</td></tr><tr><th>ATK</th><td class="up">1.03</td></tr><tr><th>DEF</th><td class="up">1.05</td></tr><tr><th>공속</th><td class="up">1.08</td></tr><tr><th>MAG</th><td class="up">1.05</td></tr><tr><th>MDEF</th><td class="up">1.05</td></tr><tr><th>CRI</th><td class="up">1.05</td></tr><tr><th>PEN</th><td class="up">1.08</td></tr><tr><th>MPEN</th><td class="up">1.08</td></tr><tr><th>MS</th><td class="up">1.05</td></tr><tr><th>CDMG</th><td class="up">1.05</td></tr><tr><th>STA</th><td class="up">1.08</td></tr><tr><th>MANA</th><td class="up">1.05</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">금강</span><span class="tier t2">2</span><span class="axis" style="--c:#7f9ed4">마법방어<em>MDEF · MPEN↓</em></span></div>
+<p class="kdesc">단련한 살이 마법까지 그대로 받아내는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.15</td></tr><tr><th>ATK</th><td class="up">1.08</td></tr><tr><th>DEF</th><td class="up">1.10</td></tr><tr><th>공속</th><td class="up">1.13</td></tr><tr><th>MAG</th><td class="up">1.15</td></tr><tr><th>MDEF ★</th><td class="up">1.51</td></tr><tr><th>CRI</th><td class="up">1.10</td></tr><tr><th>PEN</th><td class="up">1.13</td></tr><tr><th>MPEN</th><td class="dn">0.87</td></tr><tr><th>MS</th><td class="up">1.13</td></tr><tr><th>CDMG</th><td class="up">1.10</td></tr><tr><th>STA</th><td class="up">1.13</td></tr><tr><th>MANA</th><td class="up">1.15</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">자비</span><span class="tier t1">1</span><span class="axis" style="--c:#6fc9b0">마나<em>MANA</em></span></div>
+<p class="kdesc">갱한 곳을 다시 세워 곁의 숨을 붙여주는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.18</td></tr><tr><th>ATK</th><td class="up">1.18</td></tr><tr><th>DEF</th><td class="up">1.21</td></tr><tr><th>공속</th><td class="up">1.18</td></tr><tr><th>MAG</th><td class="up">1.23</td></tr><tr><th>MDEF</th><td class="up">1.21</td></tr><tr><th>CRI</th><td class="up">1.18</td></tr><tr><th>PEN</th><td class="up">1.21</td></tr><tr><th>MPEN</th><td class="up">1.21</td></tr><tr><th>MS</th><td class="up">1.18</td></tr><tr><th>CDMG</th><td class="up">1.18</td></tr><tr><th>STA</th><td class="up">1.21</td></tr><tr><th>MANA ★</th><td class="up">1.61</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>정신술사</b><span class="jlaw">어둠·빛</span><span class="role">지원</span>
+</div>
+<p class="jdesc">상대와 아군의 상태를 바꾸는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">침식</span><span class="tier t2">2</span><span class="axis" style="--c:#9b6fd4">마법관통<em>MPEN</em></span></div>
+<p class="kdesc">상대의 힘과 방어를 조금씩 깎아 내리는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.11</td></tr><tr><th>ATK</th><td class="up">1.09</td></tr><tr><th>DEF</th><td class="up">1.09</td></tr><tr><th>공속</th><td class="up">1.11</td></tr><tr><th>MAG</th><td class="up">1.23</td></tr><tr><th>MDEF</th><td class="up">1.11</td></tr><tr><th>CRI</th><td class="up">1.16</td></tr><tr><th>PEN</th><td class="up">1.06</td></tr><tr><th>MPEN ★</th><td class="up">1.45</td></tr><tr><th>MS</th><td class="up">1.11</td></tr><tr><th>CDMG</th><td class="up">1.09</td></tr><tr><th>STA</th><td class="up">1.11</td></tr><tr><th>MANA</th><td class="up">1.13</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">감응</span><span class="tier t1">1</span><span class="axis" style="--c:#e3bb75">치명위력<em>CDMG</em></span></div>
+<p class="kdesc">곁의 사기를 끌어올려 함께 버티게 하는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.12</td></tr><tr><th>ATK</th><td class="up">1.15</td></tr><tr><th>DEF</th><td class="up">1.15</td></tr><tr><th>공속</th><td class="up">1.15</td></tr><tr><th>MAG</th><td class="up">1.22</td></tr><tr><th>MDEF</th><td class="up">1.15</td></tr><tr><th>CRI</th><td class="up">1.20</td></tr><tr><th>PEN</th><td class="up">1.15</td></tr><tr><th>MPEN</th><td class="up">1.15</td></tr><tr><th>MS</th><td class="up">1.17</td></tr><tr><th>CDMG ★</th><td class="up">1.52</td></tr><tr><th>STA</th><td class="up">1.15</td></tr><tr><th>MANA</th><td class="up">1.25</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">발산</span><span class="tier t3">3</span><span class="axis" style="--c:#b48dd4">주문<em>MAG</em></span></div>
+<p class="kdesc">가진 마나를 곁의에게 나눠주는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.06</td></tr><tr><th>ATK</th><td class="up">1.03</td></tr><tr><th>DEF</th><td class="up">1.06</td></tr><tr><th>공속</th><td class="up">1.06</td></tr><tr><th>MAG ★</th><td class="up">1.39</td></tr><tr><th>MDEF</th><td class="up">1.06</td></tr><tr><th>CRI</th><td class="up">1.03</td></tr><tr><th>PEN</th><td class="up">1.06</td></tr><tr><th>MPEN</th><td class="up">1.01</td></tr><tr><th>MS</th><td class="up">1.03</td></tr><tr><th>CDMG</th><td class="up">1.03</td></tr><tr><th>STA</th><td class="up">1.06</td></tr><tr><th>MANA</th><td class="up">1.10</td></tr></tbody></table>
+</div>
+</div></div>
+<div class="job">
+<div class="jh"><b>땜장이</b><span class="jlaw">대지·화염</span><span class="role">지원</span>
+</div>
+<p class="jdesc">아군의 갑옷과 무기를 그 자리에서 고쳐 주는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">때움</span><span class="tier t1">1</span><span class="axis" style="--c:#5fa87f">방어<em>DEF · PEN↓</em></span></div>
+<p class="kdesc">뚫린 갑옷을 그 자리에서 때워 막는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.24</td></tr><tr><th>ATK</th><td class="up">1.17</td></tr><tr><th>DEF ★</th><td class="up">1.62</td></tr><tr><th>공속</th><td class="up">1.22</td></tr><tr><th>MAG</th><td class="up">1.19</td></tr><tr><th>MDEF</th><td class="up">1.19</td></tr><tr><th>CRI</th><td class="up">1.19</td></tr><tr><th>PEN</th><td class="dn">0.94</td></tr><tr><th>MPEN</th><td class="up">1.22</td></tr><tr><th>MS</th><td class="up">1.22</td></tr><tr><th>CDMG</th><td class="up">1.19</td></tr><tr><th>STA</th><td class="up">1.22</td></tr><tr><th>MANA</th><td class="up">1.19</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">담금</span><span class="tier t2">2</span><span class="axis" style="--c:#7f9ed4">마법방어<em>MDEF · MPEN↓</em></span></div>
+<p class="kdesc">달군 쇠를 식혀 주문을 견디게 하는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.23</td></tr><tr><th>ATK</th><td class="up">1.15</td></tr><tr><th>DEF</th><td class="up">1.18</td></tr><tr><th>공속</th><td class="up">1.20</td></tr><tr><th>MAG</th><td class="up">1.23</td></tr><tr><th>MDEF ★</th><td class="up">1.61</td></tr><tr><th>CRI</th><td class="up">1.18</td></tr><tr><th>PEN</th><td class="up">1.20</td></tr><tr><th>MPEN</th><td class="dn">0.92</td></tr><tr><th>MS</th><td class="up">1.20</td></tr><tr><th>CDMG</th><td class="up">1.18</td></tr><tr><th>STA</th><td class="up">1.20</td></tr><tr><th>MANA</th><td class="up">1.23</td></tr></tbody></table>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">맞춤</span><span class="tier t3">3</span><span class="axis" style="--c:#e07b5f">힘<em>ATK</em></span></div>
+<p class="kdesc">손에 맞게 고쳐 한 번의 무게를 살리는</p>
+<div class="mlab">STATMOD 13축 — ★ 가 shape 대표</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.20</td></tr><tr><th>ATK ★</th><td class="up">1.55</td></tr><tr><th>DEF</th><td class="up">1.12</td></tr><tr><th>공속</th><td class="up">1.17</td></tr><tr><th>MAG</th><td class="up">1.17</td></tr><tr><th>MDEF</th><td class="up">1.12</td></tr><tr><th>CRI</th><td class="up">1.17</td></tr><tr><th>PEN</th><td class="up">1.17</td></tr><tr><th>MPEN</th><td class="up">1.17</td></tr><tr><th>MS</th><td class="up">1.15</td></tr><tr><th>CDMG</th><td class="up">1.20</td></tr><tr><th>STA</th><td class="up">1.17</td></tr><tr><th>MANA</th><td class="up">1.17</td></tr></tbody></table>
+</div>
+</div></div>
+</div>
+<div class="l1">
+<div class="l1h"><b>무명자</b><span class="role">무직</span><small>법칙 무</small></div>
+<p class="ldesc">아직 이름이 정해지지 않은 직업</p>
+<div class="job term">
+<div class="jh"><b>무직</b><span class="jlaw">—</span><span class="role">무직</span>
+</div>
+<p class="jdesc">아직 이름이 정해지지 않은 직업</p>
+<div class="l3wrap">
+<div class="l3h"><b>L3 · 생활직</b><span class="role">생활</span><small>L4 13장 = 적성 13종 1:1</small></div>
+<p class="jdesc">살아가는 손을 고르는 직업</p>
+<p class="jdesc note">★ 이 갈래에는 <b>축이 없다</b> — 무(空) 는 스탯을 재배분하지 않는다. L4 카드는 statMod 13축이 <b>전부 1.14 로 같다</b>. 티어 2 와 3 이 섞여 있어도 배율은 같다 — 다른 것은 축이 아니라 실물(채집·생산·제작) 이다. 그래서 스탯표를 붙이지 않는다: 13줄이 전부 같은 숫자일 뿐이다.</p>
+<div class="kws l4">
+<div class="kw">
+<div class="kh"><span class="kname">채집꾼</span><span class="tier t2">2</span><span class="axis term">축 없음<em>생산</em></span></div>
+<p class="kdesc">들판에서 먹을 것과 약초를 찾는</p>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">벌목꾼</span><span class="tier t2">2</span><span class="axis term">축 없음<em>생산</em></span></div>
+<p class="kdesc">나무를 쓰러뜨려 목재로 바꾸는</p>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">농부</span><span class="tier t2">2</span><span class="axis term">축 없음<em>생산</em></span></div>
+<p class="kdesc">밭을 일구어 곡식과 약초를 얻는</p>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">건축가</span><span class="tier t2">2</span><span class="axis term">축 없음<em>생산</em></span></div>
+<p class="kdesc">건물을 세우고 손질하는</p>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">광부</span><span class="tier t2">2</span><span class="axis term">축 없음<em>생산</em></span></div>
+<p class="kdesc">땅속에서 광석을 캐내는</p>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">요리사</span><span class="tier t3">3</span><span class="axis term">축 없음<em>회복</em></span></div>
+<p class="kdesc">요리해 배를 채우고 사기를 끌어올리는</p>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">의사</span><span class="tier t3">3</span><span class="axis term">축 없음<em>회복</em></span></div>
+<p class="kdesc">다친 사람을 묶어 두고 살리는</p>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">연구자</span><span class="tier t3">3</span><span class="axis term">축 없음<em>지식</em></span></div>
+<p class="kdesc">모르는 것을 적어 남기는</p>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">조약사</span><span class="tier t2">2</span><span class="axis term">축 없음<em>제작</em></span></div>
+<p class="kdesc">재료를 갈아 물약을 끓이는</p>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">대장장이</span><span class="tier t2">2</span><span class="axis term">축 없음<em>제작</em></span></div>
+<p class="kdesc">불로 금속을 두드려 겹치는</p>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">교육자</span><span class="tier t3">3</span><span class="axis term">축 없음<em>지식</em></span></div>
+<p class="kdesc">물어보고 되받아 말하게 하는</p>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">예술가</span><span class="tier t3">3</span><span class="axis term">축 없음<em>예술</em></span></div>
+<p class="kdesc">본 것을 남에게 보여주는</p>
+</div>
+<div class="kw">
+<div class="kh"><span class="kname">상인</span><span class="tier t3">3</span><span class="axis term">축 없음<em>교역</em></span></div>
+<p class="kdesc">만든 것과 얻은 것을 오가는</p>
+</div>
+</div>
+</div>
+</div>
+<div class="job term">
+<div class="jh"><b>현자</b><span class="jlaw">무</span><span class="role">무직</span>
+</div>
+<p class="jdesc">원소보다 마나를 먼저 보는 직업</p>
+<div class="kws">
+<div class="kw">
+<div class="kh"><span class="kname">대현자</span><span class="tier t1">1</span><span class="axis term">축 없음<em>지능 130 고정</em></span></div>
+<p class="kdesc">방식에 담기기 전의 마나를 그대로 쓰는</p>
+<div class="mlab">STATMOD 13축 — <b>축 없음</b> · 13축 균등</div><table class="vstat"><tbody><tr><th>HP</th><td class="up">1.10</td></tr><tr><th>ATK</th><td class="up">1.10</td></tr><tr><th>DEF</th><td class="up">1.10</td></tr><tr><th>공속</th><td class="up">1.10</td></tr><tr><th>MAG</th><td class="up">1.10</td></tr><tr><th>MDEF</th><td class="up">1.10</td></tr><tr><th>CRI</th><td class="up">1.10</td></tr><tr><th>PEN</th><td class="up">1.10</td></tr><tr><th>MPEN</th><td class="up">1.10</td></tr><tr><th>MS</th><td class="up">1.10</td></tr><tr><th>CDMG</th><td class="up">1.10</td></tr><tr><th>STA</th><td class="up">1.10</td></tr><tr><th>MANA</th><td class="up">1.10</td></tr></tbody></table>
+</div>
+</div></div>
+</div>
+<footer>v3.4.0 — 이 문서는 <code>gen_career_html.py</code> 가 <code>job_tree.json</code> 에서 만든다. 손으로 고치지 마라. 트리가 바뀌면 이 스크립트만 다시 돌리면 따라온다.</footer>
+</main></body></html>

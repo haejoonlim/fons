@@ -17,14 +17,30 @@
       "mag": 20,
       "mdef": 0,
       "pen": 0,
-      "eva": 0,
+      "ms": 100,
       "cdmg": 0,
       "cri": 0,
       "mana": 100,
       "spd_cast": 30,
       "sta": 80,
       "status": "가안",
-      "note": "05 §7 13종 기준스탯 (2026-09-14). 필드스탯 = 기준 × (1+statMods%) × 직업계수(05 §4) × 등급계수(01 §2) × 레벨계수. ASPD/CRI/PEN/EVA/CDMG/SPD_CAST/STA는 등급계수 미적용. 플탐 튜닝."
+      "note": "05 §7 13종 기준스탯 (2026-09-14 · 38차 회피율 폐지 → 이동속도 ms 100% 신설). 필드스탯 = 기준 × (1+statMods%) × 직업계수(05 §4) × 등급계수(01 §2) × 레벨계수. ASPD/CRI/PEN/MS/CDMG/SPD_CAST/STA는 등급계수 미적용. 플탐 튜닝."
+    },
+    "cpWeights": {
+      "HP": 0.12,
+      "ATK": 2.0,
+      "MAG": 2.0,
+      "DEF": 1.5,
+      "MDEF": 1.5,
+      "ASPD": 3.0,
+      "CRI": 3.0,
+      "CDMG": 1.0,
+      "PEN": 2.5,
+      "MPEN": 2.5,
+      "MS": 1.5,
+      "STA": 0.03,
+      "MANA": 0.05,
+      "note": "01 §3 ①식 13항. 시뮬과 Godot 이 같은 파일을 읽는다(2026-10-17 이관 — 가중치를 코드에 두 번 적지 않는다)."
     },
     "jobWeightContract": {
       "order": [
@@ -264,7 +280,7 @@
           },
           "passive": {
             "name": "생존 본능",
-            "desc": "야생 지형 회피 +5%"
+            "desc": "야생 지형 이동속도 +5%"
           },
           "element": "earth",
           "biome": "지맥능선",
@@ -441,7 +457,7 @@
           },
           "passive": {
             "name": "바람의 걸음",
-            "desc": "이동 중 회피 +5%"
+            "desc": "달리는 동안 이동속도 +5%"
           },
           "element": "wind",
           "biome": "찢긴 천창",
@@ -884,7 +900,7 @@
       "aptitude": "요리사 +",
       "racePassive": {
         "name": "해양 적응",
-        "desc": "수중/물가 전투 회피 +5%",
+        "desc": "수중/물가 전투 이동속도 +5%",
         "type": "combat"
       },
       "elemental": null,
@@ -1212,7 +1228,7 @@
           },
           "passive": {
             "name": "층리의 울림",
-            "desc": "기습 공격을 받을 때 회피 +5%"
+            "desc": "기습 공격을 받아도 피해 -5%"
           },
           "element": "earth",
           "biome": "무풍고원",
@@ -1245,12 +1261,12 @@
       "lineage": "dwarf",
       "statMods": {
         "aspd": 8,
-        "eva": 5
+        "ms": 5
       },
       "aptitude": "요리사 ++",
       "racePassive": {
         "name": "행운의 발걸음",
-        "desc": "함정 회피 +10%",
+        "desc": "함정 피해 -10%",
         "type": "combat"
       },
       "elemental": null,
@@ -2450,7 +2466,7 @@
           },
           "passive": {
             "name": "바람 혈통",
-            "desc": "바람 속성 피해 +10% · 이동 중 회피 +5%"
+            "desc": "바람 속성 피해 +10% · 달리는 동안 이동속도 +5%"
           },
           "element": "wind",
           "biome": "증기구름층",
@@ -2590,7 +2606,7 @@
           },
           "passive": {
             "name": "층리 감각",
-            "desc": "지맥굴 암반 균열·매복 징후 감지 · 서브 테마 지형 회피 +5%"
+            "desc": "지맥굴 암반 균열·매복 징후 감지 · 서브 테마 지형 이동속도 +5%"
           },
           "element": "earth",
           "biome": "지맥굴",
@@ -2864,7 +2880,7 @@
           },
           "passive": {
             "name": "굴절막",
-            "desc": "전투 첫 원거리 공격 회피 +5% · 조석 지형 투명 위장"
+            "desc": "전투 첫 원거리 공격 피해 -5% · 조석 지형 투명 위장"
           },
           "element": "light",
           "biome": "역류폭포",

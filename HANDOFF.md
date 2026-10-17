@@ -16,8 +16,8 @@
 - Unity로 만들던 게임(FONS/폰즈)을 **Godot 4.7.2로 다시 만드는 새 저장소**를 바탕화면 `폰즈/`에 세웠다.
   에셋과 Unity C#은 가져오지 않고, 문서·설정·시뮬레이터 숫자만 이관하는 원칙으로 짰다.
 - 개발 환경(Godot/Blender/ffmpeg/GUT/venv)을 **실제로 설치하고 실측 검증**했다.
-- 게임 개발 플랜([docs/DEV_PLAN.md](docs/DEV_PLAN.md)), 문서 검수 기록([docs/DOC_REVIEW.md](docs/DOC_REVIEW.md)),
-  이관 계획([MIGRATION_PLAN.md](MIGRATION_PLAN.md)), 포팅 매핑([docs/GODOT_PORTING_MAP.md](docs/GODOT_PORTING_MAP.md))을 썼다.
+- 게임 개발 플랜([docs/dev/DEV_PLAN.md](docs/dev/DEV_PLAN.md)), 문서 검수 기록([docs/dev/DOC_REVIEW.md](docs/dev/DOC_REVIEW.md)),
+  이관 계획([MIGRATION_PLAN.md](MIGRATION_PLAN.md)), 포팅 매핑([docs/dev/GODOT_PORTING_MAP.md](docs/dev/GODOT_PORTING_MAP.md))을 썼다.
 - **문서 검수 자동화 도구**([tools/review_docs.py](tools/review_docs.py), 검사 7종)를 만들어
   이 저장소 문서의 결함을 실제로 잡아 고쳤다.
 - 검증 중 **침묵하는 거짓 통과**를 발견해 막았다(§4-1). 이게 이번 작업에서 제일 중요한 발견이다.
@@ -28,12 +28,20 @@
 - 읽고 나서 **원본에 없는 값이 이 저장소에 박혀 있던 것**을 찾아냈다. 가장 큰 것은 **"130회 소환" 게이트**다.
   `PULLS = 130`과 `expected_shaped = 6.5`는 원본 어디에도 없는 정의였다 — 원본의 130은 탑 층수·티켓 단가·
   레벨 상한·★4 하드 천장 등이고, 5%는 **종족 롤(shaped)** 의 비율이지 소환 횟수에 곱하는 값이 아니다.
-  [sim/gacha.py](sim/gacha.py)와 [godot/scripts/sim/gacha.gd](godot/scripts/sim/gacha.gd)를 원본 확정 #32·#11 기준으로 다시 썼다.
+  [sim/gacha.py](sim/gacha.py)와 [godot/core/gacha.gd](godot/core/gacha.gd)를 원본 확정 #32·#11 기준으로 다시 썼다.
 - **D-265와 D-267의 정의문을 읽었다 (원본 대조).** D-265 = 층 미션 시스템(주 미션 7종 + 세계 전용 특수 20종),
   D-267 = 마석본위제 화폐·은행(화폐 「레이」 LEY, 환율 1마석 = 60 LEY).
 - **데이터 manifest를 원본 트리와 대조했다.** 추정 목록은 실제와 달랐다 — 없던 파일 3개, 빠져 있던 파일 2개.
   실제는 **17종**이다([data/manifest.json](data/manifest.json)).
 - 그 결과는 [docs/original/](docs/original/00_읽는법.md) 사실표 4종에 정리했다. **이 저장소의 수치는 이제 그 사실표가 근거다.**
+
+**구조를 게임 프로젝트답게 재편했다 (2026-10-17)**
+- Godot 프로젝트를 기능별로 다시 짰다: `autoload/`(전역) · `core/`(씬 없는 규칙) · `game/`(씬 + 그 씬 전용 스크립트) · `tests/unit/`.
+  씬과 스크립트를 한 폴더에 두는 이유는 [docs/adr/0001-repo-layout.md](docs/adr/0001-repo-layout.md) 에 있다.
+- 엔진 밖에 `art-source/` · `audio-source/` 를 열어 **편집 원본과 런타임 에셋**을 나눴다.
+- 문서를 성격별로 나눴다: `docs/dev/`(계획) · `docs/design/`(2D 설계) · `docs/adr/`(결정) · `docs/art/` · `docs/audio/`.
+  입구는 [docs/README.md](docs/README.md).
+- 이동 뒤 검증: GUT 20/20 통과 · `GATE ALL OK` · `review_docs.py` 발견 0건 · 헤드리스 실행 exit 0 (자체 실측).
 
 **아직 안 된 일**
 - **원본 데이터 이관을 실행했다.** 확정된 17종을 `data/`와 `godot/data/`에 복사했고, 게이트가 누락을 잡도록 바꿨다 (자체 실측).
@@ -53,10 +61,10 @@
 | [docs/original/03_데이터_영지_탑.md](docs/original/03_데이터_영지_탑.md) | 정본 JSON 17종 · 영지 · 탑 · 바이옴 · 결정 요지 (원본 대조) |
 | [README.md](README.md) | 프로젝트 개요, 폴더 구조, 실행 명령 |
 | [SETUP.md](SETUP.md) | 환경 재현, 렌더러 결정, GUT 실행법 |
-| [docs/DEV_PLAN.md](docs/DEV_PLAN.md) | 게임 개발 플랜. Phase 0~5, WBS, 게이트, 리스크 |
-| [docs/DOC_REVIEW.md](docs/DOC_REVIEW.md) | 무엇을 검수했고 무엇이 남았는지, 검수 절차 |
+| [docs/dev/DEV_PLAN.md](docs/dev/DEV_PLAN.md) | 게임 개발 플랜. Phase 0~5, WBS, 게이트, 리스크 |
+| [docs/dev/DOC_REVIEW.md](docs/dev/DOC_REVIEW.md) | 무엇을 검수했고 무엇이 남았는지, 검수 절차 |
 | [MIGRATION_PLAN.md](MIGRATION_PLAN.md) | 원본에서 무엇을 가져오고 무엇을 버리는지 |
-| [docs/GODOT_PORTING_MAP.md](docs/GODOT_PORTING_MAP.md) | 원본 코드 → GDScript 매핑표 |
+| [docs/dev/GODOT_PORTING_MAP.md](docs/dev/GODOT_PORTING_MAP.md) | 원본 코드 → GDScript 매핑표 |
 | [data/README.md](data/README.md) | JSON 이관 규칙, manifest 대조 결과 |
 
 ---
@@ -67,18 +75,18 @@
 |---|---|---|
 | 개발 환경 | 완료 | `./.venv/bin/python tools/check_env.py --strict` → **exit 0** (자체 실측) |
 | Godot 프로젝트 | 열림·임포트됨 | `godot --headless --import` → exit 0 (자체 실측) |
-| GUT 테스트 | **2 스크립트 / 8 테스트 / 8 통과 / 25 단언** | `./tools/test_godot.sh` → **exit 0** (자체 실측) |
+| GUT 테스트 | **5 스크립트 / 20 테스트 / 20 통과 / 49 단언** | `./tools/test_godot.sh` → **exit 0** (자체 실측) |
 | Python 게이트 | 통과 | `./.venv/bin/python tools/gate_all.py` → exit 0 · `GATE ALL OK` (자체 실측) |
-| 필수 산출물 | **29종** 존재 검사 | `tools/check_docs.py` → `DOCS OK: 29 files present` (자체 실측) |
-| 문서 검수 도구 | 검사 7종 동작 · **발견 0건** / 상수 26개 대조 (면제 건수는 문서 수정마다 변한다) | `tools/review_docs.py` → exit 0 (advisory, 하드 게이트 아님) (자체 실측) |
+| 필수 산출물 | **52종** 존재 검사 + 구조 회귀 감시 | `tools/check_docs.py` → `DOCS OK: 52 files present` (자체 실측) |
+| 문서 검수 도구 | 검사 7종 동작 · **발견 0건** / 상수 21개 대조 (면제 건수는 문서 수정마다 변한다) | `tools/review_docs.py` → exit 0 (advisory, 하드 게이트 아님) (자체 실측) |
 | 소환 규칙 게이트 | 원본 확정 #32 확률표·#11 종족 롤 **재현** | `sim/gacha.py` → `GATE OK` (표본 200000, seed 265) (자체 실측) |
 | 원본 대조 사실표 | **4종 완료** | `docs/original/` (원본 대조) |
 | Godot 시뮬 코드 | 소환 규칙은 원본값 · 전투는 스텁 | `gacha.gd`, `combat.gd` (자체 실측) |
-| 3D 월드 | **없음** | `godot/scenes/` 가 타이틀 자리표시자뿐 (자체 실측) |
+| 3D 월드 | **없음** | `godot/game/` 가 타이틀 자리표시자뿐 (자체 실측) |
 | 원본 이관(데이터) | **완료 — 17종 ×2** | `tools/sync_data.py` → `data/` 17 + `godot/data/` 17 (자체 실측) |
 | 원본 문서 검수 | **완료** | `docs/original/` 4종 (원본 대조) |
 
-**되는 것**: Godot 프로젝트가 열리고, GUT 8개가 통과하고, 숫자 게이트가 원본 확률표를 재현한다.
+**되는 것**: Godot 프로젝트가 열리고, GUT 20개가 통과하고, 숫자 게이트가 원본 확률표를 재현한다.
 **안 되는 것**: 게임을 플레이할 수 없다. 원본 데이터 17종은 들어왔지만, 그 데이터를 읽어 게임을 돌리는 시뮬 코어 포팅이 아직 없다 (자체 실측).
 
 ---
@@ -159,8 +167,8 @@ ERROR: Some GUT class_names have not been imported. Please restart the Editor or
 값이 확정되기 전에는 통합하면 안 된다고 적어 뒀다. 이제 ①원본 대조와 ②값 확정이 끝났으므로 ③통합이 남은 작업이다.
 
 현재 같은 값이 두 곳에 선언돼 있다 — `SHAPED_RATE = 0.05` / `LEGACY_RATE = 0.95` 가
-[sim/gacha.py](sim/gacha.py)와 [godot/scripts/sim/gacha.gd](godot/scripts/sim/gacha.gd)에 각각 있고,
-[godot/tests/test_gacha.gd](godot/tests/test_gacha.gd)가 그 사본을 검사한다.
+[sim/gacha.py](sim/gacha.py)와 [godot/core/gacha.gd](godot/core/gacha.gd)에 각각 있고,
+[godot/tests/unit/test_gacha.gd](godot/tests/unit/test_gacha.gd)가 그 사본을 검사한다.
 구조적으로 **드리프트를 못 잡는 배치**다. 남은 작업: 한쪽을 정본으로 정하고 다른 쪽이 그것을 읽게 만든 뒤,
 [data/](data/manifest.json) 쪽 JSON으로 옮겨 테스트가 데이터를 검사하도록 바꾼다.
 [tools/review_docs.py](tools/review_docs.py)의 `CONST_DRIFT` 검사가 같은 이름·다른 값 선언을 계속 감시한다.
@@ -169,7 +177,7 @@ ERROR: Some GUT class_names have not been imported. Please restart the Editor or
 
 `gl_compatibility`로 고정했다. Intel macOS에서 Forward+/Mobile은 MoltenVK를 거치고
 Godot 4.7에서 검은 화면·Vulkan device loss 보고가 있다. 바꾸면 화면이 안 나올 수 있다.
-바꿀 거면 [docs/DEV_PLAN.md](docs/DEV_PLAN.md) §4와 [SETUP.md](SETUP.md)의 손실 목록을 먼저 읽을 것.
+바꿀 거면 [docs/dev/DEV_PLAN.md](docs/dev/DEV_PLAN.md) §4와 [SETUP.md](SETUP.md)의 손실 목록을 먼저 읽을 것.
 
 ### 4-5. `data/manifest.json`은 이제 대조된 목록이다
 
@@ -239,12 +247,14 @@ Godot 4.7에서 검은 화면·Vulkan device loss 보고가 있다. 바꾸면 �
 
 ## 7. 원본 이관 순서 (순서 고정, 건너뛰지 말 것)
 
-원본은 `~/soul-commander`에 있다 (원본 대조). 1번은 실행, 2~3번은 완료, 4번 이하는 남은 작업이다.
+원본은 `~/soul-commander`에 있다 (원본 대조). **단, `unity/` 하위는 2026-10-17에 로컬에서 삭제됐다** (자체 실측) —
+데이터·C#·에셋이 거기 있었고, 이관이 끝난 뒤 지웠다. 남은 것은 `design-docs/`(57M) · `fons-web-ver/` · `web/` · `graft/` 다.
+그래서 아래 1번은 **이미 실행 완료**이고, 재이관은 원본이 다시 있을 때만 가능하다.
 
-1. **데이터 이관 실행** — manifest는 대조 완료(17종)이므로 그대로 옮긴다. 없는 파일이 있으면 실패한다.
+1. **데이터 이관 (완료)** — manifest는 대조 완료(17종)이므로 그대로 옮겼다. 없는 파일이 있으면 실패한다.
    ```bash
-   ./.venv/bin/python tools/sync_data.py --src ~/soul-commander/unity/Assets/Resources/Data --dst data
-   ./.venv/bin/python tools/sync_data.py --src ~/soul-commander/unity/Assets/Resources/Data --dst godot/data
+   ./.venv/bin/python tools/sync_data.py --src <원본 데이터 폴더> --dst data
+   ./.venv/bin/python tools/sync_data.py --src <원본 데이터 폴더> --dst godot/data
    ```
 2. **원본 문서 이관 (완료)** — 정본 GDD 00~09·99와 웹 플랜은 전부 읽었고, 그 내용은
    [docs/original/](docs/original/00_읽는법.md) 사실표 4종에 값 단위로 정리했다.
@@ -254,7 +264,7 @@ Godot 4.7에서 검은 화면·Vulkan device loss 보고가 있다. 바꾸면 �
 4. **수치 게이트 재현** — 원본 `verify_*.mjs` 는 **15개**이고, 그 기대값을 이 저장소의 `sim`·`tests` 로 옮겨온다 (원본 대조).
    첫 사례로 소환 확률표(#32)는 이미 재현됐다 (원본 대조).
    다음 후보는 [docs/original/02_웹버전_포팅.md](docs/original/02_웹버전_포팅.md)의 검증 목록에서 고른다.
-5. **문서 검수 절차 실행** — [docs/DOC_REVIEW.md](docs/DOC_REVIEW.md)의 순서.
+5. **문서 검수 절차 실행** — [docs/dev/DOC_REVIEW.md](docs/dev/DOC_REVIEW.md)의 순서.
 6. **값 단일 소스화** — §4-3의 ③.
 7. **`review_docs.py`를 하드 게이트로 승격** — 미검증 주장이 0이 된 뒤에 (지금은 1건, 알려진 오탐).
 
@@ -363,10 +373,10 @@ git push -u origin main
 | `design-docs/결정로그/` | 결정 기록 D-251 ~ D-280 · append-only (원본 대조) | D-265·D-267 등 요지는 `docs/original/03_데이터_영지_탑.md` (원본 대조) |
 | `design-docs/_tools/` | 시뮬·게이트 도구 다수 + 일부 정본 JSON (한글 키) (원본 대조) | 게이트 개념만 차용 — 도구는 포팅하지 않음 |
 | `design-docs/설계` · `제안서` · `_기록` | 준정본·미확정 후보·검수 기록 — 확정 근거로 인용 금지 (원본 대조) | 참조만 |
-| `unity/Assets/Resources/Data/*.json` | 런타임 데이터 **17종** (원본 대조) | `data/` 와 `godot/data/` 로 복사 ([data/manifest.json](data/manifest.json)) |
-| `fons-web-ver/` | 웹 버전 — `PLAN.md`(W0~W4) · `GAME_PLAN_3D.md`(G0~G4) · `app/src` · `verify_*.mjs` **15개** (원본 대조) | 시뮬 코어를 GDScript로 포팅 ([docs/GODOT_PORTING_MAP.md](docs/GODOT_PORTING_MAP.md)) |
-| `unity/Assets/Scripts/**` (C#) | 게임 로직 전체 (원본 대조) | **버림** — GDScript로 재작성 |
-| `unity/Assets/Art` · `Prefabs` · `Scenes` | 에셋 (원본 대조) | **버림** — 재제작 |
-| `unity/PORTING_MAP.md` | 원본이 직접 쓴 Godot 매핑 초안 (원본 대조) | [docs/GODOT_PORTING_MAP.md](docs/GODOT_PORTING_MAP.md) 로 승계 |
+| 원본 데이터 폴더의 `*.json` | 런타임 데이터 **17종** (원본 대조) | `data/` 와 `godot/data/` 로 복사 ([data/manifest.json](data/manifest.json)) |
+| `fons-web-ver/` | 웹 버전 — `PLAN.md`(W0~W4) · `GAME_PLAN_3D.md`(G0~G4) · `app/src` · `verify_*.mjs` **15개** (원본 대조) | 시뮬 코어를 GDScript로 포팅 ([docs/dev/GODOT_PORTING_MAP.md](docs/dev/GODOT_PORTING_MAP.md)) |
+| 원본 C# 구현 전체 | 게임 로직 전체 (원본 대조) | **버림** — GDScript로 재작성 |
+| 원본 아트·프리팹·씬 | 에셋 (원본 대조) | **버림** — 재제작 |
+| `unity/PORTING_MAP.md` | 원본이 직접 쓴 Godot 매핑 초안 (원본 대조) | [docs/dev/GODOT_PORTING_MAP.md](docs/dev/GODOT_PORTING_MAP.md) 로 승계 |
 | `loop/` · `fons-launcher/` · `archive/` | 오케스트레이터 런 기록 · macOS 런처 · 마이그레이션 보존소 (원본 대조) | 범위 밖 (인용 금지) |
 | 구 Godot 구현체 | 원본에 **없다** — `godot-ver.zip` 은 저장소 미추적 로컬 보관분, 부활 금지 (원본 대조) | 이 저장소가 새로 만든다 |

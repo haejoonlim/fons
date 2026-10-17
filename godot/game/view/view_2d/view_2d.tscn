@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game/view/view_2d/view_2d.gd" id="1_view2d"]
+
+[node name="View2D" type="Node"]
+script = ExtResource("1_view2d")

@@ -1,5 +1,5 @@
 {
-  "source": "soul-commander/unity/Assets/Resources/Data",
+  "source": "soul-commander 원본 저장소의 데이터 폴더 (원본 대조)",
   "reconciled": "2026-10-17 — 원본 트리와 전수 대조 완료 (원본 대조). 이전 목록은 추정이었고 실제와 달랐다: 없던 파일 3개(estate_web·state·game_const), 빠져 있던 파일 2개(scenes·world_laws).",
   "generated_in_original": ["skills_catalog.json", "fusion_pairs.json"],
   "files": [

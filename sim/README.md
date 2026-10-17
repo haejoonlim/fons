@@ -47,7 +47,7 @@ GATE OK: 확정 #32 확률표·#11 종족 롤 재현 (표본 200000, seed 265)
 
 ## GDScript 본체
 
-`godot/scripts/sim/gacha.gd` 가 같은 상수를 선언하고, `godot/tests/test_gacha.gd` 가 그 값을 검사한다.
+`godot/core/gacha.gd` 가 같은 상수를 선언하고, `godot/tests/unit/test_gacha.gd` 가 그 값을 검사한다.
 포팅 순서(예정): combat → summon → estate → party → tower → economy.
 
 ## 이전 판이 틀렸던 것 (기록)
@@ -62,12 +62,12 @@ GATE OK: 확정 #32 확률표·#11 종족 롤 재현 (표본 200000, seed 265)
 
 ## 다음 작업 — 상수 단일 소스화
 
-같은 상수가 `sim/gacha.py` · `godot/scripts/sim/gacha.gd` · `godot/tests/test_gacha.gd` 세 곳에 따로 박혀 있다.
+같은 상수가 `sim/gacha.py` · `godot/core/gacha.gd` · `godot/tests/unit/test_gacha.gd` 세 곳에 따로 박혀 있다.
 이전 판은 "값을 대조하기 전에 통합하면 틀린 숫자를 한 곳에 예쁘게 모으는 것"이라며 통합을 미뤘고, 그 판단은 그때는 맞았다.
 지금은 값이 원본 대조로 확정됐으므로 통합할 수 있다. 계획:
 
 1. `data/` 아래에 상수 JSON 하나를 만든다 (이름은 아직 미정 — 예: game_const.json).
-2. `sim/gacha.py` 와 `godot/scripts/sim/gacha.gd` 가 그 JSON을 읽는다.
+2. `sim/gacha.py` 와 `godot/core/gacha.gd` 가 그 JSON을 읽는다.
 3. 테스트는 값을 다시 적지 않고 JSON에서 읽어 비교한다 — 그래야 JSON을 고쳤을 때 테스트가 실제로 깨진다.
 4. `tools/review_docs.py` 의 CONST_DRIFT·NUMBER_CONFLICT 검사가 코드 상수와 JSON·문서 표기의 불일치를 잡는다.
 

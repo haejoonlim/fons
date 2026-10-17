@@ -1,7 +1,7 @@
 {
   "meta": {
     "schemaVersion": "0.9-gavan",
-    "title": "파티 시너지 스키마 — 유니티 구현용 (00 #42 · 01 §3-3)",
+    "title": "파티 시너지 스키마 — Godot 구현용 (00 #42 · 01 §3-3)",
     "created": "2026-09-19",
     "note": "Y = clamp(1 + Σ양성×band + bioPos − Σ음성×band − bioNeg + 다양성 + 중복 + 공진, 0.90, 1.15). partyCP = Σ개인CP × Y. 개인 카드 CP는 Y 미포함. 검증기: design-docs/_tools/party_synergy_sim.py (B안 계약 — 무작위 평균 +2.0% · 이상 +12.5% · 최악 −6.0%)"
   },

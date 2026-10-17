@@ -331,7 +331,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -425,7 +425,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -517,7 +517,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -876,7 +876,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -1714,7 +1714,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -1806,7 +1806,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -2169,7 +2169,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -2625,7 +2625,7 @@
           "name": "도주",
           "cd": 3,
           "effect": "이동속도 2배 2초",
-          "telegraph": " 반짝임",
+          "telegraph": "반짝임",
           "counter": "포위"
         }
       ],
@@ -3085,7 +3085,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -3375,7 +3375,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -3753,7 +3753,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -4037,7 +4037,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -4219,7 +4219,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -4674,7 +4674,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -4766,7 +4766,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -5050,7 +5050,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -5511,7 +5511,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -6063,7 +6063,7 @@
           "name": "tréquence",
           "cd": 3,
           "effect": "수중 이동",
-          "telegraph": " 물결",
+          "telegraph": "물결",
           "counter": "그물"
         }
       ],
@@ -6543,7 +6543,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -6728,7 +6728,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -7281,7 +7281,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -7750,7 +7750,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -7845,7 +7845,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -8214,7 +8214,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -8759,7 +8759,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -9129,7 +9129,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -9510,7 +9510,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -9983,7 +9983,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -10537,7 +10537,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -10627,7 +10627,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -10903,7 +10903,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -11292,7 +11292,7 @@
           "name": "도주",
           "cd": 3,
           "effect": "이동속도 2배 2초",
-          "telegraph": " 반짝임",
+          "telegraph": "반짝임",
           "counter": "포위"
         }
       ],
@@ -12402,7 +12402,7 @@
           "name": "도주",
           "cd": 3,
           "effect": "이동속도 2배 2초",
-          "telegraph": " 반짝임",
+          "telegraph": "반짝임",
           "counter": "포위"
         }
       ],
@@ -12776,7 +12776,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -13793,7 +13793,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -14154,7 +14154,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -14428,7 +14428,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -14520,7 +14520,7 @@
           "name": "도주",
           "cd": 3,
           "effect": "이동속도 2배 2초",
-          "telegraph": " 반짝임",
+          "telegraph": "반짝임",
           "counter": "포위"
         }
       ],
@@ -14616,7 +14616,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -14706,7 +14706,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -16030,7 +16030,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -16589,7 +16589,7 @@
           "name": "도주",
           "cd": 3,
           "effect": "이동속도 2배 2초",
-          "telegraph": " 반짝임",
+          "telegraph": "반짝임",
           "counter": "포위"
         }
       ],
@@ -16770,7 +16770,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -17777,7 +17777,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -18327,7 +18327,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -18419,7 +18419,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -19473,7 +19473,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -20203,7 +20203,7 @@
           "name": "도주",
           "cd": 3,
           "effect": "이동속도 2배 2초",
-          "telegraph": " 반짝임",
+          "telegraph": "반짝임",
           "counter": "포위"
         }
       ],
@@ -20946,7 +20946,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -21518,7 +21518,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -22078,7 +22078,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -22265,7 +22265,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],
@@ -22541,7 +22541,7 @@
           "name": "도주",
           "cd": 3,
           "effect": "이동속도 2배 2초",
-          "telegraph": " 반짝임",
+          "telegraph": "반짝임",
           "counter": "포위"
         }
       ],
@@ -22631,7 +22631,7 @@
           "name": "이빨",
           "cd": 5,
           "effect": "1xATK + 출혈",
-          "telegraph": " lunges",
+          "telegraph": "달려든다",
           "counter": "이동"
         }
       ],

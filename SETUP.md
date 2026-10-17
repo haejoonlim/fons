@@ -125,7 +125,8 @@ export PATH="$HOME/.local/bin:$PATH"
 
 ## 빌드 (익스포트)
 
-익스포트 템플릿이 설치돼 있어 프리셋만 만들면 바로 빌드된다. 아직 없는 것: `godot/export_presets.cfg`, 메인 신(`res://scenes/title.tscn`) — Phase 3.
+익스포트 템플릿이 설치돼 있어 프리셋만 만들면 바로 빌드된다. 아직 없는 것: `godot/export_presets.cfg` 하나뿐이다.
+메인 신은 있다 — `res://game/main/main.tscn` ([project.godot](godot/project.godot) 의 `run/main_scene`).
 
 ```bash
 # 에디터에서 프리셋 만들고: Project > Export > Add > macOS
@@ -142,7 +143,7 @@ godot --headless --path godot --export-release "macOS" ../build/FONS.app
 
 ## 안 깔린 것 (필요해지면)
 
-- **Node.js / npm** — 계획에서 웹 표현층(Vite/TS)을 버렸으므로 불필요. 원본 `verify_*.mjs` 15종(원본 대조)은 `godot/tests/*.gd`와 `tools/` 파이썬 게이트로 승계한다.
+- **Node.js / npm** — 계획에서 웹 표현층(Vite/TS)을 버렸으므로 불필요. 원본 `verify_*.mjs` 15종(원본 대조)은 `godot/tests/unit/*.gd`와 `tools/` 파이썬 게이트로 승계한다.
 - **Homebrew** — 이번엔 안 썼다. `/usr/local`이 root 소유라 sudo가 필요해서, `.app` 직접 설치 + `~/.local/bin` 심볼릭 링크로 처리했다. 패키지 관리가 필요해지면 그때 설치.
 - **`gh` (GitHub CLI)** — 없다. 그래서 이 머신에서는 레포 생성·푸시를 CLI로 자동화할 수 없다. 자세한 처리는 [MIGRATION_PLAN.md](MIGRATION_PLAN.md) §2.
 

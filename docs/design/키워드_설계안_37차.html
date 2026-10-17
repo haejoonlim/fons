@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>직업 키워드 설계안 (37차)</title>
+<style>
+  :root{--bg:#101317;--card:#191e26;--card2:#202734;--line:#2b3340;
+        --fg:#eef2f7;--dim:#96a1b0;--accent:#7cc4ff;--warn:#f2b75e;--green:#9be0b4}
+  *{box-sizing:border-box} html,body{overflow-x:hidden}
+  body{margin:0 auto;max-width:720px;background:var(--bg);color:var(--fg);
+       font:18px/1.7 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+       padding:20px 16px 64px}
+  h1{font-size:23px;line-height:1.35;margin:0 0 8px}
+  .lead{color:var(--dim);font-size:15.5px;line-height:1.7;margin:0 0 18px}
+  h2.sec{font-size:15px;color:var(--dim);letter-spacing:.06em;margin:34px 0 12px;
+         padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:12px;
+       padding:15px 16px;margin-bottom:12px;font-size:16px;line-height:1.75}
+  .box b{color:#fff}
+  .box .k{color:var(--accent);font-weight:700}
+  ol.flow{margin:8px 0 0;padding-left:22px}
+  ol.flow li{margin:7px 0}
+  .job{background:var(--card);border:1px solid var(--line);border-radius:14px;
+       padding:17px 15px 15px;margin-bottom:15px}
+  .jh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:3px}
+  .l1{font-size:12.5px;color:var(--dim);border:1px solid var(--line);border-radius:20px;
+      padding:2px 9px;white-space:nowrap}
+  .jh h3{font-size:23px;margin:0;line-height:1.25}
+  .jdesc{font-size:15px;color:var(--dim);margin:0 0 9px}
+  .note{font-size:15.5px;color:var(--warn);margin:5px 0 13px;line-height:1.6}
+  .note::before{content:"지적  ";font-weight:700}
+  ul.kw{list-style:none;margin:0 0 13px;padding:0}
+  ul.kw li{background:var(--card2);border-radius:11px;padding:12px 14px;margin-bottom:8px}
+  .kwhead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .name{font-size:23px;font-weight:800;color:var(--accent)}
+  .ax{font-size:13.5px;color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+  .tier{font-size:12.5px;color:#c39cf0}
+  .stat{font-size:15px;color:#cfe3f5;margin:6px 0 0}
+  .stat b{color:#fff;font-size:16.5px}
+  .stat .sub{color:var(--dim);font-size:13.5px}
+  .do{font-size:16px;color:#d3dbe6;margin:5px 0 0;line-height:1.6}
+  .split{font-size:15.5px;color:var(--green);line-height:1.65;margin:0;
+         border-top:1px dashed var(--line);padding-top:10px}
+  .split::before{content:"→  ";color:#5f8f72}
+  table{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:4px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--dim);font-size:13px;font-weight:600}
+  td.c{color:var(--accent);font-weight:700;white-space:nowrap}
+  .sta{background:#161f29;border:1px solid #2a4256}
+  .sta h3{font-size:19px;margin:0 0 8px}
+  .sta b{color:#bfe0f7}
+  .foot{color:var(--dim);font-size:14px;line-height:1.7;margin-top:28px}
+</style>
+</head>
+<body>
+<h1>직업 키워드 설계안 — 대표 스탯 · 전직까지 붙여서</h1>
+<p class="lead">이름만 보면 역할이 안 읽힌다는 지적을 반영해, 카드마다 <b>그 키워드가 올려 주는 스탯과 배율</b>을 같이 적었다.</p>
+
+<h2 class="sec">전직 흐름 — 키워드가 언제 붙나</h2>
+<div class="box"><ol class="flow"><li>영웅은 <span class="k">L1 7종</span> 중 하나로 소환된다. 이때는 키워드가 없다.</li><li>활동 중 <b>전직이 자동 발동</b>한다(합성소 방문 아님). 스탯 기울기 + 적성 토큰으로 갈래가 확률적으로 정해진다.</li><li>L2(최종 직업)에 오르면 <b>키워드 3장 중 1장</b>이 붙는다. 그 한 장의 <code>statMod</code>가 영웅 스탯에 곱해진다.</li><li>정령기사·원소마도사처럼 <b>7장짜리 종점</b>도 1장만 고른다 — 7장을 다 곱하면 ×2.7~3.2배가 되어 다른 직업의 두 배가 됐기 때문.</li><li>키워드 <b>티어 1·2·3</b>은 그 직업 안에서의 서열이다(1이 가장 강함). 전직 난이도 티어(A/B/C)와는 반대 방향이며 어휘도 따로 쓴다.</li></ol></div>
+<div class="box"><b>전직 선택 관점 점검</b><br>3장짜리 L2 <b>22종</b> 전부에서 <span class="k">세 축이 서로 다른 직업 22/22</span> · <span class="k">티어 1·2·3을 하나씩 갖춘 직업 22/22</span>. 즉 전직 때 세 장이 같은 값의 다른 이름이 아니고, 난이도도 한 쪽으로 몰려 있지 않다.</div>
+<div class="box"><b>배율 읽는 법</b><br>키워드 배율은 <b>총량을 올리는 것이 아니라 방향을 옮기는</b> 값이다. <code>statMod = POWER × (1 + 0.42 × (방향 − 평균))</code> 이므로 13종 평균은 그대로고, 표시된 스탯만 오르고 나머지는 그만큼 줄어든다. 그래서 아래 표의 <b>대표 스탯 ×1.43</b>은 "방어력이 43% 오른다"가 아니라 "총량은 그대로인데 방어력 쪽으로 43%만큼 쏠린다"는 뜻이다.</div>
+<h2 class="sec">스탯 13종 — 이름과 하는 일</h2>
+<div class="box"><table><thead><tr><th>축 이름</th><th>스탯</th><th>하는 일</th><th>CP 비중</th></tr></thead><tbody>
+<tr><td class="c">HP</td><td>생명력</td><td>맷집. 0이 되면 쓰러진다</td><td>0.12</td></tr>
+<tr><td class="c">ATK</td><td>공격력</td><td>물리 피해량</td><td>2.0</td></tr>
+<tr><td class="c">DEF</td><td>방어력</td><td>물리 피해를 덜 받는다. 관통(PEN)을 깎아 상쇄한다</td><td>1.5</td></tr>
+<tr><td class="c">ASPD</td><td>공격속도</td><td>공격·시전이 나가는 간격</td><td>3.0</td></tr>
+<tr><td class="c">MAG</td><td>마법력</td><td>마법 피해량</td><td>2.0</td></tr>
+<tr><td class="c">MDEF</td><td>마법방어력</td><td>마법 피해를 덜 받는다. 마법관통(MPEN)을 깎는다</td><td>1.5</td></tr>
+<tr><td class="c">CRI</td><td>치명타율</td><td>치명타가 터질 확률</td><td>3.0</td></tr>
+<tr><td class="c">PEN</td><td>물리관통</td><td>상대 방어력을 뚫는다</td><td>2.5</td></tr>
+<tr><td class="c">MPEN</td><td>마법관통</td><td>상대 마법방어를 뚫는다</td><td>식에 없음</td></tr>
+<tr><td class="c">MS</td><td>이동속도</td><td>이동속도 — 붙기까지 걸리는 시간, 도망·추격의 우열</td><td>1.5</td></tr>
+<tr><td class="c">CDMG</td><td>치명타피해</td><td>치명타가 터졌을 때의 배율</td><td>1.0</td></tr>
+<tr><td class="c">STA</td><td>스태미너</td><td>행동 예산(스태미너) — 아래 설명 참고</td><td>0.03</td></tr>
+<tr><td class="c">MANA</td><td>마나</td><td>주문을 쓰는 자원</td><td>0.05</td></tr>
+</tbody></table><div class="stat sub" style="margin-top:9px">CP 비중 = 전투력 계산에서 그 스탯 1점이 차지하는 값. 공속·치명타율 3.0 이 가장 무겁고 스태미너 0.03 이 가장 가볍다.<br><b>마법관통(MPEN)은 전투력 식에 항이 없다</b> — 올려도 CP가 오르지 않는다(공식: HP·ATK·MAG·DEF·MDEF·ASPD·SPD_CAST·CRI·CDMG·PEN·EVA·MANA·STA 13항).</div></div>
+<h2 class="sec">근성(STA)이 정확히 뭔가</h2>
+<div class="box sta"><h3>근성 = 스태미너. <b>행동 예산</b>이다.</h3><b>1. 행동마다 깎인다.</b> 스킬·방어태세 같은 행동에는 각각 <code>staminaCost</code>가 있고, 그 값이 모자라면 그 행동은 <b>아예 선택되지 않는다</b>(AI도 실행 전에 예산을 계산한다). 방어태세는 고정 15.<br><b>2. 취소하면 돌려받는다.</b> 행동이 무산되면 쓴 값이 환급된다.<br><b>3. 전투 중 저절로 차지 않는다.</b> 회복 행동이나 장비로만 채워진다 — 코드에 틱 재생이 없다. 그래서 근성은 <b>"한 전투에서 몇 번까지 움직일 수 있나"</b>다.<br><b>4. 그래서 근성이 높은 직업</b>은 한 번의 교전에서 행동을 더 오래 굴린다 — 요새·북극성·몰이처럼 "버틴다"가 컨셉인 자리에 붙는다.<br><b>5. 전투력 기여는 작다</b>(×0.03). 세고 약함이 아니라 <b>지구력</b>이라 CP가 거의 안 오른다. 등급계수도 적용하지 않는다(7종 중 하나).<br><b>6. 문서에만 있는 규칙</b> — GDD 05는 "STA가 낮으면 전 스탯 -10%"라고 적고 있으나, 전투 코드에는 그 페널티가 아직 없다. 지금 실제로 작동하는 것은 <b>행동 예산</b> 하나다.</div>
+<h2 class="sec">수호자</h2>
+<section class="job">
+<div class="jh"><span class="l1">수호자</span><h3>철벽기사</h3></div>
+<p class="jdesc">갑옷을 입고 제자리를 지키는 직업</p>
+<p class="note">방탄·철갑 → 흘림까지 셋 다 이름이 별로 (흘림은 폐기, 중갑·요새 확정)</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">감쇄</span><span class="ax">방어</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>DEF 방어력</b> ×1.43 <span class="sub">· 다음 HP ×1.09 · CP 기여 1.5</span></p>
+<p class="do">맞은 충격을 갑옷 판 전체로 나눠 받는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">중갑</span><span class="ax">체력</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>HP 생명력</b> ×1.29 <span class="sub">· 다음 ASPD ×0.98 · CP 기여 0.12</span></p>
+<p class="do">판을 겹겹이 덧대 두꺼워지는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">요새</span><span class="ax">근성</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>STA 스태미너</b> ×1.52 <span class="sub">· 다음 HP ×1.16 · CP 기여 0.03</span></p>
+<p class="do">발을 내딛지 않아 밀려오지 않는</p>
+</li>
+</ul>
+<p class="split">받아 낸다 / 두꺼워진다 / 안 움직인다 — 방어력·생명력·스태미너로 축이 갈린다</p>
+</section>
+<section class="job">
+<div class="jh"><span class="l1">수호자</span><h3>전위기사</h3></div>
+<p class="jdesc">서 있는 대신 앞으로 밀고 나가는 직업</p>
+<p class="note">선두·전진 — 둘 다 앞으로 가서 돌파와 겹침</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">선제</span><span class="ax">속도</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>ASPD 공격속도</b> ×1.60 <span class="sub">· 다음 PEN ×1.17 · CP 기여 3.0</span></p>
+<p class="do">먼저 달려들어 싸움의 순서를 빼앗는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">압박</span><span class="ax">힘</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>ATK 공격력</b> ×1.45 <span class="sub">· 다음 HP ×1.12 · CP 기여 2.0</span></p>
+<p class="do">밀고 들어가 상대의 설 자리를 좁히는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">돌파</span><span class="ax">관통</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>PEN 물리관통</b> ×1.48 <span class="sub">· 다음 ATK ×1.26 · CP 기여 2.5</span></p>
+<p class="do">앞에 선 것을 밀치고 저 너머로 나가는</p>
+</li>
+</ul>
+<p class="split">순서를 뺀다 / 자리를 좁힌다 / 뚫고 나간다 — 공속·공격력·관통으로 갈린다</p>
+</section>
+<section class="job">
+<div class="jh"><span class="l1">수호자</span><h3>성좌기사</h3></div>
+<p class="jdesc">갑옷에 별자리를 새겨 그 별의 자리에 서는 직업</p>
+<p class="note">기사 자리로 돌아와야 함 · 키워드 3장 전부 별로</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">칠성</span><span class="ax">방어</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>DEF 방어력</b> ×1.51 <span class="sub">· 다음 HP ×1.16 · CP 기여 1.5</span></p>
+<p class="do">일곱 별을 이어 앞을 막는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">천문</span><span class="ax">마법방어</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>MDEF 마법방어력</b> ×1.49 <span class="sub">· 다음 HP ×1.14 · CP 기여 1.5</span></p>
+<p class="do">별자리를 읽어 주문이 닿기 전에 막는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">북극성</span><span class="ax">근성</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>STA 스태미너</b> ×1.56 <span class="sub">· 다음 HP ×1.19 · CP 기여 0.03</span></p>
+<p class="do">하늘의 한 점처럼 자리를 뜨지 않는</p>
+</li>
+</ul>
+<p class="split">갑옷에 별을 새긴다 — 방어력 / 마법방어력 / 스태미너, 근거가 셋 다 별</p>
+</section>
+<h2 class="sec">암살자</h2>
+<section class="job">
+<div class="jh"><span class="l1">암살자</span><h3>자객</h3></div>
+<p class="jdesc">보이지 않는 쪽에서 먼저 끝내는 직업</p>
+<p class="note">절단 — 이름이 별로</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">기습</span><span class="ax">힘</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>ATK 공격력</b> ×1.25 <span class="sub">· 다음 HP ×0.97 · CP 기여 2.0</span></p>
+<p class="do">매복했다가 한 방에 끝내는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">은밀</span><span class="ax">민첩</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>MS 이동속도</b> ×1.57 <span class="sub">· 다음 ASPD ×1.22 · CP 기여 1.5</span></p>
+<p class="do">기척 없이 다가가 먼저 닿는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">연살</span><span class="ax">속도</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>ASPD 공격속도</b> ×1.62 <span class="sub">· 다음 PEN ×1.19 · CP 기여 3.0</span></p>
+<p class="do">한 명을 쓰러뜨리면 그 흐름을 끊지 않고 다음으로 넘어가는</p>
+</li>
+</ul>
+<p class="split">한 방 / 다가감 / 이어서 다음 — 공격력·이동속도·공속</p>
+</section>
+<section class="job">
+<div class="jh"><span class="l1">암살자</span><h3>맹독사</h3></div>
+<p class="jdesc">빨리 죽이는 대신 늦게 죽게 하는 직업</p>
+<p class="note">심독 — 중독과 겹침</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">급독</span><span class="ax">민첩</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>MS 이동속도</b> ×1.57 <span class="sub">· 다음 ASPD ×1.21 · CP 기여 1.5</span></p>
+<p class="do">독을 한 번에 깊게 넣고 바로 빠지는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">중독</span><span class="ax">치명위력</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>CDMG 치명타피해</b> ×1.53 <span class="sub">· 다음 MANA ×1.25 · CP 기여 1.0</span></p>
+<p class="do">독을 겹겹이 쌓아 천천히 죽이는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">독무</span><span class="ax">마법관통</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>MPEN 마법관통</b> ×1.52 <span class="sub">· 다음 MAG ×1.29 · CP 기여 None</span></p>
+<p class="do">독을 공기 중에 풀어 지나갈 자리를 막는</p>
+</li>
+</ul>
+<p class="split">빨리 넣고 빠진다 / 쌓는다 / 자리를 막는다 — 이동속도·치명타피해·마법관통</p>
+</section>
+<section class="job">
+<div class="jh"><span class="l1">암살자</span><h3>도적</h3></div>
+<p class="jdesc">죽이러 오는 게 아니라 뺏으러 오는 직업</p>
+<p class="note">미끼 — 이름이 별로</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">절도</span><span class="ax">속도</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>ASPD 공격속도</b> ×1.61 <span class="sub">· 다음 PEN ×1.18 · CP 기여 3.0</span></p>
+<p class="do">상대 것을 훔쳐 가며 싸우는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">양동</span><span class="ax">힘</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>ATK 공격력</b> ×1.25 <span class="sub">· 다음 HP ×0.97 · CP 기여 2.0</span></p>
+<p class="do">일부러 드러나 적의 눈을 한쪽에 붙잡아 두는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">잠입</span><span class="ax">민첩</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>MS 이동속도</b> ×1.56 <span class="sub">· 다음 ASPD ×1.21 · CP 기여 1.5</span></p>
+<p class="do">빈틈으로 들어가 몰래 움직이는</p>
+</li>
+</ul>
+<p class="split">훔친다 / 눈을 붙잡는다 / 숨어든다 — 공속·공격력·이동속도</p>
+</section>
+<h2 class="sec">궁수</h2>
+<section class="job">
+<div class="jh"><span class="l1">궁수</span><h3>명사수</h3></div>
+<p class="jdesc">멀리서 한 점만 겨누는 직업</p>
+<p class="note">관통사·비거리 — 둘 다 이름이 별로</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">정밀</span><span class="ax">치명</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>CRI 치명타율</b> ×1.44 <span class="sub">· 다음 ATK ×1.12 · CP 기여 3.0</span></p>
+<p class="do">급소 한 점만 노려 빗나가면 다시 조준하는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">쐐기</span><span class="ax">관통</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>PEN 물리관통</b> ×1.40 <span class="sub">· 다음 ATK ×1.19 · CP 기여 2.5</span></p>
+<p class="do">틈에 박혀 방어를 갈라 벌리는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">장궁</span><span class="ax">치명위력</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>CDMG 치명타피해</b> ×1.52 <span class="sub">· 다음 MANA ×1.24 · CP 기여 1.0</span></p>
+<p class="do">긴 활로 멀리 보내 끝까지 힘을 잃지 않는</p>
+</li>
+</ul>
+<p class="split">한 점을 노린다 / 틈을 벌린다 / 멀리 보낸다 — 치명타율·물리관통·치명타피해</p>
+</section>
+<section class="job">
+<div class="jh"><span class="l1">궁수</span><h3>포화사수</h3></div>
+<p class="jdesc">한 발이 아니라 한 번의 사격으로 싸우는 직업</p>
+<p class="note">포줄 이름 별로 · 차폐는 컨셉 자체를 바꿔야 함</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">속사</span><span class="ax">속도</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>ASPD 공격속도</b> ×1.64 <span class="sub">· 다음 PEN ×1.20 · CP 기여 3.0</span></p>
+<p class="do">쉬지 않고 계속 쏘아 끊김 없는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">선회</span><span class="ax">민첩</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>MS 이동속도</b> ×1.59 <span class="sub">· 다음 ASPD ×1.23 · CP 기여 1.5</span></p>
+<p class="do">돌며 쏘아 매번 각도를 바꾸는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">엄호</span><span class="ax">방어</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>DEF 방어력</b> ×1.58 <span class="sub">· 다음 HP ×1.21 · CP 기여 1.5</span></p>
+<p class="do">아군 앞에 화살을 뿌려 대신 맞히는</p>
+</li>
+</ul>
+<p class="split">계속 쏜다 / 돌며 쏜다 / 대신 맞힌다 — 공속·이동속도·방어력</p>
+</section>
+<section class="job">
+<div class="jh"><span class="l1">궁수</span><h3>사냥꾼</h3></div>
+<p class="jdesc">먼저 이빨을 드러내게 만드는 직업</p>
+<p class="note">길들임 이름 별로 · 유인은 컨셉 자체 교체</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">추적</span><span class="ax">민첩</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>MS 이동속도</b> ×1.57 <span class="sub">· 다음 ASPD ×1.22 · CP 기여 1.5</span></p>
+<p class="do">도망가는 것을 끝까지 따라붙는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">조련</span><span class="ax">힘</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>ATK 공격력</b> ×1.30 <span class="sub">· 다음 HP ×1.01 · CP 기여 2.0</span></p>
+<p class="do">훈련한 짐승을 앞세워 대신 서게 하는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">몰이</span><span class="ax">근성</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>STA 스태미너</b> ×1.57 <span class="sub">· 다음 HP ×1.19 · CP 기여 0.03</span></p>
+<p class="do">정해 둔 자리까지 쫓아 몰아넣는</p>
+</li>
+</ul>
+<p class="split">따라붙는다 / 짐승을 세운다 / 몰아넣는다 — 이동속도·공격력·스태미너</p>
+</section>
+<section class="job">
+<div class="jh"><span class="l1">궁수</span><h3>마궁사</h3></div>
+<p class="jdesc">화살에 마법을 얹어 멀리 보내는 직업</p>
+<p class="note">키워드를 아예 새로 · 5글자라 다른 애들과 달라 보임</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">각인</span><span class="ax">주문</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>MAG 마법력</b> ×1.51 <span class="sub">· 다음 MANA ×1.19 · CP 기여 2.0</span></p>
+<p class="do">화살 하나에 한 마법을 오래 새겨 두는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">분열</span><span class="ax">마법관통</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>MPEN 마법관통</b> ×1.50 <span class="sub">· 다음 MAG ×1.27 · CP 기여 None</span></p>
+<p class="do">맞은 자리에서 한 발이 여러 갈래로 벌어지는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">폭렬</span><span class="ax">치명위력</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>CDMG 치명타피해</b> ×1.48 <span class="sub">· 다음 MANA ×1.21 · CP 기여 1.0</span></p>
+<p class="do">박힌 자리에서 얹은 마법이 터지는</p>
+</li>
+</ul>
+<p class="split">새긴다 / 벌어진다 / 터진다 — 마법력·마법관통·치명타피해</p>
+</section>
+<h2 class="sec">마법</h2>
+<section class="job">
+<div class="jh"><span class="l1">마법</span><h3>소환술사</h3></div>
+<p class="jdesc">혼자 싸우지 않고 부르는 직업</p>
+<p class="note">곤충은 빼고 다른 것</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">인형</span><span class="ax">체력</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>HP 생명력</b> ×1.52 <span class="sub">· 다음 ASPD ×1.15 · CP 기여 0.12</span></p>
+<p class="do">만든 몸을 불러 대신 맞게 하는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">망령</span><span class="ax">마법관통</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>MPEN 마법관통</b> ×1.43 <span class="sub">· 다음 MAG ×1.21 · CP 기여 None</span></p>
+<p class="do">죽은 자를 불러 싸우게 하되 대가를 치르는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">정령</span><span class="ax">치명위력</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>CDMG 치명타피해</b> ×1.48 <span class="sub">· 다음 MANA ×1.21 · CP 기여 1.0</span></p>
+<p class="do">혼자서는 못 잡을 것을 불러 세우는</p>
+</li>
+</ul>
+<p class="split">만든 것 / 죽은 것 / 원소 — 생명력·생명력·마법관통</p>
+</section>
+<section class="job">
+<div class="jh"><span class="l1">마법</span><h3>주술사</h3></div>
+<p class="jdesc">상대에게 저주를 매어 두는 직업</p>
+<p class="note">심연·파멸이 겹침 · 제물은 뭘 하는지 모르겠음</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">주박</span><span class="ax">주문</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>MAG 마법력</b> ×1.46 <span class="sub">· 다음 MANA ×1.15 · CP 기여 2.0</span></p>
+<p class="do">저주를 매듭지어 풀리지 않게 하는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">제물</span><span class="ax">치명위력</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>CDMG 치명타피해</b> ×1.48 <span class="sub">· 다음 MANA ×1.21 · CP 기여 1.0</span></p>
+<p class="do">제 몸을 바친 만큼 저주가 무거워지는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">파멸</span><span class="ax">마법관통</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>MPEN 마법관통</b> ×1.29 <span class="sub">· 다음 MAG ×1.10 · CP 기여 None</span></p>
+<p class="do">닿은 자리를 방어째로 바닥부터 태우는</p>
+</li>
+</ul>
+<p class="split">묶는다 / 바친다 / 태운다 — 마법력·치명타피해·마법관통</p>
+</section>
+<h2 class="sec">지원가</h2>
+<section class="job">
+<div class="jh"><span class="l1">지원가</span><h3>드루이드</h3></div>
+<p class="jdesc">숲과 통하는 자. 자연친화가 없으면 힘이 나오지 않는다</p>
+<p class="note">개화·산림이 좁 겹침 — 설계를 다시</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">개화</span><span class="ax">마나</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>MANA 마나</b> ×1.57 <span class="sub">· 다음 MAG ×1.19 · CP 기여 0.05</span></p>
+<p class="do">꽃을 피워 끊긴 숨을 다시 잇게 하는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">산림</span><span class="ax">방어</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>DEF 방어력</b> ×1.49 <span class="sub">· 다음 HP ×1.14 · CP 기여 1.5</span></p>
+<p class="do">숲을 세워 앞을 막고 아군을 그 안에 두는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">짐승</span><span class="ax">힘</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>ATK 공격력</b> ×1.50 <span class="sub">· 다음 HP ×1.16 · CP 기여 2.0</span></p>
+<p class="do">변신해 그 자리에서 가장 강한 몸이 되는</p>
+</li>
+</ul>
+<p class="split">되살린다 / 세운다 / 변한다 — 마나·방어력·공격력</p>
+</section>
+<section class="job">
+<div class="jh"><span class="l1">지원가</span><h3>전술가</h3></div>
+<p class="jdesc">한 명도 맞서지 않고 전장을 굴리는 직업</p>
+<p class="note">정찰·참모 — 컨셉이 뭔지 모르겠음</p>
+<ul class="kw">
+<li>
+<div class="kwhead"><span class="name">지휘</span><span class="ax">치명위력</span><span class="tier">티어 3</span></div>
+<p class="stat">대표 <b>CDMG 치명타피해</b> ×1.52 <span class="sub">· 다음 MANA ×1.24 · CP 기여 1.0</span></p>
+<p class="do">아군의 공격 방향을 지시해 화력을 모으는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">진형</span><span class="ax">방어</span><span class="tier">티어 2</span></div>
+<p class="stat">대표 <b>DEF 방어력</b> ×1.61 <span class="sub">· 다음 HP ×1.23 · CP 기여 1.5</span></p>
+<p class="do">줄을 세워 서로를 가리게 하는</p>
+</li>
+<li>
+<div class="kwhead"><span class="name">기동</span><span class="ax">속도</span><span class="tier">티어 1</span></div>
+<p class="stat">대표 <b>ASPD 공격속도</b> ×1.62 <span class="sub">· 다음 PEN ×1.19 · CP 기여 3.0</span></p>
+<p class="do">먼저 자리를 옮겨 싸움의 순서를 잡는</p>
+</li>
+</ul>
+<p class="split">화력을 모은다 / 줄을 세운다 / 순서를 잡는다 — 치명타피해·방어력·공속</p>
+</section>
+<p class="foot">
+  데이터: <code>data/job_tree.json</code> · 생성기: <code>sim/center/sims/gen_career_review.py</code> —
+  이름·축·설명·배율은 전부 데이터에서 읽어 채운다(손으로 옮겨 적지 않는다).
+</p>
+</body>
+</html>
