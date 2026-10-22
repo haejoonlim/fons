@@ -37,6 +37,8 @@ import re
 import sys
 from pathlib import Path
 
+from gate_contract import run
+
 ROOT = Path(__file__).resolve().parent.parent
 GLOSSARY = ROOT / "docs" / "l10n" / "용어집.md"
 DATA = ROOT / "data"
@@ -54,12 +56,53 @@ SURFACE_GLOBS = (
     "sim/center/pages/*.html",
     "godot/**/*.gd",
 )
-SURFACE_SKIP = ("/gdd/", "/original/", "용어집.md")
+#   · GDD_이름_대조표.md — 폐기 표기를 현행과 짝지은 표. 옛 이름이 표에 있는 것이 목적이므로 뺀다.
+#   · GDD_직업_개정_대기.md — 같은 이유. 직업 표의 옛 이름을 현행과 짝지은 개정 요청 목록이다.
+SURFACE_SKIP = ("/gdd/", "/gdd_개정본/", "/original/", "용어집.md", "GDD_이름_대조표.md",
+                 "GDD_직업_개정_대기.md")
 
 
-def token_re(token: str) -> re.Pattern:
-    """낱말 경계 — 앞뒤에 한글·라틴 문자가 오면 다른 낱말로 본다."""
-    return re.compile(r"(?<![가-힣A-Za-z])" + re.escape(token) + r"(?![가-힣A-Za-z])")
+# 낱말 경계 — 정규식 `[가-힣A-Za-z]` 와 같은 문자만 본다.
+# (2026-10-18: 표기 306개를 각각 정규식으로 훑으면 1.9MB 코퍼스에서 7.5초가 걸렸다.
+#  같은 판정을 str.find + 문자 비교로 옮겨 0.2초가 됐고, 결과는 306개 전부 같다.)
+
+
+def latin_char(ch: str) -> bool:
+    return "a" <= ch <= "z" or "A" <= ch <= "Z"
+
+
+def word_char(ch: str) -> bool:
+    """`[가-힣A-Za-z]` 에 속하는가."""
+    return latin_char(ch) or "\uac00" <= ch <= "\ud7a3"
+
+
+def find_token(token: str, text: str, prefix: bool = False) -> bool:
+    """낱말 경계를 지키면서 token 이 text 에 있는가.
+
+    prefix=False  앞뒤에 한글·라틴 문자가 없어야 한다 (예전 token_re 와 같은 판정
+                  — 표기 306건·경계 합성 문자열에서 결과가 전부 같음을 확인했다)
+    prefix=True   뒤에 라틴 문자가 와야 한다 (ID_PREFIX_OK — `subrace_경로` 같은 항목)
+    """
+    start, n, end = 0, len(token), len(text)
+    while True:
+        i = text.find(token, start)
+        if i < 0:
+            return False
+        if i == 0 or not word_char(text[i - 1]):
+            j = i + n
+            if prefix:
+                if j < end and latin_char(text[j]):
+                    return True
+            elif j >= end or not word_char(text[j]):
+                return True
+        start = i + 1
+
+
+def present(token: str, haystack: str) -> bool:
+    """표기가 정본 코퍼스에 있는가 — 이름 그대로, 또는 ID 접두 규칙으로."""
+    if find_token(token, haystack):
+        return True
+    return token in ID_PREFIX_OK and find_token(token, haystack, prefix=True)
 
 
 def deprecated_re(token: str) -> re.Pattern:
@@ -139,6 +182,8 @@ def report_deprecated(glossary_text: str, strict: bool) -> int:
         text = path.read_text(encoding="utf-8")
         rel = str(path.relative_to(ROOT))
         for old, now, why in pairs:
+            if old not in text:      # 부분 문자열 선별 — 정규식 1회보다 싸다 (의미 불변)
+                continue
             found = deprecated_re(old).findall(text)
             if found:
                 hits.append((rel, old, now, len(found)))
@@ -185,14 +230,7 @@ def main() -> int:
             print(token)
         return 0
 
-    def present(token: str) -> bool:
-        if token_re(token).search(haystack):
-            return True
-        if token in ID_PREFIX_OK:
-            return re.search(r"(?<![가-힣A-Za-z])" + re.escape(token) + r"[A-Za-z]", haystack) is not None
-        return False
-
-    missing = [token for token in checked if not present(token)]
+    missing = [token for token in checked if not present(token, haystack)]
     if missing:
         print(f"GLOSSARY FAIL — 정본에 없는 표기 {len(missing)}건")
         for token in missing:
@@ -205,4 +243,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(run("glossary", main))

@@ -13,6 +13,8 @@ Library/
 
 # 에이전트/에디터 로컬 상태
 .freebuff/
+# Node 의존성 — 설치 산출물이지 소스가 아니다
+node_modules/
 
 # Build output (export 대상) — 산출물이므로 커밋하지 않는다
 build/

@@ -31,6 +31,13 @@
       "note": "확정 #16 — 소환 티켓 단가(마석)"
     },
     {
+      "name": "FREE_SUMMONS",
+      "value": "10",
+      "aliases": ["FREE_SUMMONS"],
+      "sources": [],
+      "note": "확정 #17 — 최초 10회 무료 소환"
+    },
+    {
       "name": "SOFT_PITY_START",
       "value": "70",
       "aliases": ["SOFT_PITY_START"],
@@ -50,6 +57,13 @@
       "aliases": ["HARD_PITY_4"],
       "sources": [],
       "note": "확정 #32 — ★4 하드 천장"
+    },
+    {
+      "name": "HARD_PITY_5PLUS",
+      "value": "5200",
+      "aliases": ["HARD_PITY_5PLUS"],
+      "sources": [],
+      "note": "확정 #32 — ★5+ 하드 천장 (★5:★6 = 5:1 교대)"
     },
     {
       "name": "LEY_PER_CRYSTAL",

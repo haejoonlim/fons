@@ -8,7 +8,9 @@
   EMPTY      name 계열이 빈 값 (카드에 이름 없는 몬스터가 뜬다)
   SPACE      앞뒤 공백 (` lunges` 는 앞 공백 하나로 정렬이 틀어진다)
   MIXED      한글에 **소문자 낱말**이 붙음 — `가시erte`·`수 metre를`·`소리로Communication`
-             대문자 약어(UI·HP·N·m·SPD)는 정상이라 대문자는 보지 않는다
+             대문자 약어(UI·HP·N·m·SPD)는 정상이라 대문자는 보지 않는다.
+             2자도 본다 — `가시te` 처럼 짧게 깨지는 경우가 있어 3자 기준은 비켜 갔다
+             (2자로 넓힌 뒤 data/*.json 전체 0건 = 지금 데이터에는 오탐이 없다)
   UNDERSCORE 한글에 밑줄이 붙음 — `무덤_two더지`
 
 ALLOW 에 적은 문구는 MIXED·UNDERSCORE 에서 뺀다. 사람이 정상이라고 확인한 것만, 늘리지 않는다.
@@ -20,22 +22,25 @@ import json
 import re
 import sys
 
+from gate_contract import run
+
 PATHS = ("data/*.json",)
 
-ALLOW = ("assassin", "D-267_", "마석본위제_화폐_은행", "r-전략종", "자유도원칙_Unity구현사양")
+ALLOW = ("assassin", "D-267_", "마석본위제_화폐_은행", "r-전략종", "자유도원칙_Unity구현사양",
+         "저층_사육_마물_근거")  # 근거 문서 파일명 인용 (docs/design/저층_사육_마물_근거.md)
 
 # 비면 UI 가 빈다고 판단한 키만.
 REQUIRED_KEYS = ("name", "name_ko", "epithet", "desc", "telegraph")
 # 값이 문장인 키 — 깨짐 규칙은 여기 전부 본다.
 TEXT_KEYS = REQUIRED_KEYS + ("description", "effect", "counter", "note", "title")
 
-LATIN_AFTER = re.compile(r"[가-힣]([A-Za-z]{3,})")
-LATIN_BEFORE = re.compile(r"([A-Za-z]{3,})[가-힣]")
+LATIN_AFTER = re.compile(r"[가-힣]([A-Za-z]{2,})")
+LATIN_BEFORE = re.compile(r"([A-Za-z]{2,})[가-힣]")
 UNDERSCORE = re.compile(r"[가-힣]_|_[가-힣]")
 
 
 def mixed_word(s):
-    """한글에 붙은 라틴 낱말 — 소문자를 포함한 3자 이상만. 대문자 약어(SPD·UI)는 정상."""
+    """한글에 붙은 라틴 낱말 — 소문자를 포함한 2자 이상만. 대문자 약어(SPD·UI)는 정상."""
     for rx in (LATIN_AFTER, LATIN_BEFORE):
         for m in rx.finditer(s):
             word = m.group(1)
@@ -83,8 +88,16 @@ def main() -> int:
             except json.JSONDecodeError as e:
                 print(f"PARSE FAIL {path}: {e}")
                 return 1
+            except (OSError, UnicodeDecodeError) as e:
+                print(f"READ FAIL {path}: {e}")
+                return 1
             files += 1
             walk(data, path, found)
+
+    if files == 0:
+        # glob 이 아무것도 못 찾은 상태의 통과는 거짓 통과다 (data/ 가 사라져도 초록불이었다).
+        print(f"FAIL — 검사할 데이터가 없다: {', '.join(PATHS)}")
+        return 1
 
     if not found:
         print(f"DATA TEXT OK: {files} files — 깨진 문장 없음")
@@ -105,4 +118,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(run("text", main))

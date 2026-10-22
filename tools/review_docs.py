@@ -199,6 +199,9 @@ SKIP_DIRS = {
 # (docs/gdd/README.md 가 성질과 지위를 설명한다.)
 IMPORTED_DOC_DIRS = {
     "gdd",
+    # 원본 GDD 사본을 직업 표만 바꿔 다시 만든 사본 — 글은 여전히 원본 문면이다
+    # (tools/gen_gdd_revised.py 의 생성물).
+    "gdd_개정본",
 }
 
 PATHY_RE = re.compile(r"^[A-Za-z0-9_][A-Za-z0-9_./-]*\.[A-Za-z0-9]+$")

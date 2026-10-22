@@ -30,8 +30,50 @@ MODE = "full"       # 폰즈 게이트는 모드가 하나다 (스킵 갈래를 
 STEPS = [
     ("docs", "필수 산출물·구조·데이터", [sys.executable, "tools/check_docs.py"]),
     ("glossary", "용어집 표기 ↔ 정본 대조", [sys.executable, "tools/check_glossary.py"]),
+    # advisory — docs/gdd 는 원본 문면이라 고칠 수 없다. 실패로 만들지 않고 잔재 수만 보여 준다
+    # (실패로 두면 사람이 게이트를 통과시키려고 GDD 를 손대게 된다 · docs/dev/GDD_이름_갱신_절차.md).
+    ("gdd", "GDD 원본 문면 ↔ 현행 이름 대조", [sys.executable, "tools/check_gdd_names.py", "--quiet"]),
+    # 직업 표 개정 대기 목록이 데이터와 어긋났는지만 본다 — GDD 에 옛 이름이 남은 것은 실패가 아니다.
+    # (목록이 낡으면 목록을 다시 뽑는다. GDD 를 고치는 신호로 읽히면 안 된다)
+    ("gddjob", "GDD 직업 표 개정 대기 목록",
+     [sys.executable, "tools/gdd_job_pending.py", "--quiet"]),
+    # 개정 반영본 사본이 원본 + 개정 목록과 같은가. 원본 docs/gdd 는 여기서도 안 건드린다.
+    ("gddrev", "GDD 개정 반영본 사본",
+     [sys.executable, "tools/gen_gdd_revised.py", "--quiet"]),
     ("text", "데이터 문장 깨짐", [sys.executable, "tools/check_data_text.py"]),
+    # 테스트 센터 페이지는 값을 JSON 으로 박아 둔 정적 생성물이다(원본 생성기 없음).
+    # 종의 스탯·티어·좌표를 data/ 에서 다시 계산해 어긋나면 --check 로 막고, --write 로 맞힌다.
+    ("pages", "테스트 센터 페이지 내장값 ↔ data/",
+     [sys.executable, "sim/center/sync_pages.py", "--quiet"]),
+    # 융합 부모가 카탈로그에 없으면 페이지는 그 쌍을 못 그리고 게임에서는 융합이 성립하지 않는다.
+    # (2026-10-18 에 부모 3건이 dangling 이었다 — 이름을 손으로 맞추는 대신 게이트가 막는다)
+    ("fusion", "융합 참조 무결성 (F-1~F-6)",
+     [sys.executable, "tools/check_fusion.py"]),
     ("gacha", "소환 규칙 재현 (확정 #32·#11)", [sys.executable, "sim/gacha.py"]),
+    # 같은 숫자가 등록소·파이썬·GDScript 세 곳에 산다. 한 곳만 고치면 게이트는 통과하는데
+    # 게임과 시뮬이 다른 값으로 도는 상태가 된다(부록 A #3). 등록소가 정본이다.
+    ("numbers", "정본 수치 드리프트 (N-1~N-3)",
+     [sys.executable, "tools/check_numbers.py"]),
+    # 전투 몬스터 138종의 구조·참조 무결성. 이름·글자만 보던 게이트로는 aiDecision 이 빠지거나
+    # prey 가 없는 id 를 가리켜도 통과했다 — 게임은 그 개체를 조용히 기본값으로 돌린다.
+    ("monsters", "몬스터 구조·참조 무결성 (M-1~M-10)",
+     [sys.executable, "tools/check_monsters.py"]),
+    # 저층 사육 마물 — 도감 377 불변식 · 성격 기준 · 전투 개체 승격을 대조한다.
+    # (2026-10-18 에 마물이 표에는 있는데 게임에는 없는 상태를 만들어서 넣었다)
+    ("husbandry", "저층 사육 마물 정합",
+     [sys.executable, "sim/center/sims/gen_husbandry_roster.py", "--check"]),
+    # 직업 AI 프로필 — P0-1~P0-7 + 스탤 키 혼입 금지 (J 가 CP 경로에 닿지 못하게).
+    ("jobai", "직업 AI 프로필 (P0-1~7)",
+     [sys.executable, "tools/check_job_profiles.py"]),
+    # 성격 데이터 — `data/personalities.json` 이 생성기 출력과 같은지 (손으로 고치면 드리프트).
+    # 표가 바뀌면 생성기를 다시 돌린다: 05 §5-1 role 적합도 · gacha_test 상수.
+    ("personality", "성격 데이터 드리프트 (13 main · 52 sub)",
+     [sys.executable, "tools/gen_personalities.py", "--check"]),
+    # 계약 단위 검사만 돈다 (`--unit`) — 게이트 실행은 위에서 이미 했다.
+    #   마커(`[PASS]/[FAIL] <단계 id>`)는 이 파일이 각 단계 출력에서 직접 본다(run_step +
+    #   marker_gap). 그래서 계약 검사가 게이트를 두 번 돌리지 않는다 (예전엔 그래서 런이 2배).
+    ("contract", "계약 단위 검사 (표식은 gate_all 이 직접 본다)",
+     [sys.executable, "tools/test_gate_contract.py", "--unit"]),
 ]
 
 
@@ -140,15 +182,55 @@ def print_history(n=10, path=None):
     return 0 if t["passed"] else 1
 
 
-def main():
+def run_step(cmd):
+    """단계를 돌리며 출력을 그대로 흘리고, 마지막 비어 있지 않은 줄을 붙잡는다.
+
+    자식에 `-u` 를 붙이는 이유: stdout 이 파이프면 블록 버퍼링이라 단계가 끝날 때까지
+    아무것도 안 보인다. 자식만 무버퍼로 돌려 지금까지처럼 생중계한다.
+    """
+    # `-u` 는 파이썬 단계에만 붙는다 (bash·Godot 단계에 붙이면 엉뚱한 인자가 된다).
+    argv = [cmd[0], "-u"] + list(cmd[1:]) if cmd[0] == sys.executable else list(cmd)
+    proc = subprocess.Popen(argv, cwd=HERE, stdout=subprocess.PIPE, text=True)
+    lines = []
+    for line in proc.stdout:
+        if not line.endswith("\n"):
+            line += "\n"     # 마지막 줄에 개행이 없으면 다음 출력과 붙어 버린다
+        print(line, end="", flush=True)
+        if line.strip():
+            lines.append(line.rstrip("\n"))
+    proc.stdout.close()
+    return proc.wait(), lines
+
+
+def marker_gap(step_id, rc, lines):
+    """계약 G-2 — 마지막 줄이 `[PASS] <id>` / `[FAIL] <id>` 인가. 아니면 이유를 돌려준다."""
+    want = "[PASS] %s" % step_id if rc == 0 else "[FAIL] %s" % step_id
+    last = lines[-1] if lines else ""
+    if last == want or (rc != 0 and last.startswith(want + " —")):
+        return None
+    return "게이트 계약 위반 — 마지막 줄이 %r (기대 %r)" % (last, want)
+
+
+GODOT_STEP = ("godot", "GDScript 단위 테스트 (GUT)", ["bash", "tools/test_godot.sh"])
+
+
+def main(godot=False):
     ran, failures = [], []
-    for step_id, title, cmd in STEPS:
+    # Godot 은 임포트 때문에 14초쯤 걸린다 — 기본 런(2.8초)에 넣지 않고 `--godot` 로만 돌린다.
+    # (`gate_all.py --godot` = GDScript 까지 포함한 전수 검증)
+    steps = STEPS + ([GODOT_STEP] if godot else [])
+    for step_id, title, cmd in steps:
         print("+", " ".join(cmd), flush=True)
         ran.append(step_id)
-        r = subprocess.run(cmd, cwd=HERE)
-        if r.returncode != 0:
-            print(f"[{step_id}] FAIL — {title} (exit {r.returncode})")
-            failures.append({"step": step_id, "rc": r.returncode, "msg": title})
+        rc, lines = run_step(cmd)
+        gap = marker_gap(step_id, rc, lines)
+        if rc != 0:
+            print(f"[{step_id}] FAIL — {title} (exit {rc})", flush=True)
+            failures.append({"step": step_id, "rc": rc, "msg": title + (" · " + gap if gap else "")})
+        elif gap:
+            # 통과했는데 표식이 없거나 다르다 — 자동화가 이 단계를 못 알아본다.
+            print(f"[{step_id}] FAIL — {gap}", flush=True)
+            failures.append({"step": step_id, "rc": 1, "msg": gap})
 
     ledger_append(ran, failures[0]["rc"] if failures else 0, failures)
 
@@ -170,4 +252,4 @@ if __name__ == "__main__":
             except ValueError:
                 _n = 10
             sys.exit(print_history(_n))
-    sys.exit(main())
+    sys.exit(main(godot="--godot" in sys.argv[1:]))

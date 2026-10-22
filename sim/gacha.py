@@ -19,7 +19,9 @@
   ③ Lv130 만렙 ④ 1마석 = 130MP ⑤ ★4 하드 천장 130회 ⑥ 에너지 배급 상한 −130석이다.
   또 이 파일은 D-265를 근거로 적고 있었지만 D-265는 층 미션 시스템이지 가챠가 아니다.
 """
+import os
 import random
+import sys
 
 # 확정 #32 — 합 100.00 (%). 등급마다 재추첨하지 않고 누적 밴드로 한 번에 뽑는다.
 RARITY_BANDS = (
@@ -100,7 +102,9 @@ def _tolerance(pct: float, sample: int) -> float:
 
 def check() -> dict:
     """정본 수치를 시뮬레이션이 재현하는지 검사한다. 실패는 예외로 알린다."""
-    assert abs(band_sum() - 100.0) < 1e-9, "확정 #32 확률표 합이 100%가 아닙니다: %r" % band_sum()
+    # `100%%` — 이 줄은 % 포맷이라 `100%가` 로 쓰면 assert 가 터지는 순간 ValueError 가 나고
+    # 진짜 이유(합이 얼마였는지)가 사라진다. 2026-10-18 실측으로 걸렸다.
+    assert abs(band_sum() - 100.0) < 1e-9, "확정 #32 확률표 합이 100%%가 아닙니다: %r" % band_sum()
 
     result = simulate()
     sample = result["sample"]
@@ -124,7 +128,7 @@ def check() -> dict:
     return {"result": result, "largest_delta_pct": largest, "shaped_delta": shaped_delta}
 
 
-if __name__ == "__main__":
+def main() -> int:
     out = check()
     result = out["result"]
     bands = " ".join("%s=%.4f%%" % (g, result["rarity"][g] / result["sample"] * 100.0)
@@ -136,3 +140,11 @@ if __name__ == "__main__":
           % (band_sum(), out["largest_delta_pct"], out["shaped_delta"]))
     print("GATE OK: 확정 #32 확률표·#11 종족 롤 재현 "
           "(표본 %d, seed %d)" % (result["sample"], result["seed"]))
+    return 0
+
+
+if __name__ == "__main__":
+    # 계약 G-1~G-4 — 실패는 assert traceback 이 아니라 `[FAIL] gacha — …` 로 끝난다.
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools"))
+    from gate_contract import run  # noqa: E402
+    sys.exit(run("gacha", main))
