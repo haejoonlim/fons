@@ -28,6 +28,7 @@ synergy.json                  world_laws.json
 | `skills_catalog.json` · `fusion_pairs.json` | 원본 스크립트가 **한글 키 정본에서 생성**한다 — 정본은 `design-docs/_tools/`에 있고, 생성기가 런타임 JSON(snake_case)을 만든다 (원본 대조) |
 | 나머지 15종 | 원본에서 **직접 저작**한 파일이다 — 생성물이 아니다 (원본 대조) |
 
+- **`ecology_energy_channels.json` 만 원본과 다르다** (2026-10-18, schema v1 → v2). 원본에는 바이옴별 지역 채널 4개만 있었고, 근원자원 26종 표와 옛 prey 문자열 분류표는 생성기(`gen_ecology_codex.py`) 안에만 있었다. 그 두 표를 이 파일의 `roots`·`legacyCategories` 로 옮겼다 — 값은 생성기 표 그대로다. 테스트 센터 생태도감의 에너지 그래프 130노드(`energy`·`eaters`)와 종별 `resources` 가 이 파일에서 계산된다 ([sim/center/README.md](../sim/center/README.md)).
 - 어느 쪽이든 **이관 원본은 원본 저장소의 데이터 폴더 하나**다. 정본 경로와 재생성 명령은 [03_데이터_영지_탑.md](../docs/original/03_데이터_영지_탑.md) §1에 적어 뒀다 (원본 대조).
 - 원본에서 이 폴더의 JSON을 손으로 고치면 다음 동기화에 덮인다 — 수치 변경은 정본 문서·생성기에서 한다 (원본 대조).
 

@@ -1205,200 +1205,6 @@
       }
     },
     {
-      "id": "mon_bee_01",
-      "name": "독벌",
-      "category": 4,
-      "aiType": "melee",
-      "tier": 1,
-      "threatBase": 5,
-      "element": "none",
-      "stats": {
-        "hp": 40,
-        "atk": 6,
-        "def": 1,
-        "spd": 22,
-        "mdef": 0
-      },
-      "weakness": {
-        "element": [
-          "fire"
-        ],
-        "bonus": 0.5,
-        "note": "불에 약함"
-      },
-      "resistance": {
-        "physical": 0,
-        "bleed": 0
-      },
-      "statusImmune": [],
-      "aiDecision": {
-        "enrageHp": 0,
-        "patternCooldown": [
-          8,
-          12
-        ],
-        "crowdAoeRadius": 0,
-        "specialSkill": "sting"
-      },
-      "pattern": [
-        {
-          "name": "독침",
-          "cd": 6,
-          "effect": "1xATK + 독",
-          "telegraph": "노란 빛",
-          "counter": "방패"
-        }
-      ],
-      "parts": [],
-      "spawn": {
-        "floors": [
-          1,
-          20
-        ],
-        "wave": [
-          "world"
-        ]
-      },
-      "loot": {
-        "soul": [],
-        "gold": 8,
-        "exp": 3
-      },
-      "ecology": {
-        "diet": "herbivore",
-        "role": "decomposer",
-        "habitat": [
-          "forest",
-          "meadow"
-        ],
-        "activity": "diurnal",
-        "temperature": {
-          "min": 15,
-          "max": 38
-        },
-        "water_need": 0.5,
-        "food_need": 0.4,
-        "aggression": 0.6,
-        "territoriality": 0.8,
-        "sociality": 0.95,
-        "reproduction": 0.85,
-        "predators": [
-          "mon_bear_01",
-          "mon_hawk_01"
-        ],
-        "prey": [
-          "flowers",
-          "nectar",
-          "mon_moth_01",
-          "corpse"
-        ],
-        "relationTypes": {
-          "flowers": "grazing",
-          "nectar": "grazing",
-          "mon_moth_01": "predation",
-          "corpse": "scavenge"
-        },
-        "note": "군체로 부드러운 유충·썩은 과실을 분해하는 초원 벌 — 회수 못 한 잔해를 마무리한다"
-      }
-    },
-    {
-      "id": "mon_beetle_01",
-      "name": "장수풍뎅이",
-      "category": 4,
-      "aiType": "melee",
-      "tier": 1,
-      "threatBase": 6,
-      "element": "earth",
-      "stats": {
-        "hp": 60,
-        "atk": 8,
-        "def": 12,
-        "spd": 6,
-        "mdef": 5
-      },
-      "weakness": {
-        "element": [
-          "fire"
-        ],
-        "bonus": 0.3,
-        "note": "갑각 강함"
-      },
-      "resistance": {
-        "physical": 0.4,
-        "bleed": 0
-      },
-      "statusImmune": [
-        "stun"
-      ],
-      "aiDecision": {
-        "enrageHp": 0,
-        "patternCooldown": [
-          10,
-          15
-        ],
-        "crowdAoeRadius": 0,
-        "specialSkill": "charge"
-      },
-      "pattern": [
-        {
-          "name": "뿔 투창",
-          "cd": 8,
-          "effect": "1.5xATK",
-          "telegraph": "노란 뿔",
-          "counter": "측면"
-        }
-      ],
-      "parts": [],
-      "spawn": {
-        "floors": [
-          1,
-          25
-        ],
-        "wave": [
-          "world"
-        ]
-      },
-      "loot": {
-        "soul": [],
-        "gold": 12,
-        "exp": 5
-      },
-      "ecology": {
-        "diet": "herbivore",
-        "role": "scavenger",
-        "habitat": [
-          "forest",
-          "grassland"
-        ],
-        "activity": "diurnal",
-        "temperature": {
-          "min": 10,
-          "max": 35
-        },
-        "water_need": 0.3,
-        "food_need": 0.5,
-        "aggression": 0.3,
-        "territoriality": 0.5,
-        "sociality": 0.4,
-        "reproduction": 0.6,
-        "predators": [
-          "mon_bear_01",
-          "mon_dire_wolf_01"
-        ],
-        "prey": [
-          "rotten_wood",
-          "fungus",
-          "corpse"
-        ],
-        "relationTypes": {
-          "rotten_wood": "grazing",
-          "fungus": "grazing",
-          "corpse": "scavenge"
-        },
-        "note": "땅속 유충이 썩은 나무·사체를 가리는 초원의 청소곤충 — 사냥 잔해를 회수해 토양으로 되돌린다"
-      }
-    },
-    {
       "id": "mon_blackchainbeetle_01",
       "name": "흑렌 갑충",
       "category": 4,
@@ -3800,106 +3606,6 @@
         "relationTypes": {
           "열수 미네랄": "grazing",
           "detritus": "grazing"
-        }
-      }
-    },
-    {
-      "id": "mon_crow_01",
-      "name": "까마귀",
-      "category": 4,
-      "aiType": "ranged",
-      "tier": 1,
-      "threatBase": 5,
-      "element": "dark",
-      "stats": {
-        "hp": 35,
-        "atk": 6,
-        "def": 2,
-        "spd": 20,
-        "mdef": 3
-      },
-      "weakness": {
-        "element": [
-          "light"
-        ],
-        "bonus": 0.3,
-        "note": "빛에 약함"
-      },
-      "resistance": {
-        "physical": 0,
-        "bleed": 0
-      },
-      "statusImmune": [],
-      "aiDecision": {
-        "enrageHp": 0,
-        "patternCooldown": [
-          10,
-          15
-        ],
-        "crowdAoeRadius": 0,
-        "specialSkill": "caw"
-      },
-      "pattern": [
-        {
-          "name": "큰 깃털",
-          "cd": 6,
-          "effect": "0.8xATK + 실명",
-          "telegraph": "깃털 흩뿌림",
-          "counter": "방패"
-        }
-      ],
-      "parts": [],
-      "spawn": {
-        "floors": [
-          1,
-          40
-        ],
-        "wave": [
-          "world"
-        ]
-      },
-      "loot": {
-        "soul": [],
-        "gold": 6,
-        "exp": 2
-      },
-      "ecology": {
-        "diet": "omnivore",
-        "role": "scavenger",
-        "habitat": [
-          "ruins",
-          "graveyard",
-          "forest"
-        ],
-        "activity": "diurnal",
-        "temperature": {
-          "min": -10,
-          "max": 35
-        },
-        "water_need": 0.2,
-        "food_need": 0.4,
-        "aggression": 0.3,
-        "territoriality": 0.4,
-        "sociality": 0.8,
-        "reproduction": 0.6,
-        "predators": [
-          "mon_duskhawk_01"
-        ],
-        "prey": [
-          "mon_rabbit_01",
-          "organic_waste",
-          "mon_rat_01",
-          "corpse",
-          "mon_tombworm_01",
-          "mon_graverat_01"
-        ],
-        "relationTypes": {
-          "corpse": "scavenge",
-          "mon_rabbit_01": "predation",
-          "organic_waste": "grazing",
-          "mon_rat_01": "predation",
-          "mon_tombworm_01": "predation",
-          "mon_graverat_01": "predation"
         }
       }
     },
@@ -6312,95 +6018,6 @@
           "mon_weightlessbug_01": "predation"
         },
         "note": "붕괴 천창 신규 서식종 — 공기 중을 헤엄치는 무게 없는 해파리 (260종 확장 #63)"
-      }
-    },
-    {
-      "id": "mon_foreststagbeetle_01",
-      "name": "숲 사슴벌레",
-      "category": 4,
-      "aiType": "melee",
-      "tier": 1,
-      "threatBase": 6,
-      "element": "nature",
-      "stats": {
-        "hp": 60,
-        "atk": 8,
-        "def": 12,
-        "spd": 6,
-        "mdef": 5
-      },
-      "weakness": {
-        "element": [
-          "fire"
-        ],
-        "bonus": 0.3,
-        "note": "갑각 강함"
-      },
-      "resistance": {
-        "physical": 0.4,
-        "bleed": 0
-      },
-      "statusImmune": [
-        "stun"
-      ],
-      "aiDecision": {
-        "enrageHp": 0,
-        "patternCooldown": [
-          10,
-          15
-        ],
-        "crowdAoeRadius": 0,
-        "specialSkill": "charge"
-      },
-      "pattern": [
-        {
-          "name": "뿔 투창",
-          "cd": 8,
-          "effect": "1.5xATK",
-          "telegraph": "노란 뿔",
-          "counter": "측면"
-        }
-      ],
-      "parts": [],
-      "spawn": {
-        "floors": [
-          0,
-          130
-        ],
-        "wave": [
-          "world"
-        ]
-      },
-      "loot": {
-        "soul": [],
-        "gold": 12,
-        "exp": 5
-      },
-      "ecology": {
-        "diet": "omnivore",
-        "role": "scavenger",
-        "habitat": [
-          "forest"
-        ],
-        "activity": "diurnal",
-        "temperature": {
-          "min": -5,
-          "max": 35
-        },
-        "water_need": 0.3,
-        "food_need": 0.5,
-        "aggression": 0.3,
-        "territoriality": 0.5,
-        "sociality": 0.4,
-        "reproduction": 0.6,
-        "predators": [],
-        "prey": [
-          "corpse"
-        ],
-        "relationTypes": {
-          "corpse": "scavenge"
-        },
-        "note": "숲 신규 서식종 — 썩은 통나무를 갈라 청소하는 사슴벌레 (260종 확장 #63)"
       }
     },
     {
@@ -10489,7 +10106,7 @@
         "prey": [
           "먹광"
         ],
-        "note": "대도서관 신규 서식종 — 책장 사이를 흐르는 푸른 반딧불 (260종 확장 #63)",
+        "note": "탑의 서고 신규 서식종 — 책장 사이를 흐르는 푸른 반딧불 (260종 확장 #63)",
         "relationTypes": {
           "먹광": "grazing"
         }
@@ -10669,7 +10286,7 @@
         "prey": [
           "먹광"
         ],
-        "note": "대도서관 신규 서식종 — 잉크 냄새에 몰리는 검은 날벌레 (260종 확장 #63)",
+        "note": "탑의 서고 신규 서식종 — 잉크 냄새에 몰리는 검은 날벌레 (260종 확장 #63)",
         "relationTypes": {
           "먹광": "grazing"
         }
@@ -13745,7 +13362,7 @@
         "prey": [
           "corpse"
         ],
-        "note": "대도서관 신규 서식종 — 페이지 틈 먼지를 먹는 미세 진드기 (260종 확장 #63)",
+        "note": "탑의 서고 신규 서식종 — 페이지 틈 먼지를 먹는 미세 진드기 (260종 확장 #63)",
         "relationTypes": {
           "corpse": "scavenge"
         }
@@ -16544,7 +16161,7 @@
           "버려진 식량 저장고": "grazing",
           "mon_ruinbeetle_01": "predation"
         },
-        "note": "버려진 식량 저장고를 뒤지는 유적 멧돼지 — 흉고블린·레이더의 수렵 대상"
+        "note": "버려진 식량 저장고를 뒤지는 유적 멧돼지 — 흉고블린·잔해탐지충의 수렵 대상"
       }
     },
     {
@@ -18752,112 +18369,6 @@
         "relationTypes": {
           "mana": "ether",
           "mon_voidworm_01": "predation"
-        }
-      }
-    },
-    {
-      "id": "mon_slime_blue_01",
-      "name": "슬라임(블루)",
-      "category": 6,
-      "aiType": "melee",
-      "tier": 1,
-      "threatBase": 18,
-      "element": "none",
-      "stats": {
-        "hp": 170,
-        "atk": 11,
-        "def": 4,
-        "spd": 6,
-        "mdef": 4
-      },
-      "weakness": {
-        "element": [
-          "fire",
-          "water"
-        ],
-        "bonus": 0.3,
-        "note": "화염·수해 +30%, 물리 칼질 저항"
-      },
-      "resistance": {
-        "physical": 0,
-        "bleed": 0.5,
-        "pierce": -0.5
-      },
-      "statusImmune": [
-        "bleed",
-        "poison"
-      ],
-      "aiDecision": {
-        "enrageHp": 0.3,
-        "patternCooldown": [
-          7,
-          10
-        ],
-        "crowdAoeRadius": 0,
-        "specialSkill": "split",
-        "splitHp": 0.3
-      },
-      "pattern": [
-        {
-          "name": "분열",
-          "cd": 0,
-          "effect": "HP 30% 시 2마리로 분열",
-          "telegraph": "초록 이펙트",
-          "counter": "분열 전 처치"
-        },
-        {
-          "name": "산성 튀김",
-          "cd": 9,
-          "effect": "원거리 0.8xATK + 방어구 -3%",
-          "telegraph": "초록 원",
-          "counter": "이동"
-        }
-      ],
-      "parts": [],
-      "spawn": {
-        "floors": [
-          1,
-          2
-        ],
-        "wave": [
-          "normal"
-        ]
-      },
-      "loot": {
-        "soul": [
-          "하"
-        ],
-        "gold": 30,
-        "exp": 15
-      },
-      "ecology": {
-        "diet": "omnivore",
-        "role": "decomposer",
-        "habitat": [
-          "ocean",
-          "cave"
-        ],
-        "activity": "always",
-        "temperature": {
-          "min": 0,
-          "max": 25
-        },
-        "water_need": 0.9,
-        "food_need": 0.4,
-        "aggression": 0.2,
-        "territoriality": 0.2,
-        "sociality": 0.9,
-        "reproduction": 0.9,
-        "predators": [
-          "mon_dredgerays_01"
-        ],
-        "prey": [
-          "organic_waste",
-          "corpse"
-        ],
-        "relationTypes": {
-          "corpse": "scavenge",
-          "organic_waste": "grazing"
         }
       }
     },

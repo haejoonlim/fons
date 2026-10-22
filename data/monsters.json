@@ -2,7 +2,7 @@
   "monsters": [
     {
       "id": "mon_aasimar_01",
-      "name": "아시마르",
+      "name": "성광심판관",
       "category": 1,
       "aiType": "magic",
       "tier": 5,
@@ -218,7 +218,7 @@
     },
     {
       "id": "mon_ashbloom_01",
-      "name": "재 화관",
+      "name": "잿빛화관",
       "category": 6,
       "aiType": "magic",
       "tier": 4,
@@ -317,7 +317,7 @@
     },
     {
       "id": "mon_ashmoth_01",
-      "name": "재 불꽃나방",
+      "name": "잿불나방",
       "category": 2,
       "aiType": "melee",
       "tier": 2,
@@ -755,8 +755,249 @@
       }
     },
     {
+      "id": "mon_bee_01",
+      "name": "독벌",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 1,
+      "level": [
+        6,
+        26
+      ],
+      "threatBase": 21.0,
+      "element": "none",
+      "stats": {
+        "hp": 130,
+        "atk": 12,
+        "def": 4,
+        "aspd": 15,
+        "mdef": 3,
+        "cri": 5,
+        "cdmg": 150,
+        "eva": 10,
+        "sta": 60
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.5,
+        "note": "불에 약함"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          6,
+          16
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "sting",
+        "fleeHp": 0.5
+      },
+      "pattern": [
+        {
+          "name": "독침 쏘기",
+          "cd": 6,
+          "effect": "1.0xATK + 중독 3초",
+          "telegraph": "꼬리를 들어 노란 빛",
+          "counter": "방패로 막고 옆으로"
+        },
+        {
+          "name": "떼 몰이",
+          "cd": 11,
+          "effect": "대상 1명 이동 -20% 3초",
+          "telegraph": "군체가 한쪽으로 몰림",
+          "counter": "연막·불로 군체를 흩는다"
+        },
+        {
+          "name": "벌집 흔들기",
+          "cd": 16,
+          "effect": "1.3xATK, 후퇴 유도",
+          "telegraph": "몸을 낮추고 날개를 빠르게",
+          "counter": "밀지 말고 자리를 지킨다"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          6,
+          7
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 10,
+        "exp": 18
+      },
+      "ecology": {
+        "diet": "herbivore",
+        "role": "decomposer",
+        "habitat": [
+          "forest",
+          "meadow"
+        ],
+        "activity": "diurnal",
+        "temperature": {
+          "min": 15,
+          "max": 38
+        },
+        "water_need": 0.5,
+        "food_need": 0.4,
+        "aggression": 0.3,
+        "territoriality": 0.8,
+        "sociality": 0.95,
+        "reproduction": 0.85,
+        "predators": [
+          "mon_bear_01",
+          "mon_hawk_01"
+        ],
+        "prey": [
+          "flowers",
+          "nectar",
+          "mon_moth_01",
+          "corpse"
+        ],
+        "relationTypes": {
+          "flowers": "grazing",
+          "nectar": "grazing",
+          "mon_moth_01": "predation",
+          "corpse": "scavenge"
+        },
+        "note": "군체로 부드러운 유충·썩은 과실을 분해하는 초원 벌 — 회수 못 한 잔해를 마무리한다"
+      }
+    },
+    {
+      "id": "mon_beetle_01",
+      "name": "장수풍뎅이",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 1,
+      "level": [
+        1,
+        21
+      ],
+      "threatBase": 20.0,
+      "element": "earth",
+      "stats": {
+        "hp": 190,
+        "atk": 10,
+        "def": 9,
+        "aspd": 8,
+        "mdef": 4,
+        "cri": 5,
+        "cdmg": 150,
+        "eva": 4,
+        "sta": 80
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "갑각 강함"
+      },
+      "resistance": {
+        "physical": 0.4,
+        "bleed": 0
+      },
+      "statusImmune": [
+        "stun"
+      ],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          8,
+          16
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "entangle",
+        "fleeHp": 0.4
+      },
+      "pattern": [
+        {
+          "name": "뿔 밀치기",
+          "cd": 8,
+          "effect": "1.4xATK, 밀어냄",
+          "telegraph": "뿔을 낮추고 달려듦",
+          "counter": "옆으로 비켜 등쪽 타격"
+        },
+        {
+          "name": "다리 물기",
+          "cd": 12,
+          "effect": "0.8xATK + 2초 발 묶임",
+          "telegraph": "턱을 벌리고 다리에 붙음",
+          "counter": "발을 털어내고 즉시 이탈"
+        },
+        {
+          "name": "흙더미 파기",
+          "cd": 16,
+          "effect": "땅을 파 3초 회피 상승",
+          "telegraph": "앞발로 흙을 긁음",
+          "counter": "파는 자리를 끊어 이동 봉쇄"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          1,
+          2,
+          3
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 12,
+        "exp": 18
+      },
+      "ecology": {
+        "diet": "herbivore",
+        "role": "scavenger",
+        "habitat": [
+          "forest",
+          "grassland"
+        ],
+        "activity": "diurnal",
+        "temperature": {
+          "min": 10,
+          "max": 35
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.3,
+        "territoriality": 0.5,
+        "sociality": 0.6,
+        "reproduction": 0.6,
+        "predators": [
+          "mon_bear_01",
+          "mon_dire_wolf_01"
+        ],
+        "prey": [
+          "rotten_wood",
+          "fungus",
+          "corpse"
+        ],
+        "relationTypes": {
+          "rotten_wood": "grazing",
+          "fungus": "grazing",
+          "corpse": "scavenge"
+        },
+        "note": "땅속 유충이 썩은 나무·사체를 가리는 초원의 청소곤충 — 사냥 잔해를 회수해 토양으로 되돌린다"
+      }
+    },
+    {
       "id": "mon_beholder_01",
-      "name": "틈새청자",
+      "name": "틈새뱀",
       "category": 6,
       "aiType": "magic",
       "tier": 4,
@@ -1110,7 +1351,7 @@
     },
     {
       "id": "mon_cirruskite_01",
-      "name": "권운표양",
+      "name": "구름표범",
       "category": 4,
       "aiType": "ranged",
       "tier": 2,
@@ -1210,7 +1451,7 @@
     },
     {
       "id": "mon_cirruswarden_01",
-      "name": "권운감시자",
+      "name": "권운매",
       "category": 2,
       "aiType": "magic",
       "tier": 3,
@@ -1416,8 +1657,134 @@
       }
     },
     {
+      "id": "mon_crow_01",
+      "name": "까마귀",
+      "category": 4,
+      "aiType": "ranged",
+      "tier": 1,
+      "level": [
+        6,
+        26
+      ],
+      "threatBase": 21.5,
+      "element": "dark",
+      "stats": {
+        "hp": 140,
+        "atk": 11,
+        "def": 4,
+        "aspd": 16,
+        "mdef": 6,
+        "cri": 8,
+        "cdmg": 160,
+        "eva": 12,
+        "sta": 60
+      },
+      "weakness": {
+        "element": [
+          "light"
+        ],
+        "bonus": 0.3,
+        "note": "빛에 약함"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          7,
+          18
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "caw",
+        "fleeHp": 0.5
+      },
+      "pattern": [
+        {
+          "name": "눈 찍기",
+          "cd": 7,
+          "effect": "0.9xATK + 실명 2초",
+          "telegraph": "머리 위로 붙어 부리를 든다",
+          "counter": "머리를 가리고 팔로 쫓는다"
+        },
+        {
+          "name": "깃털 흩뿌리기",
+          "cd": 13,
+          "effect": "0.6xATK + 명중 -15% 4초",
+          "telegraph": "몸을 털어 깃털을 날림",
+          "counter": "거리를 벌려 시야를 되찾는다"
+        },
+        {
+          "name": "잔해 뒤지기",
+          "cd": 18,
+          "effect": "잔해에서 먹이를 찾아 HP 5% 회복",
+          "telegraph": "땅에 내려앉아 부리로 긁음",
+          "counter": "내려앉은 순간에 붙는다"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 10,
+        "exp": 18
+      },
+      "ecology": {
+        "diet": "omnivore",
+        "role": "scavenger",
+        "habitat": [
+          "ruins",
+          "graveyard",
+          "forest"
+        ],
+        "activity": "diurnal",
+        "temperature": {
+          "min": -10,
+          "max": 35
+        },
+        "water_need": 0.2,
+        "food_need": 0.4,
+        "aggression": 0.3,
+        "territoriality": 0.4,
+        "sociality": 0.8,
+        "reproduction": 0.6,
+        "predators": [
+          "mon_duskhawk_01"
+        ],
+        "prey": [
+          "mon_rabbit_01",
+          "organic_waste",
+          "mon_rat_01",
+          "corpse",
+          "mon_tombworm_01",
+          "mon_graverat_01"
+        ],
+        "relationTypes": {
+          "corpse": "scavenge",
+          "mon_rabbit_01": "predation",
+          "organic_waste": "grazing",
+          "mon_rat_01": "predation",
+          "mon_tombworm_01": "predation",
+          "mon_graverat_01": "predation"
+        }
+      }
+    },
+    {
       "id": "mon_cryoshard_01",
-      "name": "결로 파편체",
+      "name": "결로파편체",
       "category": 2,
       "aiType": "melee",
       "tier": 2,
@@ -1642,7 +2009,7 @@
     },
     {
       "id": "mon_crystalsentinel_01",
-      "name": "수정 감시자",
+      "name": "수정거미",
       "category": 6,
       "aiType": "melee",
       "tier": 4,
@@ -1740,7 +2107,7 @@
     },
     {
       "id": "mon_debtavatar_01",
-      "name": "포기한 세 번",
+      "name": "장부군주",
       "category": 1,
       "aiType": "magic",
       "tier": 5,
@@ -1867,7 +2234,7 @@
     },
     {
       "id": "mon_deeplurker_01",
-      "name": "심해 발광 포식자",
+      "name": "발광아귀",
       "category": 5,
       "aiType": "melee",
       "tier": 3,
@@ -1967,7 +2334,7 @@
     },
     {
       "id": "mon_dire_bear_01",
-      "name": "거대 곰",
+      "name": "산곰",
       "category": 4,
       "aiType": "melee",
       "tier": 3,
@@ -2017,32 +2384,32 @@
       },
       "pattern": [
         {
-          "name": "사자 머리",
+          "name": "앞발 후려치기",
           "cd": 6,
           "effect": "근접 1.5xATK",
           "telegraph": "붉은 경고선",
           "counter": "방어 태세"
         },
         {
-          "name": "염소 머리 돌진",
+          "name": "눈사태 돌진",
           "cd": 9,
           "effect": "돌진 1.2xATK",
           "telegraph": "붉은 경고선 1초",
           "counter": "이동"
         },
         {
-          "name": "뱀 머리 독",
+          "name": "겨울잠 포효",
           "cd": 12,
-          "effect": "원거리 독",
-          "telegraph": "초록 경고선",
-          "counter": "해독"
+          "effect": "전체 0.9xATK + 이동 -20% 3초",
+          "telegraph": "파란 파문",
+          "counter": "거리 벌리기"
         },
         {
-          "name": "머리 보상 버프",
+          "name": "피 냄새",
           "cd": 0,
-          "effect": "머리 1개 파괴 시 나머지 ATK +20%",
+          "effect": "체력 30% 이하에서 ATK +20%",
           "telegraph": "붉은 오라",
-          "counter": "동시 파괴"
+          "counter": "화력 집중"
         }
       ],
       "parts": [],
@@ -2097,7 +2464,7 @@
     },
     {
       "id": "mon_dire_boar_01",
-      "name": "거대 멧돼지",
+      "name": "들멧돼지",
       "category": 4,
       "aiType": "ranged",
       "tier": 2,
@@ -2140,14 +2507,14 @@
       },
       "pattern": [
         {
-          "name": "기마 사격",
+          "name": "엄니 들이받기",
           "cd": 5,
           "effect": "원거리 1.2xATK",
           "telegraph": "초록 경고선",
           "counter": "접근 압박"
         },
         {
-          "name": "근접 창",
+          "name": "몸통 밀치기",
           "cd": 9,
           "effect": "1.1xATK",
           "telegraph": "파란 경고선",
@@ -2203,7 +2570,7 @@
     },
     {
       "id": "mon_dire_wolf_01",
-      "name": "거대 늑대",
+      "name": "숲늑대",
       "category": 4,
       "aiType": "ranged",
       "tier": 2,
@@ -2246,14 +2613,14 @@
       },
       "pattern": [
         {
-          "name": "기마 사격",
+          "name": "무리 포위",
           "cd": 5,
           "effect": "원거리 1.2xATK",
           "telegraph": "초록 경고선",
           "counter": "접근 압박"
         },
         {
-          "name": "근접 창",
+          "name": "목덜미 물기",
           "cd": 9,
           "effect": "1.1xATK",
           "telegraph": "파란 경고선",
@@ -2769,7 +3136,7 @@
     },
     {
       "id": "mon_dunewalker_01",
-      "name": "사막유랑자",
+      "name": "모래표범",
       "category": 5,
       "aiType": "melee",
       "tier": 3,
@@ -2981,8 +3348,121 @@
       }
     },
     {
+      "id": "mon_foreststagbeetle_01",
+      "name": "숲 사슴벌레",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 1,
+      "level": [
+        6,
+        26
+      ],
+      "threatBase": 22.0,
+      "element": "nature",
+      "stats": {
+        "hp": 200,
+        "atk": 12,
+        "def": 9,
+        "aspd": 7,
+        "mdef": 4,
+        "cri": 6,
+        "cdmg": 150,
+        "eva": 4,
+        "sta": 80
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "갑각 강함"
+      },
+      "resistance": {
+        "physical": 0.4,
+        "bleed": 0
+      },
+      "statusImmune": [
+        "stun"
+      ],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          9,
+          18
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "entangle",
+        "fleeHp": 0.4
+      },
+      "pattern": [
+        {
+          "name": "집게 조이기",
+          "cd": 9,
+          "effect": "1.2xATK + 2초 발 묶임",
+          "telegraph": "큰 턱을 벌리고 겨냥",
+          "counter": "턱 바깥으로 돌아 붙는다"
+        },
+        {
+          "name": "통나무 뒤집기",
+          "cd": 14,
+          "effect": "1.6xATK, 넘어뜨림",
+          "telegraph": "몸을 통나무 밑으로 밀어 넣음",
+          "counter": "발을 고정하고 중심을 낮춘다"
+        },
+        {
+          "name": "턱 비틀기",
+          "cd": 18,
+          "effect": "0.9xATK + 방어 -10% 4초",
+          "telegraph": "턱을 옆으로 돌림",
+          "counter": "장비를 고쳐 잡고 거리 벌리기"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          6,
+          7,
+          8
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 14,
+        "exp": 20
+      },
+      "ecology": {
+        "diet": "omnivore",
+        "role": "scavenger",
+        "habitat": [
+          "forest"
+        ],
+        "activity": "diurnal",
+        "temperature": {
+          "min": -5,
+          "max": 35
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.3,
+        "territoriality": 0.5,
+        "sociality": 0.6,
+        "reproduction": 0.6,
+        "predators": [],
+        "prey": [
+          "corpse"
+        ],
+        "relationTypes": {
+          "corpse": "scavenge"
+        },
+        "note": "숲 신규 서식종 — 썩은 통나무를 갈라 청소하는 사슴벌레 (260종 확장 #63)"
+      }
+    },
+    {
       "id": "mon_frostlure_01",
-      "name": "등불 미끼자",
+      "name": "서리등벌레",
       "category": 5,
       "aiType": "melee",
       "tier": 3,
@@ -3178,7 +3658,7 @@
     },
     {
       "id": "mon_frostwhale_01",
-      "name": "동결 고래·첫 파도",
+      "name": "빙해고래",
       "category": 1,
       "aiType": "melee",
       "tier": 5,
@@ -3310,7 +3790,7 @@
     },
     {
       "id": "mon_gateherald_01",
-      "name": "관문전언자",
+      "name": "관문까마귀",
       "category": 5,
       "aiType": "magic",
       "tier": 4,
@@ -3360,7 +3840,7 @@
       },
       "pattern": [
         {
-          "name": "선언 broadcasting",
+          "name": "문턱 선언",
           "cd": 14,
           "effect": "전방 5m 광역 1.3xATK",
           "telegraph": "문턱 위 문양이 번진다",
@@ -3421,7 +3901,7 @@
     },
     {
       "id": "mon_giant_ant_01",
-      "name": "거대 개미",
+      "name": "둑개미",
       "category": 4,
       "aiType": "ranged",
       "tier": 2,
@@ -3464,14 +3944,14 @@
       },
       "pattern": [
         {
-          "name": "기마 사격",
+          "name": "산성 분사",
           "cd": 5,
           "effect": "원거리 1.2xATK",
           "telegraph": "초록 경고선",
           "counter": "접근 압박"
         },
         {
-          "name": "근접 창",
+          "name": "턱집게",
           "cd": 9,
           "effect": "1.1xATK",
           "telegraph": "파란 경고선",
@@ -3528,7 +4008,7 @@
     },
     {
       "id": "mon_giant_spider_01",
-      "name": "거대 거미",
+      "name": "굴거미",
       "category": 4,
       "aiType": "ranged",
       "tier": 2,
@@ -3571,14 +4051,14 @@
       },
       "pattern": [
         {
-          "name": "기마 사격",
+          "name": "거미줄 발사",
           "cd": 5,
           "effect": "원거리 1.2xATK",
           "telegraph": "초록 경고선",
           "counter": "접근 압박"
         },
         {
-          "name": "근접 창",
+          "name": "독니",
           "cd": 9,
           "effect": "1.1xATK",
           "telegraph": "파란 경고선",
@@ -3735,7 +4215,7 @@
     },
     {
       "id": "mon_glasscutter_01",
-      "name": "빛을 자르는 자·유리 파수꾼",
+      "name": "백열파수꾼",
       "category": 1,
       "aiType": "ranged",
       "tier": 5,
@@ -3973,7 +4453,7 @@
     },
     {
       "id": "mon_glassrefract_01",
-      "name": "굴절 망영",
+      "name": "굴절망령",
       "category": 5,
       "aiType": "ranged",
       "tier": 3,
@@ -5084,7 +5564,7 @@
       },
       "pattern": [
         {
-          "name": "용식 broadcasting",
+          "name": "화염 강론",
           "cd": 16,
           "effect": "전방 5m 광역 1.4xATK",
           "telegraph": "바닥에 화염 문양",
@@ -5369,7 +5849,7 @@
     },
     {
       "id": "mon_idealis_01",
-      "name": "관문감지기",
+      "name": "이데아수문장",
       "category": 1,
       "aiType": "magic",
       "tier": 5,
@@ -5475,7 +5955,7 @@
     },
     {
       "id": "mon_ideavigil_01",
-      "name": "이데아감시자",
+      "name": "이데아거울나비",
       "category": 2,
       "aiType": "magic",
       "tier": 5,
@@ -5792,7 +6272,7 @@
         "prey": [
           "먹광"
         ],
-        "note": "대도서관 신규 전투종 — 서고의 잉크가 스스로를 기억하게 된 형태 (260종 확장 #63)",
+        "note": "탑의 서고 신규 전투종 — 서고의 잉크가 스스로를 기억하게 된 형태 (260종 확장 #63)",
         "relationTypes": {
           "먹광": "grazing"
         }
@@ -5910,7 +6390,7 @@
     },
     {
       "id": "mon_junglesentinel_01",
-      "name": "밀림감시자",
+      "name": "밀림부엉이",
       "category": 2,
       "aiType": "ranged",
       "tier": 4,
@@ -6138,7 +6618,7 @@
     },
     {
       "id": "mon_kraken_tentacle_01",
-      "name": "크라켄 촉수",
+      "name": "심연크라켄",
       "category": 3,
       "aiType": "melee",
       "tier": 5,
@@ -7066,7 +7546,7 @@
     },
     {
       "id": "mon_marshwarden_01",
-      "name": "늪지감시자",
+      "name": "늪도마뱀",
       "category": 5,
       "aiType": "magic",
       "tier": 2,
@@ -7992,7 +8472,7 @@
     },
     {
       "id": "mon_raider_01",
-      "name": "레이더",
+      "name": "잔해탐지충",
       "category": 1,
       "aiType": "melee",
       "tier": 2,
@@ -8329,7 +8809,7 @@
     },
     {
       "id": "mon_reefwarden_01",
-      "name": "산호수호자",
+      "name": "산호껍질게",
       "category": 2,
       "aiType": "ranged",
       "tier": 3,
@@ -8440,7 +8920,7 @@
     },
     {
       "id": "mon_ridgewarden_01",
-      "name": "능선감시자",
+      "name": "설선염소",
       "category": 2,
       "aiType": "ranged",
       "tier": 4,
@@ -9304,7 +9784,7 @@
     },
     {
       "id": "mon_shelfwarden_01",
-      "name": "책장감시자",
+      "name": "책장먼지벌레",
       "category": 2,
       "aiType": "magic",
       "tier": 4,
@@ -9354,14 +9834,14 @@
       },
       "pattern": [
         {
-          "name": "권력 mismatch",
+          "name": "금기 문장",
           "cd": 14,
           "effect": "직선 5m 1.4xATK",
           "telegraph": "책장 글자가 붉게 번진다",
           "counter": "파란 방어"
         },
         {
-          "name": "정리 shelving",
+          "name": "서가 정리",
           "cd": 26,
           "effect": "전체 1.1xATK + 침묵 4초",
           "telegraph": "떠난 책들이 제자리로 돌아간다",
@@ -9415,7 +9895,7 @@
     },
     {
       "id": "mon_silenceking_01",
-      "name": "소리 삼키는 자·무풍 임금",
+      "name": "침묵의 군주",
       "category": 1,
       "aiType": "assassin",
       "tier": 5,
@@ -9740,7 +10220,7 @@
     },
     {
       "id": "mon_silentwarden_01",
-      "name": "무풍감시자",
+      "name": "무풍나방",
       "category": 2,
       "aiType": "ranged",
       "tier": 4,
@@ -10410,8 +10890,122 @@
       }
     },
     {
+      "id": "mon_slime_blue_01",
+      "name": "슬라임(블루)",
+      "category": 6,
+      "aiType": "melee",
+      "tier": 1,
+      "level": [
+        11,
+        31
+      ],
+      "threatBase": 18.0,
+      "element": "none",
+      "stats": {
+        "hp": 170,
+        "atk": 11,
+        "def": 4,
+        "aspd": 6,
+        "mdef": 4,
+        "cri": 4,
+        "cdmg": 150,
+        "eva": 6,
+        "sta": 60
+      },
+      "weakness": {
+        "element": [
+          "fire",
+          "water"
+        ],
+        "bonus": 0.3,
+        "note": "화염·수해 +30%, 물리 칼질 저항"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0.5,
+        "pierce": -0.5
+      },
+      "statusImmune": [
+        "bleed",
+        "poison"
+      ],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          7,
+          12
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "split",
+        "splitHp": 0.3,
+        "fleeHp": 0.5
+      },
+      "pattern": [
+        {
+          "name": "분열",
+          "cd": 0,
+          "effect": "HP 30% 시 2마리로 나뉨",
+          "telegraph": "몸이 파랗게 부푼다",
+          "counter": "나뉘기 전에 한 번에 끝낸다"
+        },
+        {
+          "name": "산성 튀김",
+          "cd": 9,
+          "effect": "0.8xATK + 방어구 -3%",
+          "telegraph": "초록 물방울이 맺힘",
+          "counter": "옆으로 비켜 장비를 닦는다"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          11,
+          12,
+          13
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 30,
+        "exp": 15
+      },
+      "ecology": {
+        "diet": "omnivore",
+        "role": "decomposer",
+        "habitat": [
+          "ocean",
+          "cave"
+        ],
+        "activity": "always",
+        "temperature": {
+          "min": 0,
+          "max": 25
+        },
+        "water_need": 0.9,
+        "food_need": 0.4,
+        "aggression": 0.2,
+        "territoriality": 0.2,
+        "sociality": 0.9,
+        "reproduction": 0.9,
+        "predators": [
+          "mon_dredgerays_01"
+        ],
+        "prey": [
+          "organic_waste",
+          "corpse"
+        ],
+        "relationTypes": {
+          "corpse": "scavenge",
+          "organic_waste": "grazing"
+        }
+      }
+    },
+    {
       "id": "mon_slime_green_01",
-      "name": "슬라임(그린)",
+      "name": "초록슬라임",
       "category": 6,
       "aiType": "melee",
       "tier": 1,
@@ -13039,7 +13633,7 @@
     },
     {
       "id": "mon_storm_giant_01",
-      "name": "스톰 자이언트",
+      "name": "폭풍거인",
       "category": 1,
       "aiType": "melee",
       "tier": 5,
@@ -13246,7 +13840,7 @@
     },
     {
       "id": "mon_sunveil_01",
-      "name": "흑렌 차양체",
+      "name": "검은차양체",
       "category": 2,
       "aiType": "melee",
       "tier": 2,
@@ -13556,7 +14150,7 @@
     },
     {
       "id": "mon_thresholdswift_01",
-      "name": "문턱순삭",
+      "name": "이음새벌레",
       "category": 4,
       "aiType": "assassin",
       "tier": 5,
@@ -13777,7 +14371,7 @@
     },
     {
       "id": "mon_tidewarden_01",
-      "name": "조수감시자",
+      "name": "조수불가사리",
       "category": 2,
       "aiType": "ranged",
       "tier": 2,

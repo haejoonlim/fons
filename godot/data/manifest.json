@@ -1,0 +1,30 @@
+{
+  "source": "soul-commander 원본 저장소의 데이터 폴더 (원본 대조)",
+  "reconciled": "2026-10-17 — 원본 트리와 전수 대조 완료 (원본 대조). 이전 목록은 추정이었고 실제와 달랐다: 없던 파일 3개(estate_web·state·game_const), 빠져 있던 파일 2개(scenes·world_laws).",
+  "generated_in_original": [
+    "skills_catalog.json",
+    "fusion_pairs.json"
+  ],
+  "files": [
+    "ambient.json",
+    "biomes.json",
+    "ecology_codex.json",
+    "ecology_energy_channels.json",
+    "elemental_affinity.json",
+    "elemental_matrix.json",
+    "equipment.json",
+    "estate.json",
+    "fusion_pairs.json",
+    "job_ai_profiles.json",
+    "job_tree.json",
+    "monster_husbandry.json",
+    "monster_personality.json",
+    "monsters.json",
+    "races.json",
+    "scenes.json",
+    "skills_catalog.json",
+    "synergy.json",
+    "world_laws.json"
+  ],
+  "notes": "원본에서 이 폴더는 런타임 직로드용이다. 이 중 skills_catalog 와 fusion_pairs 두 종은 원본 스크립트가 한글 키 정본에서 생성한 것이고, 나머지 열다섯은 원본에서 직접 저작한 파일이다 — 어느 쪽이든 이관 원본은 이 폴더다. .meta 와 .gitkeep 은 제외한다. monster_husbandry.json 은 폰즈 쪽에서 새로 저작한 파일(사역사 마물 사육 규칙), job_ai_profiles.json 은 폰즈 쪽에서 새로 저작한 파일(직업 AI 행동 가중 — 생성기 sim/center/sims/gen_job_ai_profiles.py)이다."
+}
