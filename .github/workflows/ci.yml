@@ -35,11 +35,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
 
       # 로컬 venv 는 3.9.6 이다 (자체 실측). 도구는 표준 라이브러리만 쓰므로
       # 같은 계열을 쓴다 — CI 에서만 3.12 문법이 통과하는 일을 막는다.
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: "3.9"
 
@@ -51,9 +51,9 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: "3.9"
 
@@ -89,7 +89,7 @@ jobs:
       # 실패했을 때만: 무엇이 왜 깨졌는지 볼 수 있게 junit 을 남긴다.
       - name: upload junit
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: gut-junit
           path: godot/.gut_junit.xml
