@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T5 이름 점검 — 폰즈</title>
+<style>
+  :root{--bg:#14111c;--card:#1e1930;--line:#332a4a;--tx:#e8e2f4;--dim:#9a90b8;--hi:#f0c96a;--bad:#e06a6a;--warn:#d8a45f;--ok:#5fb877}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--tx);font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;line-height:1.65}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 120px}
+  header{padding:36px 0 20px;border-bottom:1px solid var(--line);margin-bottom:26px}
+  h1{font-size:26px;letter-spacing:-.02em}
+  h1 span{color:var(--hi)}
+  .sub{color:var(--dim);font-size:14px;margin-top:8px}
+  .crit{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:20px 0 26px}
+  .crit div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13px}
+  .crit b{display:block;color:var(--hi);font-size:13px;margin-bottom:4px}
+  .tally{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+  .chip{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;background:var(--card)}
+  .chip b{font-weight:700}
+  .chip.ok b{color:var(--ok)} .chip.warn b{color:var(--warn)} .chip.bad b{color:var(--bad)}
+  h2{font-size:16px;margin:32px 0 12px;color:var(--dim);font-weight:600;letter-spacing:.02em}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .card.swap{border-left:3px solid var(--bad)}
+  .card.rev{border-left:3px solid var(--warn)}
+  .top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .nm{font-size:19px;font-weight:700;letter-spacing:-.01em}
+  .badge{font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid}
+  .badge.swap{color:var(--bad);border-color:var(--bad)}
+  .badge.rev{color:var(--warn);border-color:var(--warn)}
+  .meta{color:var(--dim);font-size:12px;margin-top:6px}
+  .why{font-size:13.5px;margin:10px 0 8px;color:#d6cfe8}
+  .why code,.meta code,.opt code{background:#2a2340;border-radius:4px;padding:1px 5px;font-size:12px}
+  .pats{font-size:12.5px;color:var(--dim);margin-bottom:12px}
+  .opts{display:grid;gap:7px}
+  label.opt{display:flex;gap:9px;align-items:flex-start;background:#241d38;border:1px solid var(--line);border-radius:9px;padding:9px 12px;cursor:pointer;font-size:13.5px}
+  label.opt:hover{border-color:#4a3d6b}
+  label.opt input{margin-top:3px;accent-color:var(--hi)}
+  label.opt.rec{border-color:#5a4a24}
+  .opt b{font-weight:700}
+  .opt small{color:var(--dim);font-size:12px}
+  .opt .tag{font-size:10px;color:#14111c;background:var(--hi);border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:1px}
+  .own{margin-top:8px;display:flex;gap:8px}
+  .own input{flex:1;background:#241d38;border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--tx);font-size:13px}
+  ul.keep{list-style:none;display:grid;gap:6px;font-size:13px}
+  ul.keep li{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:9px 13px}
+  ul.keep b{color:var(--tx)} ul.keep span{color:var(--dim)}
+  footer{position:fixed;left:0;right:0;bottom:0;background:#191426;border-top:1px solid var(--line);padding:12px 20px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+  button{background:var(--hi);color:#14111c;border:0;border-radius:8px;padding:9px 16px;font-size:13.5px;font-weight:700;cursor:pointer}
+  button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line);font-weight:500}
+  #out{font-size:12px;color:var(--dim)}
+  textarea{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>T5 몬스터 <span>이름 무게</span> 점검</h1>
+  <div class="sub">T5 22종 전수 — 데이터의 역할·서식지·패턴을 근거로 읽었습니다. 약한 것만 골라 대안을 붙였습니다.</div>
+</header>
+
+<div class="crit">
+  <div><b>① 무게</b>130층 보스로 만났을 때 긴장이 서는가. 임금·사제·파수병 같은 직분어나 고래·리치 같은 규모 명사가 무게를 만든다.</div>
+  <div><b>② 읽힘</b>이름만 보고 무엇인지 잡히는가. <code>감지기</code>·<code>촉수</code>처럼 사물·신체 일부면 개체가 아니라 부품으로 읽힌다.</div>
+  <div><b>③ 한국어</b>영문 음차(<code>스톰</code>·<code>리치</code>)와 상태이상 어휘(<code>동결</code>)를 종명에 쓰면 다른 낱말과 겹친다.</div>
+  <div><b>④ 개체성</b>같은 계보(정령 3단계) 안에서 규칙적으로 반복되는 건 의도된 것이라 건드리지 않았다.</div>
+</div>
+
+<div class="tally">
+  <span class="chip ok">유지 <b>14</b></span>
+  <span class="chip bad">교체 후보 <b>6</b></span>
+  <span class="chip warn">검토 <b>2</b></span>
+  <span class="chip">정령 계보 6종은 계보 규칙으로 유지</span>
+</div>
+
+<h2>교체 후보 — 지금 이름이 T5에 못 미치는 것</h2>
+<div id="swap"></div>
+
+<h2>검토 — 취향 문제로 남긴 것</h2>
+<div id="rev"></div>
+
+<h2>유지 — 손대지 않는 14종</h2>
+<ul class="keep" id="keep"></ul>
+</div>
+
+<footer>
+  <button id="fill">추천안 채우기</button>
+  <button id="copy">결과 복사</button>
+  <button class="ghost" id="clear">선택 비우기</button>
+  <span id="out"></span>
+  <textarea id="ta"></textarea>
+</footer>
+
+<script>
+const CARDS = [
+ {id:'mon_frostwhale_01', kind:'swap', name:'동결고래', meta:'T5 수호 · water · 105~115층 · frostsea',
+  pats:['첫 파도','심해 급선회','얼음 밑 심장박동'],
+  why:'`동결`은 상태이상 이름으로 이미 33번 쓰입니다. 종명에 쓰면 "얼어붙은 고래"가 아니라 상태 걸린 고래로 읽힙니다. 고래라는 규모는 좋으니 앞말만 바꾸면 됩니다.',
+  opts:[['빙해고래','빙해(氷海) = 얼음 바다. 상태이상과 안 겹치고 서식지가 남음',1],
+        ['서리고래','서리 + 고래. 서리 계열 어휘와 통일',0],
+        ['동결고래 유지','현행 유지',0]]},
+ {id:'mon_idealis_01', kind:'swap', name:'관문감지기', meta:'T5 apex · light · 126~130층 · ideagate',
+  pats:['최선의 판정','문턱 폐쇄'],
+  why:'`감지기`는 기기 이름입니다. T5 최상위 개체인데 센서로 읽히고, 문턱을 판정하는 존재라는 성격이 사라집니다.',
+  opts:[['관문수문장','수문장 = 문을 지키는 장수. 판정·폐쇄 패턴과 맞음',1],
+        ['이데아문지기','문지기 — 낮은 층 문지기와 헷갈릴 수 있음',0],
+        ['문턱의 눈','감시 성격을 눈으로. 다만 신체 일부 명사',0]]},
+ {id:'mon_kraken_tentacle_01', kind:'swap', name:'크라켄 촉수', meta:'T5 apex · water · 51~60층 · deep/ocean',
+  pats:['촉수 감김','잉크 분사','수중 끌어당김','촉수 광란'],
+  why:'영문 음차 + 신체 일부. `촉수`는 보스가 아니라 보스의 부위로 읽혀서, 51~60층 최상위 개체가 부품처럼 보입니다.',
+  opts:[['심연크라켄','심연 + 크라켄. 규모와 무게가 살고 영문은 고유명으로 남음',1],
+        ['크라켄의 팔','부위라는 사실을 인정하고 이름에 넣음',0],
+        ['심해촉수','한국어만 남김. 다만 여전히 부위',0]]},
+ {id:'mon_lich_01', kind:'swap', name:'리치', meta:'T5 apex · dark · 36~40층 · ruins/tower',
+  pats:['죽음의 화살','언데드 소환','서리 감옥','죽음의 격노'],
+  why:'맨 영문 차용어라 개체 이름이 아니라 종류 이름입니다. 같은 T5에 `드라코리치`가 있어 `리치`끼리도 겹칩니다.',
+  opts:[['서리리치','패턴(서리 감옥)에서 앞말을 가져옴. 드라코리치와 구분됨',1],
+        ['망자의 왕','직분어로 무게. 서리 성격은 사라짐',0],
+        ['죽음서리','패턴 어휘 조합. 다소 시적',0]]},
+ {id:'mon_storm_giant_01', kind:'swap', name:'스톰 자이언트', meta:'T5 apex · light · 80~90층 · mountain/sky',
+  pats:['번개 오라','폭풍 격노'],
+  why:'영문 두 낱말 조합. 한국어 몬스터 이름 관례에서 거의 쓰이지 않는 형태이고, 띄어쓰기가 들어가 검색·정렬에서도 어긋납니다.',
+  opts:[['폭풍거인','폭풍 + 거인. 한국어 합성으로 무게와 크기가 같이 남음',1],
+        ['뇌운거인','뇌운(雷雲). 하늘 서식이 드러남',0],
+        ['천둥거인','천둥 — 소리가 이름에 남음',0]]},
+ {id:'mon_thresholdswift_01', kind:'swap', name:'이음새벌레', meta:'T5 assassin · void · 126~130층 · ideagate · GK 아님',
+  pats:['경계 도약'],
+  why:'직접 고르신 이름이지만 `벌레`가 T5 마지막 구간의 위협으로는 가볍습니다. 이음새를 타고 넘는 사냥꾼 성격을 살리면 무게가 붙습니다.',
+  opts:[['이음새사냥꾼','이음새 정체성 유지 + assassin 역할. 층위가 올라감',1],
+        ['틈새이빨','짧고 날카로움. 무엇을 하는지는 덜 읽힘',0],
+        ['문턱이빨','문턱(층 이름)과 연결',0]]},
+];
+
+const REV = [
+ {id:'mon_dracolich_01', kind:'rev', name:'드라코리치', meta:'T5 apex · fire · 51~60층 · volcano',
+  pats:['브레스','비행/착지','꼬리 휘두르기','뼈 폭풍 격노'],
+  why:'`드라코`(음차) + `리치`(차용어)라 어원이 둘 다 밖에 있습니다. 다만 게이머에게는 바로 읽히고 무게도 있어 유지를 추천합니다.',
+  opts:[['드라코리치 유지','읽히고 무게가 있음. 리치와의 구분은 앞말이 해줌',1],
+        ['뼈용왕','한국어 조합. 낯섦이 큼',0],
+        ['용의 해골','설명적. 이름이 아니라 묘사에 가까움',0]]},
+ {id:'mon_ideavigil_01', kind:'rev', name:'이데아거울나비', meta:'T5 수호 · light · 126~130층 · ideagate · elite',
+  pats:['관문 프리즘','경계 고정'],
+  why:'날개 거울 콘셉트로 정하신 이름이라 유지를 추천합니다. 다만 `나비`가 T5에서 유일하게 작은 생물 명사라, 층 표기에서 무게 차이가 드러납니다.',
+  opts:[['이데아거울나비 유지','거울날개 콘셉트가 이름에 그대로 남음',1],
+        ['거울나비왕','직분어로 무게 보강',0],
+        ['이데아거울나방','나방 — 밤·문턱 이미지. 무풍나방과 어미가 겹침',0]]},
+];
+
+const KEEP = [
+ ['아시마르','고유명. T5 75~85층 성광선 · 성천 격노'],
+ ['결정 수호자·수정 나무 왕','두 이름 결합이지만 보스명이라 지시대로 유지'],
+ ['검은장부','47차 개명. 3인 장부 · 찢긴 천창 게이트키퍼'],
+ ['유리파수꾼','유리 + 파수꾼. 120~124층'],
+ ['지옥사제','직분어 + 지옥. 91~95층'],
+ ['무문의 파수병','무(無) + 파수병. 이데아 문턱 게이트키퍼'],
+ ['무풍임금','임금. 115~121층'],
+ ['레비아탄','신화 고유명. 음차지만 무게가 있음'],
+ ['무아정령 · 공허대정령 · 무상정령왕','무(無) 정령 3단계 — 계보 규칙'],
+ ['들바람정령 · 산바람대정령 · 하늘바람정령왕','바람 정령 3단계 — 계보 규칙'],
+];
+
+const KEY='fons_t5_audit_v1';
+const state=JSON.parse(localStorage.getItem(KEY)||'{}');
+
+function card(c){
+  const el=document.createElement('div');
+  el.className='card '+c.kind;
+  el.dataset.id=c.id;
+  const badge=c.kind==='swap'?'교체 후보':'검토';
+  el.innerHTML=`<div class="top"><span class="nm">${c.name}</span><span class="badge ${c.kind}">${badge}</span></div>
+    <div class="meta">${c.meta}</div>
+    <div class="why">${c.why.replace(/`([^`]+)`/g,'<code>$1</code>')}</div>
+    <div class="pats">패턴 — ${c.pats.join(' · ')}</div>
+    <div class="opts">${c.opts.map((o,i)=>`<label class="opt${o[2]?' rec':''}"><input type="radio" name="${c.id}" value="${o[0]}" data-i="${i}"${o[2]?' data-rec="1"':''}${state[c.id]===o[0]?' checked':''}><span><b>${o[0]}</b>${o[2]?'<span class="tag">추천</span>':''}<br><small>${o[1]}</small></span></label>`).join('')}</div>
+    <div class="own"><input type="text" placeholder="직접 입력" data-own="${c.id}" value="${state['own:'+c.id]||''}"></div>`;
+  el.querySelectorAll('input[type=radio]').forEach(r=>r.addEventListener('change',e=>{state[c.id]=e.target.value;delete state['own:'+c.id];save();}));
+  const own=el.querySelector('input[data-own]');
+  own.addEventListener('input',e=>{state['own:'+c.id]=e.target.value; el.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false); delete state[c.id]; save();});
+  return el;
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));count();}
+function chosen(c){
+  const own=state['own:'+c.id]; if(own&&own.trim()) return own.trim();
+  const v=state[c.id]; if(!v) return '';
+  return /유지$/.test(v)?'':v;
+}
+function count(){
+  const n=[...CARDS,...REV].filter(c=>chosen(c)).length;
+  document.getElementById('out').textContent=n?`${n} / ${CARDS.length+REV.length} 선택`:'';
+}
+CARDS.forEach(c=>document.getElementById('swap').appendChild(card(c)));
+REV.forEach(c=>document.getElementById('rev').appendChild(card(c)));
+document.getElementById('keep').innerHTML=KEEP.map(k=>`<li><b>${k[0]}</b> <span>— ${k[1]}</span></li>`).join('');
+
+document.getElementById('fill').onclick=()=>{
+  [...CARDS,...REV].forEach(c=>{
+    const rec=c.opts.find(o=>o[2]);
+    if(!rec) return;
+    delete state['own:'+c.id];
+    state[c.id]=/유지$/.test(rec[0])?null:rec[0];
+  });
+  localStorage.setItem(KEY,JSON.stringify(state));
+  location.reload();
+};
+document.getElementById('clear').onclick=()=>{localStorage.removeItem(KEY);location.reload();};
+document.getElementById('copy').onclick=async()=>{
+  const out=[...CARDS,...REV].map(c=>({old:c.name,new:chosen(c)})).filter(p=>p.new);
+  const txt=JSON.stringify(out,null,1);
+  const ta=document.getElementById('ta'); ta.value=txt;
+  try{await navigator.clipboard.writeText(txt);}catch(e){ta.select();document.execCommand('copy');}
+  document.getElementById('out').textContent=`복사됨 — ${out.length}건`;
+};
+count();
+</script>
+</body>
+</html>

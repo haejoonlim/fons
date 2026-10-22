@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>마물 사육 규칙</title>
+<style>
+  :root{--bg:#101317;--card:#191e26;--card2:#202734;--line:#2b3340;
+        --fg:#eef2f7;--dim:#96a1b0;--accent:#7cc4ff;--warn:#f2b75e;--green:#9be0b4}
+  *{box-sizing:border-box} html,body{overflow-x:hidden}
+  body{margin:0 auto;max-width:720px;background:var(--bg);color:var(--fg);
+       font:18px/1.7 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+       padding:20px 16px 64px}
+  h1{font-size:23px;line-height:1.35;margin:0 0 8px}
+  .lead{color:var(--dim);font-size:15.5px;line-height:1.7;margin:0 0 18px}
+  h2.sec{font-size:15px;color:var(--dim);letter-spacing:.06em;margin:30px 0 12px;
+         padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:12px;
+       padding:15px 16px;margin-bottom:12px;font-size:16px;line-height:1.75}
+  .box h3{font-size:17px;margin:0 0 6px}
+  .box p{margin:0 0 10px} .box p:last-child{margin:0}
+  .num{font-size:30px;font-weight:800;color:var(--accent);line-height:1.2}
+  .u{font-size:14px;color:var(--dim);margin-left:5px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+  .cell{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px}
+  .cell .lab{font-size:13.5px;color:var(--dim);margin-bottom:2px}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:4px 0 8px}
+  th,td{text-align:left;padding:7px 5px;border-bottom:1px solid var(--line);vertical-align:top;
+        word-break:keep-all}
+  th{color:var(--dim);font-weight:600;font-size:12.5px;white-space:nowrap}
+  td.n{font-weight:700;white-space:nowrap}
+  td.pc{white-space:nowrap}
+  .cap{font-size:13.5px;color:var(--dim);margin:2px 0 8px}
+  .ok{background:#1d3326;color:var(--green);border:1px solid #2f5a40;border-radius:20px;
+      padding:1px 8px;font-size:12px}
+  .no{background:#2b1e22;color:#d99a9a;border:1px solid #5a3038;border-radius:20px;
+      padding:1px 8px;font-size:12px}
+  .foot{color:var(--dim);font-size:14px;line-height:1.7;margin-top:28px}
+  code{background:#0b0e12;border:1px solid var(--line);border-radius:5px;padding:0 4px;font-size:14px}
+  @media (max-width:430px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<h1>마물 사육 규칙</h1>
+<p class="lead">사역사의 마물 카드가 기르는 것들의 규칙이다. 먹이·성장·동반 한도·전투 손실 네 가지와,
+기를 수 있는 개체 목록. 값은 전부 <code>data/monster_husbandry.json</code> 이 정본이다.</p>
+
+<div class="grid">
+<div class="cell"><div class="lab">동반 한도</div><div class="num">2<span class="u">+ 훈련장 레벨</span></div><div class="cap">최대 5</div></div>
+<div class="cell"><div class="lab">굶으면 우리를 뜬다</div><div class="num">3<span class="u">층</span></div><div class="cap">죽지는 않는다</div></div>
+</div>
+<h2 class="sec">먹이</h2><div class="box">
+<h3>잔해 1개 / 마리 / 층</h3>
+<p>잔해(사체·유기물)를 먹는다. 층을 한 번 돌 때 마리당 1개. 3층 연속 못 먹으면 죽지 않고 우리를 뜬다.</p>
+</div>
+<h2 class="sec">성장</h2>
+<table><tr><th>단계</th><th>먹인 층</th><th>묶는 시간</th><th>대상</th></tr>
+<tr><td class="n">새끼</td><td>0층부터</td><td>1틱</td><td>1</td></tr>
+<tr><td class="n">어른</td><td>5층부터</td><td>2틱</td><td>1</td></tr>
+<tr><td class="n">큰 것</td><td>15층부터</td><td>3틱</td><td>2</td></tr>
+</table>
+<p class="cap">먹인 층 수로 자란다. 단계가 오르면 전투에서 발을 묶는 시간(hold_ticks)과 대상 수(targets)가 는다.</p>
+<h2 class="sec">동반 한도</h2><div class="box">
+<h3>2 + 훈련장 레벨 (최대 5)</h3>
+<p>동반 한도 = 기본 2칸 + 훈련장 레벨. 기본 2칸은 시설 없이 주어지므로 1층부터 데리고 다닐 수 있다. 훈련장 최대 7 이지만 한도는 5에서 멈춘다. 지금 설정으로 도달 가능한 최대는 2 + 7 = <b>9</b> 이고, 상한 5 에서 멈춘다.</p>
+</div>
+<h2 class="sec">전투 손실</h2><div class="box">
+<h3>HP 0 = 영구 손실</h3>
+<p>전투에서 HP 0 이면 영구히 잃는다. 같은 층에서 1회만 다시 잡을 수 있다 — 되살리기는 없다.</p>
+</div>
+<h2 class="sec">기는 조건</h2><div class="box">
+<h3>공격성 0.3 이하 · 무리성 0.6 이상</h3>
+<p>판정은 성격과 먹이다. role(생태 역할)은 먹이그물에서의 위치를 적은 값이라 그 자체가 판정 축은 아니지만, 잔해(사체·유기물)를 먹는 층이 분해자·청소부로 표시돼 있어 실질 후보가 여기로 모인다.</p>
+<p class="cap">기준 정본: <code>data/monster_husbandry.json</code> <code>criteria</code> · 정의: 용어집 “마물”</p>
+</div>
+<h2 class="sec">기를 수 있는 마물</h2>
+<p class="cap">첫 해금 1층 — 1~5층은 장수풍뎅이, 6~10층은 숲 사슴벌레·독벌·까마귀 — 1층부터 잡을 것이 있다. 2026-10-18 이전에는 6~10층 유일 후보인 흉고블린(공격성 0.7)이 성격 기준을 못 넘어 1~10층에 마물이 0종이었다.</p>
+<table><tr><th>개체</th><th>해금</th><th>서식지</th><th>역할</th><th>성격<br>공격·무리</th></tr>
+<tr><td class="n">장수풍뎅이</td><td>1층</td><td>숲·초원</td><td>청소부</td><td class="pc">0.3 · 0.6</td></tr>
+<tr><td class="n">숲 사슴벌레</td><td>6층</td><td>숲</td><td>청소부</td><td class="pc">0.3 · 0.6</td></tr>
+<tr><td class="n">독벌</td><td>6층</td><td>숲·풀밭</td><td>분해자</td><td class="pc">0.3 · 0.95</td></tr>
+<tr><td class="n">까마귀</td><td>6층</td><td>폐혀·묘지·숲</td><td>청소부</td><td class="pc">0.3 · 0.8</td></tr>
+<tr><td class="n">슬라임(블루)</td><td>11층</td><td>바다·동굴</td><td>분해자</td><td class="pc">0.2 · 0.9</td></tr>
+<tr><td class="n">초록슬라임</td><td>16층</td><td>늪·동굴</td><td>분해자</td><td class="pc">0.2 · 0.9</td></tr>
+<tr><td class="n">코볼드</td><td>16층</td><td>동굴·광산</td><td>청소부</td><td class="pc">0.3 · 0.9</td></tr>
+<tr><td class="n">오우즈</td><td>31층</td><td>늪·하수구</td><td>분해자</td><td class="pc">0.3 · 0.6</td></tr>
+</table>
+<p class="cap"><b style="color:#c9d4e2">장수풍뎅이</b> — 1~5층 초원의 청소곤충. 턱으로 다리 관절을 물어 발을 묶는다 — 사육 성장의 '묶는 시간'이 이 동작에서 나온다. 1층부터 잡을 수 있는 유일한 마물이다.</p>
+<p class="cap"><b style="color:#c9d4e2">숲 사슴벌레</b> — 6~10층 숲. 큰 턱으로 적의 다리를 조인다. 장수풍뎅이보다 단단하고 무겁다 — 같은 '묶기'를 더 오래 한다.</p>
+<p class="cap"><b style="color:#c9d4e2">독벌</b> — 6~10층 숲·초원. 무리성 0.95 는 도감 최상위권이라 우리 안에서 사람을 따른다. 한 마리는 약하지만 성장하면 묶는 대상 수가 늘어난다.</p>
+<p class="cap"><b style="color:#c9d4e2">까마귀</b> — 6~10층 폐허·묘지·숲. 지능 0.62 로 1~10층에서 가장 영리하다 — 눈을 찍어 적의 시야를 끊는다.</p>
+<p class="cap"><b style="color:#c9d4e2">슬라임(블루)</b> — 11~15층 늪·바다 동굴의 분해자. 잔해를 녹여 먹고 남은 것을 흙으로 돌린다. 공격성 0.2 · 무리성 0.9 — 성격 기준은 이미 넘었고 없던 것은 레코드뿐이었다.</p>
+<p class="cap"><b style="color:#c9d4e2">초록슬라임</b> — 배설물·사체를 먹는다. 겁이 많아 먼저 물지 않는다.</p>
+<p class="cap"><b style="color:#c9d4e2">코볼드</b> — 무리성이 0.9 로 가장 높다. 손을 쓰는 청소부라 창고·광산 일이 된다.</p>
+<p class="cap"><b style="color:#c9d4e2">오우즈</b> — 지능이 0.045 로 가장 낮다. 하수구 바닥을 훑고 지나간다.</p>
+<h2 class="sec">받아들일 조건</h2><div class="box"><h3>검사 항목</h3>
+<p>· 성격 기준(공격성 0.3 이하 · 무리성 0.6 이상)을 넘지 못하는 종은 로스터에 넣지 않는다.</p>
+<p>· 로스터의 개체는 전투 개체(monsters.json)여야 한다 — 비전투 배경 생물(ambient)은 데리고 다닐 수 없다.</p>
+<p>· 동반 한도 밖의 마물은 우리에 남아 있고 전투에 나오지 않는다.</p>
+<p>· 굶은 마물은 3층째에 우리를 뜬다 — 죽지 않는다(영구 손실은 전투에서만).</p>
+<p>· 전투 손실은 되돌릴 수 없다. 같은 층에서 1회만 재포획할 수 있다.</p>
+<p>· 마물은 사역사 카드(마물)를 가진 영웅만 데리고 다닌다.</p>
+<p>· 이 규칙은 CP·스탯·등급에 영향을 주지 않는다 — 전투 밖 상태만 바꾼다.</p>
+</div>
+<p class="foot">
+  정본: <code>data/monster_husbandry.json</code> · 근거: <code>ecology_codex.json</code> ·
+  <code>monsters.json</code> · <code>monster_personality.json</code> · <code>estate.json</code> ·
+  생성기: <code>sim/center/sims/gen_husbandry.py</code><br>
+  CP·스탯·등급은 건드리지 않는다 — 전투 밖 상태만 바꾼다.
+</p>
+</body>
+</html>

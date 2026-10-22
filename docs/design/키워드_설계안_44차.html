@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>직업 키워드 재설계 (44차)</title>
+<style>
+  :root{--bg:#101317;--card:#191e26;--card2:#202734;--line:#2b3340;
+        --fg:#eef2f7;--dim:#96a1b0;--accent:#7cc4ff;--warn:#f2b75e;--green:#9be0b4}
+  *{box-sizing:border-box} html,body{overflow-x:hidden}
+  body{margin:0 auto;max-width:720px;background:var(--bg);color:var(--fg);
+       font:18px/1.7 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+       padding:20px 16px 64px}
+  h1{font-size:23px;line-height:1.35;margin:0 0 8px}
+  .lead{color:var(--dim);font-size:15.5px;line-height:1.7;margin:0 0 18px}
+  h2.sec{font-size:15px;color:var(--dim);letter-spacing:.06em;margin:34px 0 12px;
+         padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .job{background:var(--card);border:1px solid var(--line);border-radius:14px;
+       padding:17px 15px 15px;margin-bottom:15px}
+  .jh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:3px}
+  .l1{font-size:12.5px;color:var(--dim);border:1px solid var(--line);border-radius:20px;
+      padding:2px 9px;white-space:nowrap}
+  .jh h3{font-size:23px;margin:0;line-height:1.25}
+  .arrow{color:var(--dim);font-size:16px}
+  .jdesc{font-size:15px;color:var(--dim);margin:0 0 9px}
+  .note{font-size:15.5px;color:var(--warn);margin:5px 0 13px;line-height:1.6}
+  .note::before{content:"지적  ";font-weight:700}
+  .card{background:var(--card2);border-radius:11px;padding:12px 14px;margin-bottom:9px}
+  .chead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .old{font-size:17px;color:var(--dim);text-decoration:line-through}
+  .new{font-size:23px;font-weight:800;color:var(--accent)}
+  .keep{font-size:23px;font-weight:800;color:var(--fg)}
+  .ax{font-size:13.5px;color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+  .tag{font-size:12px;border-radius:20px;padding:1px 8px;margin-left:auto}
+  .done{background:#1d3326;color:var(--green);border:1px solid #2f5a40}
+  .stay{background:#1c2530;color:var(--dim);border:1px solid var(--line)}
+  .do{font-size:16px;color:#d3dbe6;margin:6px 0 0;line-height:1.6}
+  .why{font-size:14.5px;color:var(--dim);margin:5px 0 0;line-height:1.6}
+  .why::before{content:"왜  ";color:#6f8ba3}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:12px;
+       padding:15px 16px;margin-bottom:12px;font-size:16px;line-height:1.75}
+  .box h3{font-size:17px;margin:0 0 6px}
+  .box p{margin:0 0 10px} .box p:last-child{margin:0}
+  .foot{color:var(--dim);font-size:14px;line-height:1.7;margin-top:28px}
+</style>
+</head>
+<body>
+<h1>직업 키워드 재설계 — 44차</h1>
+<p class="lead">확정한 이름(중갑·강골·도발)과 관철은 그대로 두고, 나머지를 다시 세운 라운드다.
+아래 값은 전부 <code>job_tree.json</code> 에서 읽었고, 생성기 R1~R11 을 통과한 뒤의 값이다.</p>
+
+<div class="box"><b>카드 12장 교체 · 직업 7개 확인</b><br>확정이라 답한 중갑·강골·도발·관철은 그대로 두었다.</div>
+<h2 class="sec">수호자</h2>
+<section class="job">
+<div class="jh"><span class="l1">수호자</span><h3>철벽기사</h3></div>
+<p class="jdesc">갑옷을 입고 제자리를 지키는 직업</p>
+<p class="note">"중갑 확정 · 골격은 강골로"</p>
+<div class="card">
+<div class="chead"><span class="keep">중갑</span><span class="ax">방어</span><span class="tag done">확정</span></div>
+<p class="do">맞는 힘을 몸이 아니라 갑옷이 받아 내는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">골격</span><span class="arrow">→</span><span class="new">강골</span><span class="ax">체력</span><span class="tag done">교체</span></div>
+<p class="do">뼈대가 굵어 맞은 만큼을 몸에 담아 두는</p>
+<p class="why">뜻은 그대로 두고 이름만 바꿨다. 뼈대가 굵어 맞은 만큼을 담는다.</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">요새</span><span class="ax">근성</span><span class="tag stay">유지</span></div>
+<p class="do">발을 내딛지 않아 밀려오지 않는</p>
+</div>
+</section>
+<section class="job">
+<div class="jh"><span class="l1">수호자</span><h3>전위기사</h3></div>
+<p class="jdesc">서 있는 대신 앞으로 밀고 나가는 직업</p>
+<p class="note">"도발 확정"</p>
+<div class="card">
+<div class="chead"><span class="keep">연타</span><span class="ax">속도</span><span class="tag stay">유지</span></div>
+<p class="do">앞에 선 것을 쉬지 않고 연달아 때리는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">도발</span><span class="ax">방어</span><span class="tag done">확정</span></div>
+<p class="do">앞에 서서 적의 시선을 제 쪽으로 붙잡아 두는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">돌파</span><span class="ax">민첩</span><span class="tag stay">유지</span></div>
+<p class="do">앞에 선 것을 밀치고 저 너머로 나가는</p>
+</div>
+</section>
+<h2 class="sec">궁수</h2>
+<section class="job">
+<div class="jh"><span class="l1">궁수</span><h3>포화사수</h3></div>
+<p class="jdesc">한 발이 아니라 한 번의 사격으로 싸우는 직업</p>
+<p class="note">"일제는 명사수랑 차이가 없어 · 곡사는 구현이 어렵지 않을까"</p>
+<div class="card">
+<div class="chead"><span class="keep">속사</span><span class="ax">속도</span><span class="tag stay">유지</span></div>
+<p class="do">쉬지 않고 계속 쏘아 끊김 없는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">일제</span><span class="arrow">→</span><span class="new">호흡</span><span class="ax">근성</span><span class="tag done">교체</span></div>
+<p class="do">쏘는 사이에 숨을 골라 팔과 어깨를 더 오래 쓰는</p>
+<p class="why">뚫는 카드는 명사수와 같은 그림이었다. 뚫지도, 지형을 쓰지도 않는 쪽으로 바꿨다 — 연사 사이에 숨을 골라 팔과 어깨를 더 오래 쓴다. 스태미너 하나로 구현된다.</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">제압</span><span class="ax">힘</span><span class="tag stay">유지</span></div>
+<p class="do">쏟아부어 고개를 못 들게 하는</p>
+</div>
+</section>
+<section class="job">
+<div class="jh"><span class="l1">궁수</span><h3>사역사</h3></div>
+<p class="jdesc">분류군을 통째로 부려 싸움을 짜는 직업</p>
+<p class="note">"동물 종을 다룰 수 있게 — 조류면 조류, 곤충"</p>
+<div class="card">
+<div class="chead"><span class="old">합공</span><span class="arrow">→</span><span class="new">조류</span><span class="ax">치명</span><span class="tag done">교체</span></div>
+<p class="do">들매와 매를 띄워 위에서 내리꽂게 하는</p>
+<p class="why">들매(1~5층 초원)·매(6~10층 산·평원). 날짐승이 위에서 내리꽂는다.</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">추격</span><span class="arrow">→</span><span class="new">곤충</span><span class="ax">속도</span><span class="tag done">교체</span></div>
+<p class="do">거대 개미와 독벌 떼를 풀어 수로 덮치게 하는</p>
+<p class="why">거대 개미·독벌(6~10층 숲·초원). 떼가 수로 덮쳐 숨을 틈을 주지 않는다.</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">경호</span><span class="arrow">→</span><span class="new">수생</span><span class="ax">방어</span><span class="tag done">교체</span></div>
+<p class="do">거대 게와 산호상어를 불러 물길을 막아 세우는</p>
+<p class="why">거대 게·산호상어(11~15층 바다·산호). 껍질과 몸으로 물길을 막아 세운다.</p>
+</div>
+</section>
+<h2 class="sec">전사</h2>
+<section class="job">
+<div class="jh"><span class="l1">전사</span><h3>창술사</h3></div>
+<p class="jdesc">창끝을 먼저 내밀어 거리를 지키는 직업</p>
+<p class="note">"창벽이랑 소탕 진짜 아예 다시 설계"</p>
+<div class="card">
+<div class="chead"><span class="old">창벽</span><span class="arrow">→</span><span class="new">투창</span><span class="ax">치명</span><span class="tag done">교체</span></div>
+<p class="do">창을 던져 꽂아 한 번에 끝내는</p>
+<p class="why">찌르기(刺)만 창의 일이 아니다. 창을 던져 꽂는 쪽(抛)으로 바꿨다 — 치명.</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">관철</span><span class="ax">관통</span><span class="tag done">확정</span></div>
+<p class="do">판을 뚫고 뒤에 선 것까지 꿰는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">소탕</span><span class="arrow">→</span><span class="new">걸기</span><span class="ax">힘</span><span class="tag done">교체</span></div>
+<p class="do">창날로 걸어 당겨 자리를 잡지 못하게 하는</p>
+<p class="why">휘둘러 쓸어내는 대신 창날로 걸어 당긴다(挑·纏). 자리를 뺏는 쪽 — 힘.</p>
+</div>
+</section>
+<h2 class="sec">마법사</h2>
+<section class="job">
+<div class="jh"><span class="l1">마법사</span><h3>주술사</h3></div>
+<p class="jdesc">저주를 걸어 상대의 몫을 하나씩 깎는 직업</p>
+<p class="note">"그 컨셉이면 파티에 주술사 둘을 무조건 넣어야 한다"</p>
+<div class="card">
+<div class="chead"><span class="keep">낙인</span><span class="ax">주문</span><span class="tag done">확정</span></div>
+<p class="do">적 몸에 저주 표식을 태워 남기는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">매듭</span><span class="arrow">→</span><span class="new">액운</span><span class="ax">치명위력</span><span class="tag done">교체</span></div>
+<p class="do">상대의 운을 비틀어 결정적인 순간을 어긋나게 하는</p>
+<p class="why">카드 한 장이 그 자체로 끝나는 저주다. 상대의 운을 비틀어 결정적인 순간을 어긋나게 한다.</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">해봉</span><span class="arrow">→</span><span class="new">역병</span><span class="ax">마법관통</span><span class="tag done">교체</span></div>
+<p class="do">병을 옮겨 붙어 방어를 지나 안에서 썩히는</p>
+<p class="why">이것도 혼자 선다. 병을 옮겨 방어를 지나 안에서 썩힌다.</p>
+</div>
+</section>
+<h2 class="sec">지원가</h2>
+<section class="job">
+<div class="jh"><span class="l1">지원가</span><h3>길잡이</h3></div>
+<p class="jdesc">길을 살피고 대열을 이끌어 목적지까지 데려가는 직업</p>
+<p class="note">"미션·이동(자동이동) 쪽으로, 키워드는 3단계로"</p>
+<div class="card">
+<div class="chead"><span class="old">선도</span><span class="arrow">→</span><span class="new">답사</span><span class="ax">치명</span><span class="tag done">교체</span></div>
+<p class="do">떠나기 전에 길과 위험을 미리 밟아 두는</p>
+<p class="why">1단계 — 떠나기 전. 길과 위험을 미리 밟아 둔다.</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">살핌</span><span class="arrow">→</span><span class="new">인도</span><span class="ax">민첩</span><span class="tag done">교체</span></div>
+<p class="do">대열을 이끌어 더 빨리 덜 지치게 걷는</p>
+<p class="why">2단계 — 가는 길. 대열을 이끌어 더 빨리 덜 지치게 걷는다.</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">우회</span><span class="arrow">→</span><span class="new">야영</span><span class="ax">마나</span><span class="tag done">교체</span></div>
+<p class="do">도착한 곳에 자리를 잡아 다음 길을 준비하는</p>
+<p class="why">3단계 — 도착한 뒤. 자리를 잡고 다음 길을 준비한다.</p>
+</div>
+</section>
+<h2 class="sec">남은 판단</h2>
+<div class="box">
+<h3>주술사 — 왜 사슬을 끊었나</h3>
+<p>43차는 낙인 → 매듭 → 해봉으로 표식 하나의 일생을 만들었다. 그런데 이 나무의 키워드는 <b>영웅 한 명이 가진 카드 한 장</b>이다. 앞 카드가 없으면 뒤 카드가 반쪽이 되니, 한 파티에 주술사를 둘 넣어야 사슬이 완성된다.</p>
+<p>그래서 세 장을 <b>각각 그 자체로 완결되는 저주</b>로 다시 골랐다 — 남기는 저주(낙인) · 막는 저주(액운) · 삭히는 저주(역병). 혼자서도 셋 다 온전하다.</p>
+</div>
+<div class="box">
+<h3>포화사수 — 구현되는 것만 남겼다</h3>
+<p>일제(관통)는 화살로 판을 꿰는 그림이라 명사수의 급소·원사와 같은 계열이었다.</p>
+<p>곡사(포물선·엄폐 무시)는 지형과 엄폐 판정이 있어야 성립한다 — 지금 전투에는 그 판정이 없다. 그래서 <b>호흡</b>으로 바꿨다. 연사 사이에 숨을 골라 오래 쏘는 쪽이고, 필요한 것은 스태미너 하나다.</p>
+</div>
+<div class="box">
+<h3>사역사 — 개체에서 분류군으로</h3>
+<p>43차는 늑대·들매·곰 세 개체만 다뤘다. 44차는 <b>분류군</b>을 카드로 삼아, 그 서식권의 여러 종을 한꺼번에 부린다. 생태도감(ecology_codex.json)의 실제 서식종을 그대로 적었다.</p>
+<p><b>조류</b> 들매(1~5층 초원)·매(6~10층 산·평원) · <b>곤충</b> 거대 개미·독벌(6~10층 숲·초원) · <b>수생</b> 거대 게·산호상어(11~15층 바다·산호).</p>
+</div>
+<div class="box">
+<h3>창술사 — 창법 리서치</h3>
+<p>중국 창술의 기본 셋은 攔(막기)·拿(받아 막기)·扎(찌르기)이고, 그 밖에 劈(내리치기)·掃(쓸기)·挑(걸어 올리기)·纏(감기)·抛(던지기)가 있다.</p>
+<p>관철은 刺, 투창은 抛, 걸기는 挑·纏에서 가져왔다. 43차의 막기(창벽)·쓸기(소탕)는 지적을 받았으므로 다시 쓰지 않았다.</p>
+<p><b>투창은 고전 장창술이 아니라 표창 계열의 그림</b>이다 — 장창을 실제로 던졌다는 기록은 확인하지 못했다.</p>
+</div>
+<div class="box">
+<h3>길잡이 — 이동 3단계 (역할은 가안)</h3>
+<p>떠나기 전(답사) → 가는 길(인도) → 도착한 뒤(야영). 한 번의 행군을 셋으로 나눠 단계마다 다른 일을 맡긴다.</p>
+<p>미션·자동이동과 엮는 부분은 아직 <b>가안</b>이다. 지금 카드에 붙은 축(치명·민첩·마나)은 전투 스탯을 빌려 둔 임시값이고, 실제 역할은 이동·미션 규칙이 정해질 때 다시 맞춘다.</p>
+</div>
+<p class="foot">
+  데이터: <code>data/job_tree.json</code> · 생성기: <code>sim/center/sims/gen_keyword_44.py</code><br>
+  직업 id 는 그대로다(<code>l2_hunter</code> · <code>l2_magearrow</code> · <code>l2_strategist</code>).
+  바뀐 것은 이름·축·설명이고, 길잡이의 역할(지원)은 아직 가안이다.
+</p>
+</body>
+</html>

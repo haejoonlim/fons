@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>직업 키워드 확정 (52차)</title>
+<style>
+  :root{--bg:#101317;--card:#191e26;--card2:#202734;--line:#2b3340;
+        --fg:#eef2f7;--dim:#96a1b0;--accent:#7cc4ff;--warn:#f2b75e;--green:#9be0b4}
+  *{box-sizing:border-box} html,body{overflow-x:hidden}
+  body{margin:0 auto;max-width:720px;background:var(--bg);color:var(--fg);
+       font:18px/1.7 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+       padding:20px 16px 64px}
+  h1{font-size:23px;line-height:1.35;margin:0 0 8px}
+  .lead{color:var(--dim);font-size:15.5px;line-height:1.7;margin:0 0 18px}
+  h2.sec{font-size:15px;color:var(--dim);letter-spacing:.06em;margin:34px 0 12px;
+         padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .job{background:var(--card);border:1px solid var(--line);border-radius:14px;
+       padding:17px 15px 15px;margin-bottom:15px}
+  .jh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:3px}
+  .l1{font-size:12.5px;color:var(--dim);border:1px solid var(--line);border-radius:20px;
+      padding:2px 9px;white-space:nowrap}
+  .jh h3{font-size:23px;margin:0;line-height:1.25}
+  .arrow{color:var(--dim);font-size:16px}
+  .jdesc{font-size:15px;color:var(--dim);margin:0 0 9px}
+  .note{font-size:15.5px;color:var(--warn);margin:5px 0 13px;line-height:1.6}
+  .note::before{content:"지적  ";font-weight:700}
+  .card{background:var(--card2);border-radius:11px;padding:12px 14px;margin-bottom:9px}
+  .chead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .old{font-size:17px;color:var(--dim);text-decoration:line-through}
+  .new{font-size:23px;font-weight:800;color:var(--accent)}
+  .keep{font-size:23px;font-weight:800;color:var(--accent)}
+  .ax{font-size:13.5px;color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+  .tag{font-size:12px;border-radius:20px;padding:1px 8px;margin-left:auto}
+  .done{background:#1d3326;color:var(--green);border:1px solid #2f5a40}
+  .do{font-size:16px;color:#d3dbe6;margin:6px 0 0;line-height:1.6}
+  .why2{font-size:14.5px;color:var(--dim);margin:5px 0 0;line-height:1.6}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:12px;
+       padding:15px 16px;margin-bottom:12px;font-size:16px;line-height:1.75}
+  .box h3{font-size:17px;margin:0 0 6px}
+  .box p{margin:0 0 10px} .box p:last-child{margin:0}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:4px 0 8px}
+  th,td{text-align:left;padding:7px 5px;border-bottom:1px solid var(--line);vertical-align:top;
+        word-break:keep-all}
+  th{color:var(--dim);font-weight:600;font-size:12.5px;white-space:nowrap}
+  td.n{font-weight:700;white-space:nowrap}
+  td.num{white-space:nowrap}
+  .cap{font-size:13.5px;color:var(--dim);margin:2px 0 8px}
+  .dg{background:var(--card2);border-radius:10px;padding:10px 12px;margin-bottom:8px;
+      font-size:14.5px;line-height:1.6;color:var(--dim)}
+  .dg b{color:#c9d4e2}
+  .foot{color:var(--dim);font-size:14px;line-height:1.7;margin-top:28px}
+  code{background:#0b0e12;border:1px solid var(--line);border-radius:5px;padding:0 4px;font-size:14px}
+</style>
+</head>
+<body>
+<h1>직업 키워드 확정 — 52차</h1>
+<p class="lead">길잡이 셋을 <b>추적 · 탐색 · 개척</b> 으로 확정했다. 따라간다 → 찾는다 → 낸다.
+사역사는 <b>짐승 · 곤충 · 마물</b> 그대로다. 네 직업 열두 장 모두 확정이고,
+아래 값은 전부 <code>job_tree.json</code> 에서 읽었다.</p>
+
+<div class="box"><b>네 직업 · 12장 전부 확정</b><br>길잡이 세 장만 이름이 새로 붙었고 나머지 아홉 장은 값 그대로다.</div>
+<h2 class="sec">궁수</h2>
+<section class="job">
+<div class="jh"><span class="l1">궁수</span><h3>사역사</h3></div>
+<p class="jdesc">분류군을 통째로 부려 싸움을 짜는 직업</p>
+<p class="note">기를 수 있는 것만 — 공격성 0.3 이하 · 무리성 0.6 이상 · 버려진 것을 먹을 것</p>
+<div class="card">
+<div class="chead"><span class="keep">짐승</span><span class="ax">힘</span><span class="tag done">확정</span></div>
+<p class="do">들매·매와 늑대·곰·멧돼지를 한 무리로 불러 밀어붙이게 하는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">곤충</span><span class="ax">속도</span><span class="tag done">확정</span></div>
+<p class="do">둑개미와 독벌 떼를 풀어 수로 덮치게 하는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">마물</span><span class="ax">치명</span><span class="tag done">확정</span></div>
+<p class="do">사람 곁에서 길러 온 슬라임과 코볼드를 풀어 발을 묶게 하는</p>
+<p class="why2">51차에 마귀로 바꾼 자리를 마물로 확정했다. 골라 둔 셋은 바뀌지 않았다.</p>
+</div>
+<h3 style="font-size:15px;color:var(--dim);margin:16px 0 4px">기를 수 있는 마물 — 생태도감·성격 데이터에서 확인</h3>
+<p class="cap">셋 다 잡식이고, 사체와 배설물을 먹고 산다.</p>
+<table><tr><th>개체</th><th>층</th><th>서식지</th><th>역할</th><th>공격성</th><th>무리성</th></tr>
+<tr><td class="n">초록슬라임</td><td class="num">[16, 20]</td><td>늪·동굴</td><td>분해자</td><td class="num">0.2</td><td class="num">0.9</td></tr>
+<tr><td class="n">코볼드</td><td class="num">[16, 20]</td><td>동굴·광산</td><td>청소부</td><td class="num">0.3</td><td class="num">0.9</td></tr>
+<tr><td class="n">오우즈</td><td class="num">[31, 35]</td><td>늪·하수구</td><td>분해자</td><td class="num">0.3</td><td class="num">0.6</td></tr>
+</table>
+<div class="dg"><b>초록슬라임</b> — 배설물과 사체를 먹는다. 겁이 많고(0.65) 먼저 물지 않는다.</div>
+<div class="dg"><b>코볼드</b> — 무리성이 가장 높다(0.9). 손을 쓰는 청소부라 창고·광산 일이 된다.</div>
+<div class="dg"><b>오우즈</b> — 지능이 가장 낮다(0.045). 하수구 바닥을 훑고 지나간다.</div>
+</section>
+<h2 class="sec">전사</h2>
+<section class="job">
+<div class="jh"><span class="l1">전사</span><h3>창술사</h3></div>
+<p class="jdesc">창끝을 먼저 내밀어 거리를 지키는 직업</p>
+<div class="card">
+<div class="chead"><span class="keep">투창</span><span class="ax">치명</span><span class="tag done">확정</span></div>
+<p class="do">창을 던져 꽂아 한 번에 끝내는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">관철</span><span class="ax">관통</span><span class="tag done">확정</span></div>
+<p class="do">판을 뚫고 뒤에 선 것까지 꿰는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">연창</span><span class="ax">속도</span><span class="tag done">확정</span></div>
+<p class="do">창끝을 쉬지 않고 이어 내질러 틈을 주지 않는</p>
+</div>
+</section>
+<h2 class="sec">마법사</h2>
+<section class="job">
+<div class="jh"><span class="l1">마법사</span><h3>주술사</h3></div>
+<p class="jdesc">저주를 걸어 상대의 몫을 하나씩 깎는 직업</p>
+<div class="card">
+<div class="chead"><span class="keep">낙인</span><span class="ax">주문</span><span class="tag done">확정</span></div>
+<p class="do">적 몸에 저주 표식을 태워 남기는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">속박</span><span class="ax">방어</span><span class="tag done">확정</span></div>
+<p class="do">발밑에서 올라온 그림자가 다가오는 것을 붙잡는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">역병</span><span class="ax">마법관통</span><span class="tag done">확정</span></div>
+<p class="do">옮은 병이 곁으로 번져 방어를 지나 안에서 썩히는</p>
+</div>
+</section>
+<h2 class="sec">지원가</h2>
+<section class="job">
+<div class="jh"><span class="l1">지원가</span><h3>길잡이</h3></div>
+<p class="jdesc">길을 살피고 대열을 이끌어 목적지까지 데려가는 직업</p>
+<p class="note">세 번 어색했던 이름(표시물·계급어·길 접미)을 버리고 동작 셋으로</p>
+<div class="card">
+<div class="chead"><span class="old">앞서기</span><span class="arrow">→</span><span class="new">탐색</span><span class="ax">치명</span><span class="tag done">확정</span></div>
+<p class="do">가 보지 않은 곳을 먼저 둘러 위험한 자리를 찾아내는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">길열기</span><span class="arrow">→</span><span class="new">추적</span><span class="ax">민첩</span><span class="tag done">확정</span></div>
+<p class="do">남긴 자국을 따라가 무엇이 어느 쪽으로 갔는지 알아내는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">길남기기</span><span class="arrow">→</span><span class="new">개척</span><span class="ax">방어</span><span class="tag done">확정</span></div>
+<p class="do">길이 없는 곳에 길을 내어 뒤따르는 이가 지나가게 하는</p>
+</div>
+<h3 style="font-size:15px;color:var(--dim);margin:16px 0 4px">3단계 — 아는 것의 범위가 넓어진다</h3>
+<table><tr><th>카드</th><th>아는 것</th><th>하는 일</th><th class="num">티어</th></tr>
+<tr><td class="n">추적</td><td>지나간 것</td><td>남긴 자국을 따라가 무엇이 어느 쪽으로 갔는지 알아내는</td><td class="num">3 · 가장 쉽다</td></tr>
+<tr><td class="n">탐색</td><td>지금 있는 것</td><td>가 보지 않은 곳을 먼저 둘러 위험한 자리를 찾아내는</td><td class="num">2</td></tr>
+<tr><td class="n">개척</td><td>아직 없는 것</td><td>길이 없는 곳에 길을 내어 뒤따르는 이가 지나가게 하는</td><td class="num">1 · 가장 어렵다</td></tr>
+</table>
+<p class="cap" style="margin:6px 0 0">티어는 난이도다 — 1이 가장 어렵고 가장 강하다. 단계도 3 → 2 → 1 로 같이 올라간다.</p>
+</section>
+<h2 class="sec">적용과 남은 일</h2>
+<div class="box">
+<h3>확정한 것</h3>
+<p>네 직업 열두 장이 전부 확정이다 — 사역사(짐승·곤충·마물) · 창술사(투창·관철·연창) · 주술사(낙인·속박·역병) · 길잡이(추적·탐색·개척).</p>
+<p>데이터(<code>data/job_tree.json</code>)와 사본(<code>godot/data/job_tree.json</code>)이 같고, 용어집에는 이전 이름이 폐기 표기로 남았다.</p>
+</div>
+<div class="box">
+<h3>길잡이 — 아는 것의 순서</h3>
+<p>추적은 <b>지나간 것</b>을 안다. 자국이 남아 있으니 가장 쉽다.</p>
+<p>탐색은 <b>지금 있는 것</b>을 안다. 가 봐야 알 수 있다.</p>
+<p>개척은 <b>아직 없는 것</b>을 만든다. 없는 길을 내는 일이라 가장 어렵다.</p>
+<p>티어도 같은 방향이다 — 3 → 2 → 1. 어려운 카드가 강하다.</p>
+</div>
+<div class="box">
+<h3>마물 — 기른 것만 부린다</h3>
+<p>골라 둔 셋은 공격성 0.3 이하, 무리성 0.6 이상, 사람이 버린 것을 먹는다. 셋을 다 넘으면 우리 없이도 마을 곁에 남는다.</p>
+<p>위험한 것(흉고블린 0.7 · 고블린 0.6 · 임프 0.6)은 카드에서 뺐다. 기르는 대상이 아니라 사냥감이다.</p>
+</div>
+<div class="box">
+<h3>아직 정하지 않은 것</h3>
+<p>마물 사육 규칙 — 먹이 소모, 성장, 데리고 다닐 수 있는 수, 전투에서 잃었을 때.</p>
+<p>길잡이 숙련도·AI 연동 규칙. 카드 이름과 난이도만 그 방향에 맞춰 두었다.</p>
+<p>GDD 직업 표는 아직 이번 값이 아니다 (<code>docs/gdd/</code> 는 원본 문면이라 고치지 않는다).</p>
+</div>
+<p class="foot">
+  데이터: <code>data/job_tree.json</code> · 생태도감: <code>data/ecology_codex.json</code> ·
+  성격: <code>data/monster_personality.json</code> ·
+  생성기: <code>sim/center/sims/gen_keyword_52.py</code><br>
+  직업 id·카드 id 는 그대로다(<code>l2_strategist</code> · <code>kw_strategist_command</code>).
+</p>
+</body>
+</html>

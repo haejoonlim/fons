@@ -1,0 +1,108 @@
+# GDD 이름 갱신 절차 — 원본 문면을 깨지 않고 데이터와 맞추기
+
+GDD(`docs/gdd/`)는 원본 저장소 기획서의 **문면 그대로**다. 고치지 않는다([docs/README.md](../README.md) 규칙 2,
+[AGENTS.md](../../AGENTS.md) §3). 그래서 데이터에서 이름을 바꾸면 GDD 사본은 개정 전까지 옛 이름을 들고 있는 것이
+**정상**이다. 이 문서는 그 간극을 어떻게 다루는지 정한다.
+
+## 정본 관계
+
+```
+data/*.json 의 name        ← 이름의 정본 (여기가 이긴다)
+docs/l10n/용어집.md         ← 표기 규칙 + 폐기 표기 (옛 이름 → 현행 이름)
+docs/l10n/GDD_이름_대조표.md ← 생성물. GDD 안의 옛 이름을 현행과 짝지은 표
+docs/gdd/*.md              ← 원본 문면 (개정 전까지 낡은 것이 정상)
+```
+
+GDD를 손으로 고쳐 데이터와 맞추는 것은 금지다. 세 가지가 같이 무너진다.
+
+1. 원본 문면이 오염되어 다음 재수입 때 **조용히 되돌아간다**.
+2. 고친 사람마다 다른 표기가 섞여 GDD 안에서 이름이 두 가지가 된다.
+3. "원본과 다른 곳"을 찾는 검사(`tools/review_docs.py` 의 경로·SSOT 검사)가 무의미해진다.
+
+## 개명할 때 — 4단계
+
+1. **데이터 먼저.** `data/monsters.json` 의 `name` 을 바꾸고, 같은 파일을 `godot/data/` 로 복사한다
+   (`cp data/monsters.json godot/data/`). 이 저장소에서 `data/` 가 정본이고 `godot/data/` 는 사본이다.
+2. **쓰는 표면.** 이름이 문자열로 박힌 곳을 함께 고친다 — `data/biomes.json`(게이트키퍼), `data/scenes.json`,
+   `data/ecology_codex.json`, `data/ambient.json`. 테스트 센터 페이지(`sim/center/pages/생태도감.html`·
+   `바이옴_여정.html`)는 생성물이라 **손으로 고치지 않는다** — `sync_pages.py --write` 가 이름·스탯·
+   티어·좌표를 `data/` 에서 다시 계산해 맞춘다.
+3. **용어집 폐기 표기.** `docs/l10n/용어집.md` 의 "폐기 표기" 표에 `옛 이름 | 현행 이름 | 근거` 한 줄을 넣는다.
+   근거에는 무엇을 왜 바꿨는지 한 줄. 이 표가 **기계가 읽는 유일한 개명 장부**다.
+4. **대조표 갱신.** `./.venv/bin/python tools/check_gdd_names.py --write`
+   GDD 안에 남은 옛 이름과 현행 이름을 짝지어 [GDD_이름_대조표.md](../l10n/GDD_이름_대조표.md) 를 다시 쓴다.
+   직업·키워드 이름을 바꿨다면 `./.venv/bin/python tools/gdd_job_pending.py --write` 도 같이 돌린다
+   ([직업 표 개정 대기 목록](../l10n/GDD_직업_개정_대기.md) — 아래 절).
+
+GDD 본문은 이 단계에서 **손대지 않는다**. 대신 원본 저장소에 개정 요청을 올린다(같은 이름·같은 근거).
+
+### 확인
+
+```bash
+./.venv/bin/python tools/check_glossary.py              # 새 이름이 정본에 있는가
+./.venv/bin/python tools/check_glossary.py --deprecated # 쓰는 표면에 옛 이름이 남았는가
+./.venv/bin/python tools/check_gdd_names.py             # GDD 잔재 목록 (advisory)
+./.venv/bin/python sim/center/sync_pages.py             # 페이지 내장값이 data/ 와 같은가
+./.venv/bin/python tools/review_docs.py                 # 문서 검수
+./.venv/bin/python tools/gate_all.py                    # 통합 게이트
+```
+
+`check_gdd_names.py` 는 **실패하지 않는다**. GDD를 고칠 수 없는데 실패로 만들면, 사람은 게이트를 통과시키려고
+GDD를 손대게 된다. 이 도구가 하는 일은 "모르고 지나치기"를 "목록으로 보이기"로 바꾸는 것뿐이다.
+
+## 직업 표만 따로 — 개정 대기 목록
+
+이름 전체 대조표와 별개로, **직업 표**(05 §8-1 의 L1→L2→키워드 표와 그 파생 표)에 남은 옛 이름만
+파일·줄·칸 단위로 뽑는 목록이 있다. 원본 저장소에 그대로 올릴 수 있는 개정 요청서다.
+
+```bash
+./.venv/bin/python tools/gdd_job_pending.py --write   # docs/l10n/GDD_직업_개정_대기.md 갱신
+./.venv/bin/python tools/gdd_job_pending.py           # 목록이 데이터와 어긋났는가 (게이트 `gddjob`)
+```
+
+- 기준은 `data/job_tree.json` — 직업 34(L1·L2·L3)와 그 아래 키워드 94, 그리고 용어집 폐기 표기.
+- **표 행만** 본다. 산문은 문면이므로 기계가 고칠 수 없다.
+- **개정 이력 행**은 뺀다(차수·`→`·`구 …` 가 있는 행). 그 옛 이름은 틀린 것이 아니라 바뀐 기록이다.
+- L2 칸이 병합된 키워드 표는 **첫 칸이 빈 행을 앞 행의 직업에 붙인다** — 그러지 않으면
+  `|  | **관철** | 3 | 관통 | …` 같은 행이 어느 직업의 것인지 모른 채 빠진다.
+- **동철 표기**(`물기`·`대가`·`사냥꾼`)는 목록에 올리지 않고 `†` 만 붙인다. 다른 뜻으로도 쓰는
+  글자라 기계가 가릴 수 없다 — 그 칸은 사람이 읽고 정한다.
+
+목록이 비면 GDD 직업 표가 현행과 같다는 뜻이다. 목록이 낡았다고 GDD 를 고치지 않는다 — 목록을
+다시 뽑는다. 잔재가 사라졌는지는 `check_gdd_names.py --strict` 가 본다.
+
+### 개정 반영본 사본
+
+새 이름으로 읽히는 GDD 가 필요하면 원본을 고치지 않고 사본을 만든다.
+
+```bash
+./.venv/bin/python tools/gen_gdd_revised.py --write   # docs/gdd_개정본/ 생성·갱신
+./.venv/bin/python tools/gen_gdd_revised.py           # 사본이 현행인가 (게이트 `gddrev`)
+```
+
+원본 14개 파일을 복사한 뒤 위 개정 대기 목록의 칸만 바꾼다. 산문·이력 행·몬스터 이름은
+그대로라, 사본은 "원본 + 직업 표 개정"이다. 원본 `docs/gdd/` 는 이 명령으로도 바뀌지 않는다.
+
+## GDD 개정본이 들어왔을 때
+
+원본 저장소의 GDD를 다시 옮긴 뒤(`docs/gdd/` 교체) 다음 한 줄로 확인한다.
+
+```bash
+./.venv/bin/python tools/check_gdd_names.py --strict
+```
+
+- `GDD CLEAN` — 대조 끝. 대조표를 다시 써서 빈 표로 만든다.
+- `GDD STALE` + exit 1 — 개정본에 아직 옛 이름이 남았다. 목록을 근거로 원본 저장소에 다시 요청한다.
+  **이 저장소에서 GDD를 고쳐 해결하지 않는다.**
+
+## 왜 자동 치환하지 않나
+
+`docs/gdd/` 는 표·산문·결정로그가 섞인 문면이라, 이름을 기계적으로 치환하면 문장이 깨진다.
+한 글자만 다른 표기가 다른 뜻으로 섞여 있으면(용어집의 "동철 주의" 표기 — 미션 이름과 역할 태그처럼)
+치환이 엉뚱한 문장을 건드린다. 그래서 자동 치환 대신 **대조표 + 사람이 읽는 절차**를 쓴다.
+
+## 이 절차가 남기는 것
+
+- GDD를 읽는 사람: 낯선 이름을 [GDD_이름_대조표.md](../l10n/GDD_이름_대조표.md) 에서 현행 이름으로 찾을 수 있다.
+- 데이터를 고치는 사람: 용어집 폐기 표기 한 줄이 곧 개명 이력이고, 대조표는 그 이력에서 자동으로 나온다.
+- 검사하는 사람: `check_gdd_names.py` 출력의 "몬스터 이름 N종" 이 곧 원본 개정 요청 목록이다.

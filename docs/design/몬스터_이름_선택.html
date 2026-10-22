@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>몬스터 이름 선택 — 폰즈</title>
+<style>
+  :root{
+    --bg:#12121a; --panel:#1b1b26; --panel2:#22222f; --line:#33334a;
+    --text:#e8e8f2; --dim:#9a9ab4; --accent:#c9a227; --pick:#7ee2b8; --warn:#ff9f6e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+    line-height:1.55;padding:24px 20px 120px}
+  header{max-width:960px;margin:0 auto 4px}
+  h1{font-size:20px;margin:0 0 6px}
+  .lead{color:var(--dim);font-size:13px;margin:0 0 14px}
+  .concept{max-width:960px;margin:0 auto 26px;background:var(--panel);border:1px solid var(--line);
+    border-radius:8px;padding:16px 18px;font-size:13px}
+  .concept h2{font-size:12px;letter-spacing:.08em;color:var(--accent);margin:0 0 10px;text-transform:uppercase}
+  .concept ol{margin:0;padding-left:20px;color:var(--dim)}
+  .concept li{margin:5px 0}
+  .concept b{color:var(--text)}
+  h3.sec{max-width:960px;margin:26px auto 10px;font-size:14px;color:var(--text);
+    border-left:3px solid var(--accent);padding-left:10px}
+  h3.sec small{color:var(--dim);font-weight:400;font-size:12px;margin-left:6px}
+  main{max-width:960px;margin:0 auto;display:grid;gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:15px 17px}
+  .card.done{border-color:#3d6b58}
+  .top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .now{font-size:15px;font-weight:700}
+  .arrow{color:var(--dim)}
+  .chosen{color:var(--pick);font-weight:700}
+  .meta{font-size:11.5px;color:var(--dim);margin-left:auto}
+  .conceptline{font-size:12.8px;color:#cfcfe0;margin:9px 0 0;padding:9px 11px;background:#16161f;
+    border-radius:6px;border-left:2px solid #4a4a66}
+  .problem{font-size:12px;color:var(--warn);margin:8px 0 11px}
+  .problem b{color:#ffd0b8}
+  code{background:#0f0f16;border:1px solid var(--line);border-radius:4px;padding:1px 5px;
+    font-size:11.5px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d8d8ea}
+  .opts{display:grid;gap:6px}
+  label{display:flex;align-items:flex-start;gap:9px;padding:8px 10px;border:1px solid var(--line);
+    border-radius:6px;cursor:pointer;background:var(--panel2);font-size:13.5px}
+  label:hover{border-color:#4a4a66}
+  label.sel{border-color:#3d6b58;background:#1c2a24}
+  input[type=radio]{margin-top:4px;accent-color:#4fbf90}
+  .opt-name{font-weight:600}
+  .opt-note{color:var(--dim);font-size:11.5px;display:block;margin-top:1px}
+  .custom{display:flex;gap:8px;margin-top:8px}
+  .custom input[type=text]{flex:1;background:#15151f;border:1px solid var(--line);border-radius:6px;
+    color:var(--text);padding:8px 10px;font-size:13px}
+  .custom input[type=text]:focus{outline:none;border-color:#4a4a66}
+  .notes{max-width:960px;margin:22px auto 0;background:#1a1614;border:1px solid #4a3327;
+    border-radius:8px;padding:14px 16px;font-size:12.5px;color:#e2c9b8}
+  .notes b{color:#ffb98d}
+  .notes ul{margin:6px 0 0;padding-left:18px}
+  footer{position:fixed;left:0;right:0;bottom:0;background:#0e0e15;border-top:1px solid var(--line);
+    padding:12px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .count{font-size:13px;color:var(--dim);margin-right:auto}
+  .count b{color:var(--pick)}
+  button{background:var(--panel2);color:var(--text);border:1px solid var(--line);
+    border-radius:6px;padding:9px 14px;font-size:13px;cursor:pointer}
+  button:hover{border-color:#5a5a78}
+  button.primary{background:var(--accent);color:#1a1a12;border-color:var(--accent);font-weight:700}
+  textarea{width:100%;max-width:960px;margin:16px auto 0;background:#15151f;
+    border:1px solid var(--line);border-radius:6px;color:var(--text);padding:12px;font-size:12px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;height:140px;display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>몬스터 이름 선택 — 폰즈</h1>
+  <p class="lead">1부는 역할명(`~자`) 15종, 2부는 그 밖의 어색한 이름 16건입니다. 카드를 누르면 고른 이름이 아래 요약에 쌓입니다.</p>
+</header>
+
+<div class="concept">
+  <h2>작명 컨셉</h2>
+  <ol>
+    <li><b>중심은 생물, 역할은 수식어.</b> 이름의 핵심 명사가 매·뱀·아귀·게처럼 <b>떠오르는 몸</b>이어야 한다. 감시자·포식자 같은 역할명은 종명 자리에서 설정표처럼 읽힌다.</li>
+    <li><b>수식어는 하나.</b> 서식지·재료·속성 가운데 가장 구별되는 것 하나만. 둘을 겹치면 `심해 발광 포식자`처럼 설명문이 된다.</li>
+    <li><b>같은 꼬리말을 반복하지 않는다.</b> 거대 ×5, 정령왕 ×6, 감시자 ×8처럼 계열 전체가 같은 어미를 쓰면 개체 차이가 사라진다.</li>
+    <li><b>뜻이 안 잡히는 조각을 남기지 않는다.</b> 오타(`망영`·`표양`), 슬랭(`순삭`), 괄호 색상(`(그린)`), 영어 낱말(`레이더`)은 임시 표기다.</li>
+    <li><b>두 이름을 붙이지 않는다.</b> `·`로 이어진 보스명은 종명과 패턴명이 섞인 것으로, 도감에서 한 종인지 두 종인지 읽히지 않는다.</li>
+  </ol>
+</div>
+
+<h3 class="sec">1부 — 역할명(`~자`) <small>15종 · 감시자·포식자·유랑자·전언자·미끼자·청자·수호자</small></h3>
+<main id="list1"></main>
+
+<h3 class="sec">2부 — 그 밖의 어색한 이름 <small>16건 · 두 이름 결합·오타·슬랭·영문·접두 반복</small></h3>
+<main id="list2"></main>
+
+<div class="notes">
+  <b>이름은 아니지만 같이 봐야 할 데이터 이상</b>
+  <ul>
+    <li>`거대 늑대`·`거대 멧돼지`·`거대 개미`·`거대 거미`의 패턴이 전부 <b>기마 사격</b> — 복사 오류로 보임. `거대 곰`은 <b>사자 머리</b>·<b>염소 머리</b> 패턴.</li>
+    <li>`책장감시자` 패턴명 <b>권력 mismatch</b>·<b>정리 shelving</b>, `관문전언자` <b>선언 broadcasting</b>, `지옥사제` <b>용식 broadcasting</b> — 영문이 남은 임시 이름.</li>
+    <li>`틈새청자`는 직전 개명으로 `비홀더`를 바꾼 이름이라, 이 창에서 다시 고르면 2부가 아니라 1부 쪽이 기준임.</li>
+  </ul>
+</div>
+
+<textarea id="out" readonly></textarea>
+
+<footer>
+  <span class="count"><b id="n">0</b> / <span id="total">0</span> 선택</span>
+  <button id="fill">추천안 채우기</button>
+  <button id="clear">초기화</button>
+  <button id="copy" class="primary">결과 복사</button>
+</footer>
+
+<script>
+const PART1 = [
+  {id:"틈새청자", meta:"T4 · 어둠 · 정점 · 깊은 곳·굴",
+   concept:"틈으로 벌어진 지하의 가장 좁은 곳에 몸을 접고 산다. 소리를 먼저 듣고, 소리가 멎은 자리로 나와 해체 광선을 쏜다. 정점 포식자지만 사냥은 늘 '기다림'으로 시작한다.",
+   problem:"'청자'는 듣는 사람이라는 뜻이라, 귀가 아니라 사람을 떠올리게 한다.",
+   opts:[["틈새뱀","틈에 몸을 접고 기다리는 뱀 — 서식지가 그대로 이름",1],
+         ["틈귀벌레","'귀'로 듣는 존재를 살리지만 곤충 체급으로 읽힌다",0],
+         ["틈새살모사","독니를 가진 정점 — 뱀 계열을 더 날카롭게",0]]},
+  {id:"권운감시자", meta:"T3 · 바람 · 수호 · 하늘·폭풍",
+   concept:"권운이 뜨는 높이에서 폭풍의 아래쪽을 내려다본다. 상층 시야를 얻은 뒤 급강하로 내려와 한 번에 부순다. 폭풍이 오는 날에만 모습을 드러낸다.",
+   problem:"'감시자'는 역할명이다. 여덟 종이 같은 꼬리말을 공유해 개체 차이가 사라졌다.",
+   opts:[["권운매","높이 뜨는 매 — 하늘 수호자의 몸이 이름에 남는다",1],
+         ["폭풍갈매기","폭풍을 타는 갈매기 — 더 거친 바다 쪽",0],
+         ["구름수리","구름 위에서 내려다보는 수리 — 가장 짧고 세다",0]]},
+  {id:"수정 감시자", meta:"T4 · 대지 · 수호 · 수정숲",
+   concept:"수정숲의 결정 사이에 뿔을 걸고 앉아 있다가, 발을 들인 자국을 따라 수정 파편을 떨어뜨린다. 육식이지만 움직임은 느리고, 사냥은 늘 지형으로 한다.",
+   problem:"역할명 + 띄어쓰기가 어색해 이름이 아니라 설명처럼 읽힌다.",
+   opts:[["수정사슴","수정 뿔을 가진 사슴 — 숲 수호자의 몸",1],
+         ["결정거미","결정에 몸을 숨긴 거미 — 매복형으로 읽힌다",0],
+         ["수정뿔뱀","수정 뿔이 달린 뱀 — 파충류 쪽 어감",0]]},
+  {id:"심해 발광 포식자", meta:"T3 · 물 · 포식 · 심해",
+   concept:"등에 달린 등불로 어둠 속 먹이를 끌어들인 뒤 봉인된 입을 한 번에 벌린다. 빛이 꺼지면 이미 늦다. 심해 생물 가운데 가장 자주 유인 등불을 쓰는 종.",
+   problem:"수식어가 둘(심해·발광)에 역할명까지 붙어 이름 길이가 문장에 가깝다.",
+   opts:[["등아귀","아귀의 등불 — 발광 포식자의 실제 대응어",1],
+         ["심해아귀","서식지를 못 박되 '발광'을 뺀다",0],
+         ["발광아귀","발광을 앞세운 직설형 — 조금 설명적",0]]},
+  {id:"사막유랑자", meta:"T3 · 대지 · 포식 · 사막·밀림",
+   concept:"사막과 밀림의 경계를 오가며 모래에 몸을 묻는다. 모래가 밀려나는 순간이 유일한 예고이고, 그 뒤에는 옆으로 피하는 수밖에 없다.",
+   problem:"'유랑자'는 사람의 처지를 가리키는 말이라 짐승 이름으로 어색하다.",
+   opts:[["모래여우","모래빛 여우 — 떠도는 사냥꾼의 이미지",1],
+         ["사막도마뱀","사막에 사는 대형 도마뱀 — 파충형",0],
+         ["모래표범","모래를 덮은 표범 — 더 무거운 포식자",0]]},
+  {id:"등불 미끼자", meta:"T3 · 물 · 포식 · 서리바다",
+   concept:"서리바다의 얼음 아래에서 등불을 흔든다. 미끼에 닿은 것이 곧 사냥감이다. 등이 켜진 뒤 발밑 그림자가 커지면 이미 늦다.",
+   problem:"'미끼자'는 실제로 쓰지 않는 조어다. 미끼를 다는 주체와 미끼 자체가 뒤섞인다.",
+   opts:[["등불아귀","서리바다의 등불을 단 아귀",1],
+         ["서리등아귀","서리+등불을 겹쳐 더 차갑게",0],
+         ["얼음등벌레","얼음 아래 등불을 흔드는 벌레 — 소형감",0]]},
+  {id:"관문전언자", meta:"T4 · 빛 · 포식 · 이데아 관문",
+   concept:"관문을 지나는 것들에게 무언가를 '전하고' 사라진다. 전언을 들은 쪽은 다음 층에서 판정이 바뀐다. 영혼을 먹지만 사냥은 말로 한다.",
+   problem:"역할명이 추상적이고, 데이터의 패턴명도 `선언 broadcasting`으로 남아 있다.",
+   opts:[["관문전령","전언(傳言)을 전령(傳令)으로 — 직분이 이름이 된다",1],
+         ["관문까마귀","관문에 앉은 까마귀 — 전언자 이미지의 자연스러운 대응",0],
+         ["관문메아리","관문에서 되돌아오는 소리 — 현상형",0]]},
+  {id:"이데아감시자", meta:"T5 · 빛 · 수호 · 이데아",
+   concept:"이데아의 관문 프리즘을 몸에 두른 최상위 수호자. 지나가려는 자의 판정을 먼저 읽고, 통과가 아니면 빛으로 자른다. 같은 곳에 `관문감지기`라는 별개 정점이 또 있다.",
+   problem:"`관문감지기`와 이름이 기능으로 겹친다. T5가 둘인데 이름으로는 구분되지 않는다.",
+   opts:[["이데아눈나비","눈 모양 날개를 가진 나비 — T5 수호자",1],
+         ["이데아거울","빛을 되비추는 거울형 수호자",0],
+         ["이데아수정눈","수정 눈알 — 가장 기괴한 쪽",0]]},
+  {id:"밀림감시자", meta:"T4 · 자연 · 수호 · 밀림",
+   concept:"수관 위에서 밀림의 길을 전부 기억한다. 지나가는 것의 종류에 따라 사격 각도를 바꾸고, 한 번 잡은 길은 다시 열어 주지 않는다.",
+   problem:"역할명 반복. 같은 꼬리말이 여덟 종에 붙어 있다.",
+   opts:[["밀림눈거미","나뭇가지에 붙은 눈 많은 거미 — 수관의 수호자",1],
+         ["덩굴살모사","덩굴처럼 위장한 살모사 — 매복형",0],
+         ["밀림부엉이","소리 없이 내려오는 부엉이",0]]},
+  {id:"늪지감시자", meta:"T2 · 물 · 포식 · 강·늪",
+   concept:"얕은 늪의 물높이를 정확히 기억하고 그 선에 몸을 맞춘다. 늪가를 흔들어 진창으로 유도한 뒤 빠져나오지 못하게 한다.",
+   problem:"역할명 반복 + 서식지명이 그대로 앞에 붙어 `늪지 감시자`가 기능 설명처럼 읽힌다.",
+   opts:[["수렁뱀","수렁에 몸을 묻은 뱀 — 늪의 매복",1],
+         ["늪지거머리","늪의 거머리 — 더 징그러운 쪽",0],
+         ["늪도마뱀","늪을 걷는 도마뱀 — T2 체급에 맞음",0]]},
+  {id:"산호수호자", meta:"T3 · 물 · 수호 · 산호·바다 · 초식",
+   concept:"산호를 등에 이고 다니며 그 산호가 자라는 곳을 영역으로 삼는다. 초식이라 사냥하지 않지만, 영역에 들어온 것은 산호 파동으로 밀어낸다.",
+   problem:"'수호자'는 역할명. 초식 수호자라는 특이한 설정이 이름에 전혀 드러나지 않는다.",
+   opts:[["산호껍질게","산호를 등에 이고 다니는 게 — 수호자의 몸",1],
+         ["산호갑각충","갑각으로 산호를 덮는 충 — 더 단단한 인상",0],
+         ["산호조개","산호에 붙은 거대 조개 — 초식·방어형",0]]},
+  {id:"능선감시자", meta:"T4 · 대지 · 수호 · 설굴·산맥",
+   concept:"눈이 쌓인 능선을 따라 걷고, 능선을 넘는 것만 쏜다. 설굴 쪽에서 나오는 소리는 무시한다. 산맥에서 가장 먼저 눈을 밟는 존재.",
+   problem:"역할명 반복. 서식지(능선) + 역할(감시자)만 있어 몸이 없다.",
+   opts:[["능선설매","능선에 앉은 설매(雪매) — 산의 눈",1],
+         ["설선염소","눈선을 타는 산양 — 능선 수호자",0],
+         ["능선수리","능선을 도는 수리 — 가장 짧다",0]]},
+  {id:"책장감시자", meta:"T4 · 빛 · 수호 · 탑의 서고 · 무섭식",
+   concept:"먹지 않는다. 서고의 책장 간격과 권수를 전부 세고 있고, 순서가 어긋나면 그 자리에서 빛을 쏜다. 패턴명 두 개가 `권력 mismatch`·`정리 shelving`으로 남아 있어 이 개체의 설정이 아직 덜 옮겨졌다.",
+   problem:"역할명 + 데이터의 패턴명이 영문 임시값이라, 이름보다 데이터가 먼저 정리돼야 한다.",
+   opts:[["서고책벌레","책을 먹지 않는 책벌레 — 무섭식과 맞물린다",1],
+         ["책장먼지벌레","책장 먼지를 뒤집어쓴 벌레",0],
+         ["서고갈피","갈피에 끼어 사는 것 — 가장 문학적",0]]},
+  {id:"무풍감시자", meta:"T4 · 바람 · 수호 · 무풍고원 · 무섭식",
+   concept:"바람이 멈춘 고원에서 소리를 신호로 쓴다. 무음 신호를 보낸 뒤 그 자리만 공기가 비는데, 그것이 유일한 예고다.",
+   problem:"역할명 반복. 무섭식·무음이라는 설정이 이름에서 빠져 있다.",
+   opts:[["무풍나방","바람이 없어 날갯짓이 들리는 나방",1],
+         ["정적나방","정적을 먹는 나방 — 무섭식과 연결",0],
+         ["무풍그늘","그늘이 스스로 서 있는 것 — 가장 모호",0]]},
+  {id:"조수감시자", meta:"T2 · 물 · 수호 · 산호·바다",
+   concept:"조수가 오르내리는 시간표를 몸으로 안다. 조석 경보를 울려 같은 산호초의 다른 개체를 깨우고, 물이 빠질 때만 앞으로 나온다.",
+   problem:"역할명 반복. T2인데 이름에 체급감이 없다.",
+   opts:[["조수게","물때를 따라 걷는 게 — 조수와 몸이 붙는다",1],
+         ["물때조개","물때에만 입을 여는 조개 — T2 체급",0],
+         ["조수불가사리","조수에 밀려오는 불가사리 — 더 낯선 쪽",0]]}
+];
+
+const PART2 = [
+  {id:"결정 수호자·수정 나무 왕", meta:"T5 · 대지 · 수호 · 수정숲",
+   concept:"수정숲에서 가장 오래된 나무가 스스로를 지키려고 굳은 것. 뿌리로 바닥을 갈라 가둔 뒤 숲 전체를 한 번에 밝혀 부순다. 두 번째 이름(`수정 나무 왕`)이 패턴이 아니라 별칭처럼 붙어 있다.",
+   problem:"이름이 `·`로 두 개다. 도감에서 한 종인지 두 종인지 읽히지 않는다.",
+   opts:[["수정나무왕","두 이름을 하나로 합친다 — T5 보스의 무게",1],
+         ["결정나무","짧고 단단하다. '왕'을 빼서 수호자 쪽으로",0],
+         ["수정뿌리","뿌리 감옥 패턴을 이름으로",0]]},
+  {id:"소리 삼키는 자·무풍 임금", meta:"T5 · 어둠 · 수호 · 무풍고원",
+   concept:"무풍고원에서 소리를 먹어 버린 왕좌. 이 개체만 예고 없는 패턴을 하나 가지고 있는데, 그 침묵 자체가 경고다. 셋이 돌며 빈자리를 밝히는 3인 순환도 함께 쓴다.",
+   problem:"`~는 자` + 별칭 결합. 두 번째 이름이 더 강한데 앞에 묻혀 있다.",
+   opts:[["무풍임금","별칭을 정식 이름으로 올린다",1],
+         ["침묵왕좌","소리를 먹는 자리 — 왕좌가 이름",0],
+         ["소리먹는것","'~는 자'를 피하면서 뜻은 유지",0]]},
+  {id:"빛을 자르는 자·유리 파수꾼", meta:"T5 · 빛 · 수호 · 유리 사막",
+   concept:"유리 사막의 빛을 실처럼 잘라 길을 끊는다. 유리 기둥을 차례로 세워 도망칠 곳을 지우고, 남은 자리에서만 베어 낸다.",
+   problem:"`~는 자` + 별칭 결합. 서술형 이름이 종명 자리에 와 있다.",
+   opts:[["유리파수꾼","별칭을 정식으로. 파수꾼은 직분명이라 T5에 맞다",1],
+         ["빛가르개","자르는 동작을 사물처럼 — 가장 짧다",0],
+         ["유리문지기","문을 지키는 자리로 옮긴다",0]]},
+  {id:"동결 고래·첫 파도", meta:"T5 · 물 · 수호 · 서리바다",
+   concept:"서리바다에서 바다를 통째로 들어 올린다. 흰 벽이 된 물이 내려앉는 순간이 첫 파도이고, 그 뒤에는 심해 급선회로 반대편을 친다.",
+   problem:"종명(동결 고래)에 **패턴 이름**(첫 파도)이 붙어 있다. 패턴은 이름이 아니다.",
+   opts:[["동결고래","종명만 남긴다 — 가장 자연스럽다",1],
+         ["얼음고래","'동결'을 쉬운 말로",0],
+         ["첫파도고래","패턴을 별칭으로 흡수",0]]},
+  {id:"문턱순삭", meta:"T5 · 공허 · 포식 · 이데아 관문",
+   concept:"공간이 한 박자 늦게 접히는 자리에만 있다. 경계를 넘는 순간 이미 건너편에 서 있고, 지나간 자리에는 접힌 흔적만 남는다.",
+   problem:"`순삭`은 슬랭이다. T5 정점의 이름으로는 무게가 실리지 않고, 뜻도 '빠르다'에만 걸린다.",
+   opts:[["문턱삼킴","문턱을 삼킨다 — 동작이 이름이 된다",1],
+         ["경계아귀","아귀의 입처럼 접히는 경계",0],
+         ["이음새벌레","공간의 이음새에 사는 것",0]]},
+  {id:"포기한 세 번", meta:"T5 · 어둠 · 수호 · 하늘 균열",
+   concept:"세 그림자가 장부를 펼치고 돌면서 빈자리를 밝힌다. 흔적을 되짚어 지나온 길을 되살리고, 3인 순환에서 셋이 모두 서면 그 자리가 뚫린다.",
+   problem:"문장 같지만 뜻이 잡히지 않는다. '세 번 포기했다'는 서술이라 개체 이름으로 읽히지 않는다.",
+   opts:[["검은장부","셋을 하나로 묶는 장부 — 확정",1],["세그림자","셋이 함께 선다 — 3인 순환을 이름으로",0],
+         ["삼중망령","셋이 겹친 망령 — 어둠 수호자",0],
+         ["세번째빈자리","비어 있는 자리만 밝힌다",0]]},
+  {id:"굴절 망영", meta:"T3 · 빛 · 포식 · 유리 사막",
+   concept:"유리 사막에서 빛을 접어 분신을 만든다. 분신은 때리면 유리처럼 깨지고, 진짜는 빛이 한 번 더 굴절된 자리에 있다.",
+   problem:"`망영`은 `망령`의 오타로 보인다. 오타 하나로 이름의 뜻이 사라진다.",
+   opts:[["굴절망령","오타를 고친다 — 가장 확실",1],
+         ["유리망령","서식지+존재 유형",0],
+         ["빛갈래","굴절을 '갈래'로 — 더 짧다",0]]},
+  {id:"권운표양", meta:"T2 · 바람 · 사냥꾼 · 하늘·폭풍",
+   concept:"권운 높이에서 그림자를 키우며 급강하한다. 내려오는 동안 하늘의 그림자가 먼저 커지고, 그 그림자가 발밑에 닿으면 늦다.",
+   problem:"`표양`은 `표범`의 오타로 보인다. 같은 하늘 계열의 `권운감시자`와 앞말까지 겹친다.",
+   opts:[["권운표범","오타를 고친다",1],
+         ["구름표범","'권운'을 쉬운 말로",0],
+         ["높은표범","높이를 형용으로",0]]},
+  {id:"흑렌 차양체", meta:"T2 · 불 · 포식 · 유리 사막",
+   concept:"검은 껍질로 열을 빨아들이고, 빨아들인 열을 벌꿀빛으로 번뜩이며 내보낸다. 유리 사막에서 그늘을 만들 수 있는 몇 안 되는 존재라, 그늘에 모인 것을 먹는다.",
+   problem:"`흑렌`은 뜻이 잡히지 않는 조각이고, `차양체`는 분류명이다. 두 조각 다 이름이 아니다.",
+   opts:[["검은차양","색+형태 — 가장 읽힌다",1],
+         ["흑유리차양","유리 사막의 검은 그늘",0],
+         ["열그늘","열을 빨아 만든 그늘",0]]},
+  {id:"재 화관", meta:"T4 · 불 · 포식 · 화구·용암",
+   concept:"머리 위로 재의 꽃잎이 원을 그리면 그 원 안이 한 번에 탄다. 화구에서 재가 가장 많이 쌓인 자리를 골라 몸을 묻고 있다가, 원이 완성되면 나온다.",
+   problem:"`재 `가 띄어 있어 재료인지 수식인지 애매하다. 두 글자 이름인데 읽는 순간이 두 번 갈린다.",
+   opts:[["잿빛화관","'재'를 형용으로 붙여 한 낱말로",1],
+         ["재꽃","가장 짧다. 화관을 꽃으로",0],
+         ["잿불화관","재+불꽃을 겹쳐 화구의 인상",0]]},
+  {id:"재 불꽃나방", meta:"T2 · 불 · 포식 · 화구·용암",
+   concept:"날개 가루가 공기 중에 흐려지면 그 가루가 불을 옮긴다. 화구의 재 위에 앉아 있다가 가루를 터뜨리고, 불이 붙은 자리를 다시 먹는다.",
+   problem:"같은 `재 ` 접두. 같은 화구 계열인 `재 화관`과 앞말이 겹친다.",
+   opts:[["잿불나방","재+불꽃을 한 낱말로",1],
+         ["화산나방","서식지를 앞에",0],
+         ["재나방","가장 짧다",0]]},
+  {id:"결로 파편체", meta:"T2 · 대지 · 포식 · 수정숲",
+   concept:"몸이 갈라지며 내부가 붉게 달아오르고, 갈라진 조각을 파편으로 내보낸다. 수정숲의 습기를 결로처럼 몸에 맺히게 해 껍데기를 만든다.",
+   problem:"`결로`는 물리 용어라 생물 이름으로 읽히지 않는다. `파편체`는 분류명이다.",
+   opts:[["결로파편","분류명을 떼고 한 낱말로",1],
+         ["이슬파편","'결로'를 쉬운 말로",0],
+         ["물방울파편","습기를 몸에 맺히게 하는 설정을 살린다",0]]},
+  {id:"레이더", meta:"T2 · 무속성 · 청소부 · 폐허·평원",
+   concept:"폐허의 잔해를 훑어 쓸 만한 것만 골라 간다. 돌진 경고선이 먼저 바닥에 그어지고, 세 번 연달아 들이받는다.",
+   problem:"영어 낱말 하나가 이름이 되어 세계관에서 튄다. 같은 폐허 계열의 다른 이름은 전부 한글이다.",
+   opts:[["잔해탐지충","하는 일이 이름이 된다",1],
+         ["폐허탐지기","기계형 어감 — 잔해를 훑는 존재",0],
+         ["안테나벌레","모양에서 온 이름",0]]},
+  {id:"슬라임(그린)", meta:"T1 · 무속성 · 분해자 · 늪·동굴",
+   concept:"늪과 동굴의 사체를 분해한다. 맞으면 갈라져 두 개가 되고, 초록 산성을 튀긴다. 초록은 이 개체만의 색이 아니라 색상 변형 표기다.",
+   problem:"괄호 안 색상은 임시 표기다. 도감에 그대로 나오면 `(그린)`이 이름의 일부로 읽힌다.",
+   opts:[["초록슬라임","색을 이름으로 올린다",1],
+         ["늪슬라임","서식지로 구분",0],
+         ["수렁슬라임","수렁의 분해자",0]]},
+  {id:"거대 5종 (곰·늑대·멧돼지·개미·거미)", meta:"T2~T3 · 거대 곰·거대 늑대·거대 멧돼지·거대 개미·거대 거미",
+   concept:"평원·숲·산의 기본 동물을 키운 개체군. 문제는 크기가 아니라, 다섯 종이 전부 `거대`로 시작해 도감에서 구분되지 않는다는 점. 게다가 네 종의 패턴이 전부 `기마 사격`으로 복사돼 있다.",
+   problem:"`거대` 접두 5회 반복. 이름이 크기만 말하고 서식지·습성을 말하지 않는다.",
+   opts:[["서식지+동물 — 산곰·숲늑대·들멧돼지·둑개미·굴거미","다섯을 한 번에 구분되게 바꾸는 안",1],
+         ["크기 형용 — 큰곰·큰늑대·큰멧돼지·큰개미·큰거미","최소 변경. 반복은 남는다",0],
+         ["현행 유지 — 거대 곰 외 4종","데이터 패턴 오류만 따로 고친다",0]]},
+  {id:"정령 계보 21종 (정령·대정령·정령왕 ×7원소)", meta:"T3~T5 · 원소 정령 3단 계보",
+   concept:"7원소가 각각 정령 → 대정령 → 정령왕 3단으로 올라간다(먹빛→무광→심연, 지맥→지각→대지, 화구→불꽃→용암, 성광→거광→무량, 무아→공허→무상, 파도→물결→해류, 들바람→산바람→하늘바람). 계보는 깔끔한데, 21개 이름이 티어 접미사 셋만 반복해 개체 이름이 계보에 먹혀 있다.",
+   problem:"같은 꼬리말이 티어당 7번, 총 21번. `무량정령왕`·`무상정령왕`처럼 앞말까지 비슷해 도감에서 눈으로 구분되지 않는다.",
+   opts:[["왕만 압축 — 심연왕·대지왕·용암왕·무량왕·무상왕·해류왕·천공왕","3단 계보는 유지하고 최상위만 짧게",1],
+         ["'-정령' 통일 — 먹빛정령·지맥정령·화구정령…","단수를 없애고 등급은 필드로만 표기",0],
+         ["현행 유지","계보 표기를 이름에 그대로 남긴다",0]]}
+];
+
+// 본문의 `백틱`을 코드 조각으로 그린다 (그대로 두면 딱지가 글자로 보인다).
+const md = (s) => String(s).replace(/`([^`]+)`/g, '<code>$1</code>');
+
+const KEY = "fons-monster-names-v2";
+const saved = JSON.parse(localStorage.getItem(KEY) || "{}");
+const ALL = [...PART1, ...PART2];
+let seq = 0;
+
+function render(list, host) {
+  list.forEach((d) => {
+    const i = seq++;
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.id = d.id;
+    card.innerHTML = `
+      <div class="top">
+        <span class="now">${d.id}</span>
+        <span class="arrow">→</span>
+        <span class="chosen" data-chosen>—</span>
+        <span class="meta">${d.meta}</span>
+      </div>
+      <p class="conceptline">${md(d.concept)}</p>
+      <p class="problem"><b>왜 바꾸나</b> — ${md(d.problem)}</p>
+      <div class="opts"></div>
+      <div class="custom"><input type="text" placeholder="직접 입력" data-custom></div>`;
+
+    const opts = card.querySelector(".opts");
+    d.opts.forEach(([name, note, rec]) => {
+      const label = document.createElement("label");
+      label.innerHTML = `<input type="radio" name="m${i}" value="${name}">
+        <span><span class="opt-name">${name}</span>${rec ? ' <span style="color:#c9a227">★추천</span>' : ''}
+        <span class="opt-note">${note}</span></span>`;
+      opts.appendChild(label);
+    });
+
+    const custom = card.querySelector("[data-custom]");
+    const chosenEl = card.querySelector("[data-chosen]");
+
+    function paint(value) {
+      const picked = value || "";
+      chosenEl.textContent = picked || "—";
+      card.classList.toggle("done", !!picked);
+      card.querySelectorAll("label").forEach(l => {
+        const r = l.querySelector("input");
+        const on = !!picked && r.value === picked;
+        l.classList.toggle("sel", on);
+        r.checked = on;
+      });
+      custom.value = (picked && !d.opts.some(o => o[0] === picked)) ? picked : "";
+      updateCount();
+    }
+
+    function set(value) {
+      if (value) saved[d.id] = value; else delete saved[d.id];
+      localStorage.setItem(KEY, JSON.stringify(saved));
+      paint(value);
+    }
+
+    card.querySelectorAll("input[type=radio]").forEach(r =>
+      r.addEventListener("change", () => set(r.value)));
+    custom.addEventListener("input", () => set(custom.value.trim()));
+
+    paint(saved[d.id]);
+    host.appendChild(card);
+  });
+}
+
+render(PART1, document.getElementById("list1"));
+render(PART2, document.getElementById("list2"));
+
+function updateCount() {
+  document.getElementById("n").textContent = ALL.filter(d => saved[d.id]).length;
+  document.getElementById("total").textContent = ALL.length;
+}
+
+document.getElementById("fill").onclick = () => {
+  ALL.forEach(d => {
+    const rec = d.opts.find(o => o[2]) || d.opts[0];
+    saved[d.id] = rec[0];
+  });
+  localStorage.setItem(KEY, JSON.stringify(saved));
+  document.querySelectorAll(".card").forEach(card => {
+    const picked = saved[card.dataset.id];
+    card.querySelector("[data-chosen]").textContent = picked || "—";
+    card.classList.toggle("done", !!picked);
+    card.querySelectorAll("label").forEach(l => {
+      const on = l.querySelector("input").value === picked;
+      l.classList.toggle("sel", on);
+      l.querySelector("input").checked = on;
+    });
+  });
+  updateCount();
+};
+
+document.getElementById("clear").onclick = () => {
+  localStorage.removeItem(KEY);
+  location.reload();
+};
+
+document.getElementById("copy").onclick = async () => {
+  const out = ALL.map(d => ({ old: d.id, new: saved[d.id] || null }));
+  const text = JSON.stringify(out, null, 2);
+  const ta = document.getElementById("out");
+  ta.style.display = "block";
+  ta.value = text;
+  ta.select();
+  try { await navigator.clipboard.writeText(text); } catch (e) {}
+};
+</script>
+</body>
+</html>

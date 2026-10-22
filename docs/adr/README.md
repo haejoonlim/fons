@@ -29,3 +29,6 @@
 | [0002](0002-data-ssot.md) | 데이터 정본은 JSON 하나, 사본은 생성물 | 채택 |
 | [0003](0003-2d-first-vector3-sim.md) | 심은 `Vector3` 로 말하고 뷰가 축을 접는다 | 채택 |
 | [0004](0004-renderer-gl-compatibility.md) | 렌더러는 `gl_compatibility` 고정 | 채택 |
+| [0005](0005-stat-coeff-axes.md) | 등급계수·레벨계수의 적용 축 집합 | 채택 |
+| [0006](0006-job-coef-mapping.md) | 직업계수 — 05 §4 표를 현행 7직업 트리에 잇는 방법 | 채택 |
+| [0007](0007-encounter-depth-tier.md) | 조우 tier 를 탑 깊이에 맞춘다 | 채택 |

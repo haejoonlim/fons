@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T5 보스 이름 재선택 — 폰즈</title>
+<style>
+  :root{--bg:#14111c;--card:#1e1930;--line:#332a4a;--tx:#e8e2f4;--dim:#9a90b8;--hi:#f0c96a;--bad:#e06a6a}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--tx);font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;line-height:1.65}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 120px}
+  header{padding:36px 0 22px;border-bottom:1px solid var(--line);margin-bottom:24px}
+  h1{font-size:25px;letter-spacing:-.02em}
+  h1 span{color:var(--hi)}
+  .sub{color:var(--dim);font-size:14px;margin-top:8px}
+  .card{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--hi);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+  .top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .nm{font-size:19px;font-weight:700}
+  .now{font-size:11px;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+  .meta{color:var(--dim);font-size:12px;margin-top:6px}
+  .why{font-size:13.5px;margin:10px 0 8px;color:#d6cfe8}
+  .pats{font-size:12.5px;color:var(--dim);margin-bottom:12px}
+  .why code,.meta code,.opt code{background:#2a2340;border-radius:4px;padding:1px 5px;font-size:12px}
+  .opts{display:grid;gap:7px}
+  label.opt{display:flex;gap:9px;align-items:flex-start;background:#241d38;border:1px solid var(--line);border-radius:9px;padding:9px 12px;cursor:pointer;font-size:13.5px}
+  label.opt:hover{border-color:#4a3d6b}
+  label.opt input{margin-top:3px;accent-color:var(--hi)}
+  label.opt.rec{border-color:#5a4a24}
+  .opt small{color:var(--dim);font-size:12px}
+  .opt .tag{font-size:10px;color:#14111c;background:var(--hi);border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:1px}
+  .own{margin-top:8px;display:flex;gap:8px}
+  .own input{flex:1;background:#241d38;border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--tx);font-size:13px}
+  footer{position:fixed;left:0;right:0;bottom:0;background:#191426;border-top:1px solid var(--line);padding:12px 20px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+  button{background:var(--hi);color:#14111c;border:0;border-radius:8px;padding:9px 16px;font-size:13.5px;font-weight:700;cursor:pointer}
+  button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line);font-weight:500}
+  #out{font-size:12px;color:var(--dim)}
+  textarea{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>T5 보스 <span>이름 재선택</span> — 6종</h1>
+  <div class="sub">지적하신 여섯 개만. 후보는 데이터의 서식지·패턴에서 뽑았고, 추천안을 미리 표시해 뒀습니다. 직접 입력도 됩니다.</div>
+</header>
+<div id="list"></div>
+</div>
+
+<footer>
+  <button id="fill">추천안 채우기</button>
+  <button id="copy">결과 복사</button>
+  <button class="ghost" id="clear">선택 비우기</button>
+  <span id="out"></span>
+  <textarea id="ta"></textarea>
+</footer>
+
+<script>
+const CARDS = [
+ {id:'mon_aasimar_01', name:'아시마르', meta:'T5 수호 · light · 75~85층 · temple/sky · elite',
+  pats:['성광선','성천 격노'],
+  why:'`아시마르`는 D&D 종족명(aasimar)과 같은 철자입니다. 판권 잔재 정리 때 걷어낸 `기스양키`·`비홀더`와 같은 종류의 차용이고, 이름 자체가 개체가 아니라 종족처럼 읽힙니다. 신전·하늘·심판의 빛이라는 패턴에 맞춰 다시 짓습니다.',
+  opts:[['성광심판관','성광(聖光) + 심판관. 성광선·성천 격노가 이름에 남음',1],
+        ['백광의 성수','성수(聖獸) — 신전을 지키는 짐승. 관형이 붙어 길어짐',0],
+        ['천광거인','천광(天光) + 거인. 다만 크기 근거가 데이터에 없음',0]]},
+ {id:'mon_debtavatar_01', name:'검은장부', meta:'T5 수호 · dark · 125~127층 · 찢긴 천창 게이트키퍼',
+  pats:['흔적 되짚기','3인 순환','포기선 고지'],
+  why:'`검은장부`는 사물 이름이라, 셋이 겹쳐 하나로 서는 존재가 이름에서 안 읽힙니다. 장부는 패턴(붉은 잉크·장부 펼침)에 남아 있으니 이름은 존재 쪽으로 옮깁니다.',
+  opts:[['장부군주','장부 + 군주. 셋을 거느린 하나로 읽힘',1],
+        ['삼중증언','셋의 증언이 겹친다 — 성격은 정확하나 서술적',0],
+        ['잊힌삼인','밀려난 셋. 다만 사람 이름처럼 읽힘',0]]},
+ {id:'mon_glasscutter_01', name:'유리파수꾼', meta:'T5 수호 · light · 120~124층 · 유리 사막',
+  pats:['빛 절단','굴절 감옥','백열 굴절'],
+  why:'`유리` + `파수꾼`은 유리로 만든 병사처럼 읽힙니다. 세 패턴이 전부 빛을 꺾고 가두는 쪽이라, 파수보다 **굴절**이 이 개체의 정체입니다.',
+  opts:[['굴절왕','굴절 + 왕. 굴절 감옥·백열 굴절이 그대로 이름에',1],
+        ['백열파수꾼','백열(白熱)로 열기를 더함. 직분어는 유지',0],
+        ['유리왕관','유리 사막의 왕관 이미지. 패턴과는 덜 붙음',0]]},
+ {id:'mon_hellarchon_01', name:'지옥사제', meta:'T5 포식 · fire · 91~95층 · 요새/지옥',
+  pats:['화염 강론','영혼 회수'],
+  why:'`아콘(archon)`을 `사제`로 옮긴 이름이라 사제 중 하나로 보입니다. 강론으로 부하를 모으고 영혼을 거두는 패턴은 교단 수장 쪽이라 위계를 한 칸 올립니다.',
+  opts:[['지옥교주','교단의 수장. 강론·영혼 회수와 맞음',1],
+        ['화염대사제','대사제로 위계만 올림. 지옥은 빠짐',0],
+        ['영혼사제','회수 패턴이 앞으로. 강론은 안 읽힘',0]]},
+ {id:'mon_nullsentinel_01', name:'무문의 파수병', meta:'T5 수호 · dark · 128~130층 · 이데아 문턱 게이트키퍼',
+  pats:['존재 지움','백지의 문','마지막 새김'],
+  why:'`무문의` + `파수병`은 관형 + 직분이라 길고, 문(門)이 두 번 나옵니다. 패턴의 `백지의 문`을 이름으로 끌어오면 무엇을 지키는지가 바로 잡힙니다.',
+  opts:[['백지문지기','백지의 문 + 문지기. 지키는 대상이 이름에',1],
+        ['무문왕','짧고 무겁지만 무엇을 하는지 안 남음',0],
+        ['문없는 왕','문이 없다는 사실만 남음',0]]},
+ {id:'mon_silenceking_01', name:'무풍임금', meta:'T5 암살 · dark · 115~121층 · 무풍 고원',
+  pats:['침묵 낙하','무풍의 문','최후의 고요'],
+  why:'`임금`은 좋은데 `무풍`이 장소 이름이라 개체의 성격(소리를 지운다)이 안 남습니다. 패턴 셋이 전부 침묵·고요로 끝나므로 그쪽으로 옮깁니다.',
+  opts:[['고요임금','고요 + 임금. 최후의 고요 패턴과 맞음',1],
+        ['무풍왕','장소를 유지하고 짧게',0],
+        ['침묵군주','침묵 + 군주. 다만 다른 후보와 어미가 겹침',0]]},
+];
+
+const KEY='fons_t5_boss_pick_v1';
+const state=JSON.parse(localStorage.getItem(KEY)||'{}');
+
+function card(c){
+  const el=document.createElement('div');
+  el.className='card';
+  el.innerHTML=`<div class="top"><span class="nm">${c.name}</span><span class="now">지금 이름</span></div>
+    <div class="meta">${c.meta}</div>
+    <div class="why">${c.why.replace(/`([^`]+)`/g,'<code>$1</code>')}</div>
+    <div class="pats">패턴 — ${c.pats.join(' · ')}</div>
+    <div class="opts">${c.opts.map(o=>`<label class="opt${o[2]?' rec':''}"><input type="radio" name="${c.id}" value="${o[0]}"${o[2]?' data-rec="1"':''}${state[c.id]===o[0]?' checked':''}><span><b>${o[0]}</b>${o[2]?'<span class="tag">추천</span>':''}<br><small>${o[1]}</small></span></label>`).join('')}</div>
+    <div class="own"><input type="text" placeholder="직접 입력" data-own="${c.id}" value="${state['own:'+c.id]||''}"></div>`;
+  el.querySelectorAll('input[type=radio]').forEach(r=>r.addEventListener('change',e=>{state[c.id]=e.target.value;delete state['own:'+c.id];save();}));
+  el.querySelector('input[data-own]').addEventListener('input',e=>{state['own:'+c.id]=e.target.value;el.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);delete state[c.id];save();});
+  return el;
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));count();}
+function chosen(c){const own=state['own:'+c.id]; if(own&&own.trim()) return own.trim(); return state[c.id]||'';}
+function count(){const n=CARDS.filter(c=>chosen(c)).length; document.getElementById('out').textContent=n?`${n} / ${CARDS.length} 선택`:'';}
+
+CARDS.forEach(c=>document.getElementById('list').appendChild(card(c)));
+document.getElementById('fill').onclick=()=>{
+  CARDS.forEach(c=>{const rec=c.opts.find(o=>o[2]); state[c.id]=rec[0]; delete state['own:'+c.id];});
+  localStorage.setItem(KEY,JSON.stringify(state)); location.reload();
+};
+document.getElementById('clear').onclick=()=>{localStorage.removeItem(KEY);location.reload();};
+document.getElementById('copy').onclick=async()=>{
+  const out=CARDS.map(c=>({old:c.name,new:chosen(c)})).filter(p=>p.new&&p.new!==p.old);
+  const txt=JSON.stringify(out,null,1);
+  const ta=document.getElementById('ta'); ta.value=txt;
+  try{await navigator.clipboard.writeText(txt);}catch(e){ta.select();document.execCommand('copy');}
+  document.getElementById('out').textContent=`복사됨 — ${out.length}건`;
+};
+count();
+</script>
+</body>
+</html>

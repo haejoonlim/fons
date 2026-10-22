@@ -26,7 +26,10 @@ v8.0 리부트에서 "코드 직접 이식 대상이 아니다"로 강등돼 있
 |---|---|---|
 | `fons-web-ver/app/src/summon.ts` | `godot/core/summon.gd` | 소환 코어 — `mulberry32`·`rollGrade`·`summonOne`·13단계 로그 (원본 대조) |
 | `fons-web-ver/app/src/party.ts` | `godot/core/party.gd` | 편제 5인·영구사망·보상 (원본 대조) |
-| `fons-web-ver/app/src/combat.ts` | `godot/core/combat.gd` | 데미지·관통·위치보정·전술게이지 — 착수됨 |
+| `fons-web-ver/app/src/combat.ts` | `godot/core/combat.gd` · `godot/core/battle.gd` · `godot/core/floor_run.gd` | **포팅 완료** (2026-10-18 — 감소 `DEF/(DEF+200)` · 뱅커스 반올림 · 회피·치명타 · 전술게이지 · `combatStep` 턴 루프 · 편성→전투 배선). 원본 로그와 8줄 대조 일치 (자체 실측) |
+| (웹에 없음) | `godot/core/scaling.gd` | 층 스케일 — 06 §3.2 G1~G3 + 확정 #52 G4 천정 + 확정 #38 Lv110+ HP 손잡이 + #55 G4 HP 완화. 웹 포팅 대상이 아니라 정본 문서에서 직접 옴 (자체 실측) |
+| (웹에 없음) | `godot/core/hero_stats.gd` | 필드스탯 — `races.json` 기준스탯 × 등급계수(1.3^n, HP·ATK·MAG·DEF·MDEF·MANA) × 레벨계수(1+0.05(Lv−1), HP·ATK·MAG·DEF·MDEF) × 순수도 → `FonsBattle.unit_from_hero` (05 §7 · 01 §2 · 확정 #34·#35 · 축 집합은 [ADR 0005](../adr/0005-stat-coeff-axes.md)) |
+| (웹 TS 에 없음) — 정본은 `sim/center/sims/gacha_test.py` 의 계수표 | `godot/core/job_coef.gd` | 직업계수 — 05 §4 표를 현행 L1 7·L2 26 트리에 잇는다(예외는 `fallbacks` 에 기록). L2 는 6축 √티어. 생성기 `sim/center/sims/gen_job_coef.py` → `data/job_coef.json` ([ADR 0006](../adr/0006-job-coef-mapping.md)) |
 | `fons-web-ver/app/src/tower.ts` | `godot/core/tower.gd` | 탑·바이옴 카드·D 곡선 |
 | `fons-web-ver/app/src/estate.ts` | `godot/core/estate.gd` | 영지 |
 | `fons-web-ver/app/src/estate_web.ts` | `godot/core/estate.gd` | 웹 전용 시설 재설계 오버라이드 — 본게임은 정본 JSON 기준으로 되돌린다 |
@@ -56,13 +59,14 @@ v8.0 리부트에서 "코드 직접 이식 대상이 아니다"로 강등돼 있
 |---|---|---|
 | 원본 전투 구현 | 재작성 | `godot/core/combat.gd` |
 | 원본 소환 구현 | 재작성 | `godot/core/summon.gd` |
-| 원본 영지 구현 | 재작성 | `godot/core/estate.gd` |
+| 원본 영지 구현 | 재작성 | `godot/core/estate.gd` — 일과 10종 → 09 §3 생활 태그 · `estate.json` 수확 (2026-10-22). 시설 운영·건설·수지표는 미구현 |
 | 원본 코어 구현 | 재작성 | `godot/autoload/game_state.gd` |
 | 원본 데이터 계층 | 재작성 | `godot/autoload/data_loader.gd` |
 | 원본 세이브 구현 | 재작성 | `godot/autoload/save_manager.gd` |
 | 원본 UI 구현 | 재작성 | Godot Control 씬 |
 | 원본 오디오 구현 | 재작성 | Godot AudioServer |
 | 원본 AI 구현 | 이식 대상 | P0 유틸리티 AI (기본×스탯×성격벡터×적성×스킬×문맥×습관 + 개체 시드) (원본 대조) |
+| 원본 생태 조우 편성 (`Battle/EcologyEncounter.cs`) | **이식 완료** (2026-10-18) | `godot/core/encounter.gd` — 06 §3.4 habitat·온도·폴백·접촉 회전. `spawn.floors`·`level` 은 게이트로 쓰지 않는다 |
 | 원본 아트·프리팹·씬 | **버림** | 에셋은 재제작한다 |
 | 원본 저장소의 데이터 폴더 | **가져옴** | JSON 17종을 `data/` 로 복사 (원본 대조) |
 
@@ -97,6 +101,7 @@ v8.0 리부트에서 "코드 직접 이식 대상이 아니다"로 강등돼 있
 | `verify_direct` 통과 수 | 12 (`GAME_PLAN_3D.md`) | 16 (스크립트 본문) | 최신은 스크립트 본문 (원본 대조) |
 | `gacha_test.py` 개체 변량 | 상수 0.07 (±7%) | 같은 파일 주석 (±8%) | 상수와 주석이 어긋남 (원본 대조) |
 | 직업 트리 규모 | L1 7 · L2 26 · 키워드 94 | L1 7 · L2 28 · L3 82 · 트리 117 | 개편 차수 차이 (원본 대조) |
+| 직업계수 표의 직업 수 | 13직업 (05 §4 원표) | L1 7 + L2 26 (`gacha_test.JOB_COEF`) | 원표가 구 트리 기준이다. 현행 대응은 생성기가 잡고 예외를 데이터에 남긴다 ([ADR 0006](../adr/0006-job-coef-mapping.md)) |
 
 ## 6. 렌더/MSAA 참고
 

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>직업 키워드 재설계 (48차)</title>
+<style>
+  :root{--bg:#101317;--card:#191e26;--card2:#202734;--line:#2b3340;
+        --fg:#eef2f7;--dim:#96a1b0;--accent:#7cc4ff;--warn:#f2b75e;--green:#9be0b4}
+  *{box-sizing:border-box} html,body{overflow-x:hidden}
+  body{margin:0 auto;max-width:720px;background:var(--bg);color:var(--fg);
+       font:18px/1.7 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+       padding:20px 16px 64px}
+  h1{font-size:23px;line-height:1.35;margin:0 0 8px}
+  .lead{color:var(--dim);font-size:15.5px;line-height:1.7;margin:0 0 18px}
+  h2.sec{font-size:15px;color:var(--dim);letter-spacing:.06em;margin:34px 0 12px;
+         padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .job{background:var(--card);border:1px solid var(--line);border-radius:14px;
+       padding:17px 15px 15px;margin-bottom:15px}
+  .jh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:3px}
+  .l1{font-size:12.5px;color:var(--dim);border:1px solid var(--line);border-radius:20px;
+      padding:2px 9px;white-space:nowrap}
+  .jh h3{font-size:23px;margin:0;line-height:1.25}
+  .arrow{color:var(--dim);font-size:16px}
+  .jdesc{font-size:15px;color:var(--dim);margin:0 0 9px}
+  .note{font-size:15.5px;color:var(--warn);margin:5px 0 13px;line-height:1.6}
+  .note::before{content:"지적  ";font-weight:700}
+  .card{background:var(--card2);border-radius:11px;padding:12px 14px;margin-bottom:9px}
+  .chead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .old{font-size:17px;color:var(--dim);text-decoration:line-through}
+  .new{font-size:23px;font-weight:800;color:var(--accent)}
+  .keep{font-size:23px;font-weight:800;color:var(--fg)}
+  .ax{font-size:13.5px;color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+  .tag{font-size:12px;border-radius:20px;padding:1px 8px;margin-left:auto}
+  .done{background:#1d3326;color:var(--green);border:1px solid #2f5a40}
+  .stay{background:#1c2530;color:var(--dim);border:1px solid var(--line)}
+  .do{font-size:16px;color:#d3dbe6;margin:6px 0 0;line-height:1.6}
+  .why{font-size:14.5px;color:var(--dim);margin:5px 0 0;line-height:1.6}
+  .why::before{content:"왜  ";color:#6f8ba3}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:12px;
+       padding:15px 16px;margin-bottom:12px;font-size:16px;line-height:1.75}
+  .box h3{font-size:17px;margin:0 0 6px}
+  .box p{margin:0 0 10px} .box p:last-child{margin:0}
+  table{width:100%;border-collapse:collapse;font-size:15px;margin:4px 0 8px}
+  th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:13.5px}
+  td.n{font-weight:700;white-space:nowrap}
+  .cand{background:var(--card2);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .ch{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .ch b{font-size:16px}
+  .cf{font-size:13px;color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+  .cand p{margin:5px 0 0;font-size:15px;line-height:1.6;color:#c8d2de}
+  .cand.no .ch b{color:#d99a9a}
+  .foot{color:var(--dim);font-size:14px;line-height:1.7;margin-top:28px}
+  code{background:#0b0e12;border:1px solid var(--line);border-radius:5px;padding:0 4px;font-size:14px}
+</style>
+</head>
+<body>
+<h1>직업 키워드 재설계 — 48차</h1>
+<p class="lead">사역사 세 번째를 동물로 채우지 않아도 된다는 지시를 받아 생태도감을 다시 뒤졌다.
+<b>뱀</b>을 빼고 <b>덩굴</b>을 넣었다 — 부리는 것의 결이 셋으로 갈린다. 확정 여덟 장과
+길잡이 계급어는 손대지 않았다. 아래 값은 전부 <code>job_tree.json</code> 에서 읽었다.</p>
+
+<div class="box"><b>카드 1장 교체 · 확정 8장 · 직업 4개</b><br>사역사 한 장만 바꾸고 나머지는 값 그대로 확인했다.</div>
+<h2 class="sec">궁수</h2>
+<section class="job">
+<div class="jh"><span class="l1">궁수</span><h3>사역사</h3></div>
+<p class="jdesc">분류군을 통째로 부려 싸움을 짜는 직업</p>
+<p class="note">"나머지 한 장은 굳이 동물이 아니어도 된다 — 다시 찾아 봐"</p>
+<div class="card">
+<div class="chead"><span class="keep">짐승</span><span class="ax">힘</span><span class="tag stay">유지</span></div>
+<p class="do">들매·매와 늑대·곰·멧돼지를 한 무리로 불러 밀어붙이게 하는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">곤충</span><span class="ax">속도</span><span class="tag stay">유지</span></div>
+<p class="do">둑개미와 독벌 떼를 풀어 수로 덮치게 하는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">뱀</span><span class="arrow">→</span><span class="new">덩굴</span><span class="ax">방어</span><span class="tag done">교체</span></div>
+<p class="do">가시 돋친 줄기를 길목에 심어 지나가려는 발을 붙잡아 두게 하는</p>
+<p class="why">동물 셋으로 채우면 결이 얇아진다. 생태도감에서 식물 계열을 골랐다 — 뿌리내려 길목을 막아 붙잡아 두는 쪽이라 축이 방어로 갈린다.</p>
+</div>
+<h3 style="font-size:15px;color:var(--dim);margin:16px 0 4px">생태도감에서 확인한 덩굴 계열</h3>
+<table><tr><th>개체</th><th>층</th><th>서식지</th></tr>
+<tr><td class="n">독덩굴</td><td>[6, 10]</td><td>숲·늪</td></tr>
+<tr><td class="n">덩굴꽃</td><td>[66, 70]</td><td>밀림</td></tr>
+<tr><td class="n">월광덩굴</td><td>[96, 100]</td><td>성층</td></tr>
+<tr><td class="n">중력 매복 덩굴</td><td>[121, 125]</td><td>찢긴 천창</td></tr>
+</table>
+<h3 style="font-size:15px;color:var(--dim);margin:16px 0 4px">후보와 버린 이유</h3>
+<div class="cand no"><div class="ch"><b>뱀 (46차)</b><span class="cf">1~10층</span></div><p>동물 셋이 되면 짐승·곤충과 결이 겹친다. 셋 다 몸으로 때리는 쪽이다.</p></div>
+<div class="cand no"><div class="ch"><b>포자 버섯</b><span class="cf">16~20층</span></div><p>1~10층에 없다. 퍼뜨리는 쪽이라 즉발이 없어 카드 한 장으로 읽히지 않는다.</p></div>
+<div class="cand no"><div class="ch"><b>산호초</b><span class="cf">11~15층</span></div><p>바다에 갇혀 육상 층에서 부릴 수 없다.</p></div>
+<div class="cand"><div class="ch"><b>덩굴</b><span class="cf">6~130층</span></div><p>뿌리내려 길목을 막는다 — 셋 중 유일하게 방어로 갈린다.</p></div>
+</section>
+<h2 class="sec">전사</h2>
+<section class="job">
+<div class="jh"><span class="l1">전사</span><h3>창술사</h3></div>
+<p class="jdesc">창끝을 먼저 내밀어 거리를 지키는 직업</p>
+<div class="card">
+<div class="chead"><span class="keep">투창</span><span class="ax">치명</span><span class="tag done">확정</span></div>
+<p class="do">창을 던져 꽂아 한 번에 끝내는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">관철</span><span class="ax">관통</span><span class="tag done">확정</span></div>
+<p class="do">판을 뚫고 뒤에 선 것까지 꿰는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">연창</span><span class="ax">속도</span><span class="tag done">확정</span></div>
+<p class="do">창끝을 쉬지 않고 이어 내질러 틈을 주지 않는</p>
+</div>
+</section>
+<h2 class="sec">마법사</h2>
+<section class="job">
+<div class="jh"><span class="l1">마법사</span><h3>주술사</h3></div>
+<p class="jdesc">저주를 걸어 상대의 몫을 하나씩 깎는 직업</p>
+<div class="card">
+<div class="chead"><span class="keep">낙인</span><span class="ax">주문</span><span class="tag done">확정</span></div>
+<p class="do">적 몸에 저주 표식을 태워 남기는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">속박</span><span class="ax">방어</span><span class="tag done">확정</span></div>
+<p class="do">발밑에서 올라온 그림자가 다가오는 것을 붙잡는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">역병</span><span class="ax">마법관통</span><span class="tag done">확정</span></div>
+<p class="do">옮은 병이 곁으로 번져 방어를 지나 안에서 썩히는</p>
+</div>
+</section>
+<h2 class="sec">지원가</h2>
+<section class="job">
+<div class="jh"><span class="l1">지원가</span><h3>길잡이</h3></div>
+<p class="jdesc">길을 살피고 대열을 이끌어 목적지까지 데려가는 직업</p>
+<div class="card">
+<div class="chead"><span class="keep">견습</span><span class="ax">치명</span><span class="tag stay">유지</span></div>
+<p class="do">1단계 · 아직 길을 외우지 못해 남의 흔적을 따라 걷는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">숙련</span><span class="ax">민첩</span><span class="tag stay">유지</span></div>
+<p class="do">2단계 · 걸어 본 길을 스스로 표시해 뒤따르는 이를 데려가는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">장인</span><span class="ax">마나</span><span class="tag stay">유지</span></div>
+<p class="do">3단계 · 처음 가는 곳에도 길을 내어 대열을 통째로 옮기는</p>
+</div>
+</section>
+<h2 class="sec">남은 판단</h2>
+<div class="box">
+<h3>왜 동물이 아니어도 되는가</h3>
+<p>사역사의 직업 설명은 "분류군을 통째로 부려 싸움을 짜는 직업"이다. 부리는 대상이 짐승일 이유가 없다 — 생태도감의 계열이면 무엇이든 부릴 수 있다.</p>
+<p>세 번째를 동물로 채우면 셋이 모두 <b>몸으로 때리는 쪽</b>이 되어 카드가 취향으로만 갈린다. 식물은 싸우는 방식이 다르다 — 스스로 움직이지 않고, 이미 그 자리에 뿌리내려 있다.</p>
+</div>
+<div class="box">
+<h3>덩굴은 한 종이 아니라 계열이다</h3>
+<p>생태도감에서 덩굴 계열은 층을 올라가며 계속 나온다. 짐승·곤충과 같은 급의 분류군이다:</p>
+<p>독덩굴(6~10층 숲·늪) · 덩굴꽃(66~70층 밀림) · 월광덩굴(96~100층 성층) · 중력 매복 덩굴(121~125층 찢긴 천창).</p>
+<p>1~10층에서 지금 바로 만나는 것은 독덩굴 하나다. 나머지는 올라가며 같은 계열로 이어진다.</p>
+</div>
+<div class="box">
+<h3>셋의 결</h3>
+<p><b>짐승(힘)</b>은 몸으로 밀어낸다 · <b>곤충(속도)</b>은 수로 덮친다 · <b>덩굴(방어)</b>은 길목을 막아 붙잡아 둔다.</p>
+<p>셋 다 같은 자리에서 다른 일을 한다 — 공격만 늘리는 대신, 버티는 한 장이 생겨 사역사로 탱커를 세울 길이 열린다.</p>
+</div>
+<div class="box">
+<h3>바뀌지 않은 것</h3>
+<p>확정 여덟 장(중갑·강골·도발·호흡·투창·연창·속박·역병)은 그대로다.</p>
+<p>길잡이 견습·숙련·장인도 그대로다 — 47차 이름을 다시 건드리지 않았다.</p>
+</div>
+<p class="foot">
+  데이터: <code>data/job_tree.json</code> · 생태도감: <code>data/ecology_codex.json</code> ·
+  생성기: <code>sim/center/sims/gen_keyword_48.py</code><br>
+  직업 id·카드 id 는 그대로다(<code>l2_hunter</code> · <code>kw_hunter_lure</code>).<br>
+  숙련도·AI 연동 규칙과 <code>docs/gdd/</code> 쪽 직업 표는 아직 이번 값이 아니다.
+</p>
+</body>
+</html>

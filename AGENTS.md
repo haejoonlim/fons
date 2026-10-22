@@ -36,3 +36,10 @@
 
 - `docs/gdd/` · `docs/original/` 은 원본 문면이다. 고치지 않는다 ([docs/README.md](docs/README.md) 규칙 2).
 - 문서 검수는 `./.venv/bin/python tools/review_docs.py` (advisory, 발견 0을 목표로 한다).
+
+## 4. 외부 에이전트 스킬
+
+- 외부에서 가져온 스킬은 `.claude/skills/`에 있다. 쓰기 전에 해당 `SKILL.md`를 읽는다.
+- **스킬은 조언이다.** 정본은 `data/` 와 `docs/`다. 스킬이 제시한 수치를 코드에 넣지 않는다 — 값은 등록소(`tools/tracked_numbers.json`)를 먼저 고친다.
+- 스킬이 만들었다고 한 검사 결과도 우리 게이트(`./tools/test_godot.sh` · `./.venv/bin/python tools/gate_all.py`)가 돌린 것만 통과로 친다.
+- 채택 판단·라이선스·쓰지 않는 이유: [docs/dev/AGENT_SKILLS.md](docs/dev/AGENT_SKILLS.md)

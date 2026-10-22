@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>직업 키워드 재설계 (49차)</title>
+<style>
+  :root{--bg:#101317;--card:#191e26;--card2:#202734;--line:#2b3340;
+        --fg:#eef2f7;--dim:#96a1b0;--accent:#7cc4ff;--warn:#f2b75e;--green:#9be0b4}
+  *{box-sizing:border-box} html,body{overflow-x:hidden}
+  body{margin:0 auto;max-width:720px;background:var(--bg);color:var(--fg);
+       font:18px/1.7 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+       padding:20px 16px 64px}
+  h1{font-size:23px;line-height:1.35;margin:0 0 8px}
+  .lead{color:var(--dim);font-size:15.5px;line-height:1.7;margin:0 0 18px}
+  h2.sec{font-size:15px;color:var(--dim);letter-spacing:.06em;margin:34px 0 12px;
+         padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .job{background:var(--card);border:1px solid var(--line);border-radius:14px;
+       padding:17px 15px 15px;margin-bottom:15px}
+  .jh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:3px}
+  .l1{font-size:12.5px;color:var(--dim);border:1px solid var(--line);border-radius:20px;
+      padding:2px 9px;white-space:nowrap}
+  .jh h3{font-size:23px;margin:0;line-height:1.25}
+  .arrow{color:var(--dim);font-size:16px}
+  .jdesc{font-size:15px;color:var(--dim);margin:0 0 9px}
+  .note{font-size:15.5px;color:var(--warn);margin:5px 0 13px;line-height:1.6}
+  .note::before{content:"지적  ";font-weight:700}
+  .card{background:var(--card2);border-radius:11px;padding:12px 14px;margin-bottom:9px}
+  .chead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .old{font-size:17px;color:var(--dim);text-decoration:line-through}
+  .new{font-size:23px;font-weight:800;color:var(--accent)}
+  .keep{font-size:23px;font-weight:800;color:var(--fg)}
+  .ax{font-size:13.5px;color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+  .tag{font-size:12px;border-radius:20px;padding:1px 8px;margin-left:auto}
+  .done{background:#1d3326;color:var(--green);border:1px solid #2f5a40}
+  .stay{background:#1c2530;color:var(--dim);border:1px solid var(--line)}
+  .do{font-size:16px;color:#d3dbe6;margin:6px 0 0;line-height:1.6}
+  .why{font-size:14.5px;color:var(--dim);margin:5px 0 0;line-height:1.6}
+  .why::before{content:"왜  ";color:#6f8ba3}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:12px;
+       padding:15px 16px;margin-bottom:12px;font-size:16px;line-height:1.75}
+  .box h3{font-size:17px;margin:0 0 6px}
+  .box p{margin:0 0 10px} .box p:last-child{margin:0}
+  .lad{display:grid;grid-template-columns:1fr;gap:8px;margin:2px 0 14px}
+  .step{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
+  .shead{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .num{font-size:12.5px;font-weight:800;color:#0f1318;background:var(--accent);
+       border-radius:6px;padding:1px 8px;white-space:nowrap}
+  .sname{font-size:22px;font-weight:800;letter-spacing:.02em}
+  .sax{font-size:13px;color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+  .sgrow{font-size:14.5px;color:var(--dim);line-height:1.6;margin-top:4px}
+  .sgrow b{color:#cfe4f7;font-weight:700}
+  .rj{background:var(--card2);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .rh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .rh b{font-size:15.5px;color:#b9c6d4}
+  .rw{font-size:13px;color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+  .rj p{margin:5px 0 0;font-size:14.5px;line-height:1.6;color:var(--dim)}
+  .foot{color:var(--dim);font-size:14px;line-height:1.7;margin-top:28px}
+  code{background:#0b0e12;border:1px solid var(--line);border-radius:5px;padding:0 4px;font-size:14px}
+</style>
+</head>
+<body>
+<h1>직업 키워드 재설계 — 49차</h1>
+<p class="lead">길잡이 세 장의 이름만 다시 지었다. 47차의 계급어(견습·숙련·장인)는 이미 다른 계통에서
+쓰는 말이라 버리고, <b>길</b> 하나를 어근으로 세 단계를 만들었다 — 길눈 · 길꾼 · 길지기.
+확정 여덟 장과 사역사 셋은 손대지 않았다. 아래 값은 전부 <code>job_tree.json</code> 에서 읽었다.</p>
+
+<div class="box"><b>카드 3장 교체 · 확정 8장 · 직업 4개</b><br>길잡이 이름만 바꾸고 나머지는 값 그대로 확인했다.</div>
+<h2 class="sec">궁수</h2>
+<section class="job">
+<div class="jh"><span class="l1">궁수</span><h3>사역사</h3></div>
+<p class="jdesc">분류군을 통째로 부려 싸움을 짜는 직업</p>
+<div class="card">
+<div class="chead"><span class="keep">짐승</span><span class="ax">힘</span><span class="tag stay">유지</span></div>
+<p class="do">들매·매와 늑대·곰·멧돼지를 한 무리로 불러 밀어붙이게 하는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">곤충</span><span class="ax">속도</span><span class="tag stay">유지</span></div>
+<p class="do">둑개미와 독벌 떼를 풀어 수로 덮치게 하는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">덩굴</span><span class="ax">방어</span><span class="tag stay">유지</span></div>
+<p class="do">가시 돋친 줄기를 길목에 심어 지나가려는 발을 붙잡아 두게 하는</p>
+</div>
+</section>
+<h2 class="sec">전사</h2>
+<section class="job">
+<div class="jh"><span class="l1">전사</span><h3>창술사</h3></div>
+<p class="jdesc">창끝을 먼저 내밀어 거리를 지키는 직업</p>
+<div class="card">
+<div class="chead"><span class="keep">투창</span><span class="ax">치명</span><span class="tag done">확정</span></div>
+<p class="do">창을 던져 꽂아 한 번에 끝내는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">관철</span><span class="ax">관통</span><span class="tag done">확정</span></div>
+<p class="do">판을 뚫고 뒤에 선 것까지 꿰는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">연창</span><span class="ax">속도</span><span class="tag done">확정</span></div>
+<p class="do">창끝을 쉬지 않고 이어 내질러 틈을 주지 않는</p>
+</div>
+</section>
+<h2 class="sec">마법사</h2>
+<section class="job">
+<div class="jh"><span class="l1">마법사</span><h3>주술사</h3></div>
+<p class="jdesc">저주를 걸어 상대의 몫을 하나씩 깎는 직업</p>
+<div class="card">
+<div class="chead"><span class="keep">낙인</span><span class="ax">주문</span><span class="tag done">확정</span></div>
+<p class="do">적 몸에 저주 표식을 태워 남기는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">속박</span><span class="ax">방어</span><span class="tag done">확정</span></div>
+<p class="do">발밑에서 올라온 그림자가 다가오는 것을 붙잡는</p>
+</div>
+<div class="card">
+<div class="chead"><span class="keep">역병</span><span class="ax">마법관통</span><span class="tag done">확정</span></div>
+<p class="do">옮은 병이 곁으로 번져 방어를 지나 안에서 썩히는</p>
+</div>
+</section>
+<h2 class="sec">지원가</h2>
+<section class="job">
+<div class="jh"><span class="l1">지원가</span><h3>길잡이</h3></div>
+<p class="jdesc">길을 살피고 대열을 이끌어 목적지까지 데려가는 직업</p>
+<p class="note">"견습·숙련·장인은 이미 쓰는 말이다 — 길잡이답게 다시"</p>
+<div class="lad">
+<div class="step">
+<div class="shead"><span class="num">1단계</span><span class="sname">길눈</span><span class="sax">치명</span></div>
+<div class="sgrow"><b>보다</b> — 길이 어디로 뻗었는지 눈으로 먼저 안다.</div>
+</div>
+<div class="step">
+<div class="shead"><span class="num">2단계</span><span class="sname">길꾼</span><span class="sax">민첩</span></div>
+<div class="sgrow"><b>다루다</b> — 걸어 본 길을 표시해 남에게 건넨다.</div>
+</div>
+<div class="step">
+<div class="shead"><span class="num">3단계</span><span class="sname">길지기</span><span class="sax">마나</span></div>
+<div class="sgrow"><b>맡다</b> — 난 길을 지키고, 없는 길을 새로 낸다.</div>
+</div>
+</div>
+<div class="card">
+<div class="chead"><span class="old">견습</span><span class="arrow">→</span><span class="new">길눈</span><span class="ax">치명</span><span class="tag done">교체</span></div>
+<p class="do">1단계 · 아직 걸어 보지 못한 길을 눈으로 먼저 읽는</p>
+<p class="why">1단계. 눈으로 먼저 읽는다 — 아직 걸어 보지 못한 길을 알아본다.</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">숙련</span><span class="arrow">→</span><span class="new">길꾼</span><span class="ax">민첩</span><span class="tag done">교체</span></div>
+<p class="do">2단계 · 걸어 본 길을 표시해 뒤따르는 이를 데려가는</p>
+<p class="why">2단계. 읽은 길을 다뤄 남을 데려간다.</p>
+</div>
+<div class="card">
+<div class="chead"><span class="old">장인</span><span class="arrow">→</span><span class="new">길지기</span><span class="ax">마나</span><span class="tag done">교체</span></div>
+<p class="do">3단계 · 난 길을 지키고 처음 가는 곳에는 새 길을 내는</p>
+<p class="why">3단계. 난 길을 지키고, 없는 곳에는 새 길을 낸다.</p>
+</div>
+<h3 style="font-size:15px;color:var(--dim);margin:16px 0 4px">지금까지 버린 이름</h3>
+<div class="rj"><div class="rh"><b>답사 · 인도 · 개척</b><span class="rw">44차</span></div><p>뜻은 좋지만 어느 것이 위인지 이름만으로 알 수 없었다.</p></div>
+<div class="rj"><div class="rh"><b>발자국 · 표식 · 이정표</b><span class="rw">46차</span></div><p>표시물이 커지는 그림 — 위계를 읽는 사람이 추론해야 했다.</p></div>
+<div class="rj"><div class="rh"><b>견습 · 숙련 · 장인</b><span class="rw">47차</span></div><p>위계는 보였지만, 이미 다른 계통에서 쓰는 일반 계급어였다.</p></div>
+</section>
+<h2 class="sec">남은 판단</h2>
+<div class="box">
+<h3>왜 길 하나로 묶었나</h3>
+<p>셋 다 <b>길</b>로 시작한다. 어근이 같으면 같은 직업의 세 단계라는 것이 먼저 보인다.</p>
+<p>뒤에 붙는 말이 단계를 만든다 — <b>눈 → 꾼 → 지기</b>. 보는 자(감각) → 다루는 자(솜씨) → 맡는 자(책임).</p>
+<p>견습·숙련·장인은 누구에게나 붙는 말이라 길잡이를 가리키지 못했다. 이제 카드 셋만 늘어놓아도 어떤 직업의 사다리인지 읽힌다.</p>
+</div>
+<div class="box">
+<h3>셋이 하는 일</h3>
+<p><b>길눈</b>은 눈으로 먼저 읽는다 — 아직 가 보지 않은 길의 위험을 알아본다.</p>
+<p><b>길꾼</b>은 읽은 길을 표시해 뒤따르는 이를 데려간다.</p>
+<p><b>길지기</b>는 난 길을 지키고, 처음 가는 곳에 새 길을 낸다.</p>
+<p>축은 그대로 치명 · 민첩 · 마나다. 단계가 높아도 오르는 힘이 달라서 3단계가 1단계의 상위 호환이 되지 않는다.</p>
+</div>
+<div class="box">
+<h3>바뀌지 않은 것</h3>
+<p>확정 여덟 장(중갑·강골·도발·호흡·투창·연창·속박·역병)은 그대로다.</p>
+<p>사역사 셋(짐승·곤충·덩굴)과 낙인·관철도 그대로다. 이번 라운드는 길잡이 세 장의 이름만 건드렸다.</p>
+</div>
+<div class="box">
+<h3>아직 정하지 않은 것</h3>
+<p>숙련도가 무엇으로 오르고, 몇에서 카드가 바뀌는지는 가안이다. AI 연동 규칙도 아직 없다.</p>
+<p>셋이 <b>동시에</b> 오르는지 <b>하나씩</b> 열리는지 미정이다 — 동시에 오르면 1·2단계는 지나가는 자리가 된다.</p>
+</div>
+<p class="foot">
+  데이터: <code>data/job_tree.json</code> · 생성기: <code>sim/center/sims/gen_keyword_49.py</code><br>
+  직업 id·카드 id 는 그대로다(<code>l2_strategist</code> · <code>kw_strategist_command</code> 등).<br>
+  숙련도·AI 연동 규칙과 <code>docs/gdd/</code> 쪽 직업 표는 아직 이번 값이 아니다.
+</p>
+</body>
+</html>
