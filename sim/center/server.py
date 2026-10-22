@@ -63,6 +63,8 @@ SIM_LOCK = threading.Lock()  # 동시 실행 1개 — 몬테카를로 시뮬 병
 #   · review 는 advisory(판단이 섞인 권고)지만 화면에서는 실패로 보이므로 제목에 그렇게 적는다.
 GATES = [
     ("docs", "필수 산출물·구조·데이터", ["tools/check_docs.py"], "python3 tools/check_docs.py", 120),
+    ("pages", "테스트 센터 페이지 내장값 ↔ data/",
+     ["sim/center/sync_pages.py", "--quiet"], "python3 sim/center/sync_pages.py", 120),
     ("gacha", "소환 규칙 재현 (확정 #32·#11)", ["sim/gacha.py"], "python3 sim/gacha.py", 120),
     ("review", "문서 기계 검수 (advisory — 실패가 곧 빌드 실패는 아님)",
      ["tools/review_docs.py"], "python3 tools/review_docs.py", 120),
@@ -379,6 +381,18 @@ def _gate_worker(job):
 
 
 if __name__ == '__main__':
+    def _sync_pages_on_start():
+        """페이지 내장 JSON 을 data/ 기준으로 맞춘다 — 생성기가 없으니 시작할 때 --write."""
+        try:
+            r = subprocess.run([sys.executable, os.path.join(HERE, "sync_pages.py"),
+                                "--write", "--quiet"],
+                               capture_output=True, text=True, cwd=REPO, timeout=120)
+            last = ((r.stdout or "") + (r.stderr or "")).strip().splitlines()
+            print(f"[center] 페이지 동기화 — {last[-1] if last else '출력 없음'}", flush=True)
+        except Exception as ex:  # 동기화 실패가 서버를 막지는 않는다 (페이지는 옛 이름으로 뜬다)
+            print(f"[center] 페이지 동기화 건너뜀: {ex}", flush=True)
+
+    _sync_pages_on_start()
     with http.server.ThreadingHTTPServer(('127.0.0.1', PORT), CenterHandler) as httpd:
         print(f'[center] http://localhost:{PORT}/test_center.html  (파일 저장 → 자동 리로드)')
         print(f'[center] 실시간 시뮬 API: /api/sims · /api/sim/<이름> · 게이트 /api/gates')

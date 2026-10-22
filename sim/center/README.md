@@ -28,6 +28,7 @@
 sim/center/
   server.py           # 정적 서빙 + /api/sim · /api/snapshots · /api/gates · /api/gate-ledger
   run_snapshots.py    # SIMS 정본 — 시뮬 실행·stdout 캡처·데이터 지문
+  sync_pages.py       # 페이지 생성물을 data/ 에서 다시 계산 (게이트 `pages` · 서버 시작 시 --write)
   sims/               # 시뮬 본체 22종 + 형제 모듈 (gacha_test · sim_economy …)
   pages/              # 서버 루트 — 탭 HTML 6종 (test_center · gacha · 생태도감 · 바이옴 여정 · 직업트리 · promotion_lab)
 ```
@@ -63,6 +64,56 @@ sim/center/
 실행 순서는 표의 위에서 아래. 형제 모듈 `retier.py` · `keyword_scale.json` 이 함께 있어야 한다
 (`gen_career_html.py` 는 `gen_career_34.py` 의 `AX_NAME` 을 import 한다).
 
+## 페이지 동기화 (`sync_pages.py`)
+
+`pages/생태도감.html`·`pages/바이옴_여정.html` 은 값을 HTML 안에 박아 둔 정적 생성물이다.
+원본 생성기(`gen_ecology_codex.py`·`gen_biome_journey.py`)는 폰즈에 없다. 그래서 원본의 계산
+규칙을 [sync_pages.py](sync_pages.py) 로 옮겨 `data/` 위에서 다시 돌린다. **페이지 값을 손으로
+고치지 않는다.** 고칠 것은 `data/` 이고, 페이지는 스크립트로 따라오게 한다.
+
+| 명령 | 하는 일 |
+|---|---|
+| `sync_pages.py` | 검사. 다르면 exit 1 |
+| `sync_pages.py --write` | 페이지 갱신 |
+| `sync_pages.py --quiet` | 한 줄 요약 (게이트·서버가 이걸 쓴다) |
+
+서버는 시작할 때 `--write` 를 한 번 돌리고, `gate_all.py` 는 `pages` 단계에서 `--check` 로 막는다.
+
+### 다시 계산하는 것
+
+| 페이지 | 값 | 규칙 |
+|---|---|---|
+| 생태도감 종 | `tier`·`r`·`d`·`stats`·`threat`·`el`·`floors`·`temp`·`bio`·`bids`·`note`·`pred`·`prey`·`rel`·`eco`·`bc` | `monsters.json`·`ambient.json`·`biomes.json` 그대로. 스탯은 0·미기입을 버리고 `spd` 를 `aspd` 로 통일 |
+| 생태도감 종 | `level` | 서식지 → 바이옴 슬롯 → `[slot*5-4, slot*5]`. 서식지가 비면 `spawn.floors` 로 대신한다 |
+| 생태도감 종 | `bc` | 4류는 동물, 6류는 식물. 악마 계열 12종은 동물로 되돌리고, `undead`·`elemental` 은 `ether` |
+| 생태도감 종 | 정렬 | 전투(티어 높은 순) → 야생 → 같은 급은 이름순 |
+| 생태도감 바이옴 | `gid`·`gname`·`tempS`·`cl`·`slots`·`floors`·`mult`·`habitat`·`species`·`missing`·`curN`·`complete` | 그룹·기후·난이도에서. `species` 는 서식지가 겹치는 종 |
+| 생태도감 집계 | `edges`·`nAmb`·`nMon`·`nSp`·`nPlan` | 두 바이옴을 같이 사는 종이 있으면 `edges` 1 |
+| 바이옴 여정 | `step`·`region`·`slot`·`id`·`name`·`kit`·`layer`·`floors`·`category`·`gatekeeper`·`regions` | 슬롯 1..26 오름차순으로 걷는다. `slot = (rx*wx + rz*wz) % 26`, `wx`·`wz` 는 페이지의 `grid` |
+| 생태도감 바이옴 | `resName`·`resDesc`·`K`·`r`·`energy` | `data/ecology_energy_channels.json` 의 `roots`(바이옴별 근원자원 표)에서. `energy` 는 그 바이옴 노드의 `id`·`name`·`cat`·`consumerCount` |
+| 생태도감 에너지 | `energy` 130노드의 `eaters`·`consumerRoles`·`map` | 근원자원 26(종류별 식성·역할 판정, 없으면 역할 폴백) + 지역 채널 104(카탈로그의 `consumerRoles` ∩ 현지 역할). 현지 서식종 = `bids` 가 그 바이옴을 포함한 종, 순서는 종 정렬 순 |
+| 생태도감 에너지 | 종 `resources` | 그 종을 `eaters` 에 넣은 노드들. 옛 prey 문자열(`corpse`·`grass`…)은 `legacyCategories` 로 분류를 정해 같은 분류의 첫 노드, 모르면 그 바이옴 근원자원으로 붙는다 |
+| 두 페이지 | 이름 일반 | `id` 가 정본에 있으면 `name`·`n` 을 정본 이름으로 (전 깊이) |
+
+에너지 계산은 `build_energy()` 가 맡는다. 노드가 130개가 아니거나, 소비종이 없는 노드나
+비현지·비호환 링크가 나오면 페이지를 쓰지 않고 exit 1 로 멈춘다.
+
+### 계산하지 않는 것
+
+`note`(바이옴 표), `settlements`(종족 카탈로그), 여정의 3D 계측(`profile`·`arc`·`placed`·
+`footprint`·`distance`·`masks`·`camera`·`ground`·`party`·`delta`), `hero`·`mission`·`pilot`.
+원본 생성기가 읽던 다른 자료(3D 자산·종족 카탈로그)가 폰즈에 없다. 이 자리들은 페이지에 남은
+저자 값이고, 스크립트는 건드리지 않는다.
+
+### 멈추는 조건
+
+- `data/` 의 바이옴 `slots[0]` 이 1..26 연속이 아니면 멈춘다 (여정 슬롯 지도를 만들 수 없다).
+- 에너지 카탈로그가 근원자원 26 · 바이옴 26 · 채널 4씩이 아니거나, 없는 바이옴을 가리키거나,
+  `kind`·`category` 가 plant/animal/abiotic/ether 밖이면 멈춘다 (그래프를 만들 수 없다).
+- 여정 스텝 수와 바이옴 수가 다르면 멈춘다 (자산 없이 새 스텝을 만들 수 없다).
+- 페이지의 원래 JSON 띄어쓰기(`": "` 또는 빽빽한 `":"`)를 지킨다. 안 지키면 이름 하나 바꿀 때
+  파일 전체(60만 자)가 다시 쓰인다.
+
 ## 옮기지 않은 시뮬 2종 (이유)
 
 | 시뮬 | 왜 뺐나 |
@@ -80,11 +131,12 @@ sim/center/
 | id | 명령 | 성격 |
 |---|---|---|
 | `docs` | `python3 tools/check_docs.py` | 필수 산출물 52종 · 구조 회귀 · data/ 정본 대조 |
+| `pages` | `python3 sim/center/sync_pages.py` | 생태도감·바이옴 여정 내장값 ↔ data/ (`--write` 로 맞춤) |
 | `gacha` | `python3 sim/gacha.py` | 확정 #32 확률표 · #11 종족 롤 |
 | `review` | `python3 tools/review_docs.py` | advisory — 실패가 곧 빌드 실패는 아니다 |
 | `env` | `python3 tools/check_env.py` | 툴체인 doctor |
 | `godot` | `bash tools/test_godot.sh` | 임포트 + GUT (수 분) |
-| `all` | `python3 tools/gate_all.py` | 커밋 전 전체 = `docs` + `gacha` |
+| `all` | `python3 tools/gate_all.py` | 커밋 전 전체 = `docs` + `glossary` + `gdd` + `text` + `pages` + `gacha` |
 
 `godot` 은 수 분 걸려서 스냅샷에는 넣지 않았다. 패널에서만 돌린다.
 
@@ -104,6 +156,6 @@ import 해 쓴다. 두 벌로 쓰면 화면은 초록인데 게이트가 우는 
 | `sims/gacha_test.py` | `skill_catalog_gen.py` 를 파일 경로로 읽는다 — 형제 모듈이라 같이 옮겼다 |
 | `sims/playthrough_audit.py` | `sim_economy.py` 를 `design-docs/_tools/` 에서 찾던 것 → `sims/` 옆 파일 |
 | `sims/test_gacha_revisions.py` | `gacha.html` 이 `sims/` 가 아니라 `pages/` 에 있다 |
-| `sims/audit_sim.py` | (옮기지 않음 — 위 표) |
+| `sims/audit_sim.py` | (옮기지 않음 — 위 표. 계산 규칙은 `sync_pages.py` 가 대신한다) |
 | `server.py` | 원본의 "루트 밖 HTML 허용" 규칙을 지웠다. 모든 탭이 `pages/` 안에 있어 필요 없고, 경로 탈출 구멍도 함께 사라진다 |
 | `pages/test_center.html` | iframe `../` 제거 · 클론 재현성 검사 제거(폰즈에 `check_clone_selfconsistent.py` 가 없다) · 게이트/가이드 문구를 폰즈 명령으로 |
