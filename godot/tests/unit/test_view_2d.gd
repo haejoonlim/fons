@@ -42,6 +42,37 @@ func test_unmount_clears() -> void:
 	assert_false(view.is_mounted())
 	view.free()
 
+func _key(code: Key) -> InputEventKey:
+	var ev := InputEventKey.new()
+	ev.keycode = code
+	ev.pressed = true
+	return ev
+
+
+func test_space_asks_for_the_next_floor() -> void:
+	# 뷰는 규칙을 모른다 — 키를 의도로 바꿔 보낼 뿐이다.
+	var view := FonsView2D.new()
+	var got: Array = []
+	view.intent.connect(func(kind, payload): got.append(kind))
+	view._unhandled_input(_key(KEY_SPACE))
+	view._unhandled_input(_key(KEY_R))
+	view._unhandled_input(_key(KEY_A))
+	assert_eq(got, [&"next_floor", &"restart"], "스페이스=다음 층 · R=재시작 · 나머지는 무시")
+	view.free()
+
+
+func test_field_mode_maps_space_to_interact_and_r_to_retreat() -> void:
+	# 탐험 화면에서는 스페이스가 "다음 층"이 아니라 "조우와 싸운다"다.
+	var view := FonsView2D.new()
+	view.mount({"mode": "field", "field": Vector2(40, 28), "entities": []})
+	var got: Array = []
+	view.intent.connect(func(kind, payload): got.append(kind))
+	view._unhandled_input(_key(KEY_SPACE))
+	view._unhandled_input(_key(KEY_R))
+	assert_eq(got, [&"interact", &"retreat"], "필드: 스페이스=조우 · R=후퇴")
+	view.free()
+
+
 func test_screen_position_uses_projection_and_scale() -> void:
 	var view := FonsView2D.new()
 	view.pixels_per_unit = 10.0

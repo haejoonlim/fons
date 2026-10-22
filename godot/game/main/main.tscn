@@ -4,3 +4,24 @@
 
 [node name="Run" type="Node"]
 script = ExtResource("1_run")
+
+[node name="Hud" type="CanvasLayer" parent="."]
+
+[node name="FloorLabel" type="Label" parent="Hud"]
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 900.0
+offset_bottom = 40.0
+
+[node name="HintLabel" type="Label" parent="Hud"]
+offset_left = 16.0
+offset_top = 44.0
+offset_right = 1264.0
+offset_bottom = 76.0
+
+[node name="LogLabel" type="Label" parent="Hud"]
+offset_left = 16.0
+offset_top = 520.0
+offset_right = 1264.0
+offset_bottom = 704.0
+autowrap_mode = 2
