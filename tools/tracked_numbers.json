@@ -5,84 +5,108 @@
     {
       "name": "SHAPED_RATE",
       "value": "0.05",
-      "aliases": ["SHAPED_RATE"],
+      "aliases": [
+        "SHAPED_RATE"
+      ],
       "sources": [],
       "note": "확정 #11 · D-276 — shaped 종족 롤 비율"
     },
     {
       "name": "LEGACY_RATE",
       "value": "0.95",
-      "aliases": ["LEGACY_RATE"],
+      "aliases": [
+        "LEGACY_RATE"
+      ],
       "sources": [],
       "note": "확정 #11 · D-276 — legacy 20종 합계 비율"
     },
     {
       "name": "LEGACY_SPECIES",
       "value": "20",
-      "aliases": ["LEGACY_SPECIES"],
+      "aliases": [
+        "LEGACY_SPECIES"
+      ],
       "sources": [],
       "note": "확정 #11 · D-276 — legacy 종족 수 (종족별 균등 4.75%)"
     },
     {
       "name": "TICKET_COST",
-      "value": "130",
-      "aliases": ["TICKET_COST"],
+      "value": "131",
+      "aliases": [
+        "TICKET_COST"
+      ],
       "sources": [],
       "note": "확정 #16 — 소환 티켓 단가(마석)"
     },
     {
       "name": "FREE_SUMMONS",
       "value": "10",
-      "aliases": ["FREE_SUMMONS"],
+      "aliases": [
+        "FREE_SUMMONS"
+      ],
       "sources": [],
       "note": "확정 #17 — 최초 10회 무료 소환"
     },
     {
       "name": "SOFT_PITY_START",
       "value": "70",
-      "aliases": ["SOFT_PITY_START"],
+      "aliases": [
+        "SOFT_PITY_START"
+      ],
       "sources": [],
       "note": "확정 #32 — ★4 소프트 피티 시작 회차"
     },
     {
       "name": "SOFT_PITY_STEP",
       "value": "0.02",
-      "aliases": ["SOFT_PITY_STEP"],
+      "aliases": [
+        "SOFT_PITY_STEP"
+      ],
       "sources": [],
       "note": "확정 #32 — 소프트 피티 회차당 증가폭"
     },
     {
       "name": "HARD_PITY_4",
       "value": "130",
-      "aliases": ["HARD_PITY_4"],
+      "aliases": [
+        "HARD_PITY_4"
+      ],
       "sources": [],
       "note": "확정 #32 — ★4 하드 천장"
     },
     {
       "name": "HARD_PITY_5PLUS",
       "value": "5200",
-      "aliases": ["HARD_PITY_5PLUS"],
+      "aliases": [
+        "HARD_PITY_5PLUS"
+      ],
       "sources": [],
       "note": "확정 #32 — ★5+ 하드 천장 (★5:★6 = 5:1 교대)"
     },
     {
       "name": "LEY_PER_CRYSTAL",
       "value": "60",
-      "aliases": ["LEY_PER_CRYSTAL"],
+      "aliases": [
+        "LEY_PER_CRYSTAL"
+      ],
       "sources": [],
       "note": "D-267 — 마석 1개의 화폐(LEY) 발행액"
     },
     {
       "name": "MP_PER_CRYSTAL",
       "value": "130",
-      "aliases": ["MP_PER_CRYSTAL"],
+      "aliases": [
+        "MP_PER_CRYSTAL"
+      ],
       "sources": [],
       "note": "D-267 — 마석 1개의 마나 환산"
     },
     {
       "name": "LEVEL_CAP",
       "value": "130",
-      "aliases": ["LEVEL_CAP"],
+      "aliases": [
+        "LEVEL_CAP"
+      ],
       "sources": [],
       "note": "확정 #34 — 영웅 레벨 상한"
     }
