@@ -27,7 +27,8 @@ from gate_contract import run
 PATHS = ("data/*.json",)
 
 ALLOW = ("assassin", "D-267_", "마석본위제_화폐_은행", "r-전략종", "자유도원칙_Unity구현사양",
-         "저층_사육_마물_근거")  # 근거 문서 파일명 인용 (docs/design/저층_사육_마물_근거.md)
+         "저층_사육_마물_근거", "로스터_보강_화산_사막_심연")  # 근거 문서 파일명 인용
+# (docs/design/저층_사육_마물_근거.md · docs/design/로스터_보강_화산_사막_심연.md)
 
 # 비면 UI 가 빈다고 판단한 키만.
 REQUIRED_KEYS = ("name", "name_ko", "epithet", "desc", "telegraph")

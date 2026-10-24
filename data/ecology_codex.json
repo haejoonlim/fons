@@ -232,8 +232,8 @@
    "id": "mon_ashfly_01",
    "name": "재 파리떼",
    "floors": [
-    46,
-    50
+    76,
+    80
    ],
    "habitat": [
     "volcano",
@@ -246,8 +246,8 @@
     20,
     300
    ],
-   "spawnBlock": 10,
-   "group": "G1 — 하부 탑"
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
   },
   {
    "id": "mon_ashland_01",
@@ -478,7 +478,7 @@
   },
   {
    "id": "mon_blackchainbeetle_01",
-   "name": "흑렌 갑충",
+   "name": "검은사슬갑충",
    "floors": [
     116,
     120
@@ -1195,7 +1195,7 @@
   },
   {
    "id": "mon_crystalking_01",
-   "name": "결정 수호자·수정 나무 왕",
+   "name": "수정나무왕",
    "floors": [
     106,
     110
@@ -2014,7 +2014,7 @@
   },
   {
    "id": "mon_frostgull_01",
-   "name": "동결 갈매기",
+   "name": "서리 갈매기",
    "floors": [
     101,
     105
@@ -2781,7 +2781,7 @@
   },
   {
    "id": "mon_gravitymoth_01",
-   "name": "어긋나개 나방",
+   "name": "어긋난 나방",
    "floors": [
     121,
     125
@@ -3004,7 +3004,7 @@
   },
   {
    "id": "mon_hell_hound_01",
-   "name": "헬 하운드",
+   "name": "지옥사냥개",
    "floors": [
     46,
     50
@@ -3430,7 +3430,7 @@
   },
   {
    "id": "mon_inkwraith_01",
-   "name": "잉크 형태",
+   "name": "잉크망령",
    "floors": [
     71,
     75
@@ -3819,7 +3819,7 @@
   },
   {
    "id": "mon_lesser_demon_01",
-   "name": "레서 데몬",
+   "name": "하급악마",
    "floors": [
     86,
     90
@@ -3925,7 +3925,7 @@
   },
   {
    "id": "mon_lycanthrope_01",
-   "name": "라이칸슬로프",
+   "name": "늑대인간",
    "floors": [
     6,
     10
@@ -4068,7 +4068,7 @@
   },
   {
    "id": "mon_mindflayer_01",
-   "name": "마인드 플레이어",
+   "name": "사념포식자",
    "floors": [
     1,
     130
@@ -4801,7 +4801,7 @@
   },
   {
    "id": "mon_reefneedle_01",
-   "name": "갈매기침",
+   "name": "산호침",
    "floors": [
     11,
     15
@@ -5233,7 +5233,7 @@
   },
   {
    "id": "mon_rustkite_01",
-   "name": "적갈래매",
+   "name": "적갈매",
    "floors": [
     81,
     85
@@ -5249,7 +5249,7 @@
     56
    ],
    "spawnBlock": 17,
-   "group": "중층"
+   "group": "G2 — 중부 탑"
   },
   {
    "id": "mon_ruststag_01",
@@ -5313,7 +5313,7 @@
   },
   {
    "id": "mon_sandchime_01",
-   "name": "모래 종",
+   "name": "모래방울",
    "floors": [
     41,
     45
@@ -5353,7 +5353,7 @@
   },
   {
    "id": "mon_sanddart_01",
-   "name": "모래사다리",
+   "name": "모래화살",
    "floors": [
     11,
     15
@@ -5394,7 +5394,7 @@
   },
   {
    "id": "mon_sandreaver_01",
-   "name": "모래발톱사냥꾼",
+   "name": "모래갈퀴",
    "floors": [
     81,
     85
@@ -5445,7 +5445,7 @@
    ],
    "diet": "omnivore",
    "role": "prey",
-   "note": "여울을 왕복하는 소어 떼 — 산호상어·물수제비 매·조류수명이 노리는 먹이층",
+   "note": "여울을 왕복하는 소어 떼 — 산호상어·물수제비 매·조류장어이 노리는 먹이층",
    "temp": [
     0,
     28
@@ -5799,7 +5799,7 @@
   },
   {
    "id": "mon_silentrodent_01",
-   "name": "침묵일자",
+   "name": "침묵쥐",
    "floors": [
     86,
     90
@@ -5819,7 +5819,7 @@
   },
   {
    "id": "mon_silentshade_01",
-   "name": "소리 삼키는 그림자",
+   "name": "무풍그림자",
    "floors": [
     111,
     115
@@ -5839,7 +5839,7 @@
   },
   {
    "id": "mon_silentsludge_01",
-   "name": "무풍 정체체",
+   "name": "무풍진흙",
    "floors": [
     111,
     115
@@ -5899,7 +5899,7 @@
   },
   {
    "id": "mon_silicamold_01",
-   "name": "백정 벌레",
+   "name": "규산곰팡이",
    "floors": [
     116,
     120
@@ -6045,7 +6045,7 @@
   },
   {
    "id": "mon_slime_blue_01",
-   "name": "슬라임(블루)",
+   "name": "푸른슬라임",
    "floors": [
     11,
     15
@@ -6087,10 +6087,10 @@
   },
   {
    "id": "mon_slime_red_01",
-   "name": "슬라임(레드)",
+   "name": "붉은슬라임",
    "floors": [
-    46,
-    50
+    76,
+    80
    ],
    "habitat": [
     "volcano",
@@ -6103,8 +6103,8 @@
     50,
     200
    ],
-   "spawnBlock": 10,
-   "group": "G1 — 하부 탑"
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
   },
   {
    "id": "mon_snake_01",
@@ -6177,7 +6177,7 @@
     102
    ],
    "habitat": [
-    "abyss"
+    "astral"
    ],
    "diet": "mana",
    "role": "elemental",
@@ -6186,7 +6186,7 @@
     -38,
     14
    ],
-   "spawnBlock": 0,
+   "spawnBlock": 21,
    "group": "중층 — 중부 탑"
   },
   {
@@ -6197,7 +6197,7 @@
     103
    ],
    "habitat": [
-    "abyss"
+    "astral"
    ],
    "diet": "mana",
    "role": "elemental",
@@ -6206,7 +6206,7 @@
     -38,
     14
    ],
-   "spawnBlock": 0,
+   "spawnBlock": 21,
    "group": "중층 — 중부 탑"
   },
   {
@@ -6217,7 +6217,7 @@
     105
    ],
    "habitat": [
-    "abyss"
+    "astral"
    ],
    "diet": "mana",
    "role": "elemental",
@@ -6226,7 +6226,7 @@
     -38,
     14
    ],
-   "spawnBlock": 0,
+   "spawnBlock": 21,
    "group": "중층 — 중부 탑"
   },
   {
@@ -6306,8 +6306,7 @@
     102
    ],
    "habitat": [
-    "volcano",
-    "lava"
+    "astral"
    ],
    "diet": "mana",
    "role": "elemental",
@@ -6316,7 +6315,7 @@
     26,
     58
    ],
-   "spawnBlock": 0,
+   "spawnBlock": 21,
    "group": "중층 — 중부 탑"
   },
   {
@@ -6327,8 +6326,7 @@
     103
    ],
    "habitat": [
-    "volcano",
-    "lava"
+    "astral"
    ],
    "diet": "mana",
    "role": "elemental",
@@ -6337,7 +6335,7 @@
     26,
     58
    ],
-   "spawnBlock": 0,
+   "spawnBlock": 21,
    "group": "중층 — 중부 탑"
   },
   {
@@ -6348,8 +6346,7 @@
     105
    ],
    "habitat": [
-    "volcano",
-    "lava"
+    "astral"
    ],
    "diet": "mana",
    "role": "elemental",
@@ -6358,7 +6355,7 @@
     26,
     58
    ],
-   "spawnBlock": 0,
+   "spawnBlock": 21,
    "group": "중층 — 중부 탑"
   },
   {
@@ -6841,8 +6838,8 @@
    "id": "mon_sulfurmite_01",
    "name": "유황 진드기",
    "floors": [
-    46,
-    50
+    76,
+    80
    ],
    "habitat": [
     "volcano",
@@ -6855,8 +6852,8 @@
     20,
     300
    ],
-   "spawnBlock": 10,
-   "group": "G1 — 하부 탑"
+   "spawnBlock": 16,
+   "group": "G2 — 중부 탑"
   },
   {
    "id": "mon_sunveil_01",
@@ -7064,7 +7061,7 @@
   },
   {
    "id": "mon_tideeel_01",
-   "name": "조류수명",
+   "name": "조류장어",
    "floors": [
     11,
     15
@@ -7373,8 +7370,8 @@
    "id": "mon_voidjelly_01",
    "name": "보이드 젤리",
    "floors": [
-    86,
-    90
+    96,
+    100
    ],
    "habitat": [
     "abyss"
@@ -7386,7 +7383,7 @@
     -30,
     30
    ],
-   "spawnBlock": 18,
+   "spawnBlock": 20,
    "group": "G2 — 중부 탑"
   },
   {

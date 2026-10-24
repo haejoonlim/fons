@@ -316,6 +316,104 @@
       }
     },
     {
+      "id": "mon_ashfly_01",
+      "name": "재 파리떼",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 2,
+      "level": [
+        99,
+        104
+      ],
+      "threatBase": 44.0,
+      "element": "fire",
+      "stats": {
+        "hp": 478,
+        "atk": 24,
+        "def": 7,
+        "aspd": 17,
+        "mdef": 4,
+        "cri": 5,
+        "cdmg": 150,
+        "eva": 12,
+        "sta": 60
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.5,
+        "note": "불에 약함"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          8,
+          12
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "sting"
+      },
+      "pattern": [
+        {
+          "name": "독침",
+          "cd": 6,
+          "effect": "1xATK + 독",
+          "telegraph": "노란 빛",
+          "counter": "방패"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          76,
+          80
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 310,
+        "exp": 162
+      },
+      "ecology": {
+        "diet": "omnivore",
+        "role": "swarm",
+        "habitat": [
+          "volcano",
+          "lava"
+        ],
+        "activity": "diurnal",
+        "temperature": {
+          "min": 20,
+          "max": 300
+        },
+        "water_need": 0.5,
+        "food_need": 0.4,
+        "aggression": 0.6,
+        "territoriality": 0.8,
+        "sociality": 0.95,
+        "reproduction": 0.85,
+        "predators": [
+          "mon_hell_hound_01"
+        ],
+        "prey": [
+          "열조류"
+        ],
+        "note": "화산 신규 서식종 — 화산재를 먹고 번지는 붉은 파리떼 (260종 확장 #63)",
+        "relationTypes": {
+          "열조류": "grazing"
+        }
+      }
+    },
+    {
       "id": "mon_ashmoth_01",
       "name": "잿불나방",
       "category": 2,
@@ -1882,7 +1980,7 @@
     },
     {
       "id": "mon_crystalking_01",
-      "name": "결정 수호자·수정 나무 왕",
+      "name": "수정나무왕",
       "category": 1,
       "aiType": "magic",
       "tier": 5,
@@ -5388,7 +5486,7 @@
     },
     {
       "id": "mon_hell_hound_01",
-      "name": "헬 하운드",
+      "name": "지옥사냥개",
       "category": 6,
       "aiType": "assassin",
       "tier": 3,
@@ -6182,7 +6280,7 @@
     },
     {
       "id": "mon_inkwraith_01",
-      "name": "잉크 형태",
+      "name": "잉크망령",
       "category": 5,
       "aiType": "melee",
       "tier": 3,
@@ -6962,7 +7060,7 @@
     },
     {
       "id": "mon_lesser_demon_01",
-      "name": "레서 데몬",
+      "name": "하급악마",
       "category": 6,
       "aiType": "assassin",
       "tier": 3,
@@ -7334,7 +7432,7 @@
     },
     {
       "id": "mon_lycanthrope_01",
-      "name": "라이칸슬로프",
+      "name": "늑대인간",
       "category": 6,
       "aiType": "assassin",
       "tier": 3,
@@ -7658,7 +7756,7 @@
     },
     {
       "id": "mon_mindflayer_01",
-      "name": "마인드 플레이어",
+      "name": "사념포식자",
       "category": 6,
       "aiType": "magic",
       "tier": 4,
@@ -8589,7 +8687,7 @@
     },
     {
       "id": "mon_reefneedle_01",
-      "name": "갈매기침",
+      "name": "산호침",
       "category": 4,
       "aiType": "assassin",
       "tier": 1,
@@ -9029,8 +9127,107 @@
       }
     },
     {
+      "id": "mon_rustkite_01",
+      "name": "적갈매",
+      "category": 4,
+      "aiType": "ranged",
+      "tier": 4,
+      "level": [
+        105,
+        111
+      ],
+      "threatBase": 105.0,
+      "element": "wind",
+      "stats": {
+        "hp": 8493,
+        "atk": 230,
+        "def": 38,
+        "aspd": 14,
+        "mdef": 10,
+        "cri": 8,
+        "cdmg": 160,
+        "eva": 18,
+        "sta": 60
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.2,
+        "note": "깃털 화염 취약"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          8,
+          12
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "dive"
+      },
+      "pattern": [
+        {
+          "name": "급강하",
+          "cd": 10,
+          "effect": "2xATK",
+          "telegraph": "하늘에서 그림자",
+          "counter": "방패"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          81,
+          85
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 3010,
+        "exp": 815
+      },
+      "ecology": {
+        "diet": "carnivore",
+        "role": "hunter",
+        "habitat": [
+          "desert"
+        ],
+        "activity": "diurnal",
+        "temperature": {
+          "min": 14,
+          "max": 56
+        },
+        "water_need": 0.2,
+        "food_need": 0.6,
+        "aggression": 0.7,
+        "territoriality": 0.7,
+        "sociality": 0.3,
+        "reproduction": 0.4,
+        "predators": [],
+        "prey": [
+          "몸통",
+          "mon_dunefox_01",
+          "mon_glossbee_01"
+        ],
+        "relationTypes": {
+          "몸통": "grazing",
+          "mon_dunefox_01": "predation",
+          "mon_glossbee_01": "predation"
+        },
+        "note": "붉은 깃털로 태양을 가린 채 상승류를 타는 사막 사냥매"
+      }
+    },
+    {
       "id": "mon_sanddart_01",
-      "name": "모래사다리",
+      "name": "모래화살",
       "category": 4,
       "aiType": "melee",
       "tier": 1,
@@ -9137,7 +9334,7 @@
     },
     {
       "id": "mon_sandreaver_01",
-      "name": "모래발톱사냥꾼",
+      "name": "모래갈퀴",
       "category": 4,
       "aiType": "assassin",
       "tier": 3,
@@ -10022,7 +10219,7 @@
     },
     {
       "id": "mon_silentshade_01",
-      "name": "소리 삼키는 그림자",
+      "name": "무풍그림자",
       "category": 5,
       "aiType": "assassin",
       "tier": 3,
@@ -10122,7 +10319,7 @@
     },
     {
       "id": "mon_silentsludge_01",
-      "name": "무풍 정체체",
+      "name": "무풍진흙",
       "category": 2,
       "aiType": "melee",
       "tier": 2,
@@ -10891,7 +11088,7 @@
     },
     {
       "id": "mon_slime_blue_01",
-      "name": "슬라임(블루)",
+      "name": "푸른슬라임",
       "category": 6,
       "aiType": "melee",
       "tier": 1,
@@ -11124,6 +11321,116 @@
       }
     },
     {
+      "id": "mon_slime_red_01",
+      "name": "붉은슬라임",
+      "category": 6,
+      "aiType": "melee",
+      "tier": 3,
+      "level": [
+        99,
+        104
+      ],
+      "threatBase": 87.5,
+      "element": "none",
+      "stats": {
+        "hp": 3583,
+        "atk": 111,
+        "def": 16,
+        "aspd": 6,
+        "mdef": 11,
+        "cri": 4,
+        "cdmg": 150,
+        "eva": 6,
+        "sta": 60
+      },
+      "weakness": {
+        "element": [
+          "fire",
+          "water"
+        ],
+        "bonus": 0.3,
+        "note": "화염·수해 +30%, 물리 칼질 저항"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0.5,
+        "pierce": -0.5
+      },
+      "statusImmune": [
+        "bleed",
+        "poison"
+      ],
+      "aiDecision": {
+        "enrageHp": 0.3,
+        "patternCooldown": [
+          7,
+          10
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "split",
+        "splitHp": 0.3
+      },
+      "pattern": [
+        {
+          "name": "분열",
+          "cd": 0,
+          "effect": "HP 30% 시 2마리로 분열",
+          "telegraph": "초록 이펙트",
+          "counter": "분열 전 처치"
+        },
+        {
+          "name": "산성 튀김",
+          "cd": 9,
+          "effect": "원거리 0.8xATK + 방어구 -3%",
+          "telegraph": "초록 원",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          76,
+          80
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 1465,
+        "exp": 446
+      },
+      "ecology": {
+        "diet": "omnivore",
+        "role": "decomposer",
+        "habitat": [
+          "volcano",
+          "lava"
+        ],
+        "activity": "always",
+        "temperature": {
+          "min": 50,
+          "max": 200
+        },
+        "water_need": 0.0,
+        "food_need": 0.5,
+        "aggression": 0.3,
+        "territoriality": 0.3,
+        "sociality": 0.8,
+        "reproduction": 0.8,
+        "predators": [],
+        "prey": [
+          "organic_waste",
+          "corpse"
+        ],
+        "relationTypes": {
+          "corpse": "scavenge",
+          "organic_waste": "grazing"
+        }
+      }
+    },
+    {
       "id": "mon_spider_queen_01",
       "name": "거미 여왕",
       "category": 4,
@@ -11339,7 +11646,7 @@
         "diet": "mana",
         "role": "elemental",
         "habitat": [
-          "abyss"
+          "astral"
         ],
         "activity": "always",
         "temperature": {
@@ -11452,7 +11759,7 @@
         "diet": "mana",
         "role": "elemental",
         "habitat": [
-          "abyss"
+          "astral"
         ],
         "activity": "always",
         "temperature": {
@@ -11566,7 +11873,7 @@
         "diet": "mana",
         "role": "elemental",
         "habitat": [
-          "abyss"
+          "astral"
         ],
         "activity": "always",
         "temperature": {
@@ -12024,8 +12331,7 @@
         "diet": "mana",
         "role": "elemental",
         "habitat": [
-          "volcano",
-          "lava"
+          "astral"
         ],
         "activity": "always",
         "temperature": {
@@ -12137,8 +12443,7 @@
         "diet": "mana",
         "role": "elemental",
         "habitat": [
-          "volcano",
-          "lava"
+          "astral"
         ],
         "activity": "always",
         "temperature": {
@@ -12251,8 +12556,7 @@
         "diet": "mana",
         "role": "elemental",
         "habitat": [
-          "volcano",
-          "lava"
+          "astral"
         ],
         "activity": "always",
         "temperature": {
@@ -13839,6 +14143,104 @@
       }
     },
     {
+      "id": "mon_sulfurmite_01",
+      "name": "유황 진드기",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 3,
+      "level": [
+        99,
+        104
+      ],
+      "threatBase": 87.5,
+      "element": "fire",
+      "stats": {
+        "hp": 2622,
+        "atk": 86,
+        "def": 42,
+        "aspd": 6,
+        "mdef": 14,
+        "cri": 5,
+        "cdmg": 150,
+        "eva": 4,
+        "sta": 70
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "갑각 강함"
+      },
+      "resistance": {
+        "physical": 0.4,
+        "bleed": 0
+      },
+      "statusImmune": [
+        "stun"
+      ],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "charge"
+      },
+      "pattern": [
+        {
+          "name": "뿔 투창",
+          "cd": 8,
+          "effect": "1.5xATK",
+          "telegraph": "노란 뿔",
+          "counter": "측면"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          76,
+          80
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 1465,
+        "exp": 446
+      },
+      "ecology": {
+        "diet": "omnivore",
+        "role": "scavenger",
+        "habitat": [
+          "volcano",
+          "lava"
+        ],
+        "activity": "diurnal",
+        "temperature": {
+          "min": 20,
+          "max": 300
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.3,
+        "territoriality": 0.5,
+        "sociality": 0.4,
+        "reproduction": 0.6,
+        "predators": [],
+        "prey": [
+          "corpse"
+        ],
+        "relationTypes": {
+          "corpse": "scavenge"
+        },
+        "note": "화산 신규 서식종 — 유황 결정을 핥는 노란 진드기 (260종 확장 #63)"
+      }
+    },
+    {
       "id": "mon_sunveil_01",
       "name": "검은차양체",
       "category": 2,
@@ -14251,7 +14653,7 @@
     },
     {
       "id": "mon_tideeel_01",
-      "name": "조류수명",
+      "name": "조류장어",
       "category": 4,
       "aiType": "magic",
       "tier": 2,
@@ -14804,6 +15206,114 @@
           "mon_dunelizard_01": "predation",
           "mon_dunewasp_01": "predation"
         }
+      }
+    },
+    {
+      "id": "mon_voidjelly_01",
+      "name": "보이드 젤리",
+      "category": 6,
+      "aiType": "melee",
+      "tier": 4,
+      "level": [
+        125,
+        130
+      ],
+      "threatBase": 105.0,
+      "element": "dark",
+      "stats": {
+        "hp": 12268,
+        "atk": 253,
+        "def": 38,
+        "aspd": 6,
+        "mdef": 11,
+        "cri": 5,
+        "cdmg": 150,
+        "eva": 8,
+        "sta": 80
+      },
+      "weakness": {
+        "element": [
+          "fire",
+          "water"
+        ],
+        "bonus": 0.3,
+        "note": "화염·수해 +30%, 물리 칼질 저항"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0.5,
+        "pierce": -0.5
+      },
+      "statusImmune": [
+        "bleed",
+        "poison"
+      ],
+      "aiDecision": {
+        "enrageHp": 0.3,
+        "patternCooldown": [
+          7,
+          10
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "split",
+        "splitHp": 0.3
+      },
+      "pattern": [
+        {
+          "name": "분열",
+          "cd": 0,
+          "effect": "HP 30% 시 2마리로 분열",
+          "telegraph": "초록 이펙트",
+          "counter": "분열 전 처치"
+        },
+        {
+          "name": "산성 튀김",
+          "cd": 9,
+          "effect": "원거리 0.8xATK + 방어구 -3%",
+          "telegraph": "초록 원",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          96,
+          100
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 3010,
+        "exp": 815
+      },
+      "ecology": {
+        "diet": "carnivore",
+        "role": "predator",
+        "habitat": [
+          "abyss"
+        ],
+        "activity": "always",
+        "temperature": {
+          "min": -30,
+          "max": 30
+        },
+        "water_need": 0.9,
+        "food_need": 0.4,
+        "aggression": 0.2,
+        "territoriality": 0.2,
+        "sociality": 0.9,
+        "reproduction": 0.9,
+        "predators": [],
+        "prey": [
+          "보이드 이슬"
+        ],
+        "relationTypes": {
+          "보이드 이슬": "grazing"
+        },
+        "note": "심연 신규 서식종 — 어둠을 먹고 몸이 조금씩 진해지는 해파리 (260종 확장 #63)"
       }
     },
     {

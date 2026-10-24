@@ -181,11 +181,11 @@
     {"id":"biome_glass_desert","channels":[
       {"id":"diatom","name":"유리 모래 규조","category":"plant","description":"유리화된 모래 틈에서 번식하는 규산 껍질 미생물.","consumerRoles":["prey","scavenger"]},
       {"id":"dew","name":"유리 틈 응결수","category":"abiotic","description":"큰 일교차로 유리 틈에 맺히는 극소량의 수분.","consumerRoles":["prey","swarm"]},
-      {"id":"beetle","name":"흑렌 갑충 군체","category":"animal","description":"절지 군체와 작은 탈피개체. 사막성 매복 포식자의 먹이.","consumerRoles":["prey","predator"]},
+      {"id":"beetle","name":"검은사슬갑충 군체","category":"animal","description":"절지 군체와 작은 탈피개체. 사막성 매복 포식자의 먹이.","consumerRoles":["prey","predator"]},
       {"id":"sand","name":"규산 미분·광물염","category":"abiotic","description":"풍화 유리 모래와 미량 무기염의 얇은 층.","consumerRoles":["decomposer","scavenger"]}]},
     {"id":"biome_shattered_skylight","channels":[
       {"id":"gravitydust","name":"중력 먼지","category":"abiotic","description":"중력 이상 지대에 떠다니며 응집하는 무기 미립자.","consumerRoles":["prey","scavenger"]},
-      {"id":"moth","name":"어긋나개 나방 군체","category":"animal","description":"부유 씨앗·먼지 입자를 먹는 공중 곤충 무리.","consumerRoles":["prey","predator"]},
+      {"id":"moth","name":"어긋난 나방 군체","category":"animal","description":"부유 씨앗·먼지 입자를 먹는 공중 곤충 무리.","consumerRoles":["prey","predator"]},
       {"id":"seed","name":"부유 씨앗·포자","category":"plant","description":"중력 흐름을 타고 이동하는 종자·포자 공급.","consumerRoles":["prey","swarm"]},
       {"id":"debris","name":"천창 파편 유기막","category":"animal","description":"파편 틈에 걸린 유기 잔재와 사체. 청소자·분해자의 자원.","consumerRoles":["decomposer","scavenger"]}]},
     {"id":"biome_idea_gate","channels":[
