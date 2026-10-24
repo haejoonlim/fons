@@ -1,0 +1,1788 @@
+{
+ "$schema": "basic_attacks/v1",
+ "system": "basic_attack",
+ "version": "1.0.0",
+ "source": "soul-commander 36차 직업별 기본 공격 102종 (34직업 × 3) — l1_basic_attacks.py 재설계 표를 옮겼다. 태그·직업 id 는 폰즈 data/job_tree.json·skills_catalog.json 과 대조했다.",
+ "jobs": {
+  "l1_warrior": [
+   {
+    "id": "ba_l1_warrior_1",
+    "name": "관통 베기",
+    "tag": "관통공격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.2,
+    "cool": 4.0,
+    "cls": "offense",
+    "leads": [
+     "관통"
+    ],
+    "note": "쇠를 뚫고 간다. 파쇄사 쪽",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_warrior_2",
+    "name": "먼저 나서기",
+    "tag": "도발",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 7.0,
+    "cls": "control",
+    "leads": [
+     "체력"
+    ],
+    "note": "선봉이 선봉이야 하는 일. 격투사·검술사 쪽",
+    "mana": 0,
+    "stamina": 14,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_warrior_3",
+    "name": "연타",
+    "tag": "연속타격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.0,
+    "cool": 3.0,
+    "cls": "offense",
+    "leads": [
+     "속도"
+    ],
+    "note": "거리 하나를 지운다. 광전사 쪽",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l1_guardian": [
+   {
+    "id": "ba_l1_guardian_1",
+    "name": "자리 잡기",
+    "tag": "방어태세",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "방어"
+    ],
+    "note": "서서 버틴다. 철벽기사 쪽",
+    "mana": 0,
+    "stamina": 15,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_guardian_2",
+    "name": "되받아치기",
+    "tag": "반격자세",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "control",
+    "leads": [
+     "근성"
+    ],
+    "note": "맞은 만큼 되돌려 준다. 전위기사 쪽",
+    "mana": 0,
+    "stamina": 12,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_guardian_3",
+    "name": "앞으로 밀기",
+    "tag": "추격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.2,
+    "cool": 4.0,
+    "cls": "offense",
+    "leads": [
+     "관통"
+    ],
+    "note": "지키되 앞으로. 수호자의 유일한 진화길",
+    "mana": 0,
+    "stamina": 15,
+    "sway": null
+   }
+  ],
+  "l1_assassin": [
+   {
+    "id": "ba_l1_assassin_1",
+    "name": "물러서며 감추기",
+    "tag": "잠행",
+    "domain": "기동",
+    "statKey": "eva",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "회피"
+    ],
+    "note": "보이지 않는 쪽이 된다. 도적·자객 쪽",
+    "mana": 0,
+    "stamina": 12,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_assassin_2",
+    "name": "약점 찌르기",
+    "tag": "약점타격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.0,
+    "cool": 2.9,
+    "cls": "offense",
+    "leads": [
+     "힘"
+    ],
+    "note": "한 방을 끝낸다. 자객 쪽",
+    "mana": 0,
+    "stamina": 8,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_assassin_3",
+    "name": "그늘로",
+    "tag": "은신",
+    "domain": "기동",
+    "statKey": "eva",
+    "power": 0,
+    "cool": 7.0,
+    "cls": "control",
+    "leads": [
+     "속도"
+    ],
+    "note": "전투에서 빠진다. 맹독사 쪽 — 시간 우회를 준다",
+    "mana": 0,
+    "stamina": 10,
+    "sway": null
+   }
+  ],
+  "l1_archer": [
+   {
+    "id": "ba_l1_archer_1",
+    "name": "거리에서 견제",
+    "tag": "원거리사격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.0,
+    "cool": 3.2,
+    "cls": "offense",
+    "leads": [
+     "관통"
+    ],
+    "note": "붙지 않고 깎는다. 명사수 쪽",
+    "mana": 0,
+    "stamina": 5,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_archer_2",
+    "name": "먼 곳 한 점",
+    "tag": "저격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 2.4,
+    "cool": 6.0,
+    "cls": "offense",
+    "leads": [
+     "치명"
+    ],
+    "note": "한 발로 끝낸다. 명사수 쪽",
+    "mana": 0,
+    "stamina": 12,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_archer_3",
+    "name": "거리 잡기",
+    "tag": "거리유지",
+    "domain": "기동",
+    "statKey": "aspd",
+    "power": 0,
+    "cool": 5.0,
+    "cls": "control",
+    "leads": [
+     "회피"
+    ],
+    "note": "붙지 않는다. 포화사수 쪽",
+    "mana": 0,
+    "stamina": 8,
+    "sway": null
+   }
+  ],
+  "l1_mage": [
+   {
+    "id": "ba_l1_mage_1",
+    "name": "주문 짜기",
+    "tag": "마법시전",
+    "domain": "공격",
+    "statKey": "mag",
+    "power": 1.5,
+    "cool": 4.2,
+    "cls": "offense",
+    "leads": [
+     "주문"
+    ],
+    "note": "원소마도사·성술사 쪽",
+    "mana": 20,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_mage_2",
+    "name": "색 지우기",
+    "tag": "정화",
+    "domain": "공격",
+    "statKey": "mag",
+    "power": 1.2,
+    "cool": 3.6,
+    "cls": "offense",
+    "leads": [
+     "마법관통"
+    ],
+    "note": "주술사 쪽",
+    "mana": 18,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_mage_3",
+    "name": "부르기",
+    "tag": "소환",
+    "domain": "지원",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 9.0,
+    "cls": "support",
+    "leads": [
+     "체력"
+    ],
+    "note": "혼자 안으려 한다. 소환술사 쪽",
+    "mana": 30,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l1_supporter": [
+   {
+    "id": "ba_l1_supporter_1",
+    "name": "곁을 감싸기",
+    "tag": "아군보호",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "마법방어"
+    ],
+    "note": "곁에 선다. 드루이드·성좌기사 쪽",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_supporter_2",
+    "name": "되살리기",
+    "tag": "치유",
+    "domain": "지원",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "support",
+    "leads": [
+     "마나"
+    ],
+    "note": "살려 둔다. 신관·수도사 쪽",
+    "mana": 25,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_supporter_3",
+    "name": "신호",
+    "tag": "전술신호",
+    "domain": "지원",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "support",
+    "leads": [
+     "속도"
+    ],
+    "note": "떼를 움직인다. 드루이드 쪽",
+    "mana": 15,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l1_nameless": [
+   {
+    "id": "ba_l1_nameless_1",
+    "name": "살피기",
+    "tag": "정찰",
+    "domain": "기동",
+    "statKey": "aspd",
+    "power": 0,
+    "cool": 10.0,
+    "cls": "idle",
+    "leads": [],
+    "note": "아무것도 하지 않는다 — 무명자의 기본",
+    "mana": 0,
+    "stamina": 5,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_nameless_2",
+    "name": "지켜보기",
+    "tag": "관찰",
+    "domain": "기동",
+    "statKey": "aspd",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "idle",
+    "leads": [],
+    "note": "결정하지 않고 지켜본다. 현자 쪽",
+    "mana": 0,
+    "stamina": 3,
+    "sway": null
+   },
+   {
+    "id": "ba_l1_nameless_3",
+    "name": "빠지기",
+    "tag": "후퇴",
+    "domain": "기동",
+    "statKey": "aspd",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "idle",
+    "leads": [],
+    "note": "물러난다. 무직 아래로 내려가는 길",
+    "mana": 0,
+    "stamina": 5,
+    "sway": null
+   }
+  ],
+  "l2_breaker": [
+   {
+    "id": "ba_l2_breaker_1",
+    "name": "성벽 한 곳을",
+    "tag": "관통공격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.8,
+    "cool": 5.0,
+    "cls": "offense",
+    "leads": [
+     "관통"
+    ],
+    "note": "고른 한 곳만 부순다. 전부 부수는 게 아니다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_breaker_2",
+    "name": "장비를 창으로",
+    "tag": "둔기타격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.2,
+    "cool": 3.5,
+    "cls": "offense",
+    "leads": [
+     "힘"
+    ],
+    "note": "무거운 것을 그대로 찍어넣는다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_breaker_3",
+    "name": "붙어 끝까지",
+    "tag": "돌진",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 0.9,
+    "cool": 2.6,
+    "cls": "offense",
+    "leads": [
+     "속도"
+    ],
+    "note": "밀려와서도 멈추지 않는다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_vengeance_knight": [
+   {
+    "id": "ba_l2_vengeance_knight_1",
+    "name": "더 빨라지며",
+    "tag": "연속타격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.5,
+    "cool": 4.2,
+    "cls": "offense",
+    "leads": [
+     "속도"
+    ],
+    "note": "자기를 태워 속도를 산다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_vengeance_knight_2",
+    "name": "맞은 만큼",
+    "tag": "흡수공격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.2,
+    "cool": 3.4,
+    "cls": "offense",
+    "leads": [
+     "치명위력"
+    ],
+    "note": "뺏어온 힘으로 한 번 더 친다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_vengeance_knight_3",
+    "name": "몸에 불을 입혀",
+    "tag": "마법시전",
+    "domain": "공격",
+    "statKey": "mag",
+    "power": 1.2,
+    "cool": 3.6,
+    "cls": "offense",
+    "leads": [
+     "주문"
+    ],
+    "note": "주변까지 함께 태우는 주문을 건다",
+    "mana": 18,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_fighter": [
+   {
+    "id": "ba_l2_fighter_1",
+    "name": "거리 지우기",
+    "tag": "도약",
+    "domain": "기동",
+    "statKey": "aspd",
+    "power": 0,
+    "cool": 4.0,
+    "cls": "control",
+    "leads": [
+     "속도"
+    ],
+    "note": "빠른 손이 먼저 닿는다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_fighter_2",
+    "name": "붙어서 때리기",
+    "tag": "근접타격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.2,
+    "cool": 3.5,
+    "cls": "offense",
+    "leads": [
+     "힘"
+    ],
+    "note": "한 방의 무게로 승부를 낸다",
+    "mana": 0,
+    "stamina": 6,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_fighter_3",
+    "name": "밀착 자세",
+    "tag": "방어태세",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "체력"
+    ],
+    "note": "붙잡고 늘어진다. 철벽기사 쪽과 다른 버티기",
+    "mana": 0,
+    "stamina": 10,
+    "sway": null
+   }
+  ],
+  "l2_swordsman": [
+   {
+    "id": "ba_l2_swordsman_1",
+    "name": "칼이 손보다 먼저",
+    "tag": "측면기동",
+    "domain": "기동",
+    "statKey": "aspd",
+    "power": 0,
+    "cool": 4.0,
+    "cls": "control",
+    "leads": [
+     "속도"
+    ],
+    "note": "움직임이 칼이 된다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_swordsman_2",
+    "name": "일한",
+    "tag": "베기",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.2,
+    "cool": 3.4,
+    "cls": "offense",
+    "leads": [
+     "힘"
+    ],
+    "note": "잘라낸다. 횟수가 아니라 한 방",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_swordsman_3",
+    "name": "빈 곳 한 번",
+    "tag": "약점타격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.0,
+    "cool": 2.8,
+    "cls": "offense",
+    "leads": [
+     "치명위력"
+    ],
+    "note": "상대가 가린 틈만 노린다",
+    "mana": 0,
+    "stamina": 8,
+    "sway": null
+   }
+  ],
+  "l2_spirit_knight": [
+   {
+    "id": "ba_l2_spirit_knight_1",
+    "name": "정령과 함께 치는",
+    "tag": "마법시전",
+    "domain": "공격",
+    "statKey": "mag",
+    "power": 1.5,
+    "cool": 4.2,
+    "cls": "offense",
+    "leads": [
+     "주문"
+    ],
+    "note": "혼자의 힘이 아니라 둘의 힘",
+    "mana": 20,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_spirit_knight_2",
+    "name": "정령이 막아준다",
+    "tag": "보호막",
+    "domain": "지원",
+    "statKey": "def",
+    "power": 0,
+    "cool": 7.0,
+    "cls": "support",
+    "leads": [
+     "마법방어"
+    ],
+    "note": "곁도 함께 지켜진다",
+    "mana": 16,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_spirit_knight_3",
+    "name": "계약의 버티기",
+    "tag": "방어태세",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "체력"
+    ],
+    "note": "계약이 있으므로 서 있는다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_ironwall": [
+   {
+    "id": "ba_l2_ironwall_1",
+    "name": "갑옷으로 서기",
+    "tag": "방어태세",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "방어"
+    ],
+    "note": "피가 스치지 않는다",
+    "mana": 0,
+    "stamina": 15,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_ironwall_2",
+    "name": "판을 세워 곁까지",
+    "tag": "보호막",
+    "domain": "지원",
+    "statKey": "def",
+    "power": 0,
+    "cool": 7.0,
+    "cls": "support",
+    "leads": [
+     "체력"
+    ],
+    "note": "덮은 판이 흠집을 먼저 받는다",
+    "mana": 0,
+    "stamina": 10,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_ironwall_3",
+    "name": "흔들리지 않고",
+    "tag": "경계",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "control",
+    "leads": [
+     "근성"
+    ],
+    "note": "발을 내딛지 않아 밀려오지 않는다",
+    "mana": 0,
+    "stamina": 12,
+    "sway": null
+   }
+  ],
+  "l2_vanguard": [
+   {
+    "id": "ba_l2_vanguard_1",
+    "name": "맨 앞줄을 밀기",
+    "tag": "돌진",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 0.9,
+    "cool": 2.6,
+    "cls": "offense",
+    "leads": [
+     "속도"
+    ],
+    "note": "밀려도 그 자리로 돌아온다",
+    "mana": 0,
+    "stamina": 12,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_vanguard_2",
+    "name": "앞을 쳐서",
+    "tag": "둔기타격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.2,
+    "cool": 3.4,
+    "cls": "offense",
+    "leads": [
+     "힘"
+    ],
+    "note": "자신이 서는 자리를 만든다",
+    "mana": 0,
+    "stamina": 10,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_vanguard_3",
+    "name": "앞에 선 것을 밀치고",
+    "tag": "저지",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 5.0,
+    "cls": "control",
+    "leads": [
+     "관통"
+    ],
+    "note": "저 너머로 나가는 길을 먼저 막는다",
+    "mana": 0,
+    "stamina": 10,
+    "sway": null
+   }
+  ],
+  "l2_cutthroat": [
+   {
+    "id": "ba_l2_cutthroat_1",
+    "name": "매복해서 한 방",
+    "tag": "매복",
+    "domain": "기동",
+    "statKey": "eva",
+    "power": 0,
+    "cool": 5.0,
+    "cls": "control",
+    "leads": [
+     "속도",
+     "힘"
+    ],
+    "note": "기다린 쪽이 먼저 끝낸다",
+    "mana": 0,
+    "stamina": 12,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_cutthroat_2",
+    "name": "한 번 빠지기",
+    "tag": "은신",
+    "domain": "기동",
+    "statKey": "eva",
+    "power": 0,
+    "cool": 7.0,
+    "cls": "control",
+    "leads": [
+     "회피"
+    ],
+    "note": "빠졌다가 다른 각도에서 온다",
+    "mana": 0,
+    "stamina": 10,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_cutthroat_3",
+    "name": "쓰러지면 바로 다음으로",
+    "tag": "도약",
+    "domain": "기동",
+    "statKey": "aspd",
+    "power": 0,
+    "cool": 5.0,
+    "cls": "control",
+    "leads": [
+     "속도"
+    ],
+    "note": "한 명을 쓰러뜨리면 옮겨 간다",
+    "mana": 0,
+    "stamina": 10,
+    "sway": null
+   }
+  ],
+  "l2_poisoner": [
+   {
+    "id": "ba_l2_poisoner_1",
+    "name": "기척 없이 다가가",
+    "tag": "잠행",
+    "domain": "기동",
+    "statKey": "eva",
+    "power": 0,
+    "cool": 5.0,
+    "cls": "control",
+    "leads": [
+     "회피"
+    ],
+    "note": "독을 넣고 바로 빠진다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_poisoner_2",
+    "name": "겹겹이 쌓아",
+    "tag": "약점타격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.2,
+    "cool": 3.4,
+    "cls": "offense",
+    "leads": [
+     "치명위력"
+    ],
+    "note": "한 번에 깊게가 아니라 계속 쌓는다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_poisoner_3",
+    "name": "시간이 갈수록",
+    "tag": "실명",
+    "domain": "방어·제어",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "마법관통"
+    ],
+    "note": "깊어진다. 볼 수 없게 되며",
+    "mana": 16,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_thief": [
+   {
+    "id": "ba_l2_thief_1",
+    "name": "훔치고 빠지며",
+    "tag": "도약",
+    "domain": "기동",
+    "statKey": "aspd",
+    "power": 0,
+    "cool": 4.0,
+    "cls": "control",
+    "leads": [
+     "속도"
+    ],
+    "note": "가져가는 쪽이 먼저 움직인다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_thief_2",
+    "name": "훔치며 치고",
+    "tag": "약점타격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.2,
+    "cool": 3.4,
+    "cls": "offense",
+    "leads": [
+     "힘"
+    ],
+    "note": "상대 것을 빼앗으며 싸운다",
+    "mana": 0,
+    "stamina": 6,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_thief_3",
+    "name": "빈틈으로",
+    "tag": "잠행",
+    "domain": "기동",
+    "statKey": "eva",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "회피"
+    ],
+    "note": "들어가서 나올 때까지 안 보인다",
+    "mana": 0,
+    "stamina": 8,
+    "sway": null
+   }
+  ],
+  "l2_marksman": [
+   {
+    "id": "ba_l2_marksman_1",
+    "name": "한 점만 겨누어",
+    "tag": "저격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 2.4,
+    "cool": 6.0,
+    "cls": "offense",
+    "leads": [
+     "치명"
+    ],
+    "note": "빗나가면 다시 조준한다",
+    "mana": 0,
+    "stamina": 12,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_marksman_2",
+    "name": "방어와 거리를 따로",
+    "tag": "관통공격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.5,
+    "cool": 4.2,
+    "cls": "offense",
+    "leads": [
+     "관통"
+    ],
+    "note": "껍데기를 뚫고 지나간다",
+    "mana": 0,
+    "stamina": 8,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_marksman_3",
+    "name": "끝까지 힘이 실린",
+    "tag": "약점타격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.0,
+    "cool": 2.8,
+    "cls": "offense",
+    "leads": [
+     "치명위력"
+    ],
+    "note": "먼 곳에서도 무겁게 맞는다",
+    "mana": 0,
+    "stamina": 8,
+    "sway": null
+   }
+  ],
+  "l2_volley": [
+   {
+    "id": "ba_l2_volley_1",
+    "name": "쉬지 않고",
+    "tag": "연속타격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.5,
+    "cool": 4.2,
+    "cls": "offense",
+    "leads": [
+     "속도"
+    ],
+    "note": "끊김 없는 사격",
+    "mana": 0,
+    "stamina": 6,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_volley_2",
+    "name": "쏘며 물러나기",
+    "tag": "회피",
+    "domain": "방어·제어",
+    "statKey": "eva",
+    "power": 0,
+    "cool": 5.0,
+    "cls": "control",
+    "leads": [
+     "회피"
+    ],
+    "note": "거리에서 떨쳐 놓는다",
+    "mana": 0,
+    "stamina": 8,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_volley_3",
+    "name": "쏘는 선을 긋고",
+    "tag": "도발",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 7.0,
+    "cls": "control",
+    "leads": [
+     "방어"
+    ],
+    "note": "길 자체를 막는다",
+    "mana": 0,
+    "stamina": 12,
+    "sway": null
+   }
+  ],
+  "l2_hunter": [
+   {
+    "id": "ba_l2_hunter_1",
+    "name": "길 자체를 막아",
+    "tag": "함정설치",
+    "domain": "지원",
+    "statKey": "def",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "control",
+    "leads": [
+     "회피"
+    ],
+    "note": "다섯 걸음도 못 오게 한다",
+    "mana": 0,
+    "stamina": 10,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_hunter_2",
+    "name": "먼저 이빨을 드러내게",
+    "tag": "투척",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.2,
+    "cool": 3.5,
+    "cls": "offense",
+    "leads": [
+     "힘"
+    ],
+    "note": "던져서 상대를 밀어낸다",
+    "mana": 0,
+    "stamina": 8,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_hunter_3",
+    "name": "먹이를 대어",
+    "tag": "매복",
+    "domain": "기동",
+    "statKey": "eva",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "근성"
+    ],
+    "note": "지면이 빠져나오게 만든다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_magearrow": [
+   {
+    "id": "ba_l2_magearrow_1",
+    "name": "화살에 마법을 새로",
+    "tag": "마법시전",
+    "domain": "공격",
+    "statKey": "mag",
+    "power": 1.2,
+    "cool": 4.0,
+    "cls": "offense",
+    "leads": [
+     "주문"
+    ],
+    "note": "오래 새긴 주문이 화살을 탄다",
+    "mana": 16,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_magearrow_2",
+    "name": "맞은 자리에서 갈라져",
+    "tag": "정화",
+    "domain": "공격",
+    "statKey": "mag",
+    "power": 1.0,
+    "cool": 3.0,
+    "cls": "offense",
+    "leads": [
+     "마법관통"
+    ],
+    "note": "한 발이 여러 갈래로 벌어진다",
+    "mana": 14,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_magearrow_3",
+    "name": "쏘면서 앞을 가린다",
+    "tag": "보호막",
+    "domain": "지원",
+    "statKey": "def",
+    "power": 0,
+    "cool": 7.0,
+    "cls": "support",
+    "leads": [
+     "마법방어"
+    ],
+    "note": "아군 앞을 화살로 덮는다",
+    "mana": 18,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_hierophant": [
+   {
+    "id": "ba_l2_hierophant_1",
+    "name": "빛으로 밀어내며",
+    "tag": "마법시전",
+    "domain": "공격",
+    "statKey": "mag",
+    "power": 1.5,
+    "cool": 4.2,
+    "cls": "offense",
+    "leads": [
+     "주문"
+    ],
+    "note": "충격을 주고 태운다",
+    "mana": 20,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_hierophant_2",
+    "name": "먼저 결계를 세워",
+    "tag": "오라전개",
+    "domain": "지원",
+    "statKey": "def",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "support",
+    "leads": [
+     "마법방어"
+    ],
+    "note": "아군을 지키는 벽을 먼저 세운다",
+    "mana": 16,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_hierophant_3",
+    "name": "가진 것을 나눠",
+    "tag": "마나공급",
+    "domain": "지원",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "support",
+    "leads": [
+     "마나"
+    ],
+    "note": "회복이 이어질 만큼 나눠준다",
+    "mana": 12,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_summoner": [
+   {
+    "id": "ba_l2_summoner_1",
+    "name": "떼로 자리를 채우기",
+    "tag": "소환",
+    "domain": "지원",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 9.0,
+    "cls": "support",
+    "leads": [
+     "체력"
+    ],
+    "note": "머릿수로 전장을 메운다",
+    "mana": 30,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_summoner_2",
+    "name": "말 못 하게",
+    "tag": "침묵",
+    "domain": "방어·제어",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "마법관통"
+    ],
+    "note": "부른 것들이 방어를 무시하고 갉는다",
+    "mana": 18,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_summoner_3",
+    "name": "전장을 쓸어버리기",
+    "tag": "광역살포",
+    "domain": "공격",
+    "statKey": "mag",
+    "power": 1.0,
+    "cool": 3.0,
+    "cls": "offense",
+    "leads": [
+     "치명위력"
+    ],
+    "note": "한 번에 자리가 지워진다",
+    "mana": 22,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_elementalist": [
+   {
+    "id": "ba_l2_elementalist_1",
+    "name": "정해진 원소로",
+    "tag": "마법시전",
+    "domain": "공격",
+    "statKey": "mag",
+    "power": 1.5,
+    "cool": 4.2,
+    "cls": "offense",
+    "leads": [
+     "주문",
+     "마나"
+    ],
+    "note": "여섯 중 하나만 쓸 수 있다. 대신 확실하다",
+    "mana": 20,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_elementalist_2",
+    "name": "원소를 넓게",
+    "tag": "광역살포",
+    "domain": "공격",
+    "statKey": "mag",
+    "power": 1.2,
+    "cool": 3.4,
+    "cls": "offense",
+    "leads": [
+     "치명위력"
+    ],
+    "note": "한 원소를 전장에 푸는 것이 아니라 퍼뜨린다",
+    "mana": 24,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_elementalist_3",
+    "name": "원소가 지키는",
+    "tag": "경계",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "control",
+    "leads": [
+     "체력"
+    ],
+    "note": "정령이 아니라 원소가 먼저 막아준다",
+    "mana": 10,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_hexcaller": [
+   {
+    "id": "ba_l2_hexcaller_1",
+    "name": "전장을 쓸어버리듯",
+    "tag": "정화",
+    "domain": "공격",
+    "statKey": "mag",
+    "power": 1.2,
+    "cool": 3.4,
+    "cls": "offense",
+    "leads": [
+     "마법관통"
+    ],
+    "note": "방어 따위 가리지 않고 밀어붙인다",
+    "mana": 18,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_hexcaller_2",
+    "name": "바친 만큼 남은 것이 강해진다",
+    "tag": "흡수공격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.2,
+    "cool": 3.4,
+    "cls": "offense",
+    "leads": [
+     "치명위력"
+    ],
+    "note": "자기 것을 내어 상대의 저주만 되돌려 보낸다",
+    "mana": 16,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_hexcaller_3",
+    "name": "바닥부터 태워서",
+    "tag": "마법시전",
+    "domain": "공격",
+    "statKey": "mag",
+    "power": 1.2,
+    "cool": 3.4,
+    "cls": "offense",
+    "leads": [
+     "주문"
+    ],
+    "note": "저주가 바YOBEL 자리를 없앤다",
+    "mana": 20,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_druid": [
+   {
+    "id": "ba_l2_druid_1",
+    "name": "숲에 묻어 회복하기",
+    "tag": "자연접촉",
+    "domain": "회복",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 7.0,
+    "cls": "support",
+    "leads": [
+     "마나"
+    ],
+    "note": "친화가 없으면 응답이 없다",
+    "mana": 16,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_druid_2",
+    "name": "먼저 꽃을 피워",
+    "tag": "치유",
+    "domain": "지원",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "support",
+    "leads": [
+     "체력"
+    ],
+    "note": "피어나는 걸 보고 되살린다",
+    "mana": 22,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_druid_3",
+    "name": "변신해 제일 센 몸으로",
+    "tag": "둔기타격",
+    "domain": "공격",
+    "statKey": "atk",
+    "power": 1.2,
+    "cool": 3.5,
+    "cls": "offense",
+    "leads": [
+     "힘"
+    ],
+    "note": "짐승의 몸이 잠깐 빌어온다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_priest": [
+   {
+    "id": "ba_l2_priest_1",
+    "name": "성광을 펴서",
+    "tag": "보호막",
+    "domain": "지원",
+    "statKey": "def",
+    "power": 0,
+    "cool": 7.0,
+    "cls": "support",
+    "leads": [
+     "마법방어"
+    ],
+    "note": "아군 전체를 한 번에 감싼다",
+    "mana": 18,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_priest_2",
+    "name": "걸어 다녀서",
+    "tag": "사기부여",
+    "domain": "지원",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 5.0,
+    "cls": "support",
+    "leads": [
+     "치명위력"
+    ],
+    "note": "아군의 발을 가볍게 만든다",
+    "mana": 14,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_priest_3",
+    "name": "바친 만큼 되돌려",
+    "tag": "기도",
+    "domain": "회복",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "support",
+    "leads": [
+     "마나"
+    ],
+    "note": "죽기 직전을 대신 빚 진다",
+    "mana": 12,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_monk": [
+   {
+    "id": "ba_l2_monk_1",
+    "name": "뼈와 살로 서기",
+    "tag": "방어태세",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "체력"
+    ],
+    "note": "갑옷 없이 버틴다. 장비가 아니라 살이다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_monk_2",
+    "name": "단련한 살이 막아",
+    "tag": "보호막",
+    "domain": "지원",
+    "statKey": "def",
+    "power": 0,
+    "cool": 7.0,
+    "cls": "support",
+    "leads": [
+     "마법방어"
+    ],
+    "note": "몸이 마법까지 그대로 받는다",
+    "mana": 16,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_monk_3",
+    "name": "호흡으로 나눠",
+    "tag": "마나공급",
+    "domain": "지원",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "support",
+    "leads": [
+     "마나"
+    ],
+    "note": "갱한 것을 다시 세워 숨을 붙여준다",
+    "mana": 12,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_paladin": [
+   {
+    "id": "ba_l2_paladin_1",
+    "name": "몸을 벽 삼아",
+    "tag": "방어태세",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "방어"
+    ],
+    "note": "그 뒤를 비워 둔다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_paladin_2",
+    "name": "믿음으로 넓힌",
+    "tag": "오라전개",
+    "domain": "지원",
+    "statKey": "def",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "support",
+    "leads": [
+     "마법방어"
+    ],
+    "note": "성광이 곁을 감싼다",
+    "mana": 16,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_paladin_3",
+    "name": "믿는 만큼 먼저 서서",
+    "tag": "반격자세",
+    "domain": "방어·제어",
+    "statKey": "def",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "control",
+    "leads": [
+     "근성"
+    ],
+    "note": "대신 맞고 드러난다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_mentalist": [
+   {
+    "id": "ba_l2_mentalist_1",
+    "name": "상대의 힘과 방어를 깎아",
+    "tag": "약화디버프",
+    "domain": "지원",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 5.0,
+    "cls": "support",
+    "leads": [
+     "마법관통"
+    ],
+    "note": "별로 건드리지 않아도 약해진다",
+    "mana": 16,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_mentalist_2",
+    "name": "곁의 사기를 끌어올려",
+    "tag": "사기부여",
+    "domain": "지원",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 5.0,
+    "cls": "support",
+    "leads": [
+     "치명위력"
+    ],
+    "note": "함께 버틸 수 있게 만든다",
+    "mana": 14,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_mentalist_3",
+    "name": "가진 것을 나눠주며",
+    "tag": "마나공급",
+    "domain": "지원",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "support",
+    "leads": [
+     "주문"
+    ],
+    "note": "주문을 걸어 곁을 함께 묶는다",
+    "mana": 18,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_strategist": [
+   {
+    "id": "ba_l2_strategist_1",
+    "name": "한 명도 맞서지 않고",
+    "tag": "전술신호",
+    "domain": "지원",
+    "statKey": "mag",
+    "power": 0,
+    "cool": 5.0,
+    "cls": "support",
+    "leads": [
+     "치명위력"
+    ],
+    "note": "지시해 화력을 모은다",
+    "mana": 14,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_strategist_2",
+    "name": "정보를 먼저 읽어",
+    "tag": "회피",
+    "domain": "방어·제어",
+    "statKey": "eva",
+    "power": 0,
+    "cool": 4.0,
+    "cls": "control",
+    "leads": [
+     "회피"
+    ],
+    "note": "대원을 피하게 한다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_strategist_3",
+    "name": "먼저 보고 먼저 알려",
+    "tag": "정찰",
+    "domain": "기동",
+    "statKey": "aspd",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "control",
+    "leads": [
+     "속도"
+    ],
+    "note": "속도를 버는 게 아니라 사는 것",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l2_jobless": [
+   {
+    "id": "ba_l2_jobless_1",
+    "name": "아직 아무것도 하지 않기",
+    "tag": "정찰",
+    "domain": "기동",
+    "statKey": "aspd",
+    "power": 0,
+    "cool": 10.0,
+    "cls": "idle",
+    "leads": [],
+    "note": "이름이 없으므로 방향도 없다",
+    "mana": 0,
+    "stamina": 5,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_jobless_2",
+    "name": "결정하지 않고 지켜보기",
+    "tag": "관찰",
+    "domain": "기동",
+    "statKey": "aspd",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "idle",
+    "leads": [],
+    "note": "아직 고를 것이 없다",
+    "mana": 0,
+    "stamina": 3,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_jobless_3",
+    "name": "먹을 것을 찾기",
+    "tag": "채집",
+    "domain": "생산",
+    "statKey": "",
+    "power": 0,
+    "cool": 10.0,
+    "cls": "idle",
+    "leads": [],
+    "note": "손을 갈 데가 생겼다",
+    "mana": 0,
+    "stamina": 8,
+    "sway": null
+   }
+  ],
+  "l2_sage": [
+   {
+    "id": "ba_l2_sage_1",
+    "name": "방식에 담기지 않은 것을 보기",
+    "tag": "마석학",
+    "domain": "지식",
+    "statKey": "",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "idle",
+    "leads": [],
+    "note": "대현자의 일 — 보는 것이지 쓰는 것이 아니다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_sage_2",
+    "name": "묻고 기다리기",
+    "tag": "기도",
+    "domain": "회복",
+    "statKey": "",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "idle",
+    "leads": [],
+    "note": "답을 당기지 않고 기다린다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l2_sage_3",
+    "name": "가만히 앉아 있기",
+    "tag": "명상",
+    "domain": "회복",
+    "statKey": "",
+    "power": 0,
+    "cool": 7.0,
+    "cls": "idle",
+    "leads": [],
+    "note": "마나를 보는 눈이 열린다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   }
+  ],
+  "l3_life": [
+   {
+    "id": "ba_l3_life_1",
+    "name": "들판에서 찾기",
+    "tag": "채집",
+    "domain": "생산",
+    "statKey": "",
+    "power": 0,
+    "cool": 10.0,
+    "cls": "idle",
+    "leads": [],
+    "note": "먹을 것과 약초",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l3_life_2",
+    "name": "요리해서 나누기",
+    "tag": "요리",
+    "domain": "생산",
+    "statKey": "",
+    "power": 0,
+    "cool": 8.0,
+    "cls": "idle",
+    "leads": [],
+    "note": "배를 채우고 사기를 끌어올린다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   },
+   {
+    "id": "ba_l3_life_3",
+    "name": "쉬어 회복하기",
+    "tag": "휴식",
+    "domain": "회복",
+    "statKey": "",
+    "power": 0,
+    "cool": 6.0,
+    "cls": "idle",
+    "leads": [],
+    "note": "일은 쉬면서도 된다",
+    "mana": 0,
+    "stamina": 0,
+    "sway": null
+   }
+  ]
+ }
+}

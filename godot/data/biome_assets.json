@@ -1,0 +1,256 @@
+{
+  "meta": {
+    "v80": "biome_assets v1 — data/biomes.json v1.3 파생 · 2026-10-23",
+    "source": "data/biomes.json — kit = topologyKit, slot = slots[0]. 값은 전부 파생이며 손으로 고치지 않는다.",
+    "generatedBy": "tools/gen_biome_assets.py",
+    "keyRule": "ground:<kit> · lit:<biome_id> · ambient:<biome_id> · prop:<kit>:<n>",
+    "propsRule": "프롭은 아트 스타일 확정 뒤 S4 에서 채운다 — 지금은 빈 배열 (개수를 지어내지 않는다)."
+  },
+  "kits": [
+    "topo_dry_fire",
+    "topo_frozen_crystal",
+    "topo_natural_surface",
+    "topo_rock_cavern_mountain",
+    "topo_sacred_sanctuary",
+    "topo_sky_interior",
+    "topo_underwater_specialist",
+    "topo_urban_ruins",
+    "topo_wetland_water"
+  ],
+  "biomes": [
+    {
+      "id": "biome_plains",
+      "slot": 1,
+      "kit": "topo_natural_surface",
+      "ground": "ground:topo_natural_surface",
+      "lighting": "lit:biome_plains",
+      "ambient": "ambient:biome_plains",
+      "props": []
+    },
+    {
+      "id": "biome_forest",
+      "slot": 2,
+      "kit": "topo_natural_surface",
+      "ground": "ground:topo_natural_surface",
+      "lighting": "lit:biome_forest",
+      "ambient": "ambient:biome_forest",
+      "props": []
+    },
+    {
+      "id": "biome_coastal_sea",
+      "slot": 3,
+      "kit": "topo_wetland_water",
+      "ground": "ground:topo_wetland_water",
+      "lighting": "lit:biome_coastal_sea",
+      "ambient": "ambient:biome_coastal_sea",
+      "props": []
+    },
+    {
+      "id": "biome_library",
+      "slot": 4,
+      "kit": "topo_urban_ruins",
+      "ground": "ground:topo_urban_ruins",
+      "lighting": "lit:biome_library",
+      "ambient": "ambient:biome_library",
+      "props": []
+    },
+    {
+      "id": "biome_maze_city",
+      "slot": 5,
+      "kit": "topo_urban_ruins",
+      "ground": "ground:topo_urban_ruins",
+      "lighting": "lit:biome_maze_city",
+      "ambient": "ambient:biome_maze_city",
+      "props": []
+    },
+    {
+      "id": "biome_skyreach",
+      "slot": 6,
+      "kit": "topo_sky_interior",
+      "ground": "ground:topo_sky_interior",
+      "lighting": "lit:biome_skyreach",
+      "ambient": "ambient:biome_skyreach",
+      "props": []
+    },
+    {
+      "id": "biome_temple",
+      "slot": 7,
+      "kit": "topo_sacred_sanctuary",
+      "ground": "ground:topo_sacred_sanctuary",
+      "lighting": "lit:biome_temple",
+      "ambient": "ambient:biome_temple",
+      "props": []
+    },
+    {
+      "id": "biome_cave",
+      "slot": 8,
+      "kit": "topo_rock_cavern_mountain",
+      "ground": "ground:topo_rock_cavern_mountain",
+      "lighting": "lit:biome_cave",
+      "ambient": "ambient:biome_cave",
+      "props": []
+    },
+    {
+      "id": "biome_ruins",
+      "slot": 9,
+      "kit": "topo_urban_ruins",
+      "ground": "ground:topo_urban_ruins",
+      "lighting": "lit:biome_ruins",
+      "ambient": "ambient:biome_ruins",
+      "props": []
+    },
+    {
+      "id": "biome_deep_sea",
+      "slot": 10,
+      "kit": "topo_underwater_specialist",
+      "ground": "ground:topo_underwater_specialist",
+      "lighting": "lit:biome_deep_sea",
+      "ambient": "ambient:biome_deep_sea",
+      "props": []
+    },
+    {
+      "id": "biome_sewer",
+      "slot": 11,
+      "kit": "topo_urban_ruins",
+      "ground": "ground:topo_urban_ruins",
+      "lighting": "lit:biome_sewer",
+      "ambient": "ambient:biome_sewer",
+      "props": []
+    },
+    {
+      "id": "biome_mountain_range",
+      "slot": 12,
+      "kit": "topo_rock_cavern_mountain",
+      "ground": "ground:topo_rock_cavern_mountain",
+      "lighting": "lit:biome_mountain_range",
+      "ambient": "ambient:biome_mountain_range",
+      "props": []
+    },
+    {
+      "id": "biome_swamp",
+      "slot": 13,
+      "kit": "topo_wetland_water",
+      "ground": "ground:topo_wetland_water",
+      "lighting": "lit:biome_swamp",
+      "ambient": "ambient:biome_swamp",
+      "props": []
+    },
+    {
+      "id": "biome_jungle",
+      "slot": 14,
+      "kit": "topo_natural_surface",
+      "ground": "ground:topo_natural_surface",
+      "lighting": "lit:biome_jungle",
+      "ambient": "ambient:biome_jungle",
+      "props": []
+    },
+    {
+      "id": "biome_graveyard",
+      "slot": 15,
+      "kit": "topo_sacred_sanctuary",
+      "ground": "ground:topo_sacred_sanctuary",
+      "lighting": "lit:biome_graveyard",
+      "ambient": "ambient:biome_graveyard",
+      "props": []
+    },
+    {
+      "id": "biome_volcano",
+      "slot": 16,
+      "kit": "topo_dry_fire",
+      "ground": "ground:topo_dry_fire",
+      "lighting": "lit:biome_volcano",
+      "ambient": "ambient:biome_volcano",
+      "props": []
+    },
+    {
+      "id": "biome_desert",
+      "slot": 17,
+      "kit": "topo_dry_fire",
+      "ground": "ground:topo_dry_fire",
+      "lighting": "lit:biome_desert",
+      "ambient": "ambient:biome_desert",
+      "props": []
+    },
+    {
+      "id": "biome_windless_plateau",
+      "slot": 18,
+      "kit": "topo_frozen_crystal",
+      "ground": "ground:topo_frozen_crystal",
+      "lighting": "lit:biome_windless_plateau",
+      "ambient": "ambient:biome_windless_plateau",
+      "props": []
+    },
+    {
+      "id": "biome_hell",
+      "slot": 19,
+      "kit": "topo_dry_fire",
+      "ground": "ground:topo_dry_fire",
+      "lighting": "lit:biome_hell",
+      "ambient": "ambient:biome_hell",
+      "props": []
+    },
+    {
+      "id": "biome_chasm",
+      "slot": 20,
+      "kit": "topo_rock_cavern_mountain",
+      "ground": "ground:topo_rock_cavern_mountain",
+      "lighting": "lit:biome_chasm",
+      "ambient": "ambient:biome_chasm",
+      "props": []
+    },
+    {
+      "id": "biome_summit",
+      "slot": 21,
+      "kit": "topo_wetland_water",
+      "ground": "ground:topo_wetland_water",
+      "lighting": "lit:biome_summit",
+      "ambient": "ambient:biome_summit",
+      "props": []
+    },
+    {
+      "id": "biome_frozen_ocean",
+      "slot": 22,
+      "kit": "topo_sky_interior",
+      "ground": "ground:topo_sky_interior",
+      "lighting": "lit:biome_frozen_ocean",
+      "ambient": "ambient:biome_frozen_ocean",
+      "props": []
+    },
+    {
+      "id": "biome_crystal_forest",
+      "slot": 23,
+      "kit": "topo_rock_cavern_mountain",
+      "ground": "ground:topo_rock_cavern_mountain",
+      "lighting": "lit:biome_crystal_forest",
+      "ambient": "ambient:biome_crystal_forest",
+      "props": []
+    },
+    {
+      "id": "biome_glass_desert",
+      "slot": 24,
+      "kit": "topo_rock_cavern_mountain",
+      "ground": "ground:topo_rock_cavern_mountain",
+      "lighting": "lit:biome_glass_desert",
+      "ambient": "ambient:biome_glass_desert",
+      "props": []
+    },
+    {
+      "id": "biome_shattered_skylight",
+      "slot": 25,
+      "kit": "topo_sky_interior",
+      "ground": "ground:topo_sky_interior",
+      "lighting": "lit:biome_shattered_skylight",
+      "ambient": "ambient:biome_shattered_skylight",
+      "props": []
+    },
+    {
+      "id": "biome_idea_gate",
+      "slot": 26,
+      "kit": "topo_frozen_crystal",
+      "ground": "ground:topo_frozen_crystal",
+      "lighting": "lit:biome_idea_gate",
+      "ambient": "ambient:biome_idea_gate",
+      "props": []
+    }
+  ]
+}
