@@ -21,7 +21,7 @@
        (도구가 stdout 에 사람용 줄을 직접 찍으면 그건 그 도구가 지켜야 한다 — 아래 emit 참고)
 
 <id> 는 `tools/gate_all.py` 의 단계 id 를 쓴다
-(docs·glossary·gdd·gddjob·gddrev·text·pages·fusion·gacha·numbers·monsters·husbandry·jobai).
+(docs·glossary·gdd·gddjob·gddrev·text·cjk·paths·manfields·manvalues·pages·fusion·gacha·numbers·monsters·husbandry·blockroster·jobai·personality·biomeassets·kitart·contract).
 그래야 `gate_all` 로그에서 어느 줄이 어느 단계인지 바로 맞는다.
 
 쓰는 법:

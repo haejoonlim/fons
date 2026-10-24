@@ -14,7 +14,7 @@ const MAX_FLOOR := 130
 const START_FLOOR := 1
 ## 종점 직업 — 키워드를 **1장만** 적용하는 직업. 원본 `ProgressionData.TerminalKeywordCounts` (원본 대조).
 ##   l2_sage 1장(대현자) · l2_spirit_knight 7장(정령기사) · l2_elementalist 7장(원소마도사).
-## 값은 키워드 장수다 — 원본이、职业 id 로 물고 값을 회수한다.
+## 값은 키워드 장수다 — 원본이 직업 id 로 물고 값을 회수한다.
 const TERMINAL_JOBS := {"l2_sage": 1, "l2_spirit_knight": 7, "l2_elementalist": 7}
 ## HUD 에 보여 줄 로그 줄 수 — 전투 로그는 수십 줄이라 전부 그리면 화면을 덮는다.
 const LOG_TAIL := 6

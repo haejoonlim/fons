@@ -35,12 +35,17 @@ GATES = [
     ("tools/check_glossary.py", "glossary", []),
     ("tools/check_gdd_names.py", "gdd", []),
     ("tools/check_data_text.py", "text", []),
+    ("tools/check_cjk.py", "cjk", []),
+    ("tools/check_paths.py", "paths", []),
+    ("tools/check_manual_fields.py", "manfields", []),
+    ("tools/check_manual_values.py", "manvalues", []),
     ("tools/check_fusion.py", "fusion", []),
     ("tools/check_numbers.py", "numbers", []),
     ("tools/check_monsters.py", "monsters", []),
     ("tools/check_job_profiles.py", "jobai", []),
     ("sim/gacha.py", "gacha", []),
     ("sim/center/sims/gen_husbandry_roster.py", "husbandry", ["--check"]),
+    ("sim/center/sims/gen_block_roster.py", "blockroster", ["--check"]),
     ("sim/center/sync_pages.py", "pages", ["--quiet"]),
 ]
 SLOW = [("tools/gdd_job_pending.py", "gddjob"), ("tools/gen_gdd_revised.py", "gddrev")]
