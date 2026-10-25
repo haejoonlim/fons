@@ -108,9 +108,12 @@ static func run(rng, heroes: Array, enemies: Array, floor: int, max_turns: int =
 	var gauge := FonsBattle.make_gauge(floor)
 	var log_lines: Array = []
 	var turns := 0
+	## 이 판 마지막 일격의 피해 — 필드 타격 연출이 이 숫자를 띄운다.
+	var last_hit := 0
 	for turn in range(1, maxi(1, max_turns) + 1):
 		var step := FonsBattle.combat_step(rng, heroes, enemies, gauge, {})
 		log_lines.append_array(step["log"])
+		last_hit = int(step.get("last_hit", 0))
 		turns = turn
 		if _alive(enemies) == 0 or _alive(heroes) == 0:
 			break
@@ -119,7 +122,7 @@ static func run(rng, heroes: Array, enemies: Array, floor: int, max_turns: int =
 		winner = "ally"
 	elif _alive(heroes) == 0:
 		winner = "enemy"
-	return {"turns": turns, "log": log_lines, "winner": winner, "gauge": gauge}
+	return {"turns": turns, "log": log_lines, "winner": winner, "gauge": gauge, "last_hit": last_hit}
 
 
 static func simulate(rng, monsters: Variant, biomes: Variant, floor: int, contact_index: int,

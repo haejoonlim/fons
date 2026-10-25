@@ -58,6 +58,17 @@ func test_snapshot_carries_an_asset_key_per_hero() -> void:
 	assert_eq(unique.size(), 5, "다섯 키가 서로 다르다 — 아니면 3D 에서 같은 모습이 된다")
 
 
+func test_snapshot_carries_the_biome_and_its_derived_palette() -> void:
+	## 뷰는 데이터를 읽지 않는다 — 심이 바이옴 이름과 파생색을 함께 실어 보낸다 (계획서 §5).
+	var field := _field()
+	var snapshot := field.snapshot()
+	assert_eq(String(snapshot["biome"]), "biome_plains", "1층 = 슬롯 1 풀바다")
+	assert_eq(String(snapshot["kit"]), "topo_natural_surface")
+	var biome := FonsEncounter.biome_for_floor(DataLoader.get_biomes(), snapshot["floor"])
+	assert_eq(snapshot["palette"], FonsBiomePalette.from_biome(biome),
+		"같은 바이옴 = 같은 지면·조명색")
+
+
 func test_switching_moves_the_avatar_and_the_radius_center() -> void:
 	var field := _field()
 	var before: Vector2 = field.party_pos[3]
@@ -263,6 +274,21 @@ func test_allies_on_the_same_spot_split_apart() -> void:
 	field.tick(0.05)
 	assert_gt(field.party_pos[1].distance_to(field.party_pos[2]), 0.1,
 		"같은 좌표에 겹친 동료는 갈라진다 — 다섯이 한 칸에 쌓이면 안 된다")
+
+
+func test_engage_reports_the_strike_for_the_view() -> void:
+	## 연출은 스냅샷만 읽는다 — 교전이 있었다는 사실과 그 자리·피해를 심이 실어 보낸다.
+	var field := _field()
+	assert_eq(int(field.snapshot()["strike"]["seq"]), 0, "교전 전에는 연출이 없다")
+	field.explore.avatar = field.explore.sites[0]["pos"]
+	field.party_pos[field.controlled] = field.explore.avatar
+	var out := field.engage()
+	assert_true(out.has("last_hit"), "마지막 일격의 피해를 돌려준다")
+	var snapshot := field.snapshot()
+	assert_eq(int(snapshot["strike"]["seq"]), 1, "교전 한 번 = 연출 한 번")
+	assert_eq(int(snapshot["strike"]["site"]), 0, "연출은 그 조우 자리에")
+	assert_eq(int(snapshot["strike"]["damage"]), int(out["last_hit"]), "화면 숫자 = 로그 마지막 일격")
+	assert_gt(int(out["last_hit"]), 0, "때렸으면 피해가 0 보다 크다")
 
 
 func test_engage_does_nothing_after_a_wipe() -> void:

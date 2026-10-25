@@ -65,6 +65,11 @@ var _ally_decided: Dictionary = {}
 var _ally_battle: Array = []
 ## 이번 tick 에 화면이 달라졌는가 — 안 움직여도 점멸·행동·전투 결과는 다시 밀어야 한다.
 var _changed := false
+## 마지막 교전 — 뷰는 `seq` 가 늘어난 순간에만 그 자리에 타격 연출을 낸다.
+## 전투는 한 프레임에 끝나므로 "지금 싸우는 중" 대신 "방금 한 판"을 실어 보낸다.
+var _strike_seq := 0
+var _strike_site := -1
+var _strike_damage := 0
 
 
 func configure(races: Dictionary, monsters: Variant, biomes: Variant,
@@ -406,6 +411,12 @@ func _fight(index: int) -> Dictionary:
 	## 전투 한 판 — 플레이어가 누른 것과 동료가 고른 것이 같은 길을 지난다.
 	_changed = true
 	var out := explore.fight(index, heroes, _rng)
+	# 뷰에 넘길 타격 한 번 — 자리와 그 판의 피해 합 (연출 전용, 규칙에는 안 쓴다).
+	# 이미 지운 조우를 동료가 마저 치면 `turns` 가 0 이다 — 싸우지 않았으니 연출도 없다.
+	if int(out.get("turns", 0)) > 0:
+		_strike_seq += 1
+		_strike_site = index
+		_strike_damage = int(out.get("last_hit", 0))
 	# 이 조우에서 겪은 세계(물가·동굴·문지기)를 문맥 카운터로 남긴다.
 	var world := FonsFusion.place_context(_biomes, floor)
 	for hero in heroes:
@@ -533,9 +544,14 @@ func snapshot() -> Dictionary:
 			"alive": bool(heroes[i].get("alive", false)),
 			"alert": i != controlled and _signal_on(i),
 		})
+	var world: Dictionary = explore.biome() if explore != null else {}
 	return {
 		"mode": "field",
 		"floor": floor,
+		# 바이옴 이름·지형 키트·파생색 — 뷰는 데이터를 읽지 않고 이 세 값만 칠한다.
+		"biome": String(world.get("id", "")),
+		"kit": String(world.get("topologyKit", "")),
+		"palette": FonsBiomePalette.from_biome(world),
 		"controlled": controlled,
 		"radius": PARTY_RADIUS,
 		"party": party,
@@ -546,6 +562,8 @@ func snapshot() -> Dictionary:
 		"required": explore.required,
 		"done": explore.mission_done(),
 		"wiped": not winner.is_empty(),
+		# 방금 끝난 교전 — seq 가 바뀐 순간에만 뷰가 그 자리에 짧게 그린다.
+		"strike": {"seq": _strike_seq, "site": _strike_site, "damage": _strike_damage},
 		"entities": entities,
 		"log": log_lines.duplicate(),
 	}

@@ -127,6 +127,22 @@ func test_retreat_is_recorded_for_the_people_who_walked_back() -> void:
 		assert_eq(int(hero["brain"].counters.get("후퇴", 0)), 1)
 
 
+func test_snapshot_names_the_biome_and_its_topology_kit() -> void:
+	## 뷰가 "어느 층이 어느 세계인가"를 판정하려면 심이 이름을 실어야 한다 (계획서 §5).
+	var e := _explore()
+	var snap := e.snapshot()
+	assert_eq(String(snap["biome"]), "biome_plains", "3층 = 슬롯 1 풀바다")
+	assert_eq(String(snap["kit"]), "topo_natural_surface", "지형 키트도 함께")
+
+
+func test_a_floor_without_a_biome_says_so_with_empty_strings() -> void:
+	## 표기 생략 규약 — 모르는 층은 지어내지 않고 빈 문자열이다 (`FonsEncounter.biome_for_floor`).
+	var e := FonsExplore.new()
+	e.start(DataLoader.get_monsters(), [], 1, 1)
+	assert_eq(String(e.snapshot()["biome"]), "")
+	assert_eq(String(e.snapshot()["kit"]), "")
+
+
 func test_clearing_every_site_finishes_the_floor() -> void:
 	var e := _explore()
 	var heroes := _strong_party()

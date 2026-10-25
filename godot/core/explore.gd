@@ -138,6 +138,11 @@ func mission_done() -> bool:
 	return cleared >= required
 
 
+func biome() -> Dictionary:
+	## 이 층이 어느 세계인가 — 판정은 조우 편성과 같은 함수가 진다 (슬롯 → 층 범위 → {}).
+	return FonsEncounter.biome_for_floor(_biomes, floor)
+
+
 func snapshot() -> Dictionary:
 	## 뷰가 읽는 형식 — 엔티티 id 는 문자열, 위치는 `Vector3`(R2).
 	var marks: Array = []
@@ -148,11 +153,15 @@ func snapshot() -> Dictionary:
 			"pos": Vector3(float(s["pos"].x), 0.0, float(s["pos"].y)),
 			"cleared": bool(s["cleared"]),
 		})
+	var world := biome()
 	return {
 		"floor": floor,
 		"avatar": Vector3(avatar.x, 0.0, avatar.y),
 		"contact": contact_index(),
 		"sites": marks,
+		# 뷰는 데이터를 읽지 않는다 — 어느 세계·어떤 지형 키트인지는 문자열로 받는다 (R3).
+		"biome": String(world.get("id", "")),
+		"kit": String(world.get("topologyKit", "")),
 		"cleared": cleared,
 		"required": required,
 		"done": mission_done(),

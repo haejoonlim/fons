@@ -257,7 +257,7 @@ static func strike(rng, attacker: Dictionary, defender: Dictionary,
 	var name_a := String(attacker.get("name", "?"))
 	var name_d := String(defender.get("name", "?"))
 	if bool(out["evaded"]):
-		return {"text": "%s → %s 빗나감" % [name_a, name_d], "killed": false}
+		return {"text": "%s → %s 빗나감" % [name_a, name_d], "killed": false, "damage": 0}
 
 	var dmg := int(out["damage"])
 	if skill_pct > 0.0:
@@ -276,7 +276,8 @@ static func strike(rng, attacker: Dictionary, defender: Dictionary,
 	if bool(out["critical"]):
 		text += " 치명타"
 	text += " 처치" if killed else " (잔여 %d)" % int(defender["hp"])
-	return {"text": text, "killed": killed}
+	# 실제로 깎인 HP — 화면의 피해 숫자가 로그의 배율·보호막을 다시 계산하지 않게 여기서 정한다.
+	return {"text": text, "killed": killed, "damage": dmg - absorbed}
 
 
 static func combat_step(rng, party: Array, enemies: Array, gauge: Dictionary,
@@ -287,6 +288,8 @@ static func combat_step(rng, party: Array, enemies: Array, gauge: Dictionary,
 ## (원본과 같은 난수 수열로 돌려 로그를 대조하려면 스텁이 필요하다).
 	var log_lines: Array = []
 	var killed: Array = []
+	## 이번 턴 마지막 일격의 피해 — 조우 타격 연출이 띄우는 숫자다 (적이 준 피해는 안 센다).
+	var last_hit := 0
 	if bool(gauge.get("enabled", false)):
 		gauge["value"] = mini(GAUGE_MAX, int(gauge.get("value", 0)) + GAUGE_PER_TURN)
 	var party_avg := {}
@@ -299,7 +302,7 @@ static func combat_step(rng, party: Array, enemies: Array, gauge: Dictionary,
 		party_avg[key] = float(party_avg.get(key, 0.0)) / float(maxi(1, stat_n))
 
 	if _weakest(enemies).is_empty() or _weakest(party).is_empty():
-		return {"log": log_lines, "killed": killed}
+		return {"log": log_lines, "killed": killed, "last_hit": 0}
 
 	for hero in party:
 		if not bool(hero.get("alive", false)):
@@ -342,6 +345,7 @@ static func combat_step(rng, party: Array, enemies: Array, gauge: Dictionary,
 			skill_pct = _take_skill(hero)
 		var res := strike(rng, hero, target, float(position_mul.get(String(target.get("name", "")), 1.0)),
 			skill_pct, action_name)
+		last_hit = int(res.get("damage", 0))
 		log_lines.append(res["text"])
 		if bool(res["killed"]):
 			if FonsBrain.attached(hero):
@@ -365,4 +369,4 @@ static func combat_step(rng, party: Array, enemies: Array, gauge: Dictionary,
 		if bool(res2["killed"]):
 			killed.append(victim)
 
-	return {"log": log_lines, "killed": killed}
+	return {"log": log_lines, "killed": killed, "last_hit": last_hit}
