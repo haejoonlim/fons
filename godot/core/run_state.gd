@@ -41,6 +41,7 @@ var _job_tree: Dictionary = {}
 var _job_coef: Dictionary = {}
 var _equipment: Dictionary = {}
 var _ai: Dictionary = {}
+var _basics: Dictionary = {}
 var _monsters: Variant = null
 var _biomes: Variant = null
 var _seed := 0
@@ -97,7 +98,7 @@ static func keyword_mod_for(job: Dictionary, cards: int = 0) -> Array:
 static func heroes_from(races: Dictionary, job_tree: Dictionary = {}, equipment: Dictionary = {},
 		grade: int = 5, level: int = 130, seed_value: int = 0,
 		job_coef: Dictionary = {}, cards: int = 0, party_size: int = PARTY_SIZE,
-		ai: Dictionary = {}) -> Array:
+		ai: Dictionary = {}, basics: Dictionary = {}) -> Array:
 	## 기준스탯 → **직업계수** × 키워드 × 등급 × 레벨 × 순수도 + 장비 → 개체 변량 ±7% → 전투 유닛.
 	## 키워드는 원본 규칙대로 — 일반 L2 는 3장 전부 곱, 종점(7장)은 1장만 (`cards` 로 상한 재면 측정용).
 	## 장비는 3등급 한 벌(`equipment.json`) — 강화·상점·획득 경로는 아직 없다 (원본 대조는 구현만).
@@ -120,6 +121,7 @@ static func heroes_from(races: Dictionary, job_tree: Dictionary = {}, equipment:
 			unit["job"] = String(job.get("name", ""))
 			unit["job_id"] = String(job.get("id", ""))
 			unit["keyword"] = _card_names(applied_cards(job, cards))
+		FonsBasicAttacks.install(unit, basics)
 		_attach_ai(unit, ai, job, grade, level, seed_value, i)
 		out.append(unit)
 	return out
@@ -152,7 +154,7 @@ static func _card_names(cards: Array) -> String:
 func start(races: Dictionary, monsters: Variant, biomes: Variant,
 		seed_value: int = 0, start_floor: int = START_FLOOR,
 		job_tree: Dictionary = {}, equipment: Dictionary = {},
-		job_coef: Dictionary = {}, ai: Dictionary = {}) -> void:
+		job_coef: Dictionary = {}, ai: Dictionary = {}, basics: Dictionary = {}) -> void:
 	_races = races
 	_monsters = monsters
 	_biomes = biomes
@@ -160,16 +162,17 @@ func start(races: Dictionary, monsters: Variant, biomes: Variant,
 	_equipment = equipment
 	_job_coef = job_coef
 	_ai = ai
+	_basics = basics
 	_seed = seed_value
 	_start_floor = clampi(start_floor, START_FLOOR, MAX_FLOOR)
 	floor = _start_floor
-	heroes = heroes_from(races, job_tree, equipment, 5, 130, seed_value, job_coef, 0, PARTY_SIZE, ai)
+	heroes = heroes_from(races, job_tree, equipment, 5, 130, seed_value, job_coef, 0, PARTY_SIZE, ai, basics)
 	_run_floor()
 
 
 func restart() -> void:
 	floor = _start_floor
-	heroes = heroes_from(_races, _job_tree, _equipment, 5, 130, _seed, _job_coef, 0, PARTY_SIZE, _ai)
+	heroes = heroes_from(_races, _job_tree, _equipment, 5, 130, _seed, _job_coef, 0, PARTY_SIZE, _ai, _basics)
 	_run_floor()
 
 

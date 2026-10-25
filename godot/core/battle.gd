@@ -120,6 +120,15 @@ static func _take_skill(attacker: Dictionary) -> float:
 static func _tick_cooldowns(attacker: Dictionary) -> void:
 	for s in attacker.get("skills", []):
 		s["left"] = maxi(0, int(s.get("left", 0)) - 1)
+	FonsBasicAttacks.tick(attacker)
+
+
+static func _consume_action(hero: Dictionary, move: Dictionary) -> float:
+	## 이번 행동의 피해 가산(%). 기본 공격과 각인 기술이 같은 자리를 쓴다.
+	var basic_id := String(move.get("basic_id", ""))
+	if not basic_id.is_empty():
+		return FonsBasicAttacks.consume(hero, basic_id)
+	return _consume_skill(hero, String(move.get("skill_id", "")))
 
 
 static func _consume_skill(hero: Dictionary, skill_id: String) -> float:
@@ -151,6 +160,17 @@ static func _move_candidates(hero: Dictionary) -> Array:
 		"stat": "MAG" if magical else "ATK",
 		"stat_value": float(hero.get("mag", 0.0)) if magical else float(hero.get("atk", 0.0)),
 	}]
+	for b in hero.get("basics", []):
+		if int(b.get("left", 0)) > 0:
+			continue
+		out.append({
+			"action": String(b.get("name", "기본 공격")), "tag": String(b.get("tag", _attack_tag_of(hero))),
+			"domain": String(b.get("domain", "공격")),
+			"basic_id": String(b.get("id", "")),
+			"cls": String(b.get("cls", "")),
+			"stat": "MAG" if magical else "ATK",
+			"stat_value": float(hero.get("mag", 0.0)) if magical else float(hero.get("atk", 0.0)),
+		})
 	for s in hero.get("skills", []):
 		if int(s.get("left", 0)) > 0:
 			continue
@@ -216,7 +236,8 @@ static func _context(hero: Dictionary, party: Array, enemies: Array, party_avg: 
 
 
 static func strike(rng, attacker: Dictionary, defender: Dictionary,
-		position_multiplier: float = 1.0, skill_pct: float = 0.0) -> Dictionary:
+		position_multiplier: float = 1.0, skill_pct: float = 0.0,
+		action_name: String = "") -> Dictionary:
 	var eva := float(defender.get("eva", 0.0))
 	var cri := float(attacker.get("cri", 0.0))
 	var cdmg := float(attacker.get("cdmg", 0.0))
@@ -242,12 +263,16 @@ static func strike(rng, attacker: Dictionary, defender: Dictionary,
 	if skill_pct > 0.0:
 		# 스킬은 스탯이 아니라 **행동 한 번의 피해**를 올린다 (GDD 09 §5-2 성장식).
 		dmg = FonsCombat.bankers_round(float(dmg) * (1.0 + skill_pct / 100.0))
-	defender["hp"] = maxi(0, int(defender["hp"]) - dmg)
+	var absorbed := FonsStatus.absorb(defender, dmg)
+	defender["hp"] = maxi(0, int(defender["hp"]) - (dmg - absorbed))
 	var killed := int(defender["hp"]) <= 0
 	defender["alive"] = not killed
-	var text := "%s → %s %d" % [name_a, name_d, dmg]
+	var label := "「%s」 " % action_name if not action_name.is_empty() else ""
+	var text := "%s %s→ %s %d" % [name_a, label, name_d, dmg]
 	if skill_pct > 0.0:
 		text += " 스킬"
+	if absorbed > 0:
+		text += " 보호막 -%d" % absorbed
 	if bool(out["critical"]):
 		text += " 치명타"
 	text += " 처치" if killed else " (잔여 %d)" % int(defender["hp"])
@@ -284,7 +309,9 @@ static func combat_step(rng, party: Array, enemies: Array, gauge: Dictionary,
 		if target.is_empty():
 			break
 		_tick_cooldowns(hero)
+		FonsStatus.tick(hero)
 		var skill_pct := 0.0
+		var action_name := ""
 		if FonsBrain.attached(hero):
 			# 성격이 붙은 유닛은 **누구를 칠지**를 스스로 고른다 (09 §4-2).
 			var brain: FonsBrain = hero["brain"]
@@ -296,18 +323,25 @@ static func combat_step(rng, party: Array, enemies: Array, gauge: Dictionary,
 				var aimed := brain.decide(_target_candidates(enemies, move), ctx)
 				if not aimed.is_empty():
 					target = aimed["target"]
-				skill_pct = _consume_skill(hero, String(move.get("skill_id", "")))
+				skill_pct = _consume_action(hero, move)
+				if not String(move.get("basic_id", "")).is_empty():
+					action_name = String(move.get("action", ""))
 				var seen: Dictionary = brain.commit({"tag": String(move["tag"]),
 					"skill_id": String(move.get("skill_id", ""))})
 				brain.mirror(hero)
 				for born in seen["born"]:
 					log_lines.append("%s → 새 기술 「%s」" % [String(hero.get("name", "?")), String(born)])
+				var effect := FonsStatus.act(hero, party, move)
+				if not effect.is_empty():
+					log_lines.append(effect["text"])
+					continue
 			else:
 				skill_pct = _take_skill(hero)
 		else:
 			FonsActionTags.record(hero, FonsActionTags.attack_tag(hero))
 			skill_pct = _take_skill(hero)
-		var res := strike(rng, hero, target, float(position_mul.get(String(target.get("name", "")), 1.0)), skill_pct)
+		var res := strike(rng, hero, target, float(position_mul.get(String(target.get("name", "")), 1.0)),
+			skill_pct, action_name)
 		log_lines.append(res["text"])
 		if bool(res["killed"]):
 			if FonsBrain.attached(hero):
@@ -321,7 +355,9 @@ static func combat_step(rng, party: Array, enemies: Array, gauge: Dictionary,
 	for enemy in enemies:
 		if not bool(enemy.get("alive", false)):
 			continue
-		var victim := _weakest(party)
+		var victim := FonsStatus.taunt_target(party)
+		if victim.is_empty():
+			victim = _weakest(party)
 		if victim.is_empty():
 			break
 		var res2 := strike(rng, enemy, victim, 1.0)
