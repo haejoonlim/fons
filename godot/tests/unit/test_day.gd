@@ -45,6 +45,20 @@ func _counters(heroes: Array) -> Array:
 	return out
 
 
+func test_island_day_settles_once_across_floor_days() -> void:
+	## 층 하루(FonsDay)와 섬일은 다른 단위다 — 같은 섬일에 층 하루를 두 번 돌려도 정산은 한 번.
+	var d := _day()
+	d.estate.clock_epoch = 1000
+	d.estate.last_settled_day = 1
+	var heroes := _party()
+	var first := d.run(heroes, true, 1000 + 12343)
+	assert_eq(d.estate.last_settled_day, 2, "경계를 넘은 날이 정산된다")
+	assert_true(first["log"].has("섬 2일"), "정산한 날이 로그에 남는다")
+	var second := d.run(heroes, true, 1000 + 12343 + 600)
+	assert_eq(d.estate.last_settled_day, 2, "같은 섬일에 두 번 정산하지 않는다")
+	assert_false(second["log"].has("섬 3일"), "없는 날을 지어내지 않는다")
+
+
 func test_one_day_connects_estate_field_and_recovery() -> void:
 	var heroes := _party()
 	var out := _day().run(heroes)

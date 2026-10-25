@@ -20,13 +20,17 @@
     "natural_growth_rate_per_island_day": 0.02
   },
   "food": {
-    "consumption_per_pop_per_island_day": 1
+    "consumption_per_pop_per_island_day": 1,
+    "shortage_morale_per_floor": -5,
+    "starvation_after_island_days": 3,
+    "starvation_pop_loss_pct": 0.02
   },
   "morale": {
     "initial": 50,
     "min": 0,
     "max": 100,
-    "production_bonus_factor": 0.20
+    "production_bonus_factor": 0.20,
+    "recovery_per_floor": 5
   },
   "tax": {
     "gold_per_pop_per_island_day": 1
@@ -50,24 +54,10 @@
       { "id": "herb", "name_ko": "약초", "yield_food": 0, "yield_herb": 3, "growth_island_days": 3 }
     ],
     "seasons": [
-      { "id": "spring", "months": [3, 4, 5], "harvest_mul": 1.0, "food_yield_mul": 1.0, "natural_growth_mul": 1.5, "growth_mul": 1.0 },
-      { "id": "summer", "months": [6, 7, 8], "harvest_mul": 1.0, "food_yield_mul": 1.0, "natural_growth_mul": 1.0, "growth_mul": 1.0 },
-      { "id": "autumn", "months": [9, 10, 11], "harvest_mul": 1.1, "food_yield_mul": 1.0, "natural_growth_mul": 1.0, "growth_mul": 1.0 },
-      { "id": "winter", "months": [12, 1, 2], "harvest_mul": 1.0, "food_yield_mul": 0.7, "natural_growth_mul": 1.0, "growth_mul": 0.0, "morale_delta": -5 }
-    ]
-  },
-  "edicts": {
-    "unlock_floor": 10,
-    "slot_count_by_floor": [
-      { "floor": 1, "slots": 0 },
-      { "floor": 10, "slots": 1 },
-      { "floor": 30, "slots": 2 }
-    ],
-    "change_cooldown_floors": 5,
-    "list": [
-      { "id": "mercantilism", "name_ko": "중상주의", "tax_mul": 1.30, "morale_delta": -15, "gathering_yield_mul": 1.0, "natural_growth_mul": 1.0 },
-      { "id": "distributism", "name_ko": "분배주의", "tax_mul": 0.80, "morale_delta": 15, "gathering_yield_mul": 1.0, "natural_growth_mul": 1.5 },
-      { "id": "gathering_order", "name_ko": "채집장려", "tax_mul": 1.0, "morale_delta": -5, "gathering_yield_mul": 1.2, "natural_growth_mul": 1.0 }
+      { "id": "spring", "island_days": [1, 90], "harvest_mul": 1.0, "food_yield_mul": 1.0, "natural_growth_mul": 1.5, "growth_mul": 1.0 },
+      { "id": "summer", "island_days": [91, 180], "harvest_mul": 1.0, "food_yield_mul": 1.0, "natural_growth_mul": 1.0, "growth_mul": 1.0 },
+      { "id": "autumn", "island_days": [181, 270], "harvest_mul": 1.1, "food_yield_mul": 1.0, "natural_growth_mul": 1.0, "growth_mul": 1.0 },
+      { "id": "winter", "island_days": [271, 365], "harvest_mul": 1.0, "food_yield_mul": 0.7, "natural_growth_mul": 1.0, "growth_mul": 0.0, "morale_delta": -5 }
     ]
   },
   "maintenance_gold_per_level_per_island_day": 10,
@@ -119,11 +109,24 @@
     "warn_at": 0.50
   },
   "morale_unrest": {
-    "_doc": "불만 게이지 가안 (04 데이터 흐름도 — 민심 25 미만 진입 표시·15 이하 경고·20 미달 3층 지속 시 파업 유예 계층)",
+    "_doc": "불만 게이지 (04 §3.5·§3.12·§3.14 — 민심 25 미만 진입 표시·15 이하 경고·20 미만 3층 지속 시 파업·전 생산 정지 5층). 단위는 섬일이 아니라 층이다 — 파업은 층 단위 규칙",
     "schema_version": "0.1",
     "enter_below": 25,
     "warn_below": 15,
-    "strike_after_days": 3
+    "strike_below": 20,
+    "strike_after_floors": 3,
+    "strike_floors": 5,
+    "early_end_food_days": 1
+  },
+  "decrees": {
+    "_doc": "칙령 3종 (04 §3.7 — 10층 해금·1슬롯). 파업 중에 식량 흑자면 칙령을 바꿔 파업을 조기 종료한다 (04 §3.12). 효과는 §3.7 표 그대로다.",
+    "schema_version": "0.2",
+    "unlock_floor": 10,
+    "list": [
+      { "id": "mercantilism", "name_ko": "중상주의", "morale_delta": -15, "tax_mul": 1.3 },
+      { "id": "distribution", "name_ko": "분배주의", "morale_delta": 15, "tax_mul": 0.8, "natural_growth_mul": 1.5 },
+      { "id": "gathering", "name_ko": "채집장려", "morale_delta": -5, "harvest_mul": 1.2 }
+    ]
   },
   "lightway": {
     "_doc": "D-278 광로 회복률 — 얼어붙은 이데아가 녹은 정도(0~1). 계정 영속 · 엔딩 판정 축 2(StoryDirector.LightwayRecovery). 101층 스윗스팟이 유일한 대폭 상승.",

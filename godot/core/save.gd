@@ -15,7 +15,7 @@ const TOP_KEYS := ["schema", "saved_at", "data_manifest", "run", "wallet", "esta
 const RUN_KEYS := ["seed", "grade", "level", "start_floor", "floor", "heroes"]
 const HERO_KEYS := ["index", "job_id", "hp", "alive", "equipment", "brain"]
 const ESTATE_KEYS := ["clock_epoch", "last_settled_day", "stores", "population", "morale",
-	"shortage_days", "strike_floors_left", "unrest_floors", "recovering"]
+	"shortage_days", "strike_floors_left", "unrest_floors", "recovering", "decree"]
 
 
 static func to_dict(run_save: Dictionary, estate_save: Dictionary, wallet: Dictionary,

@@ -44,12 +44,18 @@ func start(estate_data: Dictionary, monsters: Variant, biomes: Variant,
 	born = []
 
 
-func run(heroes: Array, with_life: bool = true) -> Dictionary:
+func run(heroes: Array, with_life: bool = true, now: int = 0) -> Dictionary:
 	## `with_life=false` 는 **탐험만** 도는 대조군이다 (영지·저녁 없음).
 	## 전투만 도는 대조군은 부르는 쪽이 `FonsFloorRun` 으로 따로 돌린다.
+	## `now` 는 시계 주입이다 — 0 이면 기기 시각. 정산 검사가 가짜 시계를 쓴다.
 	log_lines = []
 	born = []
 	if with_life:
+		# 섬일 정산 — 여러 층 하루가 같은 섬일에 들어도 한 번만 돈다 (`FonsIslandClock.tick`).
+		# 수지 줄은 영지 로그에 붙으므로, 표시를 먼저 찍고 그 뒤를 그대로 가져온다.
+		var settle_mark := estate.log_lines.size()
+		estate.settle(now)
+		_append(estate.log_lines, settle_mark)
 		var mark := estate.log_lines.size()
 		var shift := estate.shift(heroes)
 		_append(estate.log_lines, mark)
