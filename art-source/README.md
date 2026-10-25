@@ -23,6 +23,9 @@ art-source/
 1. 원본 → 결과물 경로를 **스크립트로 고정**한다. 손으로 내보내면 다음 사람이 같은 결과를 못 만든다.
    - Blender: `blender --background --python art-source/export/<name>.py`
    - Aseprite: `aseprite -b <file>.aseprite --sheet <out>.png --data <out>.json`
+   - 3D 지형 키트는 **Blender 를 거치지 않는다** — 이 머신의 Blender 4.5 는 번들 numpy 가
+     Accelerate 심볼을 못 찾아 glTF 익스포터가 죽는다. 메시는 [`tools/gen_kit_glb.py`](../tools/gen_kit_glb.py)
+     가 직접 쓰고, `--check` 로 드리프트를 막는다 ([docs/design/바이옴_에셋_계획.md](../docs/design/바이옴_에셋_계획.md) §6).
 2. 결과물 이름은 **원본과 같게** 유지한다 (`hero_knight.aseprite` → `hero_knight.png`).
    이름이 갈라지면 어느 원본에서 나왔는지 추적이 끊긴다.
 3. 큰 바이너리(수십 MB 이상)는 Git LFS 로 추적한다. `git lfs install` 은 이 머신에 이미 되어 있다
@@ -32,5 +35,8 @@ art-source/
 
 ## 아직 없는 것
 
-원본 파일은 **하나도 없다.** 이 폴더는 규칙과 자리만 잡아 둔 상태다.
+그림 원본(.aseprite·.psd·.blend)은 **아직 없다.** 이 폴더는 규칙과 자리만 잡아 둔 상태다.
 첫 캐릭터 원본이 들어올 때 `characters/` 와 `export/` 를 만든다.
+
+3D 지형 키트는 원본이 그림 파일이 아니라 생성기다 — `tools/gen_kit_glb.py` 가 정본이고
+결과물은 `godot/assets/art/models/` 에 있다.

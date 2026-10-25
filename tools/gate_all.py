@@ -69,6 +69,14 @@ STEPS = [
     # 표가 바뀌면 생성기를 다시 돌린다: 05 §5-1 role 적합도 · gacha_test 상수.
     ("personality", "성격 데이터 드리프트 (13 main · 52 sub)",
      [sys.executable, "tools/gen_personalities.py", "--check"]),
+    # 바이옴 에셋 키 — biomes.json 의 topologyKit·slots 에서 파생한 키만 담는다 (메시 아님).
+    # 손으로 고치면 사본과 어긋나고, 정본(biomes.json)과 다른 세계 이름이 생긴다.
+    ("biomeassets", "바이옴 에셋 키 드리프트 (biomes 파생)",
+     [sys.executable, "tools/gen_biome_assets.py", "--check"]),
+    # 지형 키트 `.glb` — 생성기(표준 라이브러리)가 뽑은 바이트와 커밋된 결과물이 같은가.
+    # 손으로 메시를 고치면 다음 사람이 같은 결과를 못 만든다 (art-source/README.md 규칙 1).
+    ("kitart", "지형 키트 .glb 드리프트 (생성기 파생)",
+     [sys.executable, "tools/gen_kit_glb.py", "--check"]),
     # 계약 단위 검사만 돈다 (`--unit`) — 게이트 실행은 위에서 이미 했다.
     #   마커(`[PASS]/[FAIL] <단계 id>`)는 이 파일이 각 단계 출력에서 직접 본다(run_step +
     #   marker_gap). 그래서 계약 검사가 게이트를 두 번 돌리지 않는다 (예전엔 그래서 런이 2배).
