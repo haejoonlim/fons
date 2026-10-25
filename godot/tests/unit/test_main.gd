@@ -295,17 +295,31 @@ func test_interact_fights_a_contact_and_retreat_returns_to_entry() -> void:
 	assert_eq(node._field.explore.cleared, 1, "지운 조우는 후퇴해도 남는다 (D-265)")
 
 
+
+func test_switch_hero_intent_moves_control_and_avatar() -> void:
+	var node := _scene()
+	var target: Vector2 = node._field.party_pos[2]
+	node._on_intent(&"switch_hero", {"index": 2})
+	assert_eq(node._field.controlled, 2, "3번 영웅으로 전환")
+	assert_eq(node._field.explore.avatar, target, "아바타가 그 영웅의 자리로 간다")
+	assert_eq(node._view.entity_count(), 8, "전환해도 다섯은 화면에 남는다")
+
+
 func test_clearing_the_mission_advances_and_restart_resets() -> void:
 	var node := _scene()
+	var brain: FonsBrain = node._field.heroes[0]["brain"]
+	assert_eq(brain.floor, 1, "1층 브레인은 1층이다")
 	for i in node._field.explore.sites.size():
 		node._field.explore.avatar = node._field.explore.sites[i]["pos"]
 		node._on_intent(&"interact", {})
 	assert_true(node._field.mission_done(), "조우 셋을 정리하면 미션이 끝난다")
 	node._on_intent(&"next_floor", {})
 	assert_string_contains(node.get_node("Hud/FloorLabel").text, "2층", "미션 완료 뒤 다음 층")
+	assert_eq(brain.floor, 2, "층이 오르면 브레인 층도 오른다 — 성장 예산·연계 세션 경계")
 
 	node._on_intent(&"restart", {})
 	assert_string_contains(node.get_node("Hud/FloorLabel").text, "1층", "재시작은 1층으로 돌린다")
+	assert_eq(node._field.heroes[0]["brain"].floor, 1, "재시작하면 층도 1로 돌아간다")
 	assert_eq(node._field.explore.cleared, 0)
 
 

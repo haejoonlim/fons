@@ -110,13 +110,17 @@ func _restore_if_asked(data: Dictionary) -> bool:
 
 
 func _process(delta: float) -> void:
-	## 뷰가 방향을 보내는 동안만 걷는다. 벽·필드 밖은 `FonsExplore.walk` 가 자른다.
+	## 걷는 동안만 아바타가 움직인다. 동료는 플레이어가 서 있어도 계속 움직인다 —
+	## 그래서 매 프레임 `tick` 을 돌리고, 실제로 움직였을 때만 화면을 민다.
 	if _field == null:
 		return
+	var moved := _field.tick(delta)
 	if _move_dir != Vector2.ZERO:
 		_field.walk(_move_dir, delta)
-		_push()
+		moved = true
 	_tick_estate(delta)
+	if moved:
+		_push()
 
 
 func _tick_estate(delta: float) -> void:
@@ -141,8 +145,6 @@ func _note_floor_cleared() -> void:
 	## 층 클리어 — 식량이 바닥이면 민심이 준다 (04 §3.14 "식량 0: 즉시 민심 -5/층").
 	## 정산(섬일)과 주기가 다른 이유는 정본이 두 주기를 나눠 두었기 때문이다 (§3.4).
 	## 파업도 층 단위라 여기서 시작·종료를 알린다 (§3.5 — 민심 20 미만 3층 → 전 생산 정지 5층).
-	if _estate == null or _field == null:
-		return
 	var out := _estate.note_floor_cleared()
 	if bool(out["strike_started"]):
 		_log("파업 — 전 생산 정지 %d층" % int(out["strike"]))
@@ -198,6 +200,10 @@ func _on_intent(kind: StringName, payload: Dictionary) -> void:
 		"retreat":
 			_move_dir = Vector2.ZERO
 			_field.retreat()
+		"switch_hero":
+			# 조종을 바꾸면 범위의 중심만 옮긴다 — 성향은 각자 브레인에 남는다.
+			_move_dir = Vector2.ZERO
+			_field.switch_hero(int(payload.get("index", 0)))
 		"edict":
 			# 칙령 화면 (04 §3.7). 고르는 것은 화면, 판정은 `FonsEstate` 다.
 			_toggle_edict()

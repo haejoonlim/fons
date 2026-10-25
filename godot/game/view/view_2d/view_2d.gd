@@ -37,12 +37,11 @@ const FIELD_BORDER := Color(0.34, 0.40, 0.47, 1.0)
 const SITE_CLEARED := Color(0.32, 0.34, 0.36, 1.0)
 const SITE_CONTACT := Color(1.0, 0.95, 0.55)
 const AVATAR_RING := Color(0.85, 1.0, 0.90, 0.9)
+## 동료가 따라다니는 범위 — 심이 준 반경을 그린다. 숫자는 심이 정한다.
+const PARTY_RING := Color(0.45, 0.75, 1.0, 0.35)
 
-## HP 바 — 엔티티 사각형 아래에 붙인다. 픽셀 단위라 pixels_per_unit 을 안 탄다.
-const BAR_HEIGHT := 6.0
-const BAR_GAP := 4.0
-const BAR_BG := Color(0.12, 0.12, 0.14, 0.9)
-const BAR_FG := Color(0.32, 0.85, 0.42)
+## 오른쪽 파티 칸은 `FonsPartyPanel` 이 그린다 — 2D·3D 가 같은 그림을 쓴다.
+## HP 바도 마찬가지다 — 모양·비율은 `FonsHpBar`, 놓는 자리만 뷰가 정한다.
 
 
 class Canvas extends Node2D:
@@ -58,6 +57,9 @@ var _canvas: Canvas = null
 var _field := Vector2.ZERO
 var _is_field := false
 var _contact := -1
+var _radius := 0.0
+var _avatar_pos := Vector3.ZERO
+var _party: Array = []
 var _last_dir := Vector2.ZERO
 
 
@@ -79,6 +81,9 @@ func apply(snapshot: Dictionary) -> void:
 	_field = snapshot.get("field", Vector2.ZERO)
 	_is_field = String(snapshot.get("mode", "")) == "field" and _field.x > 0.0 and _field.y > 0.0
 	_contact = int(snapshot.get("contact", -1))
+	_radius = float(snapshot.get("radius", 0.0))
+	_avatar_pos = snapshot.get("avatar", Vector3.ZERO)
+	_party = snapshot.get("party", [])
 	_redraw()
 
 
@@ -87,12 +92,17 @@ func unmount() -> void:
 	_field = Vector2.ZERO
 	_is_field = false
 	_contact = -1
+	_party = []
 	_mounted = false
 	_redraw()
 
 
 func entity_count() -> int:
 	return _entities.size()
+
+
+func party_count() -> int:
+	return _party.size()
 
 
 func has_entity(id: StringName) -> bool:
@@ -113,10 +123,11 @@ func field_metrics() -> Dictionary:
 	## 필드를 화면 안에 넣는 배율·원점. 최소 배율 4px/unit.
 	## 위 여백은 HUD 두 줄(층·힌트), 아래 여백은 전투 로그 자리를 비운다 —
 	## 입구(0,0)의 아바타와 격자가 글자를 덮지 않게.
-	## 40×28 필드를 1280×720 에서는 약 22px/unit 로 그린다.
+	# 40×28 필드를 1280×720 에서는 약 22px/unit 로 그린다.
+	# 오른쪽은 파티 칸 자리다 — 필드가 그 아래로 들어가면 글자가 겹친다.
 	var viewport := _viewport_size()
 	var left := 32.0
-	var right := 32.0
+	var right := FonsPartyPanel.WIDTH + FonsPartyPanel.MARGIN * 2.0
 	var top := 88.0
 	var bottom := 200.0
 	var sx := (viewport.x - left - right) / maxf(1.0, _field.x)
@@ -142,12 +153,21 @@ func draw_entities(canvas: Node2D) -> void:
 			_draw_avatar(canvas, entity)
 			continue
 		var center := screen_position(entity["pos"])
-		var size: Vector2 = entity.get("size", Vector2.ONE) * pixels_per_unit
+		var size := entity_screen_size(entity)
 		var color: Color = KIND_COLORS.get(kind, DEFAULT_COLOR)
 		if not bool(entity.get("alive", true)):
 			color = color.darkened(0.6)
 		canvas.draw_rect(Rect2(center - size * 0.5, size), color)
 		_draw_hp_bar(canvas, center, size, entity)
+	if _is_field:
+		_draw_party(canvas)
+
+
+func entity_screen_size(entity: Dictionary) -> Vector2:
+	## 엔티티 사각형의 화면 크기. 탐험 필드는 필드 배율을 써야 한다 —
+	## 40×28 을 화면에 맞추면 48px/unit 보다 작아서, 전투 배율로 그리면 영웅이 세 배로 커진다.
+	var unit_scale := float(field_metrics()["scale"]) if _is_field else pixels_per_unit
+	return entity.get("size", Vector2.ONE) * unit_scale
 
 
 func _draw_field(canvas: Node2D) -> void:
@@ -170,6 +190,8 @@ func _draw_field(canvas: Node2D) -> void:
 		canvas.draw_line(Vector2(area.position.x, pz), Vector2(area.end.x, pz), FIELD_GRID, 1.0)
 		z += step
 	canvas.draw_rect(area, FIELD_BORDER, false, 2.0)
+	if _radius > 0.0:
+		canvas.draw_circle(screen_position(_avatar_pos), _radius * scale_value, PARTY_RING, false, 1.5)
 
 
 func _draw_site(canvas: Node2D, entity: Dictionary) -> void:
@@ -194,6 +216,11 @@ func _draw_avatar(canvas: Node2D, entity: Dictionary) -> void:
 	canvas.draw_circle(center, radius + 4.0, AVATAR_RING, false, 2.0)
 
 
+func _draw_party(canvas: Node2D) -> void:
+	## 오른쪽 다섯 줄. 심이 준 `party` 만 그린다 — 계산은 심이 진다.
+	FonsPartyPanel.draw(canvas, _party, _viewport_size())
+
+
 func _viewport_size() -> Vector2:
 	## `FonsView` 는 Node 라 `get_viewport_rect()`(CanvasItem)를 못 쓴다.
 	var vp := get_viewport()
@@ -203,16 +230,9 @@ func _viewport_size() -> Vector2:
 
 
 func _draw_hp_bar(canvas: Node2D, center: Vector2, size: Vector2, entity: Dictionary) -> void:
-	## 심이 `hp`·`max_hp` 를 실어 보낸 엔티티만 그린다 (없으면 이전처럼 사각형만).
-	var max_hp := int(entity.get("max_hp", 0))
-	if max_hp <= 0:
-		return
-	var ratio := clampf(float(entity.get("hp", 0)) / float(max_hp), 0.0, 1.0)
-	var bar := Rect2(center + Vector2(-size.x * 0.5, size.y * 0.5 + BAR_GAP), Vector2(size.x, BAR_HEIGHT))
-	canvas.draw_rect(bar, BAR_BG)
-	if ratio > 0.0:
-		canvas.draw_rect(Rect2(bar.position, Vector2(bar.size.x * ratio, bar.size.y)), BAR_FG)
-	canvas.draw_rect(bar, BAR_BG, false, 1.0)
+	## 심이 `hp`·`max_hp` 를 실어 보낸 엔티티만 그린다 (판단은 `FonsHpBar`).
+	var bottom := center + Vector2(0.0, size.y * 0.5)
+	FonsHpBar.draw(canvas, FonsHpBar.top_left_below(bottom, size.x), size.x, entity)
 
 
 func _process(_delta: float) -> void:
@@ -250,6 +270,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				intent.emit(&"retreat", {})
 			KEY_C:
 				intent.emit(&"edict", {})
+			KEY_1, KEY_2, KEY_3, KEY_4, KEY_5:
+				intent.emit(&"switch_hero", {"index": int(key) - int(KEY_1)})
 	else:
 		match key:
 			KEY_SPACE, KEY_ENTER:
