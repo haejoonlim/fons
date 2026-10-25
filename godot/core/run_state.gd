@@ -107,7 +107,9 @@ static func heroes_from(races: Dictionary, job_tree: Dictionary = {}, equipment:
 	## 장비는 3등급 한 벌(`equipment.json`) — 강화·상점·획득 경로는 아직 없다 (원본 대조는 구현만).
 	var def := FonsHeroStats.from_data(races)
 	var gear: Dictionary = FonsEquipment.from_grade(equipment, 3) if not equipment.is_empty() else {}
-	var jobs: Array = keyword_jobs(job_tree)
+	# 직업은 **이 파티 크기**만큼 뽑는다. 기본값(PARTY_SIZE=4)에 기대면 5인 파티의 마지막이
+	# 직업·계수·브레인 없이 남는다 — 필드 파티는 5인이다.
+	var jobs: Array = keyword_jobs(job_tree, party_size)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	var out: Array = []

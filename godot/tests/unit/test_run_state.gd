@@ -83,6 +83,29 @@ func test_party_gains_all_cards_not_one() -> void:
 		assert_gt(int(all[i]["maxHp"]), int(one[i]["maxHp"]), "파티원 %d — 3장 곱이 1장보다 크다" % i)
 
 
+func test_five_hero_party_gives_every_hero_a_job_and_a_brain() -> void:
+	# 필드 파티는 5인이다 (확정 #3). 그런데 직업은 `keyword_jobs` 기본값 4개만 뽑혀서
+	# 다섯 번째가 직업계수·직업명·브레인 없이 홀로 남았다 — 화면에서도 그 한 명만 달랐다.
+	var ai := {
+		"personalities": DataLoader.load_json("personalities.json"),
+		"profiles": DataLoader.load_json("job_ai_profiles.json"),
+		"catalog": DataLoader.load_json("skills_catalog.json"),
+		"legacy_pairs": DataLoader.load_json("fusion_pairs.json"),
+	}
+	var heroes := FonsRunState.heroes_from(DataLoader.load_json("races.json"),
+		DataLoader.load_json("job_tree.json"), DataLoader.load_json("equipment.json"),
+		5, 130, 11, DataLoader.load_json("job_coef.json"), 0, 5, ai)
+	assert_eq(heroes.size(), 5, "다섯을 만든다")
+	var jobs := {}
+	for i in heroes.size():
+		var job_id := String(heroes[i].get("job_id", ""))
+		assert_false(job_id.is_empty(), "%d번 영웅에 직업이 붙는다" % (i + 1))
+		assert_false(String(heroes[i].get("job", "")).is_empty(), "%d번 영웅에 직업명이 붙는다" % (i + 1))
+		assert_true(FonsBrain.attached(heroes[i]), "%d번 영웅에 브레인이 붙는다" % (i + 1))
+		jobs[job_id] = true
+	assert_eq(jobs.size(), 5, "다섯이 서로 다른 직업 — 직업 id 가 키다")
+
+
 func _job_of(tree: Dictionary, job_id: String) -> Dictionary:
 	for job in tree.get("jobs", []):
 		if String(job.get("id", "")) == job_id:

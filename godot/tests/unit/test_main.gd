@@ -59,7 +59,7 @@ func test_main_scene_starts_on_the_exploration_field() -> void:
 	assert_string_contains(floor_label.text, "1층", "1층 탐험이 뜬다")
 	assert_string_contains(floor_label.text, "0/3", "조우 0/3 에서 시작한다")
 	assert_string_contains(hint_label.text, "걷기", "이동 키 안내가 뜬다")
-	assert_eq(node._view.entity_count(), 4, "조우 3 + 아바타 1")
+	assert_eq(node._view.entity_count(), 8, "조우 3 + 조종 1 + 동료 4")
 
 
 func test_island_day_settlement_pays_tax_and_logs_it() -> void:
