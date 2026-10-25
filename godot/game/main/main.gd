@@ -13,6 +13,7 @@ extends Node
 const SEED := 20261020
 
 var _field: FonsFieldState = null
+var _estate: FonsEstate = null
 var _view: FonsView = null
 var _move_dir := Vector2.ZERO
 
@@ -22,18 +23,14 @@ var _move_dir := Vector2.ZERO
 
 
 func _ready() -> void:
+	var data := _data_bundle()
+	_estate = FonsEstate.new()
+	_estate.start(data["estate"], FonsFieldState.START_FLOOR)
 	_field = FonsFieldState.new()
-	# 영웅 AI 묶음 — 성격 3키워드·직업 프로필·스킬 카탈로그. 없으면 브레인 없이 예전처럼 돈다.
-	var ai := {
-		"personalities": DataLoader.load_json("personalities.json"),
-		"profiles": DataLoader.load_json("job_ai_profiles.json"),
-		"catalog": DataLoader.load_json("skills_catalog.json"),
-		"legacy_pairs": DataLoader.load_json("fusion_pairs.json"),
-	}
-	_field.start(DataLoader.load_json("races.json"), DataLoader.get_monsters(),
-		DataLoader.get_biomes(), SEED, FonsFieldState.START_FLOOR,
-		DataLoader.load_json("job_tree.json"), DataLoader.load_json("equipment.json"),
-		DataLoader.load_json("job_coef.json"), ai)
+	if not _restore_if_asked(data):
+		_field.start(data["races"], data["monsters"], data["biomes"], SEED,
+			FonsFieldState.START_FLOOR, data["job_tree"], data["equipment"],
+			data["job_coef"], data["ai"], data["basics"])
 
 	_view = FonsViewFactory.create()
 	if _view == null:
@@ -46,6 +43,57 @@ func _ready() -> void:
 	add_child(_view)
 	_view.mount(_field.snapshot())
 	_push()
+
+
+func _data_bundle() -> Dictionary:
+	## DataLoader 를 한 번만 읽어 아래로 넘긴다 — 시험과 게임이 같은 묶음을 쓴다.
+	return {
+		"races": DataLoader.load_json("races.json"),
+		"monsters": DataLoader.get_monsters(),
+		"biomes": DataLoader.get_biomes(),
+		"job_tree": DataLoader.load_json("job_tree.json"),
+		"equipment": DataLoader.load_json("equipment.json"),
+		"job_coef": DataLoader.load_json("job_coef.json"),
+		"ai": {
+			"personalities": DataLoader.load_json("personalities.json"),
+			"profiles": DataLoader.load_json("job_ai_profiles.json"),
+			"catalog": DataLoader.load_json("skills_catalog.json"),
+			"legacy_pairs": DataLoader.load_json("fusion_pairs.json"),
+		},
+		"basics": DataLoader.load_json("basic_attacks.json"),
+		"estate": DataLoader.load_json("estate.json"),
+	}
+
+
+func _restore_if_asked(data: Dictionary) -> bool:
+	## 타이틀에서 "이어하기" 를 눌렀을 때만. 없는 파일·손상·더 새 판이면 새 게임으로 떨어진다.
+	if String(GameState.start_mode) != "continue":
+		return false
+	var loaded := SaveManager.load_payload()
+	if not bool(loaded["ok"]):
+		return false
+	var payload: Dictionary = loaded["data"]
+	var run: Dictionary = payload.get("run", {})
+	_field.configure(data["races"], data["monsters"], data["biomes"],
+		int(String(run.get("seed", str(SEED)))), FonsFieldState.START_FLOOR,
+		data["job_tree"], data["equipment"], data["job_coef"], data["ai"], data["basics"])
+	if not _field.restore(run):
+		return false
+	_estate.from_save(payload.get("estate", {}))
+	GameState.from_save(payload.get("wallet", {}))
+	return true
+
+
+func _save() -> void:
+	## 저장은 층을 깼을 때·창을 닫을 때만. 전투 도중은 없다.
+	if _field == null or _estate == null:
+		return
+	SaveManager.save_payload(FonsSave.to_dict(_field.to_save(), _estate.to_save(), GameState.to_save()))
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		_save()
 
 
 func _process(delta: float) -> void:
@@ -65,7 +113,8 @@ func _on_intent(kind: StringName, payload: Dictionary) -> void:
 			if _field.contact_index() >= 0:
 				_field.engage()
 			elif _field.mission_done():
-				_field.next_floor()
+				if _field.next_floor():
+					_save()
 		"retreat":
 			_move_dir = Vector2.ZERO
 			_field.retreat()

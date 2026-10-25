@@ -1,20 +1,66 @@
-[gd_scene format=3]
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://game/ui/title/title.gd" id="1_title"]
 
 [node name="Title" type="Control"]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_title")
 
-[node name="TitleLabel" type="Label" parent="."]
+[node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0.07, 0.08, 0.1, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(380, 0)
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Center/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "폰즈"
 horizontal_alignment = 1
-vertical_alignment = 1
-text = "폰즈 (FONS)
-Godot 재구축 스캐폴드 — 이 씬은 Phase 3에서 교체됩니다."
+
+[node name="Sub" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "FONS"
+horizontal_alignment = 1
+
+[node name="Status" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "저장된 런이 없다"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Continue" type="Button" parent="Center/VBox"]
+layout_mode = 2
+disabled = true
+text = "이어하기"
+
+[node name="Start" type="Button" parent="Center/VBox"]
+layout_mode = 2
+text = "새로 시작"
+
+[node name="Confirm" type="ConfirmationDialog" parent="."]
+title = "새로 시작"
+dialog_text = "저장된 런을 덮어쓴다. 지금 세이브는 지워진다."
+ok_button_text = "새로 시작"
+cancel_button_text = "취소"

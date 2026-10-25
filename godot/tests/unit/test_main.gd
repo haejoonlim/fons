@@ -1,6 +1,44 @@
 extends GutTest
+
+
+func after_each() -> void:
+	# 층을 깨면 자동 저장이 돈다 — 다음 테스트·실제 게임이 그 파일을 물려받지 않게 지운다.
+	SaveManager.erase()
+	GameState.start_mode = "new"
+
+
 ## 조립 루트가 실제로 도는지 — 씬을 띄워 탐험 필드가 화면까지 오고, 의도가 심을 움직이는지 본다.
 ## 단위 테스트(`test_field_state`)는 심만 본다. 이 파일은 **배선**을 본다: 씬 → 심 → 뷰 → HUD.
+
+func test_continue_loads_the_saved_run() -> void:
+	## 타이틀 "이어하기" 의 실제 경로 — 저장 파일 → FonsSave → 필드 복원 → HUD.
+	var field := FonsFieldState.new()
+	field.start(DataLoader.load_json("races.json"), DataLoader.get_monsters(),
+		DataLoader.get_biomes(), 265, FonsFieldState.START_FLOOR,
+		DataLoader.load_json("job_tree.json"), DataLoader.load_json("equipment.json"),
+		DataLoader.load_json("job_coef.json"), _ai(), DataLoader.load_json("basic_attacks.json"))
+	field.floor = 2
+	var estate := FonsEstate.new()
+	estate.start(DataLoader.load_json("estate.json"), 1)
+	estate.clock_epoch = int(Time.get_unix_time_from_system())
+	SaveManager.save_payload(FonsSave.to_dict(field.to_save(), estate.to_save(),
+		{"gold": 5, "pull_count": 1}))
+	GameState.start_mode = "continue"
+	var node := _scene()
+	await wait_process_frames(2)
+	assert_string_contains(node.get_node("Hud/FloorLabel").text, "2층", "저장한 층에서 이어한다")
+	assert_eq(GameState.gold, 5, "지갑도 같이 돌아온다")
+	assert_eq(GameState.pull_count, 1, "소환 횟수도 같이 돌아온다")
+
+
+func _ai() -> Dictionary:
+	return {
+		"personalities": DataLoader.load_json("personalities.json"),
+		"profiles": DataLoader.load_json("job_ai_profiles.json"),
+		"catalog": DataLoader.load_json("skills_catalog.json"),
+		"legacy_pairs": DataLoader.load_json("fusion_pairs.json"),
+	}
+
 
 func test_main_scene_starts_on_the_exploration_field() -> void:
 	var packed := load("res://game/main/main.tscn") as PackedScene

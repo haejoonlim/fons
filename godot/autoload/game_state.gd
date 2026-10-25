@@ -8,6 +8,8 @@ var phase: Phase = Phase.TITLE
 var run_seed: int = 0
 var pull_count: int = 0
 var gold: int = 0
+## 타이틀이 정한다 — "new" 또는 "continue". 메인 씬은 이것만 보고 불러올지 결정한다.
+var start_mode := "new"
 
 signal phase_changed(next: Phase)
 
