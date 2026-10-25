@@ -157,6 +157,8 @@ var _kit_key := ""
 ## 이번 키트가 놓은 키 큰 프롭 — 카메라 붐이 못 지나가는 원통(자리·반경·높이).
 ## 물리 콜라이더는 없다. 키트가 배치하면서 같이 알려 준다.
 var _blockers: Array = []
+## 조종 영웅의 현재 흐림(0 = 불투명). 카메라 붐이 짧아질 때만 오른다.
+var _avatar_fade := 0.0
 ## 이 뷰가 아는 키트 씬 — 테스트가 가짜 씬을 넣는다 (파일이 없는 키트도 배선 확인 가능).
 var kit_scenes: Dictionary = {}
 var _last_dir := Vector2.ZERO
@@ -541,52 +543,40 @@ func _place_camera() -> void:
 func _fade_avatar(boom: float) -> void:
 	## 붐이 짧을수록 조종 영웅을 흐린다. 카메라가 등에 붙은 채 캐릭터를 그대로 두면
 	## 화면이 초록 덩어리로 덮여, 나무를 피한 의미가 없다 (2026-10-25 렌더).
-	var node: Node3D = _nodes.get(KIND_AVATAR, null)
-	if node == null:
-		return
 	var span := CAMERA_AVATAR_FADE_FAR - CAMERA_AVATAR_FADE_NEAR
 	var alpha := 0.0 if span <= 0.0 else clampf(
 		(CAMERA_AVATAR_FADE_FAR - boom) / span, 0.0, 1.0)
-	_apply_fade(node, alpha)
+	if is_equal_approx(alpha, _avatar_fade):
+		return
+	_avatar_fade = alpha
+	var node: Node3D = _nodes.get(KIND_AVATAR, null)
+	if node == null:
+		return
+	# ponytail: 지금 아바타는 대체 도형 하나다. 씬 자산 아바타가 생기면 표면 재질별로 알파를 건다.
+	var mesh := node.get_child(0) as MeshInstance3D
+	if mesh != null:
+		mesh.material_override = _avatar_material()
 
 
-static func _apply_fade(node: Node, alpha: float) -> void:
+func _avatar_material() -> StandardMaterial3D:
 	## `GeometryInstance3D.transparency` 는 gl_compatibility 에서 화면을 안 바꿨다 (2026-10-25 렌더).
-	## 그래서 메시 재질의 알베도 알파를 직접 바꾼다 — 재질은 색별로 공유되므로 복제해서 건다.
-	## 씬 자산은 메시가 여러 겹이다 — 조상 하나만 건드리면 반만 흐려진다.
-	if node is MeshInstance3D:
-		var mesh := node as MeshInstance3D
-		var source := mesh.material_override as StandardMaterial3D
-		if source != null:
-			var faded: StandardMaterial3D = null
-			if mesh.has_meta("fade_material"):
-				faded = mesh.get_meta("fade_material") as StandardMaterial3D
-			if faded == null or mesh.material_override != faded:
-				faded = source.duplicate() as StandardMaterial3D
-				faded.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-				mesh.set_meta("fade_source", source)
-				mesh.set_meta("fade_material", faded)
-			mesh.material_override = source if alpha <= 0.0 else faded
-			if alpha > 0.0:
-				var color := faded.albedo_color
-				color.a = clampf(1.0 - alpha, 0.0, 1.0)
-				faded.albedo_color = color
-	for child in node.get_children():
-		_apply_fade(child, alpha)
+	## 재질은 색별로 공유되므로, 아바타만 쓰는 복제본을 만들어 알베도 알파를 건다.
+	if _avatar_fade <= 0.0:
+		return _material(AVATAR_COLOR)
+	var faded: StandardMaterial3D = _materials.get("avatar_fade", null)
+	if faded == null:
+		faded = _material(AVATAR_COLOR).duplicate() as StandardMaterial3D
+		faded.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_materials["avatar_fade"] = faded
+	var color := _material(AVATAR_COLOR).albedo_color
+	color.a = 1.0 - _avatar_fade
+	faded.albedo_color = color
+	return faded
 
 
 func avatar_transparency() -> float:
 	## 테스트·디버그용 — 조종 영웅에 걸린 흐림(0 = 불투명, 1 = 안 보임).
-	var node: Node3D = _nodes.get(KIND_AVATAR, null)
-	if node == null:
-		return 0.0
-	var mesh := node.find_child("Visual", true, false) as MeshInstance3D
-	if mesh == null:
-		return 0.0
-	var material := mesh.material_override as StandardMaterial3D
-	if material == null or material.transparency != BaseMaterial3D.TRANSPARENCY_ALPHA:
-		return 0.0
-	return clampf(1.0 - material.albedo_color.a, 0.0, 1.0)
+	return _avatar_fade
 
 
 func _apply_palette() -> void:
@@ -941,7 +931,7 @@ func _place(node: Node3D, entity: Dictionary) -> void:
 		mesh.scale = Vector3(1.0, 0.18, 1.0) if cleared else Vector3.ONE
 		mesh.position.y = height * 0.5 * mesh.scale.y
 	elif kind == KIND_AVATAR:
-		mesh.material_override = _material(AVATAR_COLOR)
+		mesh.material_override = _avatar_material()
 		mesh.scale = Vector3.ONE
 		mesh.position.y = height * 0.5
 	else:
