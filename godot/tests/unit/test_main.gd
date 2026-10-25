@@ -1,10 +1,17 @@
 extends GutTest
 
 
+func before_each() -> void:
+	# 앞 테스트가 칙령 화면을 열어 둔 채 끝났어도 얼지 않게.
+	get_tree().paused = false
+
+
 func after_each() -> void:
 	# 층을 깨면 자동 저장이 돈다 — 다음 테스트·실제 게임이 그 파일을 물려받지 않게 지운다.
 	SaveManager.erase()
 	GameState.start_mode = "new"
+	# 칙령 화면은 열릴 때 트리를 멈춘다 — 테스트가 도중에 끝나도 다음 검사가 얼지 않게 되돌린다.
+	get_tree().paused = false
 
 
 ## 조립 루트가 실제로 도는지 — 씬을 띄워 탐험 필드가 화면까지 오고, 의도가 심을 움직이는지 본다.
@@ -145,6 +152,124 @@ func test_unrest_gauge_shows_on_the_hud_below_25_and_warns_at_15() -> void:
 	node._push()
 	assert_true(node._estate.is_striking(), "3층 아래로 내려가면 파업")
 	assert_false(label.visible, "파업 중에는 게이지를 숨긴다")
+
+
+
+func test_edict_screen_opens_and_the_choice_reaches_the_hud() -> void:
+	## 04 §3.7 — C 로 칙령 화면을 열고, 고른 칙령이 HUD·로그에 남는다.
+	var node := _scene()
+	node._estate.floor = 12
+	node._view._unhandled_input(_key(KEY_C))   # 실제 경로: 키 → 뷰 → 의도 → 메인
+	var screen: Control = node.get_node("Hud/Edict")
+	assert_true(screen.visible, "C — 칙령 화면이 열린다")
+	var rows: Array = screen.get_node("Center/Panel/VBox/Rows").get_children()
+	assert_eq(rows.size(), 3, "칙령 3종")
+	assert_string_contains(String(rows[0].text), "중상주의")
+	rows[0].pressed.emit()
+	assert_false(screen.visible, "고르면 닫힌다")
+	assert_eq(String(node._estate.decree_id), "mercantilism")
+	assert_string_contains(node.get_node("Hud/FloorLabel").text, "중상주의",
+		"켜진 칙령은 세금·증가를 계속 바꾼다 — HUD 에 남긴다")
+	assert_string_contains(node.get_node("Hud/LogLabel").text, "칙령")
+
+
+func test_edict_choice_ends_a_strike_and_the_hint_offers_it() -> void:
+	## 04 §3.12 — 파업 중 식량 흑자면 칙령 교체로 끝난다. 안내가 그 수단을 말한다.
+	var node := _scene()
+	node._estate.floor = 12
+	node._estate.stores["food"] = 1000
+	node._estate.morale = 19
+	for i in 3:
+		node._note_floor_cleared()
+	node._push()
+	assert_true(node._estate.is_striking())
+	assert_string_contains(node.get_node("Hud/HintLabel").text, "칙령", "파업 중에는 수단을 안내한다")
+
+	node._on_intent(&"edict", {})
+	var screen: Control = node.get_node("Hud/Edict")
+	assert_string_contains(screen.get_node("Center/Panel/VBox/Status").text, "파업")
+	screen.get_node("Center/Panel/VBox/Rows").get_child(1).pressed.emit()   # 분배주의
+	assert_false(node._estate.is_striking(), "칙령 교체로 파업이 끝난다")
+	assert_eq(node._estate.morale, 34, "19 + 15")
+	assert_string_contains(node.get_node("Hud/LogLabel").text, "파업 종료")
+
+
+func test_edict_choice_without_surplus_keeps_the_screen_and_says_why() -> void:
+	## 안 되는 이유를 화면이 말해야 한다 (UI 문구 규칙 §6 — 조건을 그대로).
+	var node := _scene()
+	node._estate.floor = 12
+	node._estate.stores["food"] = 0
+	node._estate.morale = 19
+	for i in 3:
+		node._note_floor_cleared()
+	node._on_intent(&"edict", {})
+	var screen: Control = node.get_node("Hud/Edict")
+	screen.get_node("Center/Panel/VBox/Rows").get_child(1).pressed.emit()
+	assert_true(node._estate.is_striking(), "식량이 없으면 파업은 계속된다")
+	assert_true(screen.visible, "안 되면 화면은 열린 채로 이유를 보여 준다")
+	assert_string_contains(screen.get_node("Center/Panel/VBox/Status").text, "식량")
+
+
+func test_the_edict_screen_freezes_the_world_while_open() -> void:
+	## 고르는 동안 세상이 계속 돌면 «멈춰 놓고 고른다»가 성립하지 않는다.
+	var node := _scene()
+	node._estate.floor = 12
+	node._view._unhandled_input(_key(KEY_C))
+	assert_true(get_tree().paused, "화면이 열려 있는 동안 세계는 멈춘다")
+	assert_false(node.can_process(), "메인 루프(이동·섬일)도 멈춘다 — 플래그만 세우고 도는 게 아니다")
+	assert_true(node.get_node("Hud/Edict").can_process(), "화면은 멈춘 트리에서도 입력을 받는다")
+	node._view._unhandled_input(_key(KEY_C))
+	assert_false(get_tree().paused, "닫으면 다시 돈다")
+	assert_true(node.can_process())
+
+
+func test_a_number_key_picks_and_unfreezes() -> void:
+	## 실제 입력 경로 — 화면이 떠 있을 때 숫자키를 화면이 직접 받는다 (뷰는 멈춰 있다).
+	var node := _scene()
+	node._estate.floor = 12
+	node._view._unhandled_input(_key(KEY_C))
+	var screen: Control = node.get_node("Hud/Edict")
+	screen._unhandled_input(_key(KEY_1))
+	assert_eq(String(node._estate.decree_id), "mercantilism", "1 = 첫 칙령")
+	assert_false(get_tree().paused, "고르면 세계가 다시 돈다")
+	assert_false(screen.visible)
+
+
+func test_closing_the_window_while_paused_still_saves() -> void:
+	## 실제 실행 경로 — 칙령 화면으로 멈춘 채 창을 닫아도 세이브가 남아야 한다.
+	## 엔진 문서가 적은 경로 그대로: `get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)`.
+	## 일시정지는 process·input 만 막는다 — notification 은 그대로 모든 노드에 온다.
+	var node := _scene()
+	node._field.floor = 13
+	node._estate.floor = 13
+	node._estate.stores["food"] = 42
+	node._view._unhandled_input(_key(KEY_C))   # 화면 열기 = 일시정지
+	assert_true(get_tree().paused, "전제 — 멈춰 있다")
+	assert_false(bool(SaveManager.load_payload()["ok"]), "아직 저장 전")
+
+	get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
+
+	var loaded := SaveManager.load_payload()
+	assert_true(bool(loaded["ok"]), "멈춘 채로 닫아도 세이브가 남는다")
+	var payload: Dictionary = loaded["data"]
+	assert_eq(int(payload["run"]["floor"]), 13, "멈춘 시점의 층")
+	assert_eq(int(payload["estate"]["stores"]["food"]), 42, "멈춘 시점의 식량")
+
+
+func test_edict_screen_closes_with_the_same_key() -> void:
+	var node := _scene()
+	node._view._unhandled_input(_key(KEY_C))
+	var screen: Control = node.get_node("Hud/Edict")
+	assert_true(screen.visible)
+	node._view._unhandled_input(_key(KEY_C))
+	assert_false(screen.visible, "C 를 다시 누르면 닫힌다")
+
+
+func _key(code: Key) -> InputEventKey:
+	var event := InputEventKey.new()
+	event.keycode = code
+	event.pressed = true
+	return event
 
 
 func test_move_intent_walks_the_avatar() -> void:

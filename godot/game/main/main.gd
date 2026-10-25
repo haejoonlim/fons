@@ -17,6 +17,7 @@ extends Node
 ## 전투 도중은 저장하지 않는다 — 반쯤 진행한 턴을 복원하면 난수 순서가 어긋난다 (설계 §6).
 
 const SEED := 20261020
+const EDICT_SCENE := "res://game/ui/edict/edict.tscn"
 ## 영지 시계를 몇 초마다 보는가. 정산 자체는 하루 한 번이라 이 값은 반응 속도만 정한다.
 const CLOCK_STEP := 1.0
 ## 불만 게이지 색 — 평시는 파티 패널 경보와 같은 호박색, 경고는 붉은색.
@@ -26,6 +27,7 @@ const UNREST_WARN := Color(0.90, 0.38, 0.32, 1.0)
 var _field: FonsFieldState = null
 var _estate: FonsEstate = null
 var _view: FonsView = null
+var _edict: Control = null
 var _move_dir := Vector2.ZERO
 var _clock_accum := 0.0
 
@@ -59,6 +61,11 @@ func _ready() -> void:
 		return
 	_view.intent.connect(_on_intent)
 	add_child(_view)
+	# 칙령 화면은 HUD 위에 얹는다 — CanvasLayer 순서상 마지막 자식이 가장 위에 그려진다.
+	_edict = (load(EDICT_SCENE) as PackedScene).instantiate()
+	$Hud.add_child(_edict)
+	_edict.chosen.connect(_on_edict_chosen)
+	_edict.closed.connect(_on_edict_closed)
 	_view.mount(_field.snapshot())
 	_push()
 
@@ -191,6 +198,10 @@ func _on_intent(kind: StringName, payload: Dictionary) -> void:
 		"retreat":
 			_move_dir = Vector2.ZERO
 			_field.retreat()
+		"edict":
+			# 칙령 화면 (04 §3.7). 고르는 것은 화면, 판정은 `FonsEstate` 다.
+			_toggle_edict()
+			return
 		"next_floor":
 			# 예전 화면·테스트가 쓰던 의도 — 미션을 끝냈을 때만 실제로 넘어간다.
 			if _field.next_floor():
@@ -230,9 +241,52 @@ func _update_hud() -> void:
 		]
 	if _hint_label != null:
 		var hint := _field.hint()
+		if _estate != null and _estate.is_striking():
+			# 파업은 전 생산이 멈춘 상태다 — 나갈 길을 그 자리에서 말한다 (04 §3.12).
+			hint += " · C — 칙령"
 		_hint_label.text = hint
 	if _log_label != null:
 		_log_label.text = "\n".join(_field.log_lines)
+
+
+func _toggle_edict() -> void:
+	## C — 칙령 화면. 열려 있으면 닫는다. 목록과 현재 값은 영지가 준다.
+	## 고르는 동안은 세계를 멈춘다 — 화면이 위에 떠 있는데 뒤에서 층이 깨지면 안 된다.
+	if _edict == null or _estate == null:
+		return
+	if _edict.visible:
+		_edict.hide()
+		get_tree().paused = false
+		return
+	_edict.open(_estate.decrees(), _estate.decree_id, _edict_note())
+	get_tree().paused = true
+
+
+func _edict_note() -> String:
+	## 화면 위 한 줄 — 지금 무엇이 막히는지, 혹은 왜 지금 바꿀 만한지.
+	var gate := _estate.can_set_decree()
+	if not bool(gate["ok"]):
+		return String(gate["reason"])
+	if _estate.is_striking():
+		return "파업 중 — 칙령을 바꾸면 파업이 끝난다"
+	return "1슬롯 — 하나만 켜진다"
+
+
+func _on_edict_chosen(id: String) -> void:
+	var out := _estate.set_decree(id)
+	if not bool(out["ok"]):
+		_edict.set_note(String(out["reason"]))   # 화면에 이유를 남기고 다시 고르게 둔다
+		return
+	_edict.hide()
+	get_tree().paused = false
+	_log(String(out["line"]))
+	_save()
+	_push()
+
+
+func _on_edict_closed() -> void:
+	get_tree().paused = false
+	_push()
 
 
 func _update_unrest() -> void:

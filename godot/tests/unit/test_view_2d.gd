@@ -61,6 +61,17 @@ func test_space_asks_for_the_next_floor() -> void:
 	view.free()
 
 
+func test_field_mode_maps_c_to_the_edict() -> void:
+	# C 는 칙령 — 파업을 끝내는 수단이다 (04 §3.12). 뷰는 의도만 보낸다.
+	var view := FonsView2D.new()
+	view.mount({"mode": "field", "field": Vector2(40, 28), "entities": []})
+	var got: Array = []
+	view.intent.connect(func(kind, payload): got.append(kind))
+	view._unhandled_input(_key(KEY_C))
+	assert_eq(got, [&"edict"], "필드: C = 칙령")
+	view.free()
+
+
 func test_field_mode_maps_space_to_interact_and_r_to_retreat() -> void:
 	# 탐험 화면에서는 스페이스가 "다음 층"이 아니라 "조우와 싸운다"다.
 	var view := FonsView2D.new()

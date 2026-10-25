@@ -248,6 +248,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				intent.emit(&"interact", {})
 			KEY_R:
 				intent.emit(&"retreat", {})
+			KEY_C:
+				intent.emit(&"edict", {})
 	else:
 		match key:
 			KEY_SPACE, KEY_ENTER:
