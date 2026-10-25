@@ -12,6 +12,9 @@ extends RefCounted
 const PARTY_SIZE := 4
 const MAX_FLOOR := 130
 const START_FLOOR := 1
+## 세이브가 같이 적는 값 — 불러올 때 이 값으로 영웅을 다시 만든다.
+const GRADE := 5
+const LEVEL := 130
 ## 종점 직업 — 키워드를 **1장만** 적용하는 직업. 원본 `ProgressionData.TerminalKeywordCounts` (원본 대조).
 ##   l2_sage 1장(대현자) · l2_spirit_knight 7장(정령기사) · l2_elementalist 7장(원소마도사).
 ## 값은 키워드 장수다 — 원본이 직업 id 로 물고 값을 회수한다.
@@ -151,10 +154,13 @@ static func _card_names(cards: Array) -> String:
 	return "·".join(names)
 
 
-func start(races: Dictionary, monsters: Variant, biomes: Variant,
+func configure(races: Dictionary, monsters: Variant, biomes: Variant,
 		seed_value: int = 0, start_floor: int = START_FLOOR,
 		job_tree: Dictionary = {}, equipment: Dictionary = {},
 		job_coef: Dictionary = {}, ai: Dictionary = {}, basics: Dictionary = {}) -> void:
+	## 데이터만 잡아 둔다 — 영웅을 만들지 않고 판도 돌리지 않는다.
+	## 불러오기는 이 위에 `restore()` 를 얹는다: `start()` 를 부르면 1층을 한 번 싸워
+	## 카운터·각인이 늘어난 뒤에 덮어쓰게 된다.
 	_races = races
 	_monsters = monsters
 	_biomes = biomes
@@ -166,14 +172,84 @@ func start(races: Dictionary, monsters: Variant, biomes: Variant,
 	_seed = seed_value
 	_start_floor = clampi(start_floor, START_FLOOR, MAX_FLOOR)
 	floor = _start_floor
-	heroes = heroes_from(races, job_tree, equipment, 5, 130, seed_value, job_coef, 0, PARTY_SIZE, ai, basics)
+
+
+func start(races: Dictionary, monsters: Variant, biomes: Variant,
+		seed_value: int = 0, start_floor: int = START_FLOOR,
+		job_tree: Dictionary = {}, equipment: Dictionary = {},
+		job_coef: Dictionary = {}, ai: Dictionary = {}, basics: Dictionary = {}) -> void:
+	configure(races, monsters, biomes, seed_value, start_floor, job_tree, equipment, job_coef, ai, basics)
+	heroes = heroes_from(races, job_tree, equipment, GRADE, LEVEL, seed_value, job_coef, 0, PARTY_SIZE, ai, basics)
 	_run_floor()
 
 
 func restart() -> void:
 	floor = _start_floor
-	heroes = heroes_from(_races, _job_tree, _equipment, 5, 130, _seed, _job_coef, 0, PARTY_SIZE, _ai, _basics)
+	heroes = heroes_from(_races, _job_tree, _equipment, GRADE, LEVEL, _seed, _job_coef, 0, PARTY_SIZE, _ai, _basics)
 	_run_floor()
+
+
+func to_save() -> Dictionary:
+	## 이 런이 **가진 것**만 낸다. 적·로그·스냅샷은 시드의 함수라 넣지 않는다 (ADR 0008).
+	return {
+		## 64비트 시드는 문자열로 쓴다 — JSON 이 정수를 float 로 돌려준다 (설계 §2).
+		"seed": str(_seed),
+		"grade": GRADE,
+		"level": LEVEL,
+		"start_floor": _start_floor,
+		"floor": floor,
+		"heroes": heroes_to_save(heroes),
+	}
+
+
+static func heroes_to_save(party: Array) -> Array:
+	## 영웅 한 줄의 저장 형식. 런과 필드가 같은 형식을 쓴다 — 둘을 따로 쓰면 갈라진다.
+	var rows: Array = []
+	for i in party.size():
+		var hero: Dictionary = party[i]
+		var row := {
+			"index": i,
+			"job_id": String(hero.get("job_id", "")),
+			"hp": int(hero.get("hp", 0)),
+			"alive": bool(hero.get("alive", false)),
+			"equipment": [],
+		}
+		if FonsBrain.attached(hero):
+			row["brain"] = hero["brain"].to_save()
+		rows.append(row)
+	return rows
+
+
+static func apply_hero_save(party: Array, rows: Array) -> void:
+	## 저장값을 이미 만들어진 영웅에게 덮어쓴다. 브레인이 없던 시절의 세이브는 HP·생존만 되살아난다.
+	for i in mini(rows.size(), party.size()):
+		var row: Dictionary = rows[i]
+		var hero: Dictionary = party[i]
+		hero["hp"] = clampi(int(row.get("hp", hero.get("hp", 0))), 0, int(hero.get("maxHp", 1)))
+		hero["alive"] = bool(row.get("alive", true)) and int(hero["hp"]) > 0
+		if FonsBrain.attached(hero) and row.get("brain") is Dictionary:
+			hero["brain"].from_save(row["brain"])
+			hero["brain"].mirror(hero)
+
+
+func restore(saved: Dictionary) -> bool:
+	## `configure()` 를 먼저 부른 뒤에 써야 한다. 영웅을 시드로 다시 만들고 저장값을 덮어쓴다.
+	## 판은 돌리지 않는다 — 저장 파일에는 판 중간이 없고, 다음 층은 `next_floor()` 가 새로 돈다.
+	if saved.is_empty():
+		return false
+	_seed = int(String(saved.get("seed", "0")))
+	_start_floor = clampi(int(saved.get("start_floor", _start_floor)), START_FLOOR, MAX_FLOOR)
+	floor = clampi(int(saved.get("floor", _start_floor)), START_FLOOR, MAX_FLOOR)
+	heroes = heroes_from(_races, _job_tree, _equipment, int(saved.get("grade", GRADE)),
+		int(saved.get("level", LEVEL)), _seed, _job_coef, 0, PARTY_SIZE, _ai, _basics)
+	apply_hero_save(heroes, saved.get("heroes", []))
+	# 이 층의 적은 시드에서 다시 만든다 — 저장하지 않는다.
+	var built := FonsFloorRun.build(_monsters, _biomes, floor, 0)
+	enemies = built["party"]
+	winner = ""
+	turns = 0
+	log_lines = []
+	return true
 
 
 func next_floor() -> bool:

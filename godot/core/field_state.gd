@@ -33,15 +33,17 @@ var _job_tree: Dictionary = {}
 var _equipment: Dictionary = {}
 var _job_coef: Dictionary = {}
 var _ai: Dictionary = {}
+var _basics: Dictionary = {}
 var _seed := 0
 var _start_floor := START_FLOOR
 var _rng := RandomNumberGenerator.new()
 
 
-func start(races: Dictionary, monsters: Variant, biomes: Variant,
+func configure(races: Dictionary, monsters: Variant, biomes: Variant,
 		seed_value: int = 0, start_floor: int = START_FLOOR,
 		job_tree: Dictionary = {}, equipment: Dictionary = {},
-		job_coef: Dictionary = {}, ai: Dictionary = {}) -> void:
+		job_coef: Dictionary = {}, ai: Dictionary = {}, basics: Dictionary = {}) -> void:
+	## 데이터만 잡아 둔다 — 불러오기는 이 위에 `restore()` 를 얹는다.
 	_races = races
 	_monsters = monsters
 	_biomes = biomes
@@ -49,13 +51,48 @@ func start(races: Dictionary, monsters: Variant, biomes: Variant,
 	_equipment = equipment
 	_job_coef = job_coef
 	_ai = ai
+	_basics = basics
 	_seed = seed_value
 	_start_floor = clampi(start_floor, START_FLOOR, MAX_FLOOR)
 	floor = _start_floor
+
+
+func start(races: Dictionary, monsters: Variant, biomes: Variant,
+		seed_value: int = 0, start_floor: int = START_FLOOR,
+		job_tree: Dictionary = {}, equipment: Dictionary = {},
+		job_coef: Dictionary = {}, ai: Dictionary = {}, basics: Dictionary = {}) -> void:
+	configure(races, monsters, biomes, seed_value, start_floor, job_tree, equipment, job_coef, ai, basics)
 	heroes = _make_party()
 	_open_field()
 	log_lines = []
 	winner = ""
+
+
+func to_save() -> Dictionary:
+	## 층·영웅만 낸다. 필드 좌표·조우 배치는 층 시작에서 다시 만든다 (설계 §1·§6).
+	return {
+		"seed": str(_seed),
+		"grade": FonsRunState.GRADE,
+		"level": FonsRunState.LEVEL,
+		"start_floor": _start_floor,
+		"floor": floor,
+		"heroes": FonsRunState.heroes_to_save(heroes),
+	}
+
+
+func restore(saved: Dictionary) -> bool:
+	## `configure()` 를 먼저 호출해야 한다. 층과 영웅을 되살리고 필드는 그 층 시작으로 연다.
+	if saved.is_empty():
+		return false
+	_seed = int(String(saved.get("seed", "0")))
+	_start_floor = clampi(int(saved.get("start_floor", _start_floor)), START_FLOOR, MAX_FLOOR)
+	floor = clampi(int(saved.get("floor", _start_floor)), START_FLOOR, MAX_FLOOR)
+	heroes = _make_party()
+	FonsRunState.apply_hero_save(heroes, saved.get("heroes", []))
+	_open_field()
+	log_lines = []
+	winner = ""
+	return true
 
 
 func restart() -> void:
@@ -194,7 +231,7 @@ func _open_field() -> void:
 
 func _make_party() -> Array:
 	return FonsRunState.heroes_from(_races, _job_tree, _equipment, 5, 130, _seed,
-		_job_coef, 0, PARTY_SIZE, _ai)
+		_job_coef, 0, PARTY_SIZE, _ai, _basics)
 
 
 func _update_winner() -> void:

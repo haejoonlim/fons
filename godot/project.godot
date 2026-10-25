@@ -18,6 +18,7 @@ enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 
 GameState="*res://autoload/game_state.gd"
 DataLoader="*res://autoload/data_loader.gd"
+SaveManager="*res://autoload/save_manager.gd"
 
 [fons]
 

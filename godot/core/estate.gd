@@ -47,8 +47,20 @@ const REST := [
 ]
 
 var floor := 1
-## 수확 누적 — `food`·`herb`·`wood`·`ore`. 소비·저장고는 아직 없다 (수지표 몫).
+## 수확 누적 — `food`·`herb`·`wood`·`ore`. 소비는 섬일 정산이 한다.
 var stores := {}
+## 주민 수. 자연증가는 비율이라 소수로 들고 있는다 (표시·징수는 정수로 반올림).
+var population := 0.0
+## 민심 0~100 (50 시작). 채집 수확에 걸린다.
+var morale := 50
+## 연속으로 식량이 모자란 섬일 수 — 3일째부터 아사.
+var shortage_days := 0
+## 섬일 시계 — 세이브가 함께 적는 기준점 둘 (설계 §4).
+var clock_epoch := 0
+var last_settled_day := 1
+var strike_floors_left := 0
+var unrest_floors := 0
+var recovering := false
 var log_lines: Array = []
 
 var _gathering: Dictionary = {}
@@ -60,7 +72,46 @@ func start(estate_data: Dictionary, floor_value: int, rng: RandomNumberGenerator
 	_gathering = estate_data.get("gathering", {})
 	_rng = rng
 	stores = {"food": 0, "herb": 0, "wood": 0, "ore": 0}
+	population = 0.0
+	morale = 50
+	shortage_days = 0
+	strike_floors_left = 0
+	unrest_floors = 0
+	recovering = false
 	log_lines = []
+	clock_epoch = int(Time.get_unix_time_from_system())
+	last_settled_day = 1
+
+
+func to_save() -> Dictionary:
+	return {
+		"clock_epoch": clock_epoch,
+		"last_settled_day": last_settled_day,
+		"stores": stores.duplicate(),
+		"population": population,
+		"morale": morale,
+		"shortage_days": shortage_days,
+		"strike_floors_left": strike_floors_left,
+		"unrest_floors": unrest_floors,
+		"recovering": recovering,
+	}
+
+
+func from_save(saved: Dictionary, now: int = 0) -> void:
+	## 기준점이 없는 예전 세이브는 **지금**을 기준점으로 삼는다 (ADR 0008 부수 결정).
+	var stamp := now if now > 0 else int(Time.get_unix_time_from_system())
+	clock_epoch = int(saved.get("clock_epoch", stamp))
+	last_settled_day = maxi(1, int(saved.get("last_settled_day", last_settled_day)))
+	population = float(saved.get("population", population))
+	morale = clampi(int(saved.get("morale", morale)), 0, 100)
+	shortage_days = maxi(0, int(saved.get("shortage_days", shortage_days)))
+	strike_floors_left = maxi(0, int(saved.get("strike_floors_left", strike_floors_left)))
+	unrest_floors = maxi(0, int(saved.get("unrest_floors", unrest_floors)))
+	recovering = bool(saved.get("recovering", recovering))
+	var saved_stores: Dictionary = saved.get("stores", {})
+	for key in stores:
+		if saved_stores.has(key):
+			stores[key] = int(saved_stores[key])
 
 
 func candidates() -> Array:

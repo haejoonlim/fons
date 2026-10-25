@@ -92,7 +92,15 @@ static func try_engrave(book: Dictionary, counters: Dictionary, catalog: Array,
 	if rng.randf() >= chance:
 		return born
 	var id := str(skill.get("id", ""))
-	book[id] = {
+	book[id] = make_entry(skill)
+	born.append(String(skill.get("name", "")))
+	return born
+
+
+static func make_entry(skill: Dictionary) -> Dictionary:
+	## 카탈로그 항목 → 스킬북 항목. 각인과 **복원**이 같은 모양을 쓴다.
+	## 복원에서 이 함수를 안 쓰면 저장에서 돌아온 스킬북과 새로 깨운 스킬북의 필드가 갈린다.
+	return {
 		"name": String(skill.get("name", "")),
 		"rarity": int(skill.get("rarity", 1)),
 		"domain": String(skill.get("domain", "")),
@@ -106,8 +114,6 @@ static func try_engrave(book: Dictionary, counters: Dictionary, catalog: Array,
 		"xp": 0,
 		"heat": HEAT_START,
 	}
-	born.append(String(skill.get("name", "")))
-	return born
 
 
 static func _preferred(pool: Array, domain_weight: Dictionary) -> Dictionary:

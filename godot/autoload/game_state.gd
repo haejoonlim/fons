@@ -20,3 +20,13 @@ func reset_run(seed: int) -> void:
 	pull_count = 0
 	gold = 0
 	set_phase(Phase.TITLE)
+
+
+func to_save() -> Dictionary:
+	## 지갑만 저장한다 — `phase` 는 화면 상태라 불러오면 타이틀에서 다시 시작한다.
+	return {"gold": gold, "pull_count": pull_count}
+
+
+func from_save(saved: Dictionary) -> void:
+	gold = int(saved.get("gold", gold))
+	pull_count = int(saved.get("pull_count", pull_count))
