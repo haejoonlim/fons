@@ -19,9 +19,37 @@ offset_top = 44.0
 offset_right = 1264.0
 offset_bottom = 76.0
 
-[node name="LogLabel" type="Label" parent="Hud"]
+[node name="UnrestGauge" type="ColorRect" parent="Hud"]
+visible = false
 offset_left = 16.0
-offset_top = 520.0
-offset_right = 1264.0
-offset_bottom = 704.0
+offset_top = 84.0
+offset_right = 136.0
+offset_bottom = 94.0
+color = Color(0.16, 0.17, 0.2, 1)
+
+[node name="Fill" type="ColorRect" parent="Hud/UnrestGauge"]
+offset_right = 120.0
+offset_bottom = 10.0
+color = Color(1, 0.72, 0.25, 1)
+
+[node name="UnrestLabel" type="Label" parent="Hud"]
+visible = false
+offset_left = 144.0
+offset_top = 76.0
+offset_right = 704.0
+offset_bottom = 104.0
+
+[node name="LogLabel" type="Label" parent="Hud"]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -192.0
+offset_top = 306.0
+offset_right = -14.0
+offset_bottom = 640.0
+grow_horizontal = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 13
 autowrap_mode = 2

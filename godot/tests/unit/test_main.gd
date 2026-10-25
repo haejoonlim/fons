@@ -55,6 +55,98 @@ func test_main_scene_starts_on_the_exploration_field() -> void:
 	assert_eq(node._view.entity_count(), 4, "조우 3 + 아바타 1")
 
 
+func test_island_day_settlement_pays_tax_and_logs_it() -> void:
+	## 영지 일과와 섬일 정산의 배선 — 세금·유지비가 지갑에 닿고 수지 줄이 화면 로그에 온다.
+	var node := _scene()
+	GameState.gold = 100
+	node._estate.clock_epoch = int(Time.get_unix_time_from_system()) - 12343
+	node._estate.last_settled_day = 1
+	node._clock_accum = 0.0
+	node._tick_estate(1.0)
+	assert_eq(GameState.gold, 120, "세금 30G - 유지비 10G")
+	assert_string_contains(node.get_node("Hud/LogLabel").text, "섬 2일")
+	assert_string_contains(node.get_node("Hud/LogLabel").text, "유지비")
+
+
+func test_island_day_runs_the_estate_shift_so_food_piles_up() -> void:
+	## 하루가 지나면 영웅들이 영지에서 일하고, 그 수확이 그날 소비보다 먼저 들어간다.
+	## 예전에는 정산만 돌아 게임 안에서 식량이 영원히 0 이었다.
+	var node := _scene()
+	node._estate.clock_epoch = int(Time.get_unix_time_from_system()) - 12343
+	node._estate.last_settled_day = 1
+	node._clock_accum = 0.0
+	node._tick_estate(1.0)
+	assert_string_contains(node.get_node("Hud/LogLabel").text, "일과", "하루가 지나면 일과가 돈다")
+	assert_gt(int(node._estate.stores["food"]), 0, "수확이 남는다")
+	assert_string_contains(node.get_node("Hud/FloorLabel").text, "식량",
+		"HUD 가 쌓인 식량을 보여 준다")
+
+
+func test_clearing_a_floor_costs_morale_when_food_is_out() -> void:
+	## 층 클리어 훅 — 식량이 없으면 민심 -5 가 실제 게임 경로에서 돈다 (04 §3.14).
+	var node := _scene()
+	for i in node._field.explore.sites.size():
+		node._field.explore.avatar = node._field.explore.sites[i]["pos"]
+		node._on_intent(&"interact", {})
+	node._on_intent(&"next_floor", {})
+	assert_eq(node._estate.morale, 45, "식량 0 에서 2층으로 넘어가면 민심 50 → 45")
+	assert_string_contains(node.get_node("Hud/LogLabel").text, "민심 -5")
+	assert_string_contains(node.get_node("Hud/FloorLabel").text, "민심 45", "HUD 가 민심을 보여 준다")
+
+
+func test_strike_stops_production_and_reaches_the_hud() -> void:
+	## 민심 19 가 3층 이어지면 파업 — 채집팀·영웅 일과가 멈추고 HUD 가 남은 층을 보여 준다.
+	var node := _scene()
+	node._estate.morale = 19
+	for i in 3:
+		node._note_floor_cleared()
+	assert_true(node._estate.is_striking(), "민심 19 × 3층 = 파업")
+	assert_true(node._field.log_lines.has("파업 — 전 생산 정지 5층"))
+	node._estate.stores["food"] = 100
+	var before := int(node._estate.stores["food"])
+	node._estate.clock_epoch = int(Time.get_unix_time_from_system()) - 12343
+	node._estate.last_settled_day = 1
+	node._clock_accum = 0.0
+	node._tick_estate(1.0)
+	assert_eq(int(node._estate.stores["food"]), before - 30, "생산 없이 소비만 한다")
+	assert_string_contains(node.get_node("Hud/LogLabel").text, "파업 중")
+	assert_string_contains(node.get_node("Hud/FloorLabel").text, "파업 5층")
+
+
+func test_unrest_gauge_shows_on_the_hud_below_25_and_warns_at_15() -> void:
+	## 불만 게이지 (04 §3.5·§3.12) — 민심 25 미만 진입 표시, 15 이하 경고. 50 이면 없다.
+	var node := _scene()
+	var label: Label = node.get_node("Hud/UnrestLabel")
+	var fill: ColorRect = node.get_node("Hud/UnrestGauge/Fill")
+	node._estate.morale = 50
+	node._push()
+	assert_false(label.visible, "민심 50 — 게이지가 없다")
+
+	node._estate.morale = 24
+	node._push()
+	assert_true(label.visible, "민심 24 — 게이지가 뜬다")
+	assert_string_contains(label.text, "불만")
+	assert_false(String(label.text).contains("경고"), "24 는 경고가 아니다")
+	var calm := label.get_theme_color("font_color")
+
+	var bar: ColorRect = node.get_node("Hud/UnrestGauge")
+	node._estate.unrest_floors = 2
+	node._push()
+	assert_almost_eq(fill.size.x, 2.0 / 3.0 * bar.size.x, 0.5, "게이지가 2/3 만큼 찬다")
+
+	node._estate.morale = 15
+	node._push()
+	assert_string_contains(label.text, "경고", "민심 15 — 경고")
+	assert_ne(label.get_theme_color("font_color"), calm, "경고는 색으로도 구분한다")
+
+	node._estate.morale = 19
+	for i in 3:
+		node._note_floor_cleared()
+	node._push()
+	assert_true(node._estate.is_striking(), "3층 아래로 내려가면 파업")
+	assert_false(label.visible, "파업 중에는 게이지를 숨긴다")
+
+
 func test_move_intent_walks_the_avatar() -> void:
 	var node := _scene()
 	var before: float = node._field.explore.avatar.x
