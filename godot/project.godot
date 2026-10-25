@@ -22,7 +22,7 @@ SaveManager="*res://autoload/save_manager.gd"
 
 [fons]
 
-view_mode="2d"
+view_mode="3d"
 
 [rendering]
 

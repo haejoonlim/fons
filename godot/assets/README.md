@@ -18,6 +18,7 @@ assets/
     tilesets/     # 타일셋 + .tres (TileSet)
     ui/           # 9-slice 패널, 아이콘
     vfx/          # 파티클 텍스처
+    models/       # 3D 지형 키트 (.glb) — tools/gen_kit_glb.py 가 뽑는다
   audio/
     music/        # OGG Vorbis, 루프 지점 포함
     sfx/          # OGG Vorbis
@@ -40,9 +41,13 @@ assets/
 4. **포맷은 임포트 비용이 낮은 쪽으로.** 이미지는 PNG, 오디오는 OGG Vorbis
    (`ffmpeg -c:a libvorbis -q:a 5`) — 도구 버전은 [SETUP.md](../../SETUP.md).
 5. **라이선스를 남긴다.** 외부 폰트·사운드·스프라이트는 출처와 라이선스를
-   `assets/CREDITS.md` 에 적는다. 파일만 받아 두면 배포 전에 권리 확인이 불가능해진다.
+   `godot/assets/CREDITS.md` 에 적는다. 파일만 받아 두면 배포 전에 권리 확인이 불가능해진다.
 
 ## 아직 없는 것
 
-에셋은 **하나도 없다.** 지금 2D 뷰는 `kind` 별 색 사각형으로 그린다.
+스프라이트·오디오·폰트는 **아직 없다.** 지금 2D 뷰는 `kind` 별 색 사각형으로 그린다.
 첫 스프라이트가 들어오는 시점에 `sprites/` 와 매핑표를 함께 만든다.
+
+3D 는 지형 키트 **1벌**(`art/models/topo_natural_surface.glb`)만 있다 — 부품 이름 접두사가 계약이고
+(`ground_`·`height_`·`landmark_`·`prop_`), 배치는 `game/view/view_3d/biome_kit.gd` 가 진다.
+결과물은 [`tools/gen_kit_glb.py`](../../tools/gen_kit_glb.py) 가 쓰고 `--check` 로 드리프트를 막는다.
