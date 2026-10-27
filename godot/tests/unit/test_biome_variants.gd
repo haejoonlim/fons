@@ -156,6 +156,18 @@ func test_lighting_preset_separates_same_kit_biomes() -> void:
 	assert_ne(float(library["energy"]), float(maze["energy"]), "태양광도 같은 값이 아니다")
 
 
+func test_sewer_is_dimmer_and_hazier_than_maze_city() -> void:
+	## 같은 `chaos`·같은 키트라 카테고리 프리셋만으로는 둘이 화면에서 붙는다 (2026-10-28 시트).
+	## 수로는 `light:dim` 으로 한 단 더 내려앉고, 미궁도시는 chaos 그대로다 — 동굴(`dark`)만큼은 아니다.
+	var maze := FonsBiomePalette.from_biome(_biome("biome_maze_city"))
+	var sewer := FonsBiomePalette.from_biome(_biome("biome_sewer"))
+	var cave := FonsBiomePalette.from_biome(_biome("biome_cave"))
+	assert_lt(float(sewer["energy"]), float(maze["energy"]), "수로 태양광이 미궁도시보다 약하다")
+	assert_lt(float(sewer["fill"]), float(maze["fill"]), "수로 채움광이 더 낮다")
+	assert_gt(float(sewer["fog"]), float(maze["fog"]), "수로 안개가 더 짙다")
+	assert_gt(float(sewer["fill"]), float(cave["fill"]), "수로는 동굴만큼 어둡지 않다")
+
+
 func test_light_dark_mod_is_darker_than_its_category() -> void:
 	## 동굴(dark + light:dark)은 묘역(dark)보다 어둡고 짙어야 한다 — 카테고리만으로는
 	## 낮의 어둠과 지하가 구분되지 않는다.
