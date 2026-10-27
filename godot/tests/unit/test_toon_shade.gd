@@ -81,6 +81,50 @@ func test_emissive_and_transparent_materials_are_left_alone() -> void:
 		assert_eq(instance.material_override, material, "원래 재질 그대로")
 
 
+class StubView:
+	extends Node
+
+	var _light: DirectionalLight3D
+	var _environment: Environment
+
+
+func test_setup_scales_down_when_the_sun_is_stronger_than_the_reference() -> void:
+	## 태양이 기준(온대 0.99)보다 센 바이옴은 노출·환경광을 함께 깎는다. ruins(태양 1.23)가
+	## 보정 없이 A 보다 16% 밝게 넘쳤다 — 2026-10-28 재측정에서 두 축을 같이 내렸다.
+	var shade := FonsToonShade.new()
+	var view := StubView.new()
+	add_child_autofree(view)
+	var light := DirectionalLight3D.new()
+	light.light_energy = 1.23
+	view.add_child(light)
+	view._light = light
+	shade.setup(view)
+	assert_almost_eq(shade.sun_scale, FonsToonShade.SUN_REF / 1.23, 0.001, "태양 세기에 반비례해 깎는다")
+	var instance := _box(Color.WHITE)
+	shade.apply(instance)
+	var material := instance.get_surface_override_material(0) as ShaderMaterial
+	assert_almost_eq(float(material.get_shader_parameter("gain")),
+		FonsToonShade.EXPOSURE, 0.001, "노출은 건드리지 않는다")
+	assert_almost_eq(float(material.get_shader_parameter("fill")),
+		FonsToonShade.AMBIENT_FILL * shade.sun_scale, 0.001, "환경광에만 배율이 곱해진다")
+
+
+func test_sun_scale_stays_inside_the_guard_rails() -> void:
+	## 상한 1.0 — 기준보다 약한 태양은 밝히지 않는다. 하한 0.5 — 아주 센 태양에서도 그 밑으로는 안 간다.
+	var shade := FonsToonShade.new()
+	var view := StubView.new()
+	add_child_autofree(view)
+	var light := DirectionalLight3D.new()
+	view.add_child(light)
+	view._light = light
+	light.light_energy = 0.1
+	shade.setup(view)
+	assert_almost_eq(shade.sun_scale, 1.0, 0.001, "약한 태양은 그대로 둔다")
+	light.light_energy = 2.5
+	shade.setup(view)
+	assert_almost_eq(shade.sun_scale, FonsToonShade.SUN_SCALE_MIN, 0.001, "아주 센 태양은 하한에서 멈춘다")
+
+
 func _glowing() -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.emission_enabled = true

@@ -72,11 +72,18 @@ const BAND_LOW := 0.45
 const BAND_HIGH := 0.72
 const BAND_MID := 0.82
 const BAND_FLOOR := 0.60
-## 환경광 배율. 이 값이 그늘(p10)을 민다 — 1.0 에서는 그늘이 A 의 1/5 이었다.
-## 두 바이옴을 같이 보면 2.2 가 가장 좋다(plains p10 0.083 · ruins 0.144 · A 0.108/0.171).
+## 환경광 배율. 이 값이 그늘(p10)을 민다 — 1.7 에서는 그늘이 너무 어두웠고(plains p10 0.058 vs
+## A 0.108), 3.4 에서는 밝은 면까지 넘쳤다. 2.6 이 두 바이옴을 A 대역에 넣는다(2026-10-28 격자).
 const AMBIENT_FILL := 2.6
-## 노출 — 태양 항의 크기. 0.80 에서 평균이 A 와 가장 가깝다(plains 0.217 vs 0.208 · ruins 0.288 vs 0.259).
+## 노출 — 태양 항의 크기. 0.63 이면 두 바이옴 평균이 A 대역에 든다(2026-10-28 고정 화소 격자:
+## plains +2.8% · ruins +2.0%, 아래 환경광 배율까지 거친 값). 노출에는 바이옴 배율을 걸지 않는다 —
+## 걸면 ruins 가 어두워져 두 바이옴이 다시 갈렸다.
 const EXPOSURE := 0.63
+## 바이옴 보정의 기준 태양 세기 — 온대(plains)의 값. 태양이 이보다 세면 툰이 A 보다 밝게 넘쳐
+## **환경광**을 반비례해 깎는다(ruins 태양 1.23 → 배율 0.81 로 평균 +13.6% → +2.0%).
+const SUN_REF := 0.99
+## 깎는 하한 — 태양이 아주 약한 바이옴(어둠 0.62 · 동굴 모드 0.55)에서 배율이 무한정 작아지지 않게 막는다.
+const SUN_SCALE_MIN := 0.5
 ## 넓은 광택 — 태양 색을 그대로 더하는 albedo 무관 하이라이트의 크기.
 ## 0.04 에서 관목처럼 파랑 알베도가 낮은 부품의 파랑을 A 쪽으로 올린다(색 오차 0.104 → 0.048).
 const SPECULAR_GAIN := 0.035
@@ -101,6 +108,8 @@ var ambient_fill := AMBIENT_FILL:
 	set(value):
 		ambient_fill = value
 		_refresh()
+## 바이옴 보정 배율 — `setup()` 이 태양 세기에서 낸다. 환경광 항에만 곱한다(밝히지는 않는다).
+var sun_scale := 1.0
 
 var _shader: Shader
 ## instance_id → [노드, 덮기 전 재질 목록]. 되돌리기에만 쓴다.
@@ -120,6 +129,7 @@ func setup(view: Node) -> void:
 	clear()
 	_ambient = Color.BLACK
 	_sun_color = Vector3.ZERO
+	sun_scale = 1.0
 	var env: Environment = view.get("_environment")
 	if env != null:
 		# 환경광 색은 sRGB 로 적혀 있다 — 셰이더는 선형으로 받는다.
@@ -136,6 +146,9 @@ func setup(view: Node) -> void:
 			_sun_dir = -_sun_dir
 		var linear := light.light_color.srgb_to_linear() * light.light_energy
 		_sun_color = Vector3(linear.r, linear.g, linear.b)
+		# 바이옴 보정 — 태양이 기준(온대 0.99)보다 세면 **그늘 쪽(환경광)** 이 A 보다 밝아진다.
+		# 실측: ruins 태양 1.23 · 보정 없이 평균 +13.6%(2026-10-28 고정 화소) → 배율 0.81 로 +2.0%.
+		sun_scale = clampf(SUN_REF / maxf(light.light_energy, 0.001), SUN_SCALE_MIN, 1.0)
 	_refresh()
 
 
@@ -209,12 +222,12 @@ func clear() -> void:
 
 func _refresh() -> void:
 	## 노출·균형·광택을 바꾸면 이미 깔린 재질 전부에 민다. 환경광도 같이 — 바이옴을 바꾸면
-	## `setup()` 이 `_ambient` 를 갈아 끼우므로, 여기서 안 밀면 지형만 이전 바이옴 빛을 받는다.
+	## `setup()` 이 `_ambient`·`sun_scale` 을 갈아 끼우므로, 여기서 안 밀면 지형만 이전 바이옴 빛을 받는다.
 	for material: ShaderMaterial in _materials:
 		material.set_shader_parameter("gain", exposure)
 		material.set_shader_parameter("balance", balance)
 		material.set_shader_parameter("specular_gain", specular_gain)
-		material.set_shader_parameter("fill", ambient_fill)
+		material.set_shader_parameter("fill", ambient_fill * sun_scale)
 		material.set_shader_parameter("ambient_color",
 			Vector3(_ambient.r, _ambient.g, _ambient.b))
 		material.set_shader_parameter("sun_dir", _sun_dir)
@@ -249,7 +262,7 @@ func _build(albedo: Color, vertex_color: bool) -> ShaderMaterial:
 	material.set_shader_parameter("band_high", BAND_HIGH)
 	material.set_shader_parameter("band_mid_gain", BAND_MID)
 	material.set_shader_parameter("band_floor", BAND_FLOOR)
-	material.set_shader_parameter("fill", ambient_fill)
+	material.set_shader_parameter("fill", ambient_fill * sun_scale)
 	material.set_shader_parameter("specular_gain", specular_gain)
 	material.set_shader_parameter("gain", exposure)
 	material.set_shader_parameter("balance", balance)

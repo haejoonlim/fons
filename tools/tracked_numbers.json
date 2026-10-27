@@ -207,7 +207,7 @@
     "AMBIENT_FILL"
    ],
    "sources": [],
-   "note": "툰 그늘 환경광 배율 — toon_shade.gd. unshaded 모델에서 격자로 맞췄다 (docs/art/셰이딩_조각수_선택지.md §3.9)"
+   "note": "툰 그늘 환경광 배율 — toon_shade.gd. 바이옴 배율(SUN_REF)이 여기에 곱해진다 (docs/art/셰이딩_조각수_선택지.md §3.11)"
   },
   {
    "name": "EXPOSURE",
@@ -216,7 +216,25 @@
     "EXPOSURE"
    ],
    "sources": [],
-   "note": "툰 태양 항 노출 — toon_shade.gd. unshaded 모델에서 격자로 맞췄다 (docs/art/셰이딩_조각수_선택지.md §3.9)"
+   "note": "툰 태양 항 노출 — toon_shade.gd. 고정 화소 격자에서 두 바이옴 평균이 A 대역에 든다 (docs/art/셰이딩_조각수_선택지.md §3.11)"
+  },
+  {
+   "name": "SUN_REF",
+   "value": "0.99",
+   "aliases": [
+    "SUN_REF"
+   ],
+   "sources": [],
+   "note": "툰 바이옴 보정 기준 태양 세기(온대) — toon_shade.gd. 태양이 세면 환경광을 반비례해 깎는다 (§3.11)"
+  },
+  {
+   "name": "SUN_SCALE_MIN",
+   "value": "0.5",
+   "aliases": [
+    "SUN_SCALE_MIN"
+   ],
+   "sources": [],
+   "note": "툰 바이옴 보정 하한 — toon_shade.gd. 어둠 바이옴에서 배율이 무한정 작아지지 않게 막는다 (§3.11)"
   },
   {
    "name": "SPECULAR_GAIN",

@@ -25,7 +25,8 @@ const VARIANTS := ["a_current", "b_flat", "c_toon"]
 ## 광택 항은 태양 색(푸른 #d8e5ff)을 albedo 무관하게 더한다 — 잎·풀의 파랑이 여기서 산다.
 ## 광택은 밝은 면을, 환경광은 그늘(p10)을 민다 — 한 값씩 따로 맞출 수 없어 격자로 훑는다.
 const CALIBRATION := [
-	[0.63, 0.035, 2.6], [0.66, 0.035, 2.4], [0.70, 0.035, 2.2],
+	[0.63, 0.035, 2.6], [0.63, 0.035, 2.0], [0.63, 0.035, 3.2],
+	[0.54, 0.035, 2.6], [0.72, 0.035, 2.6],
 ]
 ## 견본대 — [부품 prefix, 개수]. 랜드마크는 늘 첫 자리(근접 구도의 기준).
 const LINEUP := [["landmark_", 1], ["height_", 2], ["prop_", 2]]
@@ -113,7 +114,11 @@ func _initialize() -> void:
 			quit(1)
 			return
 		_capture_base(_lineup)
-		await _shoot(cam, biome_id)
+		# 견본대를 감춘 한 장 — 기준 화소를 잡는 바탕이다(아래 _shoot 주석).
+		_lineup.visible = false
+		var empty := await _both(cam, biome_id, "lineup", false)
+		_lineup.visible = true
+		await _shoot(cam, biome_id, empty)
 		_restore()
 		await _sheet(biome_id)
 		if _lineup != null:
@@ -122,7 +127,7 @@ func _initialize() -> void:
 	quit()
 
 
-func _shoot(cam: Camera3D, biome_id: String) -> void:
+func _shoot(cam: Camera3D, biome_id: String, empty: Image) -> void:
 	## 후보를 하나씩 찍는다. C 는 A 와 **같은 화소**에서 그늘·평균을 재어 기록한다 — 안 맞추면
 	## 셰이딩 모양이 아니라 노출 차이를 보게 되고, 판정이 "툰은 어둡다"로 끝나 버린다(첫 렌더 실측).
 	## 기준 화소는 **셰이딩이 바뀐 곳**(두 그림이 다른 화소)이다 — 화면 평균을 쓰면 지형이 절반을
@@ -136,14 +141,18 @@ func _shoot(cam: Camera3D, biome_id: String) -> void:
 			img_a = img
 	# 노출은 모듈이 정한 값(1.1)으로 고정한다. 노출로 평균을 맞추면 태양 항만 커져 색이 틀어진다 —
 	# 회색 돌이 따뜻하게 물들었다(실측: A (0.27 0.28 0.28) → C (0.29 0.27 0.23)). 색이 정본이다.
-	print("툰 모델 — 밴드 %.2f/%.2f 중간 %.2f 바닥 %.2f · 환경광 x%.1f · 노출 %.2f · 광택 %.4f · 균형 %s"
+	print("툰 모델 — 밴드 %.2f/%.2f 중간 %.2f 바닥 %.2f · 환경광 x%.1f · 노출 %.2f · 광택 %.4f · 균형 %s · 태양 보정 x%.3f"
 		% [FonsToonShade.BAND_LOW, FonsToonShade.BAND_HIGH, FonsToonShade.BAND_MID,
 			FonsToonShade.BAND_FLOOR, _shade.ambient_fill,
-			_shade.exposure, _shade.specular_gain, str(_shade.balance)])
+			_shade.exposure, _shade.specular_gain, str(_shade.balance), _shade.sun_scale])
+	# 기준 화소 — **견본대가 차지한 자리**를, 견본대를 감춘 같은 구도와 견주어 잡는다.
+	# 예전에는 C 의 첫 그림과 A 의 차이로 잡았는데, 화소 집합이 C 값에 따라 달라져서
+	# 값 조합끼리 비교가 안 됐다(2026-10-28 실측: 같은 값·다른 실행에서 A 평균이 0.198/0.182 로 갈렸다).
+	var coords: Array = _mask_stats(empty, img_a).get("coords", [])
+	# 행을 훑기 전에 C 를 한 번 깔아 둔다 — 행은 값만 갈아 끼우고 `_refresh()` 가 깔린 재질에 민다.
+	# (이 한 줄을 빼면 다섯 행이 모두 A 를 찍는다 — 2026-10-28 실측으로 겪었다.)
 	_restore()
 	_apply("c_toon")
-	var probe := await _both(cam, biome_id, "c_toon", false)
-	var coords: Array = _mask_stats(img_a, probe).get("coords", [])
 	# 노출 보정 — 밴드 셰이더는 표준 셰이더보다 어둡다(C 평균이 A 의 0.83배 · 실측). 그대로 찍으면
 	# 셰이딩이 아니라 노출 차이를 보게 된다. 몇 노출을 훑어 **A 와 같은 화소**의 평균·색을 찍는다.
 	for pair: Array in CALIBRATION:
@@ -180,6 +189,7 @@ func _shoot(cam: Camera3D, biome_id: String) -> void:
 
 func _both(cam: Camera3D, biome_id: String, variant: String, save := true) -> Image:
 	## 같은 후보의 두 구도(기본 거리·근접). `save=false` 는 밝기만 재는 패스다.
+	## 돌려주는 그림은 **근접 구도** — 재는 화소(`coords`)가 그 구도에서 잡힌다.
 	cam.global_position = Vector3(CENTER.x, _ground + FAR_HEIGHT, CENTER.y + FAR_BACK)
 	cam.look_at(Vector3(CENTER.x, _ground + 1.6, CENTER.y))
 	for f in 4:
