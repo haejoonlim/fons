@@ -330,7 +330,7 @@ func test_gatekeeper_floors_are_five_ten_fifteen_twenty() -> void:
 func test_biome_names_the_winner_on_a_shared_gatekeeper_floor() -> void:
 	# 130층에는 이데아수문장[126,130]과 무문의 파수병[128,130]이 둘 다 걸린다.
 	# 정본은 biomes.json 의 gatekeeper — 무문의 파수병이다.
-	var biomes := DataLoader.get_biomes()
+	var biomes: Variant = DataLoader.get_biomes()   # DataLoader 는 Variant 를 돌려준다 — `:=` 는 경고(오류)에 걸린다
 	var gk := FonsEncounter.gatekeeper_for_floor(DataLoader.get_monsters(), 130, biomes)
 	assert_eq(gk["id"], "mon_nullsentinel_01", "130층 문지기 = 무문의 파수병 (biomes 정본)")
 	assert_eq(FonsEncounter.gatekeeper_for_floor(DataLoader.get_monsters(), 126, biomes)["id"],

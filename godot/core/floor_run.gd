@@ -45,7 +45,7 @@ static func build_gatekeeper(monsters: Variant, biomes: Variant, floor: int,
 	##   hp_ratio  — 같은 층 일반 조우 HP **합계**의 몇 배로 문지기 HP 를 잡을지
 	##   atk_ratio — 일반 조우 **한 마리 평균** 공격력의 몇 배로 문지기 ATK 를 잡을지
 	## 배수를 정하는 것은 밸런스 결정이라 여기서 기본값을 바꾸지 않는다.
-	var gk := FonsEncounter.gatekeeper_for_floor(monsters, floor)
+	var gk := FonsEncounter.gatekeeper_for_floor(monsters, floor, biomes)
 	if gk.is_empty():
 		return {"floor": floor, "biome_id": "", "party": [], "gatekeeper": "", "gatekeeper_id": ""}
 	var hp_target := 0.0
@@ -104,16 +104,24 @@ static func _alive(units: Array) -> int:
 
 
 static func run(rng, heroes: Array, enemies: Array, floor: int, max_turns: int = MAX_TURNS) -> Dictionary:
-	## 유닛은 제자리에서 바뀐다. 반환: turns · log(평탄한 문자열 배열) · winner(ally/enemy/draw) · gauge.
+	## 유닛은 제자리에서 바뀐다. 반환: turns · log(평탄한 문자열 배열) · winner(ally/enemy/draw/none) · gauge.
+	## `none` 은 **싸울 상대가 없는 층**이다 — 일반 조우 없음 바이옴(이데아 문턱 · #59).
+	## 승리로 세면 곡선이 거짓말을 하고, 패배로 세면 벽이 된다. 둘 다 아니다.
+	if enemies.is_empty():
+		return {"turns": 0, "log": [], "winner": "none", "gauge": FonsBattle.make_gauge(floor),
+			"last_hit": 0, "last_crit": false}
 	var gauge := FonsBattle.make_gauge(floor)
 	var log_lines: Array = []
 	var turns := 0
 	## 이 판 마지막 일격의 피해 — 필드 타격 연출이 이 숫자를 띄운다.
 	var last_hit := 0
+	## 이 판 마지막 일격이 치명타였나 — 화면 흔들림의 세기 단계다.
+	var last_crit := false
 	for turn in range(1, maxi(1, max_turns) + 1):
 		var step := FonsBattle.combat_step(rng, heroes, enemies, gauge, {})
 		log_lines.append_array(step["log"])
 		last_hit = int(step.get("last_hit", 0))
+		last_crit = bool(step.get("last_crit", false))
 		turns = turn
 		if _alive(enemies) == 0 or _alive(heroes) == 0:
 			break
@@ -122,12 +130,14 @@ static func run(rng, heroes: Array, enemies: Array, floor: int, max_turns: int =
 		winner = "ally"
 	elif _alive(heroes) == 0:
 		winner = "enemy"
-	return {"turns": turns, "log": log_lines, "winner": winner, "gauge": gauge, "last_hit": last_hit}
+	return {"turns": turns, "log": log_lines, "winner": winner, "gauge": gauge, "last_hit": last_hit,
+		"last_crit": last_crit}
 
 
 static func simulate(rng, monsters: Variant, biomes: Variant, floor: int, contact_index: int,
 		heroes: Array, max_turns: int = MAX_TURNS, hp_knob: float = 1.0) -> Dictionary:
 	## 편성부터 한 판까지 — 판마다 새 유닛을 만든다.
+	## 일반 조우가 없는 층은 편성이 비고 `winner` 가 `none` 이다 (`run` 참조).
 	## `hp_knob` 은 적 HP 에만 걸리는 측정 손잡이다 (정본 곡선은 그대로, 기본 1.0).
 	var built := build(monsters, biomes, floor, contact_index, hp_knob)
 	var enemies: Array = built["party"]
