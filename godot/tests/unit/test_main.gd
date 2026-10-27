@@ -496,6 +496,7 @@ func test_ending_panel_appears_once_and_r_starts_a_new_run() -> void:
 		"loot": {"soul": ["최상"], "gold": 6000, "exp": 1200}}
 	node._ending_shown = false
 	node._push()
+	assert_string_contains(line.text, "무문의 파수병", "판 기록의 이름")
 	assert_string_contains(line.text, "82턴", "걸린 턴")
 	assert_string_contains(line.text, "생존 4/5", "살아남은 수")
 	assert_string_contains(line.text, "gold 6000", "받은 전리품")

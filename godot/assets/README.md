@@ -63,5 +63,7 @@ assets/
 영웅 몸통도 **3벌**이다 — `hero_guard` · `hero_scout` · `hero_mystic`
 (`art/models/hero_<band>.glb`). 생성기는 [`tools/gen_hero_glb.py`](../../tools/gen_hero_glb.py),
 드리프트는 게이트 `heroart` 가 막고, 런타임 해석은
-[hero_body.gd](../game/view/view_3d/hero_body.gd) 이 진다. 부품 다섯(`body_hide` · `skin_limb` ·
+[hero_body.gd](../game/view/view_3d/hero_body.gd) 이 진다. 어느 직업이 어느 벌을 입는지는
+`data/hero_assets.json` 이 정한다 — 생성기 [`tools/gen_hero_assets.py`](../../tools/gen_hero_assets.py),
+드리프트는 게이트 `heroassets` 가 막는다. 부품 다섯(`body_hide` · `skin_limb` ·
 `gear_metal` · `gear_shine` · `eye_dark`)이 계약이고 틴트는 `body_`·`skin_`·`head_` 만 바꾼다.

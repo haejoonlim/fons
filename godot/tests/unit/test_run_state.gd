@@ -75,12 +75,20 @@ func test_keyword_mod_follows_the_original_accumulation_rule() -> void:
 
 func test_party_gains_all_cards_not_one() -> void:
 	# 편성된 파티원도 3장 곱을 받는다 — 1장짜리보다 HP 가 크다.
+	# 단 종점 직업(카드 1장 — 정령기사·원소마도사·대현자)은 상한을 3으로 줘도 1장 그대로다.
+	# 그런 영웅에서 비교하면 거짓 실패다 — 3장이 실제로 붙는 영웅만 본다.
 	var races: Dictionary = DataLoader.load_json("races.json")
 	var tree: Dictionary = DataLoader.load_json("job_tree.json")
 	var one := FonsRunState.heroes_from(races, tree, {}, 5, 130, 3, {}, 1)
 	var all := FonsRunState.heroes_from(races, tree, {}, 5, 130, 3, {}, 3)
+	var compared := 0
 	for i in one.size():
+		var job := _job_of(tree, String(all[i].get("job_id", "")))
+		if FonsRunState.applied_cards(job, 3).size() <= FonsRunState.applied_cards(job, 1).size():
+			continue
 		assert_gt(int(all[i]["maxHp"]), int(one[i]["maxHp"]), "파티원 %d — 3장 곱이 1장보다 크다" % i)
+		compared += 1
+	assert_gt(compared, 0, "3장이 붙는 직업이 파티에 최소 하나")
 
 
 func test_five_hero_party_gives_every_hero_a_job_and_a_brain() -> void:
@@ -104,6 +112,37 @@ func test_five_hero_party_gives_every_hero_a_job_and_a_brain() -> void:
 		assert_true(FonsBrain.attached(heroes[i]), "%d번 영웅에 브레인이 붙는다" % (i + 1))
 		jobs[job_id] = true
 	assert_eq(jobs.size(), 5, "다섯이 서로 다른 직업 — 직업 id 가 키다")
+
+
+func test_party_spreads_roles_so_the_field_does_not_show_five_clones() -> void:
+	## 직업 트리 앞에서 다섯을 집으면 전원 선봉이다 — 역할을 돌아가며 뽑아야 필드 실루엣이 갈린다.
+	var tree: Dictionary = DataLoader.load_json("job_tree.json")
+	for seed_value in [1, 7, 11, 42]:
+		var jobs := FonsRunState.keyword_jobs(tree, 5, seed_value)
+		assert_eq(jobs.size(), 5, "시드 %d — 다섯 직업" % seed_value)
+		var roles := {}
+		for job in jobs:
+			roles[String(job.get("role", ""))] = true
+			assert_ne(String(job.get("id", "")), "l3_life", "생활직은 전투 파티 자리가 아니다")
+		assert_eq(roles.size(), 5, "시드 %d — 다섯 역할이 겹치지 않는다" % seed_value)
+
+
+func test_party_jobs_follow_the_seed() -> void:
+	## 세이브는 시드로 영웅을 다시 만든다 — 같은 시드면 같은 편성이어야 사람이 안 바뀐다.
+	var tree: Dictionary = DataLoader.load_json("job_tree.json")
+	assert_eq(_ids(FonsRunState.keyword_jobs(tree, 5, 11)),
+		_ids(FonsRunState.keyword_jobs(tree, 5, 11)), "같은 시드 = 같은 편성")
+	var seen := {}
+	for seed_value in [1, 2, 3, 4, 5]:
+		seen[_ids(FonsRunState.keyword_jobs(tree, 5, seed_value))] = true
+	assert_gt(seen.size(), 1, "시드가 다르면 편성도 달라진다 — 판마다 같은 다섯이 서지 않는다")
+
+
+func _ids(jobs: Array) -> String:
+	var out: Array = []
+	for job in jobs:
+		out.append(String(job.get("id", "")))
+	return ",".join(out)
 
 
 func _job_of(tree: Dictionary, job_id: String) -> Dictionary:

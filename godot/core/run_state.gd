@@ -51,17 +51,57 @@ var _seed := 0
 var _start_floor := START_FLOOR
 
 
-static func keyword_jobs(job_tree: Dictionary, count: int = PARTY_SIZE) -> Array:
-	## 파티원이 맡을 직업 — 키워드가 붙은 L2 를 앞에서부터 하나씩.
-	## L1 은 키워드가 없으므로 자동으로 건너뛴다.
-	var out: Array = []
+static func keyword_jobs(job_tree: Dictionary, count: int = PARTY_SIZE, seed_value: int = 0) -> Array:
+	## 파티원이 맡을 직업 — 키워드가 붙은 L2 를 **역할이 안 겹치게** 한 명씩 먼저 뽑는다.
+	## 트리 앞에서부터 다섯을 집으면 전원이 선봉이 되어 필드에 같은 몸통 다섯이 선다
+	## (실측: l2_breaker · l2_vengeance_knight · l2_fighter · l2_swordsman · l2_spirit_knight).
+	##
+	## 역할 순서·역할 안 순서를 시드로 섞는다 — 같은 시드면 같은 파티(세이브가 시드로 영웅을
+	## 다시 만든다), 다른 판이면 다른 다섯. 역할이 모자라면 돌아가며 두 번째를 채운다.
+	## L1 은 키워드가 없고 L3(생활직)은 전투 파티 자리가 아니므로 stage 2 만 쓴다.
+	var by_role: Dictionary = {}
+	var roles: Array = []
 	for job in job_tree.get("jobs", []):
-		if job.get("keywords", []).is_empty():
+		if int(job.get("stage", 0)) != 2:
 			continue
-		out.append(job)
-		if out.size() >= count:
+		if (job.get("keywords", []) as Array).is_empty():
+			continue
+		var role := String(job.get("role", ""))
+		if not by_role.has(role):
+			by_role[role] = []
+			roles.append(role)
+		(by_role[role] as Array).append(job)
+	if roles.is_empty():
+		return []
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value
+	_shuffle(roles, rng)
+	for role in roles:
+		_shuffle(by_role[role], rng)
+	var out: Array = []
+	var depth := 0
+	while out.size() < count:
+		var added := false
+		for role in roles:
+			if out.size() >= count:
+				break
+			var rows: Array = by_role[role]
+			if depth < rows.size():
+				out.append(rows[depth])
+				added = true
+		if not added:
 			break
+		depth += 1
 	return out
+
+
+static func _shuffle(rows: Array, rng: RandomNumberGenerator) -> void:
+	## 시드를 쓰는 섞기 — `Array.shuffle()` 은 전역 RNG 라 세이브 재현이 안 된다.
+	for i in range(rows.size() - 1, 0, -1):
+		var j := rng.randi_range(0, i)
+		var tmp: Variant = rows[i]
+		rows[i] = rows[j]
+		rows[j] = tmp
 
 
 static func applied_cards(job: Dictionary, cards: int = 0) -> Array:
@@ -109,7 +149,7 @@ static func heroes_from(races: Dictionary, job_tree: Dictionary = {}, equipment:
 	var gear: Dictionary = FonsEquipment.from_grade(equipment, 3) if not equipment.is_empty() else {}
 	# 직업은 **이 파티 크기**만큼 뽑는다. 기본값(PARTY_SIZE=4)에 기대면 5인 파티의 마지막이
 	# 직업·계수·브레인 없이 남는다 — 필드 파티는 5인이다.
-	var jobs: Array = keyword_jobs(job_tree, party_size)
+	var jobs: Array = keyword_jobs(job_tree, party_size, seed_value)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	var out: Array = []

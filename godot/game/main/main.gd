@@ -279,9 +279,13 @@ func _sync_ending_panel() -> void:
 
 func _ending_summary() -> String:
 	## 마지막 판 요약 — 이름 · 턴 · 생존 · 전리품. 판 기록이 없으면(이어하기) 이름만 적는다.
-	var gk := _field.gatekeeper_name()
-	var shown := gk if not gk.is_empty() else "마지막 문지기"
 	var last: Dictionary = _field.last_gatekeeper
+	# 이름은 그 판의 기록에서 먼저 읽는다 — 이어하기로 들어와도 누구와 싸웠는지가 남는다.
+	var shown := String(last.get("name", ""))
+	if shown.is_empty():
+		shown = _field.gatekeeper_name()
+	if shown.is_empty():
+		shown = "마지막 문지기"
 	if last.is_empty():
 		return "%s를 지나 이데아 문턱을 지났다" % shown
 	var parts: Array = ["%s — %d턴" % [shown, int(last.get("turns", 0))]]
