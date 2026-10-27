@@ -20,7 +20,9 @@ rm -f "$JUNIT"
 # 실패 파일도 test_estate.gd(8건) → test_main.gd(7건) → 0건 으로 갈아탔다.
 # 그때 초록이었던 실행도, 이후 편집을 반영하지 않은 결과라 근거로 쓸 수 없다.
 # 그래서 실행이 끝난 뒤 이 시각 이후에 바뀐 소스가 있으면 초록을 내지 않고 실패한다.
-STAMP="$(mktemp -t fons_gate_stamp)"
+# 템플릿에 `X` 를 넣는다 — BSD(macOS)는 없어도 붙여 주지만 GNU(CI 리눅스)는
+# `too few X's in template` 으로 죽는다. 2026-10-27 CI 첫 실행이 이것 때문에 실패했다.
+STAMP="$(mktemp "${TMPDIR:-/tmp}/fons_gate_stamp.XXXXXX")"
 trap 'rm -f "$STAMP"' EXIT
 
 # 게이트 계약 G-1·G-2 (`tools/gate_contract.py`) — 마지막 줄이 `[PASS] godot` /
