@@ -420,6 +420,101 @@ func tag_share(tag: String) -> float:
 	return float(hits) / float(maxi(1, recent.size()))
 
 
+## ── 저장 ────────────────────────────────────────────────────────────────
+
+func to_save() -> Dictionary:
+	## 브레인이 **가진 것**만 낸다. 태그 이름·효과·이름표는 `skills_catalog.json` 에서 다시 채운다.
+	## 확률 상태(`_rng`)는 파생이 아니라 상태다 — 저장하지 않으면 불러온 뒤 판단이 달라진다.
+	var rows: Array = []
+	for id in book:
+		var entry: Dictionary = book[id]
+		rows.append({
+			"id": String(id),
+			"stage": int(entry.get("stage", 1)),
+			"level": int(entry.get("level", 1)),
+			"xp": int(entry.get("xp", 0)),
+			"heat": float(entry.get("heat", 0.0)),
+		})
+	rows.sort_custom(func(a, b): return int(a["id"]) < int(b["id"]))
+	return {
+		"identity": identity.duplicate(true),
+		"rng": str(_rng.state),
+		"counters": counters.duplicate(),
+		"recent": recent.duplicate(),
+		"recent_skills": recent_skills.duplicate(),
+		"book": rows,
+		"links": links.duplicate(),
+		"link_sessions": link_sessions.duplicate(),
+		"born": born.duplicate(),
+		"fusions": fusions.duplicate(),
+		"last_tag": last_tag,
+		"last_skill": last_skill,
+		"streak": streak,
+		"decisions": decisions.duplicate(),
+		"floor": floor,
+	}
+
+
+func from_save(saved: Dictionary) -> bool:
+	## 저장값을 덮어쓴다. 카탈로그에 없는 스킬 id 는 **버린다** — 카탈로그가 줄었을 수 있다.
+	## 모르는 값은 지어내지 않는다 (ADR 0008 부수 결정).
+	if saved.is_empty():
+		return false
+	var ident: Dictionary = saved.get("identity", {})
+	if not ident.is_empty():
+		identity = ident.duplicate(true)
+		_rng.seed = int(identity.get("seed", 1))
+		if FonsPersonality.is_ready(data):
+			apt = FonsPersonality.apt_eff(data, identity, _rng, 5)
+	book.clear()
+	for row in saved.get("book", []):
+		var id := String(row.get("id", ""))
+		var skill: Dictionary = catalog_by_id.get(id, {})
+		if skill.is_empty():
+			continue
+		var entry := FonsSkillBook.make_entry(skill)
+		entry["stage"] = int(row.get("stage", 1))
+		entry["level"] = int(row.get("level", 1))
+		entry["xp"] = int(row.get("xp", 0))
+		entry["heat"] = float(row.get("heat", 0.0))
+		book[id] = entry
+	counters = _int_map(saved.get("counters", {}))
+	decisions = _int_map(saved.get("decisions", {}))
+	links = _int_map(saved.get("links", {}))
+	link_sessions = _int_map(saved.get("link_sessions", {}))
+	recent = _string_list(saved.get("recent", []))
+	born = _string_list(saved.get("born", []))
+	fusions = _string_list(saved.get("fusions", []))
+	recent_skills = []
+	for id in saved.get("recent_skills", []):
+		recent_skills.append(String(id))
+	last_tag = String(saved.get("last_tag", ""))
+	last_skill = String(saved.get("last_skill", ""))
+	streak = int(saved.get("streak", 0))
+	floor = int(saved.get("floor", 1))
+	# 시드는 문자열로 저장된다 — `JSON.parse_string` 이 큰 정수를 float 로 돌려주기 때문이다.
+	# 없는 필드는 건드리지 않는다 (필드 추가는 버전을 올리지 않는다 — ADR 0008).
+	if saved.has("rng"):
+		_rng.state = int(String(saved["rng"]))
+	return true
+
+
+static func _int_map(source: Variant) -> Dictionary:
+	var out := {}
+	if source is Dictionary:
+		for key in source:
+			out[String(key)] = int(source[key])
+	return out
+
+
+static func _string_list(source: Variant) -> Array:
+	var out: Array = []
+	if source is Array:
+		for item in source:
+			out.append(String(item))
+	return out
+
+
 func describe() -> String:
 	## 사람이 읽는 요약 — "난폭 · 다정·탐욕 — 근접타격 41 · 정찰 12 · 스킬 1".
 	var head := FonsPersonality.describe(data, identity)

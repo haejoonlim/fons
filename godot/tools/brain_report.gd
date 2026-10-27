@@ -26,6 +26,7 @@ var _catalog: Dictionary
 var _personalities: Dictionary
 var _profiles: Dictionary
 var _legacy: Dictionary
+var _basics: Dictionary
 var _floors := 40
 
 
@@ -40,6 +41,7 @@ func _initialize() -> void:
 	_personalities = _load("personalities.json")
 	_profiles = _load("job_ai_profiles.json")
 	_legacy = _load("fusion_pairs.json")
+	_basics = _load("basic_attacks.json")
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--floors="):
 			_floors = int(arg.split("=")[1])
@@ -113,7 +115,7 @@ func _live_run() -> void:
 	print("|---|---|---|---|---|---|")
 	for seed_value in [11, 22, 33]:
 		var st := FonsRunState.new()
-		st.start(_races, _monsters, _biomes, seed_value, 1, _job_tree, _equipment, _job_coef, _ai())
+		st.start(_races, _monsters, _biomes, seed_value, 1, _job_tree, _equipment, _job_coef, _ai(), _basics)
 		var guard := 0
 		while st.winner == "ally" and st.floor < _floors and guard < _floors + 5:
 			guard += 1
@@ -134,7 +136,7 @@ func _live_run() -> void:
 
 	print("### 영웅별 정체 (시드 11 · 마지막 층)\n")
 	var st2 := FonsRunState.new()
-	st2.start(_races, _monsters, _biomes, 11, 1, _job_tree, _equipment, _job_coef, _ai())
+	st2.start(_races, _monsters, _biomes, 11, 1, _job_tree, _equipment, _job_coef, _ai(), _basics)
 	var guard2 := 0
 	while st2.winner == "ally" and st2.floor < _floors and guard2 < _floors + 5:
 		guard2 += 1

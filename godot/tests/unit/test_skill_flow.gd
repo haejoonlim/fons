@@ -26,6 +26,13 @@ func _early_party() -> Array:
 		3, 10, 31, DataLoader.load_json("job_coef.json"), 0, 4, _ai())
 
 
+func _open_site(explore: FonsExplore) -> int:
+	for i in explore.sites.size():
+		if not bool(explore.sites[i]["cleared"]):
+			return i
+	return -1
+
+
 func test_early_exploration_alone_engraves_skills() -> void:
 	var heroes := _early_party()
 	var rng := RandomNumberGenerator.new()
@@ -33,11 +40,19 @@ func test_early_exploration_alone_engraves_skills() -> void:
 	for day in DAYS:
 		var explore := FonsExplore.new()
 		explore.start(DataLoader.get_monsters(), DataLoader.get_biomes(), 1, 31 + day)
-		for i in explore.sites.size():
-			explore.walk_to(i, heroes)
-			var out := explore.fight(i, heroes, rng)
+		# 무한맵 — 활성 조우가 27곳이라 전부 칠 필요가 없다. 층 목표(3곳)만 채운다.
+		# 걷는 동안 청크가 갈리면 목록 순서가 바뀌므로, 걸은 뒤에 다시 고른다.
+		var guard := 0
+		while not explore.mission_done() and guard < FonsExplore.SITE_COUNT * 2:
+			guard += 1
+			var index := _open_site(explore)
+			if index < 0:
+				break
+			explore.walk_to(index, heroes)
+			index = _open_site(explore)
+			var out := explore.fight(index, heroes, rng)
 			assert_eq(String(out["winner"]), "ally",
-				"초반 파티가 1층 조우를 이겨야 태그가 쌓인다 (day %d · site %d)" % [day, i])
+				"초반 파티가 1층 조우를 이겨야 태그가 쌓인다 (day %d)" % day)
 		FonsDay.renew(heroes)
 
 	var born := 0

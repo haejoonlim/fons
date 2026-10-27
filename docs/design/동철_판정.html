@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GDD 동철 표기 판정 — 폰즈</title>
+<style>
+  :root{--bg:#12121a;--panel:#1b1b26;--panel2:#22222f;--line:#33334a;--text:#e8e8f2;
+    --dim:#9a9ab4;--accent:#c9a227;--pick:#7ee2b8;--warn:#ff9f6e}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.55;padding:24px 20px 120px;
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+  header{max-width:980px;margin:0 auto}
+  h1{font-size:20px;margin:0 0 6px}
+  .lead{color:var(--dim);font-size:13px;margin:0 0 14px;max-width:760px}
+  .lead b{color:var(--text)}
+  .tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+  .tools input[type=search]{flex:1;min-width:180px;background:#15151f;border:1px solid var(--line);
+    border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px}
+  .tools label{font-size:12.5px;color:var(--dim);display:flex;gap:6px;align-items:center}
+  .count{font-size:12.5px;color:var(--dim)}
+  .count b{color:var(--pick)}
+  .badge{font-size:11px;color:var(--accent);margin-left:8px}
+  .hintchip{font-size:10.5px;color:#1a1a12;background:var(--accent);border-radius:4px;
+    padding:1px 5px;margin-left:6px;font-weight:700}
+  .bulk{display:flex;gap:6px;margin:7px 0 0}
+  .bulk button{font-size:11.5px;padding:4px 9px;border-radius:5px}
+  .picks{display:grid;gap:7px;margin-top:9px}
+  .pick{border-top:1px solid var(--line);padding-top:7px}
+  .pick:first-child{border-top:0;padding-top:0}
+  .pick .pname{font-size:13.5px;font-weight:600}
+  .pick.done .old{color:var(--pick)}
+  .pick .why{margin:3px 0 0;font-size:11px}
+  .pick .opts{margin-top:5px}
+  .pick .opts label{min-width:150px;padding:5px 9px;font-size:12.5px}
+  h3.sec{max-width:980px;margin:22px auto 8px;font-size:13.5px;border-left:3px solid var(--accent);
+    padding-left:10px}
+  h3.sec small{color:var(--dim);font-weight:400;font-size:12px;margin-left:6px}
+  main{max-width:980px;margin:0 auto;display:grid;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:13px 15px}
+  .card.done{border-color:#3d6b58}
+  .card.hide{display:none}
+  .top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .old{font-size:14.5px;font-weight:700;color:var(--warn)}
+  .arrow{color:var(--dim)}
+  .now{color:var(--pick);font-weight:700;font-size:14px}
+  .meta{font-size:11.5px;color:var(--dim);margin-left:auto;font-family:ui-monospace,Menlo,monospace}
+  .line{font-size:12.6px;color:#cfcfe0;margin:8px 0 0;padding:8px 10px;background:#16161f;
+    border-radius:6px;border-left:2px solid #4a4a66;cursor:pointer}
+  .line .more{color:var(--accent);font-size:11.5px;margin-left:4px}
+  mark{background:#3a3320;color:#ffe9a8;padding:0 2px;border-radius:3px}
+  .why{font-size:11.5px;color:var(--dim);margin:6px 0 0}
+  .opts{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+  .opts label{flex:1;min-width:190px;display:flex;align-items:center;gap:8px;padding:7px 10px;
+    border:1px solid var(--line);border-radius:6px;cursor:pointer;background:var(--panel2);font-size:13px}
+  .opts label:hover{border-color:#4a4a66}
+  .opts label.sel{border-color:#3d6b58;background:#1c2a24}
+  .opts input{accent-color:#4fbf90;margin:0}
+  footer{position:fixed;left:0;right:0;bottom:0;background:#0e0e15;border-top:1px solid var(--line);
+    padding:11px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  footer .count{margin-right:auto}
+  button{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:6px;
+    padding:8px 13px;font-size:13px;cursor:pointer}
+  button:hover{border-color:#5a5a78}
+  button.primary{background:var(--accent);color:#1a1a12;border-color:var(--accent);font-weight:700}
+  textarea{width:100%;max-width:980px;margin:16px auto 0;background:#15151f;border:1px solid var(--line);
+    border-radius:6px;color:var(--text);padding:12px;font-size:12px;height:180px;display:none;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+</style>
+</head>
+<body>
+<header>
+  <h1>GDD 동철 표기 판정</h1>
+  <p class="lead">
+    용어집이 <b>동철 주의</b> 로 표시한 5종이 GDD 19줄 21자리에 나온다. 같은 글자가 <b>이름</b>으로도
+    <b>보통명사</b>로도 쓰여서, 기계가 일괄 치환하면 문장이 깨진다. 카드마다 묻는 것은 하나다 —
+    <b>이 자리의 글자가 옛 스킬·직업·몬스터 이름인가?</b><br>
+    목록·표의 이름 칸이나 “스킬 ○○” 처럼 이름으로 쓰였으면 <b>옛 이름</b> — 바뀔 이름을 카드에 적었다.
+    문장 속 동작·도구·일반명사로 쓰였으면 <b>다른 뜻</b> — 글자를 그대로 둔다.<br>
+    <b>길잡이 키워드</b> 같은 표시는 그 현행 이름이 그 직업에만 붙은 키워드이고, 이 줄에 그 직업 이름이
+    함께 나온다는 뜻이다 — 이름으로 읽을 근거가 하나 더 있는 셈이다.<br>
+    고른 결과는 아래 <b>판정 JSON 복사</b> 로 떠서 <code>docs/l10n/동철_판정.json</code> 에 붙여 넣고,
+    <code>check_gdd_names.py --pending</code> 을 다시 돌린다.
+  </p>
+  <div class="tools">
+    <input id="q" type="search" placeholder="파일 이름·표기로 거르기">
+    <label><input type="checkbox" id="todo"> 미정만 보기</label>
+    <span id="count" class="count"></span>
+  </div>
+</header>
+<main id="list"></main>
+<textarea id="out" spellcheck="false" readonly></textarea>
+<footer>
+  <span id="pad" class="count"></span>
+  <button id="json">JSON 보기</button>
+  <button class="primary" id="copy">판정 JSON 복사</button>
+</footer>
+<script>
+const ROWS = [{"f": "GDD_v8.0_04_영지.md", "n": 249, "line": "| Sanity (0~100, 영웅별) | 병원 | 병상 요양 +10 (L1 기준) · +5/Lv (L7 +40 — §3.10) · **간호 XP +1/명 (05 §6-2)** | 병상 2~14 (§3.10) · 경고 <50 · 위험 <25 (01 §5) |", "toks": [{"o": "간호", "now": "의사", "why": "35차 후속③ 적성 개명 · 동철 주의 (지식 계열 스킬 이름·간호 XP가 같은 글자)", "k": "GDD_v8.0_04_영지.md:249:간호", "hint": ""}]}, {"f": "GDD_v8.0_05_영웅생성.md", "n": 504, "line": "- **직업 프로필 (시설·생활 이관 — 안B · 7스케일)**: 광산기사 광부6·대장4 · 현자 연구6·조제4 · 질풍사냥꾼 채집5·벌목4 — 특화직은 프로필 기준값이 5~7이라 **상시 카드 표시** (±1 롤). 일반직은 2~4 기준이라 보정 없으면 은닉 — 전 13직업은 시뮬 코드 JOB_APT 참조", "toks": [{"o": "대장", "now": "대장장이", "why": "35차 후속③ 적성 개명 · 동철 주의 (프리마의 직함 「대장 서기」가 같은 글자)", "k": "GDD_v8.0_05_영웅생성.md:504:대장", "hint": ""}]}, {"f": "GDD_v8.0_05_영웅생성.md", "n": 508, "line": "- 종족 aptitude 보정은 §6 6차 규칙으로 흡수: races.json 토큰(연구+/요리++/대장++ 등) → 공통 적성 시작 티어 +1/+2", "toks": [{"o": "대장", "now": "대장장이", "why": "35차 후속③ 적성 개명 · 동철 주의 (프리마의 직함 「대장 서기」가 같은 글자)", "k": "GDD_v8.0_05_영웅생성.md:508:대장", "hint": ""}]}, {"f": "GDD_v8.0_05_영웅생성.md", "n": 573, "line": "| 간호 | 병원 요양 1명 (04 §3.6-2) | 5 |", "toks": [{"o": "간호", "now": "의사", "why": "35차 후속③ 적성 개명 · 동철 주의 (지식 계열 스킬 이름·간호 XP가 같은 글자)", "k": "GDD_v8.0_05_영웅생성.md:573:간호", "hint": ""}]}, {"f": "GDD_v8.0_05_영웅생성.md", "n": 576, "line": "| 대장 | 합성·강화 1회 | 5 |", "toks": [{"o": "대장", "now": "대장장이", "why": "35차 후속③ 적성 개명 · 동철 주의 (프리마의 직함 「대장 서기」가 같은 글자)", "k": "GDD_v8.0_05_영웅생성.md:576:대장", "hint": ""}]}, {"f": "GDD_v8.0_05_영웅생성.md", "n": 714, "line": "| **이름** | `격투왕·투신·주먹기사` · `검풍객·일섬검사·패검` · `수호천사·봉인사` · `몸받이·현갑기사·갑옷장인` · `그림자자객(그림자사·무영객·영행자)` · `맹독사(침독사·분말사·만취사)` · `처형자(처형집행관·체포병·결의자)` · `신궁(관통궁수·연발사수·천리궁수)` · `포화사수(화염궁수·수화궁수·차폐궁수)` · `그림자자객`·`처형자` | **R1~R5 로 전면 개명** — `격투사(속격사·중격사·밀착사)` `검술사(속검사·일섬사·반격사)` `자객(기습사·은밀사·절단사)` `맹독사(급독사·중독사·심독사)` `도적(절도사·유인사·은닉사)` `명사수(관통사수·정밀사수·비거사수)` `포화사수(속사사수·화염사수·차폐사수)` `사냥꾼(표적사수·함정사수·유인사수)` `전위기사(선두기사·불굴기사·지탱기사)` | 사용자가 지목한 이름 전부 재설계. **L2 도 6건 개명**(파쇄기사→파쇄사 · 재앙기사→재앙사 · 격투가→격투사 · 검무사→검술사 · 수호기사→전위기사 · 신궁→명사수) — 계수는 그대로 승계 |", "toks": [{"o": "사냥꾼", "now": "사역사", "why": "41차 — 짐승에게 일을 맡기는 쪽으로 · 동철 주의 (생태도감 개체명에 사냥꾼이 붙는다)", "k": "GDD_v8.0_05_영웅생성.md:714:사냥꾼", "hint": ""}]}, {"f": "GDD_v8.0_05_영웅생성.md", "n": 779, "line": "|  | 주술사 | 마법 | 어둠·무 | **낙인** · **대가** · **해봉** |", "toks": [{"o": "대가", "now": "속박", "why": "42차 제목 → 43차 매듭 → 44차 액운 → 45차 속박 · 동철 주의 (값을 치룬다는 일반어와 같은 글자)", "k": "GDD_v8.0_05_영웅생성.md:779:대가", "hint": "주술사"}]}, {"f": "GDD_v8.0_05_영웅생성.md", "n": 859, "line": "|  | **대가** | 1 | 치명위력 | 1.1033 · 1.1277 · 1.1277 · 1.1277 · 1.2008 · 1.1277 · 1.1764 · 1.1277 · 1.1277 · 1.1521 · 1.4934 · 1.1277 · 1.2252 | 제 몸을 깎아 표식을 키우는 |", "toks": [{"o": "대가", "now": "속박", "why": "42차 제목 → 43차 매듭 → 44차 액운 → 45차 속박 · 동철 주의 (값을 치룬다는 일반어와 같은 글자)", "k": "GDD_v8.0_05_영웅생성.md:859:대가", "hint": ""}]}, {"f": "GDD_v8.0_05_영웅생성.md", "n": 883, "line": "축 순서 = L1 JOB_COEF 동일(HP·ATK·DEF·공속·MAG·MDEF·CRI). **승계 계열**(파쇄기사·방벽기사·재앙기사·성좌기사·사냥꾼·원소 마도사·주술사·소환술사·성술사·신관·드루이드·현자·예술가·검무사·격투가·그림자자객·맹독사·처형자·신궁·포화사수 등)은 개명·재편뿐이라 계수를 그대로 승계했고, **신규·재조정**(철벽기사·전술가·정령기사·기타 극단)은 L1 프로필 스큐 가안으로 캘리브레이션했다.", "toks": [{"o": "사냥꾼", "now": "사역사", "why": "41차 — 짐승에게 일을 맡기는 쪽으로 · 동철 주의 (생태도감 개체명에 사냥꾼이 붙는다)", "k": "GDD_v8.0_05_영웅생성.md:883:사냥꾼", "hint": ""}]}, {"f": "GDD_v8.0_05_영웅생성.md", "n": 925, "line": "- **A (7종)**: 사냥꾼 · 주술사 · 신관 · 드루이드 · 현자 · 정령기사 · **격투사** — 단순 기울기·승계 보유", "toks": [{"o": "사냥꾼", "now": "사역사", "why": "41차 — 짐승에게 일을 맡기는 쪽으로 · 동철 주의 (생태도감 개체명에 사냥꾼이 붙는다)", "k": "GDD_v8.0_05_영웅생성.md:925:사냥꾼", "hint": ""}]}, {"f": "GDD_v8.0_09_스킬시스템.md", "n": 59, "line": "| 생산 | 채집 · 벌목 · 농사 · 채광 · 제련 · 목수 · 대장 · 세공 · 조제 · 요리 · 양조 · 건설 · 운반 |", "toks": [{"o": "대장", "now": "대장장이", "why": "35차 후속③ 적성 개명 · 동철 주의 (프리마의 직함 「대장 서기」가 같은 글자)", "k": "GDD_v8.0_09_스킬시스템.md:59:대장", "hint": ""}]}, {"f": "GDD_v8.0_09_스킬시스템.md", "n": 60, "line": "| 지식 | 연구 · 실험 · 해독 · 감정 · 관찰 · 간호 · 약초학 · 측량 · 지도제작 · 기록 · 별관측 · 조련 · 마석학 |", "toks": [{"o": "간호", "now": "의사", "why": "35차 후속③ 적성 개명 · 동철 주의 (지식 계열 스킬 이름·간호 XP가 같은 글자)", "k": "GDD_v8.0_09_스킬시스템.md:60:간호", "hint": ""}, {"o": "조련", "now": "곤충", "why": "42차 몰이 → 43차 추격 → 44차 곤충 · 동철 주의 (지식 계열 스킬 이름·생태 태그가 같은 글자)", "k": "GDD_v8.0_09_스킬시스템.md:60:조련", "hint": ""}]}, {"f": "GDD_v8.0_09_스킬시스템.md", "n": 97, "line": "| A항 매핑 | 행동 a의 태그 → 적성 매핑표 `ACTION_APT` (P0 상수): 채집·벌목·농부·광부·목수·대장·조제·요리·간호·연구 — 태그와 동명 적성 1:1 · **전투 도메인 태그는 A항 1.0 고정** (적성=생활 전용 — 05 §6 체계 유지) |", "toks": [{"o": "대장", "now": "대장장이", "why": "35차 후속③ 적성 개명 · 동철 주의 (프리마의 직함 「대장 서기」가 같은 글자)", "k": "GDD_v8.0_09_스킬시스템.md:97:대장", "hint": ""}, {"o": "간호", "now": "의사", "why": "35차 후속③ 적성 개명 · 동철 주의 (지식 계열 스킬 이름·간호 XP가 같은 글자)", "k": "GDD_v8.0_09_스킬시스템.md:97:간호", "hint": ""}]}, {"f": "GDD_v8.0_09_스킬시스템.md", "n": 193, "line": "| 5 | 온후 | 정(情) | 회복·지원 | 공격 | 간호·위문 | 도발 | 공격 태그 스코어 ×0.85 · 치유 스코어 ×1.15 |", "toks": [{"o": "간호", "now": "의사", "why": "35차 후속③ 적성 개명 · 동철 주의 (지식 계열 스킬 이름·간호 XP가 같은 글자)", "k": "GDD_v8.0_09_스킬시스템.md:193:간호", "hint": ""}]}, {"f": "GDD_v8.0_09_스킬시스템.md", "n": 197, "line": "| 9 | 재치 | 지(知) | 기동·사회 | 생산 | 측면기동·투척 | 대장 | 문맥 전환 직후 행동 스코어 +10% (즉응) |", "toks": [{"o": "대장", "now": "대장장이", "why": "35차 후속③ 적성 개명 · 동철 주의 (프리마의 직함 「대장 서기」가 같은 글자)", "k": "GDD_v8.0_09_스킬시스템.md:197:대장", "hint": ""}]}, {"f": "GDD_v8.0_09_스킬시스템.md", "n": 198, "line": "| 10 | 세심 | 지(知) | 생산·지식 | — | 간호·세공 | 광역살포 | 장비정비·조제 스코어 ×1.2 · 아군 상태이상 감지 우선 |", "toks": [{"o": "간호", "now": "의사", "why": "35차 후속③ 적성 개명 · 동철 주의 (지식 계열 스킬 이름·간호 XP가 같은 글자)", "k": "GDD_v8.0_09_스킬시스템.md:198:간호", "hint": ""}]}, {"f": "GDD_v8.0_09_스킬시스템.md", "n": 218, "line": "| 30 | 다감 | 사(社) | 지식·회복 | 공격 | 간호·관찰 | 저격 | 아군 부상 감지 반응 1틱 조기 (치유 후보 최우선 검토) |", "toks": [{"o": "간호", "now": "의사", "why": "35차 후속③ 적성 개명 · 동철 주의 (지식 계열 스킬 이름·간호 XP가 같은 글자)", "k": "GDD_v8.0_09_스킬시스템.md:218:간호", "hint": ""}]}, {"f": "GDD_v8.0_09_스킬시스템.md", "n": 334, "line": "- **예시 스킬 (조건·레어도 — D-269 기준)**: 야습 = 매복 26+야간 39 = 65 → **C(상급까지)** · 응급치유 = 치유 65+아군부상 26 = 91 → **C(상급까지)** · 반격 = 반격자세 130+근접타격 110 = 240 → **A(극급까지)** · 대장간의 불꽃 = 대장 390+채광 325+제련 195+문맥 26 = 936 → **L(초월급까지 — 3태그·문맥)** (생활·전투 하이브리드 허용)", "toks": [{"o": "대장", "now": "대장장이", "why": "35차 후속③ 적성 개명 · 동철 주의 (프리마의 직함 「대장 서기」가 같은 글자)", "k": "GDD_v8.0_09_스킬시스템.md:334:대장", "hint": ""}]}, {"f": "GDD_v8.0_09_스킬시스템.md", "n": 448, "line": "| 🦌 생태 | [[GDD_v8.0_02_생태사전]] (조련·관찰 태그 연동) |", "toks": [{"o": "조련", "now": "곤충", "why": "42차 몰이 → 43차 추격 → 44차 곤충 · 동철 주의 (지식 계열 스킬 이름·생태 태그가 같은 글자)", "k": "GDD_v8.0_09_스킬시스템.md:448:조련", "hint": ""}]}];
+const FILE = "docs/l10n/동철_판정.json";
+const STORE = "fons.homonym";
+let picked = JSON.parse(localStorage.getItem(STORE) || "{}");
+
+const list = document.getElementById("list");
+const FULL = new Map();
+const TRIM = new Map();
+let last = "";
+for (const r of ROWS) {
+  const wid = `${r.f}:${r.n}`;
+  if (r.f !== last) {
+    const h = document.createElement("h3");
+    h.className = "sec";
+    h.innerHTML = `${esc(r.f)} <small>${ROWS.filter(x => x.f === r.f).length}줄</small>`;
+    list.appendChild(h);
+    last = r.f;
+  }
+  const card = document.createElement("div");
+  card.className = "card";
+  card.dataset.w = wid;
+  card.dataset.f = r.f;
+  const toks = r.toks.map(t => t.o);
+  card.dataset.toks = toks.join(" ");
+  FULL.set(wid, mark(r.line, toks, 0));
+  TRIM.set(wid, mark(r.line, toks, 190));
+  card.innerHTML = `
+    <div class="top"><span class="meta">${esc(r.f.replace("GDD_v8.0_", ""))}:${r.n}</span>
+      ${r.toks.length > 1 ? `<span class="badge">${r.toks.length}표기</span>` : ""}</div>
+    <p class="line" data-open="">${TRIM.get(wid)}</p>
+    ${r.toks.length > 1 ? `<div class="bulk">
+      <button data-bulk="다른 뜻">이 줄 모두 다른 뜻</button>
+      <button data-bulk="옛 이름">이 줄 모두 옛 이름</button></div>` : ""}
+    <div class="picks">${r.toks.map(tokRow).join("")}</div>`;
+  list.appendChild(card);
+}
+
+// 한 줄에 동철 표기가 여럿이면 카드 하나에 선택 줄을 여럿 둔다 — 같은 줄을 되풀이해 보이지 않게.
+function tokRow(t) {
+  // 조사는 받침을 본다 — 투창'으로' · 의사'로'. 현행이 `삭제` 면 부를 이름이 없다고 적는다.
+  const tail = t.now.charCodeAt(t.now.length - 1);
+  const jong = t.now === "삭제" ? 0 : (tail - 0xAC00) % 28;
+  const ro = jong === 0 || jong === 8 ? "로" : "으로";
+  const alt = t.now === "삭제"
+    ? "<b>옛 이름</b> — 여기서는 이름. 현행 이름이 없다(삭제 표기)"
+    : `<b>옛 이름</b> — <code>${esc(t.now)}</code>${ro} 바꾼다`;
+  return `
+    <div class="pick" data-k="${esc(t.k)}">
+      <div class="pname"><span class="old">${esc(t.o)}</span><span class="arrow">→</span>
+        <span class="now">${esc(t.now)}</span>
+        ${t.hint ? `<span class="hintchip">${esc(t.hint)} 키워드</span>` : ""}</div>
+      <div class="opts">
+        <label><input type="radio" name="${esc(t.k)}" value="다른 뜻">
+          <span><b>다른 뜻</b> — 보통명사. <code>${esc(t.o)}</code> 그대로 둔다</span></label>
+        <label><input type="radio" name="${esc(t.k)}" value="옛 이름">
+          <span>${alt}</span></label>
+      </div>
+      <p class="why">용어집 근거: ${esc(clean(t.why))}</p>
+    </div>`;
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+}
+// GDD 는 마크다운 표다 — 카드 안에서는 "코드처럼" 보이므로 장식만 지운다.
+function clean(s) {
+  return String(s).replace(/\"/g, '"').replace(/\*\*/g, "").replace(/`/g, "")
+    .replace(/\s*\|\s*/g, " · ").replace(/^\s*·\s*|\s*·\s*$/g, "").replace(/\s+/g, " ").trim();
+}
+function mark(line, tokens, cap) {
+  let t = clean(line);
+  let more = "";
+  if (cap && t.length > cap) {
+    t = t.slice(0, cap).replace(/\s+\S*$/, "") + "…";
+    more = '<span class="more">더 보기</span>';
+  }
+  let out = esc(t);
+  for (const tok of (Array.isArray(tokens) ? tokens : [tokens])) {
+    out = out.replace(esc(tok), `<mark>${esc(tok)}</mark>`);
+  }
+  return out + more;
+}
+function paint() {
+  document.querySelectorAll(".pick").forEach(p => {
+    const v = picked[p.dataset.k];
+    p.classList.toggle("done", !!v);
+    p.querySelectorAll("input").forEach(i => {
+      i.checked = v === i.value;
+      i.closest("label").classList.toggle("sel", v === i.value);
+    });
+  });
+  document.querySelectorAll(".card").forEach(card => {
+    const keys = [...card.querySelectorAll(".pick")].map(p => p.dataset.k);
+    card.classList.toggle("done", keys.length > 0 && keys.every(k => picked[k]));
+  });
+  const n = Object.values(picked).length;
+  const said = `21자리 중 <b>${n}</b> 고름`;
+  document.getElementById("count").innerHTML = said;
+  document.getElementById("pad").innerHTML = said;
+  filter();
+}
+function filter() {
+  const q = document.getElementById("q").value.trim();
+  const todo = document.getElementById("todo").checked;
+  document.querySelectorAll(".card").forEach(card => {
+    const left = [...card.querySelectorAll(".pick")].filter(p => !picked[p.dataset.k]);
+    const hit = (!q || (card.dataset.f + " " + card.dataset.toks).includes(q))
+      && (!todo || left.length > 0);
+    card.classList.toggle("hide", !hit);
+  });
+  document.querySelectorAll("h3.sec").forEach(h => {
+    let n = h.nextElementSibling, shown = 0;
+    while (n && n.classList.contains("card")) {
+      if (!n.classList.contains("hide")) shown++;
+      n = n.nextElementSibling;
+    }
+    h.classList.toggle("hide", !shown);
+  });
+}
+function dump() {
+  const 판정 = {};
+  document.querySelectorAll(".pick").forEach(p => {
+    const v = picked[p.dataset.k];
+    if (v) 판정[p.dataset.k] = {표기: p.querySelector(".old").textContent.trim(), 판정: v};
+  });
+  return JSON.stringify({
+    _설명: "GDD 동철 표기 판정 — docs/design/동철_판정.html 에서 고른 결과. " +
+      "check_gdd_names.py 가 읽어 `다른 뜻` 자리를 목록에서 빼고 `옛 이름` 자리에 `제안` 을 붙인다.",
+    판정
+  }, null, 2);
+}
+list.addEventListener("click", e => {
+  const bulk = e.target.closest("[data-bulk]");
+  if (bulk) {
+    const value = bulk.dataset.bulk;
+    bulk.closest(".card").querySelectorAll(".pick").forEach(p => { picked[p.dataset.k] = value; });
+    localStorage.setItem(STORE, JSON.stringify(picked));
+    paint();
+    return;
+  }
+  const el = e.target.closest(".line");
+  if (!el) return;
+  const k = el.closest(".card").dataset.w;
+  const open = el.dataset.open === "1";
+  el.innerHTML = open ? TRIM.get(k) : FULL.get(k);
+  el.dataset.open = open ? "" : "1";
+});
+list.addEventListener("change", e => {
+  const pick = e.target.closest(".pick");
+  if (!pick) return;
+  picked[pick.dataset.k] = e.target.value;
+  localStorage.setItem(STORE, JSON.stringify(picked));
+  paint();
+});
+document.getElementById("q").addEventListener("input", filter);
+document.getElementById("todo").addEventListener("change", filter);
+document.getElementById("json").addEventListener("click", () => {
+  const box = document.getElementById("out");
+  box.value = dump();
+  box.style.display = box.style.display === "block" ? "none" : "block";
+});
+document.getElementById("copy").addEventListener("click", async e => {
+  const text = dump();
+  try {
+    await navigator.clipboard.writeText(text);
+    e.target.textContent = FILE + " 에 붙여 넣으세요 — 복사됨";
+  } catch (err) {
+    const box = document.getElementById("out");
+    box.value = text;
+    box.style.display = "block";
+    box.select();
+    e.target.textContent = "복사가 막혔다 — 아래 상자를 직접 복사";
+  }
+  setTimeout(() => { e.target.textContent = "판정 JSON 복사"; }, 4000);
+});
+paint();
+</script>
+</body>
+</html>

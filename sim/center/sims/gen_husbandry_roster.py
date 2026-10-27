@@ -161,7 +161,7 @@ SPECS = [
     },
     {
         # 11~15층 — 로스터에 이름만 있고 성격·전투 개체가 없던 자리를 메운다.
-        'id': 'mon_slime_blue_01', 'name': '슬라임(블루)',
+        'id': 'mon_slime_blue_01', 'name': '푸른슬라임',
         'unlock_floor': 11, 'spawn_floors': [11, 12, 13], 'level': [11, 31],
         'tier': 1, 'threat': 18.0, 'aiType': 'melee',
         'stats': {'hp': 170, 'atk': 11, 'def': 4, 'aspd': 6, 'mdef': 4,

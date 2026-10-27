@@ -1,90 +1,249 @@
 {
-  "notes": "이 프로젝트가 실제로 판단 근거로 쓰는 상수만 등록한다. 값은 전부 원본 저장소와 대조한 확정값이다 (2026-10-17 대조). alias 는 사람이 쓰는 표현이 아니라 코드/문서에 그대로 나타나는 식별자만 넣는다 — '5%' 같은 표현을 alias 로 넣으면 뒤따르는 다른 수를 잘못 집는다. 문서에 이 상수를 쓸 때는 registry 의 값 표기를 그대로 쓴다 (예: SHAPED_RATE = 0.05). 이전 판의 PULLS=130 은 원본에 없는 정의라 삭제했다.",
-  "registry_version": 2,
-  "numbers": [
-    {
-      "name": "SHAPED_RATE",
-      "value": "0.05",
-      "aliases": ["SHAPED_RATE"],
-      "sources": [],
-      "note": "확정 #11 · D-276 — shaped 종족 롤 비율"
-    },
-    {
-      "name": "LEGACY_RATE",
-      "value": "0.95",
-      "aliases": ["LEGACY_RATE"],
-      "sources": [],
-      "note": "확정 #11 · D-276 — legacy 20종 합계 비율"
-    },
-    {
-      "name": "LEGACY_SPECIES",
-      "value": "20",
-      "aliases": ["LEGACY_SPECIES"],
-      "sources": [],
-      "note": "확정 #11 · D-276 — legacy 종족 수 (종족별 균등 4.75%)"
-    },
-    {
-      "name": "TICKET_COST",
-      "value": "130",
-      "aliases": ["TICKET_COST"],
-      "sources": [],
-      "note": "확정 #16 — 소환 티켓 단가(마석)"
-    },
-    {
-      "name": "FREE_SUMMONS",
-      "value": "10",
-      "aliases": ["FREE_SUMMONS"],
-      "sources": [],
-      "note": "확정 #17 — 최초 10회 무료 소환"
-    },
-    {
-      "name": "SOFT_PITY_START",
-      "value": "70",
-      "aliases": ["SOFT_PITY_START"],
-      "sources": [],
-      "note": "확정 #32 — ★4 소프트 피티 시작 회차"
-    },
-    {
-      "name": "SOFT_PITY_STEP",
-      "value": "0.02",
-      "aliases": ["SOFT_PITY_STEP"],
-      "sources": [],
-      "note": "확정 #32 — 소프트 피티 회차당 증가폭"
-    },
-    {
-      "name": "HARD_PITY_4",
-      "value": "130",
-      "aliases": ["HARD_PITY_4"],
-      "sources": [],
-      "note": "확정 #32 — ★4 하드 천장"
-    },
-    {
-      "name": "HARD_PITY_5PLUS",
-      "value": "5200",
-      "aliases": ["HARD_PITY_5PLUS"],
-      "sources": [],
-      "note": "확정 #32 — ★5+ 하드 천장 (★5:★6 = 5:1 교대)"
-    },
-    {
-      "name": "LEY_PER_CRYSTAL",
-      "value": "60",
-      "aliases": ["LEY_PER_CRYSTAL"],
-      "sources": [],
-      "note": "D-267 — 마석 1개의 화폐(LEY) 발행액"
-    },
-    {
-      "name": "MP_PER_CRYSTAL",
-      "value": "130",
-      "aliases": ["MP_PER_CRYSTAL"],
-      "sources": [],
-      "note": "D-267 — 마석 1개의 마나 환산"
-    },
-    {
-      "name": "LEVEL_CAP",
-      "value": "130",
-      "aliases": ["LEVEL_CAP"],
-      "sources": [],
-      "note": "확정 #34 — 영웅 레벨 상한"
-    }
-  ]
+ "notes": "이 프로젝트가 실제로 판단 근거로 쓰는 상수만 등록한다. 값은 전부 원본 저장소와 대조한 확정값이다 (2026-10-17 대조). alias 는 사람이 쓰는 표현이 아니라 코드/문서에 그대로 나타나는 식별자만 넣는다 — '5%' 같은 표현을 alias 로 넣으면 뒤따르는 다른 수를 잘못 집는다. 문서에 이 상수를 쓸 때는 registry 의 값 표기를 그대로 쓴다 (예: SHAPED_RATE = 0.05). 이전 판의 PULLS=130 은 원본에 없는 정의라 삭제했다.",
+ "registry_version": 2,
+ "numbers": [
+  {
+   "name": "SHAPED_RATE",
+   "value": "0.05",
+   "aliases": [
+    "SHAPED_RATE"
+   ],
+   "sources": [],
+   "note": "확정 #11 · D-276 — shaped 종족 롤 비율"
+  },
+  {
+   "name": "LEGACY_RATE",
+   "value": "0.95",
+   "aliases": [
+    "LEGACY_RATE"
+   ],
+   "sources": [],
+   "note": "확정 #11 · D-276 — legacy 20종 합계 비율"
+  },
+  {
+   "name": "LEGACY_SPECIES",
+   "value": "20",
+   "aliases": [
+    "LEGACY_SPECIES"
+   ],
+   "sources": [],
+   "note": "확정 #11 · D-276 — legacy 종족 수 (종족별 균등 4.75%)"
+  },
+  {
+   "name": "TICKET_COST",
+   "value": "130",
+   "aliases": [
+    "TICKET_COST"
+   ],
+   "sources": [],
+   "note": "확정 #16 — 소환 티켓 단가(마석)"
+  },
+  {
+   "name": "FREE_SUMMONS",
+   "value": "10",
+   "aliases": [
+    "FREE_SUMMONS"
+   ],
+   "sources": [],
+   "note": "확정 #17 — 최초 10회 무료 소환"
+  },
+  {
+   "name": "SOFT_PITY_START",
+   "value": "70",
+   "aliases": [
+    "SOFT_PITY_START"
+   ],
+   "sources": [],
+   "note": "확정 #32 — ★4 소프트 피티 시작 회차"
+  },
+  {
+   "name": "SOFT_PITY_STEP",
+   "value": "0.02",
+   "aliases": [
+    "SOFT_PITY_STEP"
+   ],
+   "sources": [],
+   "note": "확정 #32 — 소프트 피티 회차당 증가폭"
+  },
+  {
+   "name": "HARD_PITY_4",
+   "value": "130",
+   "aliases": [
+    "HARD_PITY_4"
+   ],
+   "sources": [],
+   "note": "확정 #32 — ★4 하드 천장"
+  },
+  {
+   "name": "HARD_PITY_5PLUS",
+   "value": "5200",
+   "aliases": [
+    "HARD_PITY_5PLUS"
+   ],
+   "sources": [],
+   "note": "확정 #32 — ★5+ 하드 천장 (★5:★6 = 5:1 교대)"
+  },
+  {
+   "name": "LEY_PER_CRYSTAL",
+   "value": "60",
+   "aliases": [
+    "LEY_PER_CRYSTAL"
+   ],
+   "sources": [],
+   "note": "D-267 — 마석 1개의 화폐(LEY) 발행액"
+  },
+  {
+   "name": "MP_PER_CRYSTAL",
+   "value": "130",
+   "aliases": [
+    "MP_PER_CRYSTAL"
+   ],
+   "sources": [],
+   "note": "D-267 — 마석 1개의 마나 환산"
+  },
+  {
+   "name": "LEVEL_CAP",
+   "value": "130",
+   "aliases": [
+    "LEVEL_CAP"
+   ],
+   "sources": [],
+   "note": "확정 #34 — 영웅 레벨 상한"
+  },
+  {
+   "name": "BASIC_HEAL_PCT",
+   "value": "0.12",
+   "aliases": [
+    "BASIC_HEAL_PCT"
+   ],
+   "sources": [],
+   "note": "기본 공격 치유 — 대상 최대 HP의 12%. 정본 없음(가안): GDD 09 §5-2 B등급 효과 기본 12%를 기준으로 잡았다"
+  },
+  {
+   "name": "BASIC_SHIELD_PCT",
+   "value": "0.15",
+   "aliases": [
+    "BASIC_SHIELD_PCT"
+   ],
+   "sources": [],
+   "note": "기본 공격 보호막 — 대상 최대 HP의 15%. 정본 없음(가안)"
+  },
+  {
+   "name": "BASIC_SHIELD_TURNS",
+   "value": "3",
+   "aliases": [
+    "BASIC_SHIELD_TURNS"
+   ],
+   "sources": [],
+   "note": "기본 공격 보호막 지속 턴. 정본 없음(가안)"
+  },
+  {
+   "name": "BASIC_TAUNT_TURNS",
+   "value": "2",
+   "aliases": [
+    "BASIC_TAUNT_TURNS"
+   ],
+   "sources": [],
+   "note": "기본 공격 도발 지속 턴. 정본 없음(가안)"
+  },
+  {
+   "name": "DECREE_CHANGE_COOLDOWN_FLOORS",
+   "value": "5",
+   "aliases": [
+    "DECREE_CHANGE_COOLDOWN_FLOORS"
+   ],
+   "sources": [],
+   "note": "04 §3.7 · ADR 0011 — 칙령 교체 쿨다운 5층. data/estate.json 의 change_cooldown_floors"
+  },
+  {
+   "name": "DECREE_OVERFLOW_GOLD_PER_POP",
+   "value": "4",
+   "aliases": [
+    "DECREE_OVERFLOW_GOLD_PER_POP"
+   ],
+   "sources": [],
+   "note": "ADR 0012 — 분배주의 상한 초과 1명당 골드 (가안). data/estate.json 의 overflow_gold_per_pop"
+  },
+  {
+   "name": "BAND_LOW",
+   "value": "0.45",
+   "aliases": [
+    "BAND_LOW"
+   ],
+   "sources": [],
+   "note": "툰 밴드 아래 문턱 — godot/game/view/view_3d/toon_shade.gd (sim 사본 없음, gacha 와 무관)"
+  },
+  {
+   "name": "BAND_HIGH",
+   "value": "0.72",
+   "aliases": [
+    "BAND_HIGH"
+   ],
+   "sources": [],
+   "note": "툰 밴드 위 문턱 — toon_shade.gd"
+  },
+  {
+   "name": "BAND_MID",
+   "value": "0.82",
+   "aliases": [
+    "BAND_MID"
+   ],
+   "sources": [],
+   "note": "툰 중간 단 배율 — toon_shade.gd"
+  },
+  {
+   "name": "BAND_FLOOR",
+   "value": "0.60",
+   "aliases": [
+    "BAND_FLOOR"
+   ],
+   "sources": [],
+   "note": "툰 그늘 바닥 — toon_shade.gd"
+  },
+  {
+   "name": "AMBIENT_FILL",
+   "value": "2.6",
+   "aliases": [
+    "AMBIENT_FILL"
+   ],
+   "sources": [],
+   "note": "툰 그늘 환경광 배율 — toon_shade.gd. 바이옴 배율(SUN_REF)이 여기에 곱해진다 (docs/art/셰이딩_조각수_선택지.md §3.11)"
+  },
+  {
+   "name": "EXPOSURE",
+   "value": "0.63",
+   "aliases": [
+    "EXPOSURE"
+   ],
+   "sources": [],
+   "note": "툰 태양 항 노출 — toon_shade.gd. 고정 화소 격자에서 두 바이옴 평균이 A 대역에 든다 (docs/art/셰이딩_조각수_선택지.md §3.11)"
+  },
+  {
+   "name": "SUN_REF",
+   "value": "0.99",
+   "aliases": [
+    "SUN_REF"
+   ],
+   "sources": [],
+   "note": "툰 바이옴 보정 기준 태양 세기(온대) — toon_shade.gd. 태양이 세면 환경광을 반비례해 깎는다 (§3.11)"
+  },
+  {
+   "name": "SUN_SCALE_MIN",
+   "value": "0.5",
+   "aliases": [
+    "SUN_SCALE_MIN"
+   ],
+   "sources": [],
+   "note": "툰 바이옴 보정 하한 — toon_shade.gd. 어둠 바이옴에서 배율이 무한정 작아지지 않게 막는다 (§3.11)"
+  },
+  {
+   "name": "SPECULAR_GAIN",
+   "value": "0.035",
+   "aliases": [
+    "SPECULAR_GAIN"
+   ],
+   "sources": [],
+   "note": "툰 넓은 광택 — 태양 색을 albedo 무관하게 더해 색을 맞춘다. toon_shade.gd. 색 오차 0.104 → 0.045 (§3.9)"
+  }
+ ]
 }

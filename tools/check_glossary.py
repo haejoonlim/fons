@@ -58,8 +58,9 @@ SURFACE_GLOBS = (
 )
 #   · GDD_이름_대조표.md — 폐기 표기를 현행과 짝지은 표. 옛 이름이 표에 있는 것이 목적이므로 뺀다.
 #   · GDD_직업_개정_대기.md — 같은 이유. 직업 표의 옛 이름을 현행과 짝지은 개정 요청 목록이다.
+#   · GDD_이름_개정_요청.md — 같은 이유. GDD 원본에 올릴 옛 이름을 줄 단위로 뽑은 목록이다.
 SURFACE_SKIP = ("/gdd/", "/gdd_개정본/", "/original/", "용어집.md", "GDD_이름_대조표.md",
-                 "GDD_직업_개정_대기.md")
+                 "GDD_직업_개정_대기.md", "GDD_이름_개정_요청.md")
 
 
 # 낱말 경계 — 정규식 `[가-힣A-Za-z]` 와 같은 문자만 본다.
@@ -98,6 +99,26 @@ def find_token(token: str, text: str, prefix: bool = False) -> bool:
         start = i + 1
 
 
+def replace_token(text: str, token: str, new: str) -> str:
+    """낱말 경계에서만 바꾼다 — `대장` 이 `대장간` 을 건드리지 않게.
+
+    `find_token` 과 같은 판정(앞뒤에 한글·라틴 문자가 없다)을 쓴다. 치환 도구 셋
+    (check_gdd_names·gdd_job_pending·gen_gdd_revised)이 모두 이 함수를 거친다.
+    """
+    out, i, n = [], 0, len(token)
+    while True:
+        j = text.find(token, i)
+        if j < 0:
+            out.append(text[i:])
+            return "".join(out)
+        end = j + n
+        bounded = (j == 0 or not word_char(text[j - 1])) and (
+            end >= len(text) or not word_char(text[end]))
+        out.append(text[i:j])
+        out.append(new if bounded else token)
+        i = end
+
+
 def present(token: str, haystack: str) -> bool:
     """표기가 정본 코퍼스에 있는가 — 이름 그대로, 또는 ID 접두 규칙으로."""
     if find_token(token, haystack):
@@ -110,8 +131,12 @@ def deprecated_re(token: str) -> re.Pattern:
     return re.compile(r"(?<!구 )(?<![가-힣A-Za-z])" + re.escape(token) + r"(?![가-힣A-Za-z])")
 
 
-def deprecated_pairs(text: str):
-    """용어집 \"폐기 표기\" 표에서 (구 표기, 현행, 근거) 를 뽑는다."""
+def deprecated_pairs(text: str, keep_doubt: bool = False):
+    """용어집 \"폐기 표기\" 표에서 (구 표기, 현행, 근거) 를 뽑는다.
+
+    `동철 주의` 가 적힌 행은 기본값에서 뺀다 — 글자가 다른 뜻으로도 쓰여 기계가
+    선별할 수 없다. `keep_doubt=True` 면 남긴다 (부르는 쪽이 `동철` 판정을 직접 한다).
+    """
     if "## 폐기 표기" not in text:
         return []
     section = text.split("## 폐기 표기", 1)[1]
@@ -122,7 +147,7 @@ def deprecated_pairs(text: str):
         if len(cells) < 2:
             continue
         why = cells[2] if len(cells) > 2 else ""
-        if "동철" in why:
+        if "동철" in why and not keep_doubt:
             continue   # 다른 뜻으로도 쓰이는 글자 — 기계가 선별할 수 없다
         for old in cells[0].split("` · `"):
             old = old.strip(" `")

@@ -1,4 +1,10 @@
-# sim/ — 소환 규칙 게이트 (에셋 없음, 표준 라이브러리만)
+# sim/ — 정적 게이트 (에셋 없음, 표준 라이브러리만)
+
+| 파일 | 무엇을 잠그는가 |
+|---|---|
+| `gacha.py` | 소환 확률표·천장·종족 롤 재현 (확정 #32·#33·#11·#16·#17) |
+| `foodweb.py` | 377종 먹이그물 구조와 26바이옴 근원자원 정합 (E-1~E-7) |
+| `ecology.py` | 12시즌 순환 모델 재현 — 원본 `audit_sim.py` 포팅 (S-1~S-7 · Godot 패리티 P-1) |
 
 ## `gacha.py` 가 하는 일
 
@@ -44,6 +50,101 @@ GATE OK: 확정 #32 확률표·#11 종족 롤 재현 (표본 200000, seed 265)
 | 확정 #32 확률표 합이 100%가 아닙니다 | `RARITY_BANDS` 를 고쳤는데 합이 100.00 이 아니다 — 밴드를 손대면 합부터 확인한다 |
 | ★N 분포가 정본 밖입니다 | 그 등급의 관측 비율이 정본에서 3시그마를 넘었다 — 확률표나 추첨 방식이 틀렸다 |
 | shaped 비율이 정본 밖입니다 | 종족 롤이 shaped 5% 계약에서 벗어났다 |
+
+## `foodweb.py` — 먹이그물 정적 감사
+
+생태계 시스템(출현·사체·분해)을 붙이기 전에 **관계 데이터가 스스로 모순되지 않는지** 잠그는 게이트다.
+읽는 곳은 `data/monsters.json`(143) · `data/ambient.json`(234) · `data/ecology_codex.json`(377) ·
+`data/biomes.json`(26) · `data/ecology_energy_channels.json`(근원자원 K·r · 채널 이름) 다섯이다.
+
+| 검사 | 계약 |
+|---|---|
+| E-1 | 종 377 = 전투 143 + 비전투 234 · id 중복 0 · 도감 총계와 일치 |
+| E-2 | `predators` 가 실존 종만 가리킨다 — `prey` 의 모르는 이름은 미등재 자원으로 보고만 한다 (08) |
+| E-3 | 쌍방 정합 — `A.prey` 에 B 가 있으면 `B.predators` 에 A 가 있다 (08 §3-6) |
+| E-4 | 고아 0 — `prey`·`predators` 가 둘 다 빈 종 (`elemental`·`mimic` 제외, 08 §2) |
+| E-5 | 순환 0 — A→B→A |
+| E-6 | 0간선 바이옴 0 |
+| E-7 | 근원자원·채널의 `biomeId` 가 `biomes.json` 의 id 와 일치 (26/26) |
+
+```bash
+./.venv/bin/python sim/foodweb.py           # 26바이옴 표 + 판정
+./.venv/bin/python sim/foodweb.py --json    # 기계용
+./.venv/bin/python sim/foodweb.py --data-dir /tmp/eco   # 검사기 자체 시험
+```
+
+**판정에 쓰지 않는 것**: 사슬 깊이(GDD 는 하한을 정하지 않았다) · 미등재 자원 이름(08 은 자원 표기라 했다).
+둘 다 표에 숫자만 낸다. **조우 편성·출현표는 이 도구가 다시 계산하지 않는다** — 런타임 규칙을 그대로 도는
+게임 쪽 도구가 정본이고, 파이썬에 두 번째 규칙을 만들면 둘이 갈라진다.
+
+### 서고 별칭 (`biome_archive` ↔ `biome_library`)
+
+`ecology_energy_channels.json` 의 근원자원·채널은 서고를 `biome_archive` 로 부르는데
+`biomes.json` 의 id 는 `biome_library` 다. 데이터가 틀린 것이 아니다 — 원본 생성기가 그 이름을 쓰고,
+`sim/center/sync_pages.py` 61-64 가 같은 별칭을 문서화한다. 06 §G2 도 "데이터 코드 `biome_library` 유지"다.
+E-7 은 이 쌍만 별칭으로 풀어 26/26 을 확인한다. **모르는 id 가 새로 생기면 실패한다** — 별칭을 늘리려면
+여기와 `sync_pages.py` 를 같이 고쳐야 한다.
+
+## `ecology.py` — 계절 순환 모델 재현 (S-1~S-7)
+
+07 §8 의 개체수 모델은 원본 저장소의 `design-docs/_tools/audit_sim.py` 가 정본이다 (원본 대조).
+이 저장소에는 포팅이 없어 "그런 규칙이 있다"만 문서에 남아 있었다. `ecology.py` 는 그 모델을
+**값을 바꾸지 않고** 옮겨, 지금 데이터에서도 같은 법칙이 도는지 검사한다.
+바이옴 K 는 `data/ecology_energy_channels.json` 의 근원자원 K — 원본 `RESOURCES` 와 26/26 같은 값임을 대조했다.
+
+```
+마르코프 P = [[0.60,0.35,0.05],[0.15,0.70,0.15],[0.05,0.35,0.60]] · 이상기후 진폭 0.4×밴드
+φ = exp(−((T−tl)/tw)²)        tl = 온도 밴드 중심 · tw = max(2, 폭/2)
+r = max(0.05, reproduction×φ)  K = max(2, Kb×(0.25+0.75φ))
+d = min(0.9, 0.05 + food_need×0.8×(1+0.4(1−φ)))
+포식 손실 = Σ aff×N_prey/(20+N_prey)   aff = 0.004 + 0.012×aggression   (Holling II)
+dN = rN(1−N/K) − 손실×N − d×N×0.2 · dt 0.05 · 400스텝/계절
+Kb = max(5, round(K×0.55/하위 종수)) · max(2, round(K×0.10/포식 종수))
+절멸 N<0.05 → 0 · 시즌 경계 25% 이주 재유입 · N ≤ 1.02K · LCG 시드
+포식 역할 = predator·hunter·ambusher·apex (guardian 은 하위층)
+```
+
+| 검사 | 계약 |
+|---|---|
+| S-1 | 마르코프 행 합 = 1 · 대각(한파·폭엔) 우세 |
+| S-2 | 10% 법칙 — 포식/먹이 K 총합 비율 0.03~0.55 (26바이옴) |
+| S-3 | LV 진폭 — 풀바다 전문 포식자(먹이 <3) 60% 이상이 진폭 ≥15% |
+| S-4 | 열성능 φ — 60% 이상 종이 계절에 5% 이상 반응 (원본과 같이 K=80 고정) |
+| S-5 | 수치 위생 — NaN·음수·절멸 임계 흡수 누락 0 (26바이옴 × 12계절) |
+| S-6 | 결정론 — 같은 시드 → 같은 궤적 |
+| S-7 | 에너지 피라미드 — 풀바다 포식자 평균 < 피식자 평균 |
+| P-1 | Godot 패리티 픽스처가 지금 계산과 같은가 (아래) |
+
+```bash
+./.venv/bin/python sim/ecology.py                 # 26바이옴 · 12계절 · 패리티 확인
+./.venv/bin/python sim/ecology.py --json          # 기계용
+./.venv/bin/python sim/ecology.py --seasons 24    # 계절 수만 늘려 보기
+./.venv/bin/python sim/ecology.py --write-fixture # Godot 패리티 픽스처 다시 뽑기
+```
+
+2026-10-26 실행 — 9검사 전부 통과. K 비율 0.07~0.50 · 풀바다 전문 포식자 11/11종 진폭 통과 ·
+계절 반응 377/409종 · 피라미드 1.33 < 6.99. `gate_all` 단계 `ecosim` 으로 등록 (약 3.5초).
+
+### Godot 런타임과 같은 궤적 (`godot/core/ecology.gd`)
+
+상수는 `data/ecology_model.json` 하나에 있고, 파이썬 게이트와 Godot 런타임이 같은 파일을 읽는다 —
+두 언어에 같은 숫자를 두 번 적지 않는다. `FonsEcology.simulate()` 는 같은 입력에 같은 계절 열을 낸다.
+
+패리티는 두 겹이다.
+
+1. `sim/ecology.py --write-fixture` 가 풀바다 6계절 궤적을 `godot/tests/fixtures/ecology_parity.json` 에 쓴다.
+2. `godot/tests/unit/test_ecology.gd` 가 그 파일과 런타임 계산을 비교한다 (상대 오차 1e-6 이하).
+
+P-1 검사가 픽스처가 낡지 않았는지 매 게이트에서 확인한다. 모델을 고쳤는데 픽스처를 안 뽑으면
+`ecosim` 이 실패하고, 픽스처만 고치고 GDScript 를 안 고치면 GUT 이 실패한다.
+**2026-10-26 실측**: 14종 × 7스냅샷 전부 차이 0 (비트 단위로 같다).
+
+**폐기한 이전 조각** — 처음에는 원본을 안 보고 `d = food_need × 배율` 로 세워 배율을 손으로 맞췄다(0.5 제안).
+원본에 그런 자유 배율은 없었다. `d` 는 φ 로 커지고 `dN` 에서 0.2 를 곱하는 고정식이다.
+그 반쪽 모델의 민감도 표(배율 1.0 이면 17/26곳 절멸)는 정본과 무관하므로 지웠다.
+
+**이 도구가 하지 않는 것**: 플레이어 사냥 압력(원본에도 식이 없다) · 원본의 나머지 검사 중
+이 저장소 데이터에 없는 것(JS 소스 존재 확인 등). 마르코프·φ 수치는 원본에서 온 것이고 우리가 고른 값이 아니다.
 
 ## GDScript 본체
 

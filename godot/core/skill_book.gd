@@ -21,14 +21,32 @@ extends RefCounted
 ## 열기는 "요즘 손에 붙었나"다. 같은 단계의 두 기술을 가르는 용도로만 쓰고 피해는 안 건드린다.
 
 const CAP := 32
-## 성장 예산 — 층마다 늘어나는 총 보유 상한(각인+융합). 40층에서 30.
+## 성장 예산 — 층마다 늘어나는 총 보유 상한(각인+융합).
+##
+## 왜 직선이 아닌가: 직선 6 + 0.55 × 층 은 48층에 32 에 닿고, 그 뒤 82층은 새 기술이
+## 하나도 안 생긴다. 130층이 실제 최대 층이므로 성장도 130층까지 이어져야 한다.
+## 그래서 40층에서 한 번 꺾는다 — 초반은 빨리, 이후는 9층에 하나씩.
+##
+##   1층 6 → 40층 22 → 49층 23 → 58층 24 → … → 121층 31 → 130층 32(상한)
+##
 ## 각인 확률만 낮추면 융합이 그 자리를 메워 상한이 그대로 찬다(2026-10-22 실측).
+## 마지막 한 칸을 130층에 두는 이유: 최대 층에서 새 기술이 나야 "끝까지 자란다"가 성립한다.
 const GROWTH_BASE := 6.0
-const GROWTH_PER_FLOOR := 0.55
+const GROWTH_KNEE_FLOOR := 40
+const GROWTH_KNEE := 22.0
+const GROWTH_END_FLOOR := 130
+const GROWTH_END := 32.0
 
 
 static func growth_limit(floor_value: int) -> int:
-	return mini(CAP, floori(GROWTH_BASE + GROWTH_PER_FLOOR * float(floor_value)))
+	var f := clampi(floor_value, 1, GROWTH_END_FLOOR)
+	var n := 0.0
+	if f <= GROWTH_KNEE_FLOOR:
+		n = GROWTH_BASE + (GROWTH_KNEE - GROWTH_BASE) * float(f - 1) / float(GROWTH_KNEE_FLOOR - 1)
+	else:
+		n = GROWTH_KNEE + (GROWTH_END - GROWTH_KNEE) * float(f - GROWTH_KNEE_FLOOR) \
+			/ float(GROWTH_END_FLOOR - GROWTH_KNEE_FLOOR)
+	return mini(CAP, floori(n))
 const MAX_STAGE := 7
 const MAX_LEVEL := 13
 const LEVEL_STEP := 13        ## 필요 XP = 13 × 현재 레벨
@@ -92,7 +110,15 @@ static func try_engrave(book: Dictionary, counters: Dictionary, catalog: Array,
 	if rng.randf() >= chance:
 		return born
 	var id := str(skill.get("id", ""))
-	book[id] = {
+	book[id] = make_entry(skill)
+	born.append(String(skill.get("name", "")))
+	return born
+
+
+static func make_entry(skill: Dictionary) -> Dictionary:
+	## 카탈로그 항목 → 스킬북 항목. 각인과 **복원**이 같은 모양을 쓴다.
+	## 복원에서 이 함수를 안 쓰면 저장에서 돌아온 스킬북과 새로 깨운 스킬북의 필드가 갈린다.
+	return {
 		"name": String(skill.get("name", "")),
 		"rarity": int(skill.get("rarity", 1)),
 		"domain": String(skill.get("domain", "")),
@@ -106,8 +132,6 @@ static func try_engrave(book: Dictionary, counters: Dictionary, catalog: Array,
 		"xp": 0,
 		"heat": HEAT_START,
 	}
-	born.append(String(skill.get("name", "")))
-	return born
 
 
 static func _preferred(pool: Array, domain_weight: Dictionary) -> Dictionary:

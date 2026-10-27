@@ -63,6 +63,22 @@ func test_data_hero_can_clear_floor_one() -> void:
 	assert_true(heroes[0]["alive"], "영웅은 살아 있어야 한다")
 
 
+func test_deep_blocks_are_winnable_with_floor_level_party() -> void:
+	# 2026-10-23 로스터 보강의 수용 기준 — 76·81·96층이 그 층대 레벨(round(층×1.3)) 파티로 뚫린다.
+	# 보강 전에는 세 층 모두 0승이었고, 81~85 는 이웃 블록 tier 4 로만 채워졌다.
+	var races: Dictionary = DataLoader.load_json("races.json")
+	var tree: Dictionary = DataLoader.load_json("job_tree.json")
+	var gear: Dictionary = DataLoader.load_json("equipment.json")
+	var coef: Dictionary = DataLoader.load_json("job_coef.json")
+	for floor in [76, 81, 96]:
+		var level := int(roundf(float(floor) * 1.3))
+		var heroes := FonsRunState.heroes_from(races, tree, gear, 5, level, floor, coef)
+		var out := FonsFloorRun.simulate(_rng(floor), DataLoader.get_monsters(),
+			DataLoader.get_biomes(), floor, 0, heroes)
+		assert_eq(String(out["winner"]), "ally",
+			"%d층(Lv%d) 이 뚫려야 한다 — 패배하면 보강이 되돌아간 것이다" % [floor, level])
+
+
 func test_run_reaches_a_winner() -> void:
 	var built := FonsFloorRun.build(DataLoader.get_monsters(), DataLoader.get_biomes(), 1, 0)
 	var heroes := [_hero("영웅", 100000, 99999.0)]
@@ -136,11 +152,27 @@ func test_every_floor_run_terminates() -> void:
 		var heroes := [_hero("성좌기사", 12000, 700.0, 120.0), _hero("수도사", 9000, 600.0, 90.0)]
 		var out := FonsFloorRun.simulate(_rng(floor), DataLoader.get_monsters(), DataLoader.get_biomes(),
 			floor, 0, heroes)
-		assert_true(out["turns"] >= 1 and out["turns"] <= FonsFloorRun.MAX_TURNS,
-			"%d층 턴 수 %d" % [floor, out["turns"]])
-		assert_true(String(out["winner"]) in ["ally", "enemy", "draw"], "%d층 판정" % floor)
+		if String(out["winner"]) == "none":
+			# 일반 조우가 없는 층(이데아 문턱) — 판이 성립하지 않으므로 턴도 0 이다.
+			assert_eq(int(out["turns"]), 0, "%d층 면제는 턴 0" % floor)
+			assert_eq(int(out["party_size"]), 0, "%d층 적 0" % floor)
+		else:
+			assert_true(out["turns"] >= 1 and out["turns"] <= FonsFloorRun.MAX_TURNS,
+				"%d층 턴 수 %d" % [floor, out["turns"]])
+			assert_true(String(out["winner"]) in ["ally", "enemy", "draw"], "%d층 판정" % floor)
 		winners[out["winner"]] = int(winners.get(out["winner"], 0)) + 1
-	assert_eq(int(winners.get("ally", 0)) + int(winners.get("enemy", 0)) + int(winners.get("draw", 0)), 130)
+	assert_eq(int(winners.get("ally", 0)) + int(winners.get("enemy", 0)) + int(winners.get("draw", 0)) \
+		+ int(winners.get("none", 0)), 130)
+
+
+func test_combatless_floor_is_exempt_not_a_win() -> void:
+	## 126~130 은 일반 조우가 없다 — 빈 편성을 승리로 세면 승률표가 거짓말을 한다.
+	var heroes := [_hero("성좌기사", 12000, 700.0, 120.0)]
+	var out := FonsFloorRun.simulate(_rng(128), DataLoader.get_monsters(),
+		DataLoader.get_biomes(), 128, 0, heroes)
+	assert_eq(String(out["winner"]), "none", "면제 판정")
+	assert_eq(int(out["party_size"]), 0)
+	assert_true(heroes[0]["alive"], "싸우지 않았으니 영웅도 그대로다")
 
 
 func test_band_win_rate_never_rises_with_depth() -> void:
@@ -199,3 +231,7 @@ func test_gatekeeper_build_is_one_boss_and_empty_elsewhere() -> void:
 	var none := FonsFloorRun.build_gatekeeper(DataLoader.get_monsters(), DataLoader.get_biomes(), 6)
 	assert_eq(none["party"].size(), 0, "6층에는 문지기가 없다")
 	assert_eq(none["gatekeeper"], "")
+	# 130층은 문지기가 둘 걸린다 — 편성도 바이옴 정본(무문의 파수병)을 따라야 한다.
+	var idea := FonsFloorRun.build_gatekeeper(DataLoader.get_monsters(), DataLoader.get_biomes(), 130)
+	assert_eq(idea["gatekeeper"], "무문의 파수병")
+	assert_eq(idea["party"].size(), 1)

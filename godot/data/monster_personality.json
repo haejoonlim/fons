@@ -3,44 +3,228 @@
   "source": "monsters.json",
   "generated": "2026-09-21",
   "schema": "CombatPersona v2 · 캐릭터AI_성격_지능 §4·§6 + 생태연동 §3 (preyIds·preyResources·activity)",
-  "count": 138,
-  "note": "2026-10-18 — 저층 사육 마물 4종 추가 (장수풍뎅이, 숲 사슴벌레, 독벌, 까마귀, 슬라임(블루)). 저작: sim/center/sims/gen_husbandry_roster.py · 근거: docs/design/저층_사육_마물_근거.md"
+  "count": 162,
+  "note": "2026-10-26 — 먹이층 0인 17바이옴 승격 19종 추가 (설계: docs/design 피식자 보강 설계 · 생성기: 승격 로스터)"
  },
  "personas": [
   {
-   "id": "mon_lich_01",
-   "name": "리치",
-   "aggression": 0.8,
+   "id": "mon_aasimar_01",
+   "name": "성광심판관",
+   "aggression": 0.4,
+   "territoriality": 0.6,
+   "sociality": 0.5,
+   "fear": 0.15,
+   "vengeance": 0.53,
+   "allyPriority": 0.75,
+   "intelligence": 0.693,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [
+    "mana"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_archgolem_01",
+   "name": "서고 골렘",
+   "aggression": 0.9,
    "territoriality": 0.9,
-   "sociality": 0.2,
-   "fear": 0.3,
-   "vengeance": 0.6,
-   "allyPriority": 0.6,
-   "intelligence": 1.0,
-   "band": "X2",
+   "sociality": 0.3,
+   "fear": 0.15,
+   "vengeance": 0.5,
+   "allyPriority": 0.65,
+   "intelligence": 0.534,
+   "band": "N",
    "preyIds": [
-    "mon_slime_black_01"
+    "mon_inkworm_01"
    ],
    "preyResources": [
-    "soul",
-    "mana"
+    "먹광",
+    "detritus"
+   ],
+   "activity": "crepuscular"
+  },
+  {
+   "id": "mon_ashbloom_01",
+   "name": "잿빛화관",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.673,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [
+    "열조류"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_ashfly_01",
+   "name": "재 파리떼",
+   "aggression": 0.6,
+   "territoriality": 0.8,
+   "sociality": 0.95,
+   "fear": 0.4,
+   "vengeance": 0.5,
+   "allyPriority": 0.7,
+   "intelligence": 0.14,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "열조류"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_ashland_01",
+   "name": "요흔사슴",
+   "aggression": 0.2,
+   "territoriality": 0.3,
+   "sociality": 0.9,
+   "fear": 0.75,
+   "vengeance": 0.05,
+   "allyPriority": 0.65,
+   "intelligence": 0.24,
+   "band": "T2",
+   "preyIds": [],
+   "preyResources": [
+    "corpse",
+    "재"
    ],
    "activity": "nocturnal"
   },
   {
-   "id": "mon_storm_giant_01",
-   "name": "폭풍거인",
-   "aggression": 0.6,
-   "territoriality": 0.9,
+   "id": "mon_ashmoth_01",
+   "name": "잿불나방",
+   "aggression": 0.7,
+   "territoriality": 0.7,
    "sociality": 0.3,
-   "fear": 0.3,
-   "vengeance": 0.65,
+   "fear": 0.35,
+   "vengeance": 0.4,
    "allyPriority": 0.65,
-   "intelligence": 0.96,
-   "band": "X2",
+   "intelligence": 0.557,
+   "band": "S1",
    "preyIds": [],
    "preyResources": [
-    "mana"
+    "열조류"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_backworm_01",
+   "name": "배수충",
+   "aggression": 0.6,
+   "territoriality": 0.8,
+   "sociality": 0.95,
+   "fear": 0.45,
+   "vengeance": 0.05,
+   "allyPriority": 0.95,
+   "intelligence": 0.03,
+   "band": "T2",
+   "preyIds": [],
+   "preyResources": [
+    "슬러지",
+    "organic_waste"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_balrog_01",
+   "name": "발록",
+   "aggression": 0.95,
+   "territoriality": 1.0,
+   "sociality": 0.1,
+   "fear": 0.3,
+   "vengeance": 0.6,
+   "allyPriority": 0.55,
+   "intelligence": 0.863,
+   "band": "X1",
+   "preyIds": [
+    "mon_imp_01",
+    "mon_brimstonefly_01",
+    "mon_lesser_demon_01",
+    "mon_hell_hound_01"
+   ],
+   "preyResources": [],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_banshee_01",
+   "name": "밴시",
+   "aggression": 0.6,
+   "territoriality": 0.5,
+   "sociality": 0.2,
+   "fear": 0.2,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.273,
+   "band": "T2",
+   "preyIds": [],
+   "preyResources": [
+    "soul"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_bear_01",
+   "name": "곰",
+   "aggression": 0.5,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.38,
+   "allyPriority": 0.65,
+   "intelligence": 0.429,
+   "band": "N",
+   "preyIds": [
+    "mon_boar_01",
+    "mon_bugbear_01",
+    "mon_bee_01",
+    "mon_beetle_01"
+   ],
+   "preyResources": [],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_bee_01",
+   "name": "독벌",
+   "aggression": 0.3,
+   "territoriality": 0.8,
+   "sociality": 0.95,
+   "fear": 0.3,
+   "vengeance": 0.4,
+   "allyPriority": 0.9,
+   "intelligence": 0.191,
+   "band": "T1",
+   "preyIds": [
+    "mon_moth_01"
+   ],
+   "preyResources": [
+    "corpse",
+    "nectar",
+    "flowers"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_beetle_01",
+   "name": "장수풍뎅이",
+   "aggression": 0.3,
+   "territoriality": 0.4,
+   "sociality": 0.6,
+   "fear": 0.5,
+   "vengeance": 0.1,
+   "allyPriority": 0.7,
+   "intelligence": 0.082,
+   "band": "T1",
+   "preyIds": [],
+   "preyResources": [
+    "corpse",
+    "rotten_wood",
+    "detritus"
    ],
    "activity": "diurnal"
   },
@@ -65,467 +249,75 @@
    "activity": "nocturnal"
   },
   {
-   "id": "mon_dire_bear_01",
-   "name": "산곰",
-   "aggression": 0.7,
-   "territoriality": 0.9,
-   "sociality": 0.2,
-   "fear": 0.3,
-   "vengeance": 0.65,
-   "allyPriority": 0.6,
-   "intelligence": 0.942,
-   "band": "X2",
-   "preyIds": [
-    "mon_bear_01",
-    "mon_wolf_01",
-    "mon_rockmoss_01"
+   "id": "mon_boar_01",
+   "name": "멧돼지",
+   "aggression": 0.3,
+   "territoriality": 0.4,
+   "sociality": 0.5,
+   "fear": 0.85,
+   "vengeance": 0.05,
+   "allyPriority": 0.75,
+   "intelligence": 0.185,
+   "band": "T1",
+   "preyIds": [],
+   "preyResources": [
+    "grass",
+    "roots"
    ],
-   "preyResources": [],
    "activity": "diurnal"
   },
   {
-   "id": "mon_kraken_tentacle_01",
-   "name": "심연크라켄",
-   "aggression": 0.9,
-   "territoriality": 1.0,
-   "sociality": 0.1,
-   "fear": 0.3,
-   "vengeance": 0.65,
+   "id": "mon_borderfly_01",
+   "name": "경계눈박이",
+   "aggression": 0.2,
+   "territoriality": 0.3,
+   "sociality": 0.9,
+   "fear": 0.6,
+   "vengeance": 0.1,
    "allyPriority": 0.55,
-   "intelligence": 0.935,
-   "band": "X2",
-   "preyIds": [
-    "mon_sea_serpent_01",
-    "mon_jellyfish_01",
-    "mon_crab_01"
-   ],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_dracolich_01",
-   "name": "드라코리치",
-   "aggression": 0.95,
-   "territoriality": 1.0,
-   "sociality": 0.1,
-   "fear": 0.3,
-   "vengeance": 0.6,
-   "allyPriority": 0.55,
-   "intelligence": 0.929,
-   "band": "X1",
-   "preyIds": [
-    "mon_stardust_01",
-    "mon_astralhawk_01"
-   ],
-   "preyResources": [],
-   "activity": "nocturnal"
-  },
-  {
-   "id": "mon_idealis_01",
-   "name": "이데아수문장",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.3,
-   "vengeance": 0.6,
-   "allyPriority": 0.65,
-   "intelligence": 0.926,
-   "band": "X1",
+   "intelligence": 0.3,
+   "band": "T2",
    "preyIds": [],
    "preyResources": [
-    "soul"
+    "몸통",
+    "insects"
    ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_leviathan_01",
-   "name": "레비아탄",
-   "aggression": 0.9,
-   "territoriality": 1.0,
-   "sociality": 0.05,
-   "fear": 0.3,
-   "vengeance": 0.65,
-   "allyPriority": 0.525,
-   "intelligence": 0.912,
-   "band": "X1",
-   "preyIds": [
-    "mon_kraken_tentacle_01",
-    "mon_sea_serpent_01",
-    "mon_jellyfish_01",
-    "mon_voidworm_01"
-   ],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_troll_01",
-   "name": "트롤",
-   "aggression": 0.9,
-   "territoriality": 0.9,
-   "sociality": 0.3,
-   "fear": 0.3,
-   "vengeance": 0.65,
-   "allyPriority": 0.65,
-   "intelligence": 0.91,
-   "band": "X1",
-   "preyIds": [
-    "mon_bear_01",
-    "mon_ogre_01",
-    "mon_wolf_01",
-    "mon_dire_wolf_01",
-    "mon_dire_boar_01"
-   ],
-   "preyResources": [],
-   "activity": "crepuscular"
-  },
-  {
-   "id": "mon_balrog_01",
-   "name": "발록",
-   "aggression": 0.95,
-   "territoriality": 1.0,
-   "sociality": 0.1,
-   "fear": 0.3,
-   "vengeance": 0.6,
-   "allyPriority": 0.55,
-   "intelligence": 0.863,
-   "band": "X1",
-   "preyIds": [
-    "mon_imp_01",
-    "mon_brimstonefly_01",
-    "mon_lesser_demon_01",
-    "mon_hell_hound_01"
-   ],
-   "preyResources": [],
    "activity": "nocturnal"
   },
   {
-   "id": "mon_lycanthrope_01",
-   "name": "라이칸슬로프",
-   "aggression": 0.9,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.3,
-   "vengeance": 0.65,
-   "allyPriority": 0.65,
-   "intelligence": 0.857,
-   "band": "X1",
+   "id": "mon_bugbear_01",
+   "name": "버그베어",
+   "aggression": 0.8,
+   "territoriality": 0.7,
+   "sociality": 0.4,
+   "fear": 0.25,
+   "vengeance": 0.6,
+   "allyPriority": 0.7,
+   "intelligence": 0.601,
+   "band": "S1",
    "preyIds": [
+    "mon_goblin_01",
     "mon_wolf_01"
    ],
    "preyResources": [],
    "activity": "nocturnal"
   },
   {
-   "id": "mon_spider_queen_01",
-   "name": "거미 여왕",
-   "aggression": 0.8,
-   "territoriality": 0.9,
-   "sociality": 0.4,
+   "id": "mon_cirruskite_01",
+   "name": "구름표범",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
    "fear": 0.3,
-   "vengeance": 0.65,
-   "allyPriority": 0.7,
-   "intelligence": 0.845,
-   "band": "S2",
+   "vengeance": 0.45,
+   "allyPriority": 0.65,
+   "intelligence": 0.504,
+   "band": "N",
    "preyIds": [
-    "mon_giant_spider_01",
-    "mon_kobold_01",
-    "mon_dustbug_01",
-    "mon_rat_01"
-   ],
-   "preyResources": [],
-   "activity": "nocturnal"
-  },
-  {
-   "id": "mon_doppelganger_01",
-   "name": "도플갱어",
-   "aggression": 0.6,
-   "territoriality": 0.5,
-   "sociality": 0.3,
-   "fear": 0.4,
-   "vengeance": 0.55,
-   "allyPriority": 0.65,
-   "intelligence": 0.805,
-   "band": "S2",
-   "preyIds": [
-    "mon_goblin_01",
-    "mon_alleyrat_01"
-   ],
-   "preyResources": [],
-   "activity": "nocturnal"
-  },
-  {
-   "id": "mon_glasscutter_01",
-   "name": "백열파수꾼",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.15,
-   "vengeance": 0.55,
-   "allyPriority": 0.65,
-   "intelligence": 0.756,
-   "band": "S2",
-   "preyIds": [],
-   "preyResources": [
-    "유리 모래 규조"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_crystalsentinel_01",
-   "name": "수정거미",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.15,
-   "vengeance": 0.55,
-   "allyPriority": 0.65,
-   "intelligence": 0.734,
-   "band": "S2",
-   "preyIds": [],
-   "preyResources": [
-    "수정 수액"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_junglesentinel_01",
-   "name": "밀림부엉이",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.15,
-   "vengeance": 0.55,
-   "allyPriority": 0.65,
-   "intelligence": 0.732,
-   "band": "S2",
-   "preyIds": [
-    "mon_vinepython_01"
+    "mon_stormhawk_01"
    ],
    "preyResources": [
-    "과실·수액"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_silenceking_01",
-   "name": "침묵의 군주",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.15,
-   "vengeance": 0.55,
-   "allyPriority": 0.65,
-   "intelligence": 0.728,
-   "band": "S2",
-   "preyIds": [],
-   "preyResources": [
-    "고원 표토 이끼"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_dreadnought_01",
-   "name": "드레드노트",
-   "aggression": 0.7,
-   "territoriality": 0.9,
-   "sociality": 0.2,
-   "fear": 0.15,
-   "vengeance": 0.5,
-   "allyPriority": 0.6,
-   "intelligence": 0.724,
-   "band": "S2",
-   "preyIds": [],
-   "preyResources": [
-    "mana"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_ideavigil_01",
-   "name": "이데아거울나비",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.15,
-   "vengeance": 0.5,
-   "allyPriority": 0.65,
-   "intelligence": 0.72,
-   "band": "S2",
-   "preyIds": [],
-   "preyResources": [
-    "빛결 잔향"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_debtavatar_01",
-   "name": "장부군주",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.15,
-   "vengeance": 0.55,
-   "allyPriority": 0.65,
-   "intelligence": 0.702,
-   "band": "S2",
-   "preyIds": [],
-   "preyResources": [
-    "중력 먼지"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_thresholdswift_01",
-   "name": "이음새벌레",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.697,
-   "band": "S1",
-   "preyIds": [
-    "mon_whitelviper_01"
-   ],
-   "preyResources": [
-    "mana"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_aasimar_01",
-   "name": "성광심판관",
-   "aggression": 0.4,
-   "territoriality": 0.6,
-   "sociality": 0.5,
-   "fear": 0.15,
-   "vengeance": 0.53,
-   "allyPriority": 0.75,
-   "intelligence": 0.693,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [
-    "mana"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_glaciermaw_01",
-   "name": "빙하 이빨",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.683,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [
-    "얼음 밑 플랑크톤"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_templeward_01",
-   "name": "신전 파수 이끼",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.15,
-   "vengeance": 0.55,
-   "allyPriority": 0.65,
-   "intelligence": 0.682,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [
-    "성수 이슬"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_ashbloom_01",
-   "name": "잿빛화관",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.673,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [
-    "열조류"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_crystalking_01",
-   "name": "결정 수호자·수정 나무 왕",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.15,
-   "vengeance": 0.55,
-   "allyPriority": 0.65,
-   "intelligence": 0.673,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [
-    "수정 수액"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_void_03",
-   "name": "무상정령왕",
-   "aggression": 0.6,
-   "territoriality": 0.8,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.667,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_swampknight_01",
-   "name": "늪지기사",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.15,
-   "vengeance": 0.55,
-   "allyPriority": 0.65,
-   "intelligence": 0.666,
-   "band": "S1",
-   "preyIds": [
-    "mon_frog_01"
-   ],
-   "preyResources": [
-    "수생식물"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_guardian_spirit_01",
-   "name": "수호령",
-   "aggression": 0.3,
-   "territoriality": 0.9,
-   "sociality": 0.2,
-   "fear": 0.15,
-   "vengeance": 0.5,
-   "allyPriority": 0.6,
-   "intelligence": 0.653,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [
-    "mana"
+    "바람씨앗"
    ],
    "activity": "always"
   },
@@ -549,21 +341,420 @@
    "activity": "always"
   },
   {
-   "id": "mon_glassmonk_01",
-   "name": "유리승려",
+   "id": "mon_citypigeon_01",
+   "name": "도시비둘기",
+   "aggression": 0.05,
+   "territoriality": 0.1,
+   "sociality": 0.6,
+   "fear": 0.85,
+   "vengeance": 0.02,
+   "allyPriority": 0.6,
+   "intelligence": 0.2,
+   "band": "T1",
+   "preyIds": [],
+   "preyResources": [
+    "시장 잔반"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_cookiewraith_01",
+   "name": "절삭 망령",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.548,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "보이드 이슬"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_creviceech_01",
+   "name": "틈새우레지",
+   "aggression": 0.2,
+   "territoriality": 0.3,
+   "sociality": 0.9,
+   "fear": 0.65,
+   "vengeance": 0.1,
+   "allyPriority": 0.5,
+   "intelligence": 0.12,
+   "band": "T2",
+   "preyIds": [],
+   "preyResources": [
+    "열수 미네랄",
+    "detritus"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_crow_01",
+   "name": "까마귀",
+   "aggression": 0.3,
+   "territoriality": 0.4,
+   "sociality": 0.8,
+   "fear": 0.3,
+   "vengeance": 0.45,
+   "allyPriority": 0.85,
+   "intelligence": 0.617,
+   "band": "T1",
+   "preyIds": [
+    "mon_rabbit_01",
+    "mon_rat_01",
+    "mon_tombworm_01",
+    "mon_graverat_01"
+   ],
+   "preyResources": [
+    "corpse",
+    "organic_waste"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_cryoshard_01",
+   "name": "결로파편체",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.489,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "수정 수액"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_crystaldeer_01",
+   "name": "수정노루",
+   "aggression": 0.2,
+   "territoriality": 0.3,
+   "sociality": 0.9,
+   "fear": 0.75,
+   "vengeance": 0.05,
+   "allyPriority": 0.6,
+   "intelligence": 0.2,
+   "band": "T2",
+   "preyIds": [],
+   "preyResources": [
+    "수정 수액"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_crystalking_01",
+   "name": "수정나무왕",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.15,
+   "vengeance": 0.55,
+   "allyPriority": 0.65,
+   "intelligence": 0.673,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [
+    "수정 수액"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_crystalsentinel_01",
+   "name": "수정거미",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.15,
+   "vengeance": 0.55,
+   "allyPriority": 0.65,
+   "intelligence": 0.734,
+   "band": "S2",
+   "preyIds": [],
+   "preyResources": [
+    "수정 수액"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_debtavatar_01",
+   "name": "장부군주",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.15,
+   "vengeance": 0.55,
+   "allyPriority": 0.65,
+   "intelligence": 0.702,
+   "band": "S2",
+   "preyIds": [],
+   "preyResources": [
+    "중력 먼지"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_deeplurker_01",
+   "name": "발광아귀",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.533,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "열수 분출구 미네랄"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_dire_bear_01",
+   "name": "산곰",
+   "aggression": 0.7,
+   "territoriality": 0.9,
+   "sociality": 0.2,
+   "fear": 0.3,
+   "vengeance": 0.65,
+   "allyPriority": 0.6,
+   "intelligence": 0.942,
+   "band": "X2",
+   "preyIds": [
+    "mon_bear_01",
+    "mon_wolf_01",
+    "mon_rockmoss_01"
+   ],
+   "preyResources": [],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_dire_boar_01",
+   "name": "들멧돼지",
+   "aggression": 0.5,
+   "territoriality": 0.5,
+   "sociality": 0.5,
+   "fear": 0.85,
+   "vengeance": 0.05,
+   "allyPriority": 0.75,
+   "intelligence": 0.224,
+   "band": "T2",
+   "preyIds": [],
+   "preyResources": [
+    "grass",
+    "roots"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_dire_wolf_01",
+   "name": "숲늑대",
+   "aggression": 0.8,
+   "territoriality": 0.8,
+   "sociality": 0.7,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.85,
+   "intelligence": 0.407,
+   "band": "N",
+   "preyIds": [
+    "mon_wolf_01",
+    "mon_bear_01",
+    "mon_dire_boar_01",
+    "mon_beetle_01"
+   ],
+   "preyResources": [],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_doppelganger_01",
+   "name": "도플갱어",
+   "aggression": 0.6,
+   "territoriality": 0.5,
+   "sociality": 0.3,
+   "fear": 0.4,
+   "vengeance": 0.55,
+   "allyPriority": 0.65,
+   "intelligence": 0.805,
+   "band": "S2",
+   "preyIds": [
+    "mon_goblin_01",
+    "mon_alleyrat_01"
+   ],
+   "preyResources": [],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_dracolich_01",
+   "name": "드라코리치",
+   "aggression": 0.95,
+   "territoriality": 1.0,
+   "sociality": 0.1,
+   "fear": 0.3,
+   "vengeance": 0.6,
+   "allyPriority": 0.55,
+   "intelligence": 0.929,
+   "band": "X1",
+   "preyIds": [
+    "mon_stardust_01",
+    "mon_astralhawk_01"
+   ],
+   "preyResources": [],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_dreadnought_01",
+   "name": "드레드노트",
+   "aggression": 0.7,
+   "territoriality": 0.9,
+   "sociality": 0.2,
+   "fear": 0.15,
+   "vengeance": 0.5,
+   "allyPriority": 0.6,
+   "intelligence": 0.724,
+   "band": "S2",
+   "preyIds": [],
+   "preyResources": [
+    "mana"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_driftvulture_01",
+   "name": "표류수리",
    "aggression": 0.7,
    "territoriality": 0.8,
    "sociality": 0.3,
-   "fear": 0.15,
-   "vengeance": 0.5,
+   "fear": 0.6,
+   "vengeance": 0.15,
    "allyPriority": 0.65,
-   "intelligence": 0.651,
-   "band": "S1",
+   "intelligence": 0.153,
+   "band": "T1",
    "preyIds": [
-    "mon_glassgrub_01"
+    "mon_reefstar_01",
+    "mon_sanddart_01"
    ],
    "preyResources": [
-    "유리 모래 규조"
+    "corpse",
+    "organic_waste"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_dunewalker_01",
+   "name": "모래표범",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.497,
+   "band": "N",
+   "preyIds": [
+    "mon_boar_01"
+   ],
+   "preyResources": [
+    "선인장",
+    "과실"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_dunewasp_01",
+   "name": "사막말벌",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.55,
+   "vengeance": 0.0,
+   "allyPriority": 0.65,
+   "intelligence": 0.013,
+   "band": "T1",
+   "preyIds": [
+    "mon_dunefox_01"
+   ],
+   "preyResources": [
+    "꽃"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_foreststagbeetle_01",
+   "name": "숲 사슴벌레",
+   "aggression": 0.3,
+   "territoriality": 0.5,
+   "sociality": 0.6,
+   "fear": 0.45,
+   "vengeance": 0.15,
+   "allyPriority": 0.7,
+   "intelligence": 0.114,
+   "band": "T1",
+   "preyIds": [],
+   "preyResources": [
+    "corpse",
+    "rotten_wood"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_frog_01",
+   "name": "개구리",
+   "aggression": 0.1,
+   "territoriality": 0.2,
+   "sociality": 0.4,
+   "fear": 0.85,
+   "vengeance": 0.02,
+   "allyPriority": 0.5,
+   "intelligence": 0.15,
+   "band": "T2",
+   "preyIds": [
+    "mon_rat_01"
+   ],
+   "preyResources": [
+    "insects"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_frostlure_01",
+   "name": "서리등벌레",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.452,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "얼음 밑 플랑크톤"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_frostmothswarm_01",
+   "name": "서리 나방떼",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.597,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [
+    "얼음 밑 플랑크톤"
    ],
    "activity": "always"
   },
@@ -585,6 +776,244 @@
    "activity": "always"
   },
   {
+   "id": "mon_gateherald_01",
+   "name": "관문까마귀",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.35,
+   "allyPriority": 0.65,
+   "intelligence": 0.531,
+   "band": "N",
+   "preyIds": [
+    "mon_watchwyrm_01"
+   ],
+   "preyResources": [
+    "soul"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_giant_ant_01",
+   "name": "둑개미",
+   "aggression": 0.5,
+   "territoriality": 0.8,
+   "sociality": 0.95,
+   "fear": 0.55,
+   "vengeance": 0.03,
+   "allyPriority": 0.975,
+   "intelligence": 0.04,
+   "band": "T1",
+   "preyIds": [],
+   "preyResources": [
+    "plants",
+    "insects"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_giant_spider_01",
+   "name": "굴거미",
+   "aggression": 0.7,
+   "territoriality": 0.6,
+   "sociality": 0.3,
+   "fear": 0.25,
+   "vengeance": 0.6,
+   "allyPriority": 0.65,
+   "intelligence": 0.573,
+   "band": "S1",
+   "preyIds": [
+    "mon_kobold_01",
+    "mon_giant_ant_01",
+    "mon_moth_01",
+    "mon_cavefirefly_01"
+   ],
+   "preyResources": [],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_glaciaribou_01",
+   "name": "얼음사슴",
+   "aggression": 0.2,
+   "territoriality": 0.3,
+   "sociality": 0.9,
+   "fear": 0.8,
+   "vengeance": 0.03,
+   "allyPriority": 0.7,
+   "intelligence": 0.22,
+   "band": "T2",
+   "preyIds": [],
+   "preyResources": [
+    "얼음 밑 플랑크톤"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_glaciermaw_01",
+   "name": "빙하 이빨",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.683,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [
+    "얼음 밑 플랑크톤"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_glasscutter_01",
+   "name": "백열파수꾼",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.15,
+   "vengeance": 0.55,
+   "allyPriority": 0.65,
+   "intelligence": 0.756,
+   "band": "S2",
+   "preyIds": [],
+   "preyResources": [
+    "유리 모래 규조"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_glasslizard_01",
+   "name": "유리 도마뱀",
+   "aggression": 0.2,
+   "territoriality": 0.3,
+   "sociality": 0.9,
+   "fear": 0.7,
+   "vengeance": 0.08,
+   "allyPriority": 0.4,
+   "intelligence": 0.18,
+   "band": "T2",
+   "preyIds": [
+    "mon_glassdiatom_01",
+    "mon_glassmoss_01"
+   ],
+   "preyResources": [
+    "유리 모래 규조"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_glassmonk_01",
+   "name": "유리승려",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.15,
+   "vengeance": 0.5,
+   "allyPriority": 0.65,
+   "intelligence": 0.651,
+   "band": "S1",
+   "preyIds": [
+    "mon_glassgrub_01"
+   ],
+   "preyResources": [
+    "유리 모래 규조"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_glassrefract_01",
+   "name": "굴절망령",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.556,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [
+    "유리 모래 규조"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_glassswarm_01",
+   "name": "유리 규각 군체",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.478,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "유리 모래 규조"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_goblin_01",
+   "name": "고블린",
+   "aggression": 0.6,
+   "territoriality": 0.4,
+   "sociality": 0.8,
+   "fear": 0.6,
+   "vengeance": 0.13,
+   "allyPriority": 0.9,
+   "intelligence": 0.274,
+   "band": "T2",
+   "preyIds": [
+    "mon_slime_green_01",
+    "mon_kobold_01",
+    "mon_ruinbeetle_01"
+   ],
+   "preyResources": [
+    "corpse"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_graveknight_01",
+   "name": "묘비파수꾼",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.2,
+   "vengeance": 0.3,
+   "allyPriority": 0.65,
+   "intelligence": 0.264,
+   "band": "T2",
+   "preyIds": [
+    "mon_skeleton_01"
+   ],
+   "preyResources": [
+    "soul"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_gravityworm_01",
+   "name": "천창 중력 벌레",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.481,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "중력 먼지"
+   ],
+   "activity": "always"
+  },
+  {
    "id": "mon_grieyer_01",
    "name": "어긋난 눈",
    "aggression": 0.7,
@@ -602,70 +1031,167 @@
    "activity": "always"
   },
   {
-   "id": "mon_ridgewarden_01",
-   "name": "설선염소",
+   "id": "mon_guanoqueen_01",
+   "name": "회로 여왕",
    "aggression": 0.7,
-   "territoriality": 0.8,
+   "territoriality": 0.7,
    "sociality": 0.3,
-   "fear": 0.15,
-   "vengeance": 0.55,
+   "fear": 0.35,
+   "vengeance": 0.4,
    "allyPriority": 0.65,
-   "intelligence": 0.644,
-   "band": "S1",
-   "preyIds": [
-    "mon_dire_bear_01"
-   ],
+   "intelligence": 0.517,
+   "band": "N",
+   "preyIds": [],
    "preyResources": [
-    "몸통"
+    "슬러지"
    ],
    "activity": "always"
   },
   {
-   "id": "mon_mindflayer_01",
-   "name": "마인드 플레이어",
-   "aggression": 0.8,
-   "territoriality": 0.8,
-   "sociality": 0.5,
+   "id": "mon_guanoswarm_01",
+   "name": "회로 박쥐떼",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
    "fear": 0.35,
-   "vengeance": 0.35,
-   "allyPriority": 0.75,
-   "intelligence": 0.631,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.508,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "슬러지"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_guardian_spirit_01",
+   "name": "수호령",
+   "aggression": 0.3,
+   "territoriality": 0.9,
+   "sociality": 0.2,
+   "fear": 0.15,
+   "vengeance": 0.5,
+   "allyPriority": 0.6,
+   "intelligence": 0.653,
    "band": "S1",
+   "preyIds": [],
+   "preyResources": [
+    "mana"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_hell_hound_01",
+   "name": "지옥사냥개",
+   "aggression": 0.9,
+   "territoriality": 0.8,
+   "sociality": 0.6,
+   "fear": 0.3,
+   "vengeance": 0.45,
+   "allyPriority": 0.8,
+   "intelligence": 0.504,
+   "band": "N",
    "preyIds": [
-    "mon_goblin_01",
-    "mon_kobold_01",
-    "mon_citypigeon_01",
-    "mon_alleyrat_01"
+    "mon_wolf_01",
+    "mon_imp_01",
+    "mon_fireberry_01",
+    "mon_flameworm_01",
+    "mon_ashfly_01",
+    "mon_ashland_01",
+    "mon_ironfist_01"
    ],
    "preyResources": [],
    "activity": "nocturnal"
   },
   {
-   "id": "mon_spirit_water_02",
-   "name": "물결대정령",
-   "aggression": 0.6,
-   "territoriality": 0.7,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.624,
+   "id": "mon_hellarchon_01",
+   "name": "지옥사제",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.35,
+   "allyPriority": 0.65,
+   "intelligence": 0.607,
    "band": "S1",
-   "preyIds": [],
-   "preyResources": [],
+   "preyIds": [
+    "mon_pyrewisp_01"
+   ],
+   "preyResources": [
+    "mana"
+   ],
    "activity": "always"
   },
   {
-   "id": "mon_nullsentinel_01",
-   "name": "무문의 파수병",
+   "id": "mon_heronshrike_01",
+   "name": "물수제비 매",
    "aggression": 0.7,
-   "territoriality": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.3,
+   "vengeance": 0.45,
+   "allyPriority": 0.65,
+   "intelligence": 0.413,
+   "band": "N",
+   "preyIds": [
+    "mon_sardine_01",
+    "mon_sanddart_01",
+    "mon_fish_01"
+   ],
+   "preyResources": [
+    "조석·물결"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_hobgoblin_01",
+   "name": "흉고블린",
+   "aggression": 0.7,
+   "territoriality": 0.6,
+   "sociality": 0.7,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.85,
+   "intelligence": 0.457,
+   "band": "N",
+   "preyIds": [
+    "mon_goblin_01",
+    "mon_kobold_01",
+    "mon_ruinpig_01",
+    "mon_ruinbeetle_01"
+   ],
+   "preyResources": [],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_idealis_01",
+   "name": "이데아수문장",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.3,
+   "vengeance": 0.6,
+   "allyPriority": 0.65,
+   "intelligence": 0.926,
+   "band": "X1",
+   "preyIds": [],
+   "preyResources": [
+    "soul"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_ideavigil_01",
+   "name": "이데아거울나비",
+   "aggression": 0.7,
+   "territoriality": 0.8,
    "sociality": 0.3,
    "fear": 0.15,
-   "vengeance": 0.55,
+   "vengeance": 0.5,
    "allyPriority": 0.65,
-   "intelligence": 0.623,
-   "band": "S1",
+   "intelligence": 0.72,
+   "band": "S2",
    "preyIds": [],
    "preyResources": [
     "빛결 잔향"
@@ -673,22 +1199,133 @@
    "activity": "always"
   },
   {
-   "id": "mon_sandreaver_01",
-   "name": "모래발톱사냥꾼",
+   "id": "mon_imp_01",
+   "name": "임프",
+   "aggression": 0.6,
+   "territoriality": 0.4,
+   "sociality": 0.7,
+   "fear": 0.6,
+   "vengeance": 0.13,
+   "allyPriority": 0.85,
+   "intelligence": 0.316,
+   "band": "T2",
+   "preyIds": [],
+   "preyResources": [
+    "soul",
+    "corpse"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_inkwraith_01",
+   "name": "잉크망령",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.1,
+   "vengeance": 0.45,
+   "allyPriority": 0.65,
+   "intelligence": 0.501,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "먹광"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_junglepanther_01",
+   "name": "정글 표범",
+   "aggression": 0.8,
+   "territoriality": 0.8,
+   "sociality": 0.7,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.85,
+   "intelligence": 0.447,
+   "band": "N",
+   "preyIds": [
+    "mon_junglemonkey_01",
+    "mon_parrotswarm_01",
+    "mon_jungleboar_01",
+    "mon_plumed_deer_01"
+   ],
+   "preyResources": [
+    "과실·수액"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_junglesentinel_01",
+   "name": "밀림부엉이",
    "aggression": 0.7,
    "territoriality": 0.8,
    "sociality": 0.3,
-   "fear": 0.25,
-   "vengeance": 0.6,
+   "fear": 0.15,
+   "vengeance": 0.55,
    "allyPriority": 0.65,
-   "intelligence": 0.621,
-   "band": "S1",
+   "intelligence": 0.732,
+   "band": "S2",
    "preyIds": [
-    "mon_dunelizard_01",
-    "mon_ruststag_01"
+    "mon_vinepython_01"
    ],
    "preyResources": [
-    "선인장"
+    "과실·수액"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_kobold_01",
+   "name": "코볼드",
+   "aggression": 0.3,
+   "territoriality": 0.5,
+   "sociality": 0.9,
+   "fear": 0.6,
+   "vengeance": 0.13,
+   "allyPriority": 0.95,
+   "intelligence": 0.233,
+   "band": "T2",
+   "preyIds": [
+    "mon_slime_green_01"
+   ],
+   "preyResources": [
+    "corpse"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_kraken_tentacle_01",
+   "name": "심연크라켄",
+   "aggression": 0.9,
+   "territoriality": 1.0,
+   "sociality": 0.1,
+   "fear": 0.3,
+   "vengeance": 0.65,
+   "allyPriority": 0.55,
+   "intelligence": 0.935,
+   "band": "X2",
+   "preyIds": [
+    "mon_sea_serpent_01",
+    "mon_jellyfish_01",
+    "mon_crab_01"
+   ],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_labythrower_01",
+   "name": "미궁 재배치체",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.596,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [
+    "시장 잔반"
    ],
    "activity": "always"
   },
@@ -713,277 +1350,334 @@
    "activity": "always"
   },
   {
-   "id": "mon_reefwarden_01",
-   "name": "산호껍질게",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.25,
-   "vengeance": 0.5,
-   "allyPriority": 0.65,
-   "intelligence": 0.611,
-   "band": "S1",
-   "preyIds": [
-    "mon_reefneedle_01"
-   ],
-   "preyResources": [
-    "플랑크톤·해조"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_hellarchon_01",
-   "name": "지옥사제",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
+   "id": "mon_lesser_demon_01",
+   "name": "하급악마",
+   "aggression": 0.8,
+   "territoriality": 0.7,
+   "sociality": 0.4,
    "fear": 0.35,
    "vengeance": 0.35,
-   "allyPriority": 0.65,
-   "intelligence": 0.607,
-   "band": "S1",
+   "allyPriority": 0.7,
+   "intelligence": 0.494,
+   "band": "N",
    "preyIds": [
-    "mon_pyrewisp_01"
+    "mon_imp_01",
+    "mon_voidworm_01"
    ],
    "preyResources": [
-    "mana"
+    "soul"
    ],
-   "activity": "always"
+   "activity": "nocturnal"
   },
   {
-   "id": "mon_spirit_dark_03",
-   "name": "심연정령왕",
-   "aggression": 0.6,
-   "territoriality": 0.8,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.605,
-   "band": "S1",
-   "preyIds": [],
+   "id": "mon_leviathan_01",
+   "name": "레비아탄",
+   "aggression": 0.9,
+   "territoriality": 1.0,
+   "sociality": 0.05,
+   "fear": 0.3,
+   "vengeance": 0.65,
+   "allyPriority": 0.525,
+   "intelligence": 0.912,
+   "band": "X1",
+   "preyIds": [
+    "mon_kraken_tentacle_01",
+    "mon_sea_serpent_01",
+    "mon_jellyfish_01",
+    "mon_voidworm_01"
+   ],
    "preyResources": [],
    "activity": "always"
   },
   {
-   "id": "mon_bugbear_01",
-   "name": "버그베어",
+   "id": "mon_lich_01",
+   "name": "리치",
    "aggression": 0.8,
-   "territoriality": 0.7,
-   "sociality": 0.4,
-   "fear": 0.25,
+   "territoriality": 0.9,
+   "sociality": 0.2,
+   "fear": 0.3,
    "vengeance": 0.6,
-   "allyPriority": 0.7,
-   "intelligence": 0.601,
-   "band": "S1",
+   "allyPriority": 0.6,
+   "intelligence": 1.0,
+   "band": "X2",
    "preyIds": [
-    "mon_goblin_01",
+    "mon_slime_black_01"
+   ],
+   "preyResources": [
+    "soul",
+    "mana"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_lycanthrope_01",
+   "name": "늑대인간",
+   "aggression": 0.9,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.3,
+   "vengeance": 0.65,
+   "allyPriority": 0.65,
+   "intelligence": 0.857,
+   "band": "X1",
+   "preyIds": [
     "mon_wolf_01"
    ],
    "preyResources": [],
    "activity": "nocturnal"
   },
   {
-   "id": "mon_frostmothswarm_01",
-   "name": "서리 나방떼",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.597,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [
-    "얼음 밑 플랑크톤"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_silentwarden_01",
-   "name": "무풍나방",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.25,
-   "vengeance": 0.5,
-   "allyPriority": 0.65,
-   "intelligence": 0.597,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [
-    "고원 표토 이끼"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_dark_01",
-   "name": "먹빛정령",
-   "aggression": 0.6,
-   "territoriality": 0.6,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.597,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_labythrower_01",
-   "name": "미궁 재배치체",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.596,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [
-    "시장 잔반"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_dark_02",
-   "name": "무광대정령",
-   "aggression": 0.6,
-   "territoriality": 0.7,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.588,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_wind_03",
-   "name": "하늘바람정령왕",
-   "aggression": 0.6,
-   "territoriality": 0.8,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.587,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_tideeel_01",
-   "name": "조류수명",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.583,
-   "band": "S1",
-   "preyIds": [
-    "mon_sardine_01",
-    "mon_lanternsquid_01",
-    "mon_dredgerays_01",
-    "mon_fish_01"
-   ],
-   "preyResources": [
-    "조석·물결"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_fire_03",
-   "name": "용암정령왕",
-   "aggression": 0.6,
-   "territoriality": 0.8,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.582,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_shelfwarden_01",
-   "name": "책장먼지벌레",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.25,
-   "vengeance": 0.5,
-   "allyPriority": 0.65,
-   "intelligence": 0.581,
-   "band": "S1",
-   "preyIds": [
-    "mon_inkworm_01"
-   ],
-   "preyResources": [
-    "먹광"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_void_01",
-   "name": "무아정령",
-   "aggression": 0.6,
-   "territoriality": 0.6,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.581,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_giant_spider_01",
-   "name": "굴거미",
-   "aggression": 0.7,
+   "id": "mon_mantrap_01",
+   "name": "식인 식물",
+   "aggression": 0.4,
    "territoriality": 0.6,
    "sociality": 0.3,
    "fear": 0.25,
    "vengeance": 0.6,
    "allyPriority": 0.65,
-   "intelligence": 0.573,
+   "intelligence": 0.483,
+   "band": "N",
+   "preyIds": [
+    "mon_junglemonkey_01",
+    "mon_jungleboar_01"
+   ],
+   "preyResources": [
+    "과실·수액"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_marshwarden_01",
+   "name": "늪도마뱀",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.437,
+   "band": "N",
+   "preyIds": [
+    "mon_frog_01"
+   ],
+   "preyResources": [
+    "수생식물"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_mindflayer_01",
+   "name": "사념포식자",
+   "aggression": 0.8,
+   "territoriality": 0.8,
+   "sociality": 0.5,
+   "fear": 0.35,
+   "vengeance": 0.35,
+   "allyPriority": 0.75,
+   "intelligence": 0.631,
    "band": "S1",
    "preyIds": [
+    "mon_goblin_01",
     "mon_kobold_01",
-    "mon_giant_ant_01",
-    "mon_moth_01",
-    "mon_cavefirefly_01"
+    "mon_citypigeon_01",
+    "mon_alleyrat_01"
    ],
    "preyResources": [],
    "activity": "nocturnal"
   },
   {
-   "id": "mon_ashmoth_01",
-   "name": "잿불나방",
+   "id": "mon_nullsentinel_01",
+   "name": "무문의 파수병",
    "aggression": 0.7,
    "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.15,
+   "vengeance": 0.55,
+   "allyPriority": 0.65,
+   "intelligence": 0.623,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [
+    "빛결 잔향"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_ogre_01",
+   "name": "오거",
+   "aggression": 0.7,
+   "territoriality": 0.6,
+   "sociality": 0.4,
+   "fear": 0.35,
+   "vengeance": 0.38,
+   "allyPriority": 0.7,
+   "intelligence": 0.465,
+   "band": "N",
+   "preyIds": [
+    "mon_goblin_01",
+    "mon_boar_01",
+    "mon_wolf_01",
+    "mon_meadowlark_01",
+    "mon_cavebat_01"
+   ],
+   "preyResources": [],
+   "activity": "crepuscular"
+  },
+  {
+   "id": "mon_ooze_01",
+   "name": "오우즈",
+   "aggression": 0.3,
+   "territoriality": 0.3,
+   "sociality": 0.6,
+   "fear": 0.65,
+   "vengeance": 0.08,
+   "allyPriority": 0.8,
+   "intelligence": 0.045,
+   "band": "T1",
+   "preyIds": [
+    "mon_slime_green_01",
+    "mon_marshleech_01"
+   ],
+   "preyResources": [
+    "organic_waste",
+    "corpse"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_ossuaryhound_01",
+   "name": "유골수족",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.6,
+   "vengeance": 0.15,
+   "allyPriority": 0.65,
+   "intelligence": 0.341,
+   "band": "T2",
+   "preyIds": [
+    "mon_zombie_01"
+   ],
+   "preyResources": [
+    "corpse"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_papermite_01",
+   "name": "종이개미",
+   "aggression": 0.2,
+   "territoriality": 0.3,
+   "sociality": 0.9,
+   "fear": 0.5,
+   "vengeance": 0.05,
+   "allyPriority": 0.9,
+   "intelligence": 0.05,
+   "band": "T1",
+   "preyIds": [],
+   "preyResources": [
+    "낙엽",
+    "_detritus"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_parchmentzombie_01",
+   "name": "양피지 좀비",
+   "aggression": 0.4,
+   "territoriality": 0.2,
+   "sociality": 0.6,
+   "fear": 0.2,
+   "vengeance": 0.3,
+   "allyPriority": 0.8,
+   "intelligence": 0.204,
+   "band": "T2",
+   "preyIds": [
+    "mon_papermoth_01",
+    "mon_papermite_01"
+   ],
+   "preyResources": [
+    "먹광"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_plainshawk_01",
+   "name": "들매",
+   "aggression": 0.7,
+   "territoriality": 0.6,
+   "sociality": 0.3,
+   "fear": 0.3,
+   "vengeance": 0.45,
+   "allyPriority": 0.65,
+   "intelligence": 0.444,
+   "band": "N",
+   "preyIds": [
+    "mon_dewlark_01",
+    "mon_grasshoppertrap_01",
+    "mon_hawk_01"
+   ],
+   "preyResources": [
+    "햇빛·풀"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_plumed_deer_01",
+   "name": "깃털사슴",
+   "aggression": 0.2,
+   "territoriality": 0.3,
+   "sociality": 0.9,
+   "fear": 0.8,
+   "vengeance": 0.03,
+   "allyPriority": 0.7,
+   "intelligence": 0.22,
+   "band": "T2",
+   "preyIds": [],
+   "preyResources": [
+    "과실",
+    "수생식물"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_raider_01",
+   "name": "잔해탐지충",
+   "aggression": 0.7,
+   "territoriality": 0.5,
+   "sociality": 0.6,
+   "fear": 0.6,
+   "vengeance": 0.13,
+   "allyPriority": 0.8,
+   "intelligence": 0.2,
+   "band": "T2",
+   "preyIds": [
+    "mon_goblin_01",
+    "mon_kobold_01",
+    "mon_ruinpig_01"
+   ],
+   "preyResources": [
+    "corpse"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_reefneedle_01",
+   "name": "산호침",
+   "aggression": 0.7,
+   "territoriality": 0.8,
    "sociality": 0.3,
    "fear": 0.35,
    "vengeance": 0.4,
    "allyPriority": 0.65,
-   "intelligence": 0.557,
-   "band": "S1",
-   "preyIds": [],
+   "intelligence": 0.395,
+   "band": "N",
+   "preyIds": [
+    "mon_fish_01",
+    "mon_sardine_01"
+   ],
    "preyResources": [
-    "열조류"
+    "플랑크톤·해조"
    ],
    "activity": "always"
   },
@@ -1011,194 +1705,160 @@
    "activity": "always"
   },
   {
-   "id": "mon_glassrefract_01",
-   "name": "굴절망령",
+   "id": "mon_reefwarden_01",
+   "name": "산호껍질게",
    "aggression": 0.7,
-   "territoriality": 0.7,
+   "territoriality": 0.8,
    "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
+   "fear": 0.25,
+   "vengeance": 0.5,
    "allyPriority": 0.65,
-   "intelligence": 0.556,
+   "intelligence": 0.611,
    "band": "S1",
-   "preyIds": [],
+   "preyIds": [
+    "mon_reefneedle_01"
+   ],
    "preyResources": [
-    "유리 모래 규조"
+    "플랑크톤·해조"
    ],
    "activity": "always"
   },
   {
-   "id": "mon_spirit_earth_03",
-   "name": "대지정령왕",
-   "aggression": 0.6,
-   "territoriality": 0.8,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.553,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_void_02",
-   "name": "공허대정령",
-   "aggression": 0.6,
-   "territoriality": 0.7,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.553,
-   "band": "S1",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_cookiewraith_01",
-   "name": "절삭 망령",
+   "id": "mon_ridgewarden_01",
+   "name": "설선염소",
    "aggression": 0.7,
-   "territoriality": 0.7,
+   "territoriality": 0.8,
    "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
+   "fear": 0.15,
+   "vengeance": 0.55,
    "allyPriority": 0.65,
-   "intelligence": 0.548,
-   "band": "N",
-   "preyIds": [],
+   "intelligence": 0.644,
+   "band": "S1",
+   "preyIds": [
+    "mon_dire_bear_01"
+   ],
    "preyResources": [
-    "보이드 이슬"
+    "몸통"
    ],
    "activity": "always"
   },
   {
-   "id": "mon_venom_scorpion_01",
-   "name": "맹독 전갈",
+   "id": "mon_ruinpig_01",
+   "name": "폐허멧돼지",
+   "aggression": 0.3,
+   "territoriality": 0.4,
+   "sociality": 0.5,
+   "fear": 0.7,
+   "vengeance": 0.15,
+   "allyPriority": 0.6,
+   "intelligence": 0.18,
+   "band": "T2",
+   "preyIds": [
+    "mon_ruinbeetle_01"
+   ],
+   "preyResources": [
+    "버려진 식량 저장고"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_rustkite_01",
+   "name": "적갈매",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.25,
+   "vengeance": 0.4,
+   "allyPriority": 0.4,
+   "intelligence": 0.62,
+   "band": "S1",
+   "preyIds": [
+    "mon_dunefox_01",
+    "mon_glossbee_01"
+   ],
+   "preyResources": [
+    "몸통"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_sanddart_01",
+   "name": "모래화살",
    "aggression": 0.7,
    "territoriality": 0.8,
-   "sociality": 0.2,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.6,
-   "intelligence": 0.547,
+   "sociality": 0.3,
+   "fear": 0.25,
+   "vengeance": 0.6,
+   "allyPriority": 0.65,
+   "intelligence": 0.481,
    "band": "N",
    "preyIds": [
-    "mon_scorpion_01",
+    "mon_musselbed_01",
+    "mon_sardine_01",
+    "mon_shorefly_01"
+   ],
+   "preyResources": [
+    "잔해·피"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_sandreaver_01",
+   "name": "모래갈퀴",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.25,
+   "vengeance": 0.6,
+   "allyPriority": 0.65,
+   "intelligence": 0.621,
+   "band": "S1",
+   "preyIds": [
+    "mon_dunelizard_01",
+    "mon_ruststag_01"
+   ],
+   "preyResources": [
+    "선인장"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_sardine_01",
+   "name": "소어 떼",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.8,
+   "vengeance": 0.05,
+   "allyPriority": 0.6,
+   "intelligence": 0.12,
+   "band": "T1",
+   "preyIds": [
+    "mon_tidebloom_01",
+    "mon_rockweed_01"
+   ],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_scorpion_01",
+   "name": "전갈",
+   "aggression": 0.6,
+   "territoriality": 0.7,
+   "sociality": 0.2,
+   "fear": 0.25,
+   "vengeance": 0.6,
+   "allyPriority": 0.6,
+   "intelligence": 0.463,
+   "band": "N",
+   "preyIds": [
     "mon_giant_ant_01",
     "mon_desertrat_01",
     "mon_dunelizard_01",
-    "mon_dunewasp_01"
+    "mon_sandchime_01"
    ],
    "preyResources": [],
    "activity": "nocturnal"
-  },
-  {
-   "id": "mon_silentshade_01",
-   "name": "소리 삼키는 그림자",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.537,
-   "band": "N",
-   "preyIds": [
-    "mon_windlessrat_01"
-   ],
-   "preyResources": [
-    "고원 표토 이끼"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_light_01",
-   "name": "성광정령",
-   "aggression": 0.6,
-   "territoriality": 0.6,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.536,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_archgolem_01",
-   "name": "서고 골렘",
-   "aggression": 0.9,
-   "territoriality": 0.9,
-   "sociality": 0.3,
-   "fear": 0.15,
-   "vengeance": 0.5,
-   "allyPriority": 0.65,
-   "intelligence": 0.534,
-   "band": "N",
-   "preyIds": [
-    "mon_inkworm_01"
-   ],
-   "preyResources": [
-    "먹광",
-    "detritus"
-   ],
-   "activity": "crepuscular"
-  },
-  {
-   "id": "mon_deeplurker_01",
-   "name": "발광아귀",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.533,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [
-    "열수 분출구 미네랄"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_gateherald_01",
-   "name": "관문까마귀",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.35,
-   "allyPriority": 0.65,
-   "intelligence": 0.531,
-   "band": "N",
-   "preyIds": [
-    "mon_watchwyrm_01"
-   ],
-   "preyResources": [
-    "soul"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_wind_02",
-   "name": "산바람대정령",
-   "aggression": 0.6,
-   "territoriality": 0.7,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.524,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
   },
   {
    "id": "mon_sea_serpent_01",
@@ -1217,6 +1877,57 @@
     "mon_jellyfish_01"
    ],
    "preyResources": [],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_sewagemass_01",
+   "name": "침전 괴체",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.518,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "슬러지"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_sewerling_01",
+   "name": "관로 분열체",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.459,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "슬러지"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_sewerslug_01",
+   "name": "슬러지 벌레",
+   "aggression": 0.2,
+   "territoriality": 0.3,
+   "sociality": 0.9,
+   "fear": 0.6,
+   "vengeance": 0.05,
+   "allyPriority": 0.7,
+   "intelligence": 0.08,
+   "band": "T2",
+   "preyIds": [],
+   "preyResources": [
+    "슬러지"
+   ],
    "activity": "nocturnal"
   },
   {
@@ -1242,604 +1953,63 @@
    "activity": "crepuscular"
   },
   {
-   "id": "mon_spirit_wind_01",
-   "name": "들바람정령",
-   "aggression": 0.6,
-   "territoriality": 0.6,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.519,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_sewagemass_01",
-   "name": "침전 괴체",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.518,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [
-    "슬러지"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_water_03",
-   "name": "해류정령왕",
-   "aggression": 0.6,
-   "territoriality": 0.8,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.518,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_guanoqueen_01",
-   "name": "회로 여왕",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.517,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [
-    "슬러지"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_earth_01",
-   "name": "지맥정령",
-   "aggression": 0.6,
-   "territoriality": 0.6,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.512,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_guanoswarm_01",
-   "name": "회로 박쥐떼",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.508,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [
-    "슬러지"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_cirruskite_01",
-   "name": "구름표범",
+   "id": "mon_shelfwarden_01",
+   "name": "책장먼지벌레",
    "aggression": 0.7,
    "territoriality": 0.8,
    "sociality": 0.3,
-   "fear": 0.3,
-   "vengeance": 0.45,
+   "fear": 0.25,
+   "vengeance": 0.5,
    "allyPriority": 0.65,
-   "intelligence": 0.504,
-   "band": "N",
+   "intelligence": 0.581,
+   "band": "S1",
    "preyIds": [
-    "mon_stormhawk_01"
+    "mon_inkworm_01"
    ],
-   "preyResources": [
-    "바람씨앗"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_hell_hound_01",
-   "name": "헬 하운드",
-   "aggression": 0.9,
-   "territoriality": 0.8,
-   "sociality": 0.6,
-   "fear": 0.3,
-   "vengeance": 0.45,
-   "allyPriority": 0.8,
-   "intelligence": 0.504,
-   "band": "N",
-   "preyIds": [
-    "mon_wolf_01",
-    "mon_imp_01",
-    "mon_fireberry_01",
-    "mon_flameworm_01",
-    "mon_ashfly_01",
-    "mon_ashland_01",
-    "mon_ironfist_01"
-   ],
-   "preyResources": [],
-   "activity": "nocturnal"
-  },
-  {
-   "id": "mon_inkwraith_01",
-   "name": "잉크 형태",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.1,
-   "vengeance": 0.45,
-   "allyPriority": 0.65,
-   "intelligence": 0.501,
-   "band": "N",
-   "preyIds": [],
    "preyResources": [
     "먹광"
    ],
    "activity": "always"
   },
   {
-   "id": "mon_sunveil_01",
-   "name": "검은차양체",
+   "id": "mon_silenceking_01",
+   "name": "침묵의 군주",
    "aggression": 0.7,
    "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.499,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [
-    "유리 모래 규조"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_water_01",
-   "name": "파도정령",
-   "aggression": 0.6,
-   "territoriality": 0.6,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.498,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_dunewalker_01",
-   "name": "모래표범",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.497,
-   "band": "N",
-   "preyIds": [
-    "mon_boar_01"
-   ],
-   "preyResources": [
-    "선인장",
-    "과실"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_fire_01",
-   "name": "화구정령",
-   "aggression": 0.6,
-   "territoriality": 0.6,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.496,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_lesser_demon_01",
-   "name": "레서 데몬",
-   "aggression": 0.8,
-   "territoriality": 0.7,
-   "sociality": 0.4,
-   "fear": 0.35,
-   "vengeance": 0.35,
-   "allyPriority": 0.7,
-   "intelligence": 0.494,
-   "band": "N",
-   "preyIds": [
-    "mon_imp_01",
-    "mon_voidworm_01"
-   ],
-   "preyResources": [
-    "soul"
-   ],
-   "activity": "nocturnal"
-  },
-  {
-   "id": "mon_cryoshard_01",
-   "name": "결로파편체",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.489,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [
-    "수정 수액"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_mantrap_01",
-   "name": "식인 식물",
-   "aggression": 0.4,
-   "territoriality": 0.6,
-   "sociality": 0.3,
-   "fear": 0.25,
-   "vengeance": 0.6,
-   "allyPriority": 0.65,
-   "intelligence": 0.483,
-   "band": "N",
-   "preyIds": [
-    "mon_junglemonkey_01",
-    "mon_jungleboar_01"
-   ],
-   "preyResources": [
-    "과실·수액"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_gravityworm_01",
-   "name": "천창 중력 벌레",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.481,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [
-    "중력 먼지"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_sanddart_01",
-   "name": "모래사다리",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.25,
-   "vengeance": 0.6,
-   "allyPriority": 0.65,
-   "intelligence": 0.481,
-   "band": "N",
-   "preyIds": [
-    "mon_musselbed_01",
-    "mon_sardine_01",
-    "mon_shorefly_01"
-   ],
-   "preyResources": [
-    "잔해·피"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_fire_02",
-   "name": "불꽃대정령",
-   "aggression": 0.6,
-   "territoriality": 0.7,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.48,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_glassswarm_01",
-   "name": "유리 규각 군체",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.478,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [
-    "유리 모래 규조"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_wolf_01",
-   "name": "늑대",
-   "aggression": 0.6,
-   "territoriality": 0.6,
-   "sociality": 0.8,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.9,
-   "intelligence": 0.478,
-   "band": "N",
-   "preyIds": [
-    "mon_boar_01",
-    "mon_goblin_01",
-    "mon_rabbit_01",
-    "mon_rat_01"
-   ],
-   "preyResources": [],
-   "activity": "crepuscular"
-  },
-  {
-   "id": "mon_spirit_light_03",
-   "name": "무량정령왕",
-   "aggression": 0.6,
-   "territoriality": 0.8,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.47,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_ogre_01",
-   "name": "오거",
-   "aggression": 0.7,
-   "territoriality": 0.6,
-   "sociality": 0.4,
-   "fear": 0.35,
-   "vengeance": 0.38,
-   "allyPriority": 0.7,
-   "intelligence": 0.465,
-   "band": "N",
-   "preyIds": [
-    "mon_goblin_01",
-    "mon_boar_01",
-    "mon_wolf_01",
-    "mon_meadowlark_01",
-    "mon_cavebat_01"
-   ],
-   "preyResources": [],
-   "activity": "crepuscular"
-  },
-  {
-   "id": "mon_scorpion_01",
-   "name": "전갈",
-   "aggression": 0.6,
-   "territoriality": 0.7,
-   "sociality": 0.2,
-   "fear": 0.25,
-   "vengeance": 0.6,
-   "allyPriority": 0.6,
-   "intelligence": 0.463,
-   "band": "N",
-   "preyIds": [
-    "mon_giant_ant_01",
-    "mon_desertrat_01",
-    "mon_dunelizard_01",
-    "mon_sandchime_01"
-   ],
-   "preyResources": [],
-   "activity": "nocturnal"
-  },
-  {
-   "id": "mon_sewerling_01",
-   "name": "관로 분열체",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.459,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [
-    "슬러지"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_hobgoblin_01",
-   "name": "흉고블린",
-   "aggression": 0.7,
-   "territoriality": 0.6,
-   "sociality": 0.7,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.85,
-   "intelligence": 0.457,
-   "band": "N",
-   "preyIds": [
-    "mon_goblin_01",
-    "mon_kobold_01",
-    "mon_ruinpig_01",
-    "mon_ruinbeetle_01"
-   ],
-   "preyResources": [],
-   "activity": "nocturnal"
-  },
-  {
-   "id": "mon_frostlure_01",
-   "name": "서리등벌레",
-   "aggression": 0.7,
-   "territoriality": 0.7,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.452,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [
-    "얼음 밑 플랑크톤"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_tidewarden_01",
-   "name": "조수불가사리",
-   "aggression": 0.7,
-   "territoriality": 0.8,
    "sociality": 0.3,
    "fear": 0.15,
    "vengeance": 0.55,
    "allyPriority": 0.65,
-   "intelligence": 0.45,
-   "band": "N",
-   "preyIds": [
-    "mon_crab_01",
-    "mon_sardine_01"
-   ],
-   "preyResources": [
-    "플랑크톤·해조"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_junglepanther_01",
-   "name": "정글 표범",
-   "aggression": 0.8,
-   "territoriality": 0.8,
-   "sociality": 0.7,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.85,
-   "intelligence": 0.447,
-   "band": "N",
-   "preyIds": [
-    "mon_junglemonkey_01",
-    "mon_parrotswarm_01",
-    "mon_jungleboar_01",
-    "mon_plumed_deer_01"
-   ],
-   "preyResources": [
-    "과실·수액"
-   ],
-   "activity": "nocturnal"
-  },
-  {
-   "id": "mon_plainshawk_01",
-   "name": "들매",
-   "aggression": 0.7,
-   "territoriality": 0.6,
-   "sociality": 0.3,
-   "fear": 0.3,
-   "vengeance": 0.45,
-   "allyPriority": 0.65,
-   "intelligence": 0.444,
-   "band": "N",
-   "preyIds": [
-    "mon_dewlark_01",
-    "mon_grasshoppertrap_01",
-    "mon_hawk_01"
-   ],
-   "preyResources": [
-    "햇빛·풀"
-   ],
-   "activity": "diurnal"
-  },
-  {
-   "id": "mon_marshwarden_01",
-   "name": "늪도마뱀",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.437,
-   "band": "N",
-   "preyIds": [
-    "mon_frog_01"
-   ],
-   "preyResources": [
-    "수생식물"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_spirit_earth_02",
-   "name": "지각대정령",
-   "aggression": 0.6,
-   "territoriality": 0.7,
-   "sociality": 0.2,
-   "fear": 0.05,
-   "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.432,
-   "band": "N",
+   "intelligence": 0.728,
+   "band": "S2",
    "preyIds": [],
-   "preyResources": [],
+   "preyResources": [
+    "고원 표토 이끼"
+   ],
    "activity": "always"
   },
   {
-   "id": "mon_bear_01",
-   "name": "곰",
-   "aggression": 0.5,
+   "id": "mon_silentshade_01",
+   "name": "무풍그림자",
+   "aggression": 0.7,
    "territoriality": 0.7,
    "sociality": 0.3,
    "fear": 0.35,
-   "vengeance": 0.38,
+   "vengeance": 0.4,
    "allyPriority": 0.65,
-   "intelligence": 0.429,
+   "intelligence": 0.537,
    "band": "N",
    "preyIds": [
-    "mon_boar_01",
-    "mon_bugbear_01",
-    "mon_bee_01",
-    "mon_beetle_01"
+    "mon_windlessrat_01"
    ],
-   "preyResources": [],
-   "activity": "diurnal"
+   "preyResources": [
+    "고원 표토 이끼"
+   ],
+   "activity": "always"
   },
   {
    "id": "mon_silentsludge_01",
-   "name": "무풍 정체체",
+   "name": "무풍진흙",
    "aggression": 0.7,
    "territoriality": 0.7,
    "sociality": 0.3,
@@ -1855,45 +2025,21 @@
    "activity": "always"
   },
   {
-   "id": "mon_heronshrike_01",
-   "name": "물수제비 매",
+   "id": "mon_silentwarden_01",
+   "name": "무풍나방",
    "aggression": 0.7,
    "territoriality": 0.8,
    "sociality": 0.3,
-   "fear": 0.3,
-   "vengeance": 0.45,
+   "fear": 0.25,
+   "vengeance": 0.5,
    "allyPriority": 0.65,
-   "intelligence": 0.413,
-   "band": "N",
-   "preyIds": [
-    "mon_sardine_01",
-    "mon_sanddart_01",
-    "mon_fish_01"
-   ],
+   "intelligence": 0.597,
+   "band": "S1",
+   "preyIds": [],
    "preyResources": [
-    "조석·물결"
+    "고원 표토 이끼"
    ],
    "activity": "always"
-  },
-  {
-   "id": "mon_dire_wolf_01",
-   "name": "숲늑대",
-   "aggression": 0.8,
-   "territoriality": 0.8,
-   "sociality": 0.7,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.85,
-   "intelligence": 0.407,
-   "band": "N",
-   "preyIds": [
-    "mon_wolf_01",
-    "mon_bear_01",
-    "mon_dire_boar_01",
-    "mon_beetle_01"
-   ],
-   "preyResources": [],
-   "activity": "nocturnal"
   },
   {
    "id": "mon_siren_01",
@@ -1919,39 +2065,41 @@
    "activity": "always"
   },
   {
-   "id": "mon_spirit_light_02",
-   "name": "거광대정령",
-   "aggression": 0.6,
-   "territoriality": 0.7,
-   "sociality": 0.2,
-   "fear": 0.05,
+   "id": "mon_skeleton_01",
+   "name": "스켈레톤",
+   "aggression": 0.5,
+   "territoriality": 0.3,
+   "sociality": 0.7,
+   "fear": 0.2,
    "vengeance": 0.3,
-   "allyPriority": 0.6,
-   "intelligence": 0.403,
-   "band": "N",
-   "preyIds": [],
-   "preyResources": [],
-   "activity": "always"
-  },
-  {
-   "id": "mon_reefneedle_01",
-   "name": "갈매기침",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.35,
-   "vengeance": 0.4,
-   "allyPriority": 0.65,
-   "intelligence": 0.395,
-   "band": "N",
+   "allyPriority": 0.85,
+   "intelligence": 0.247,
+   "band": "T2",
    "preyIds": [
-    "mon_fish_01",
-    "mon_sardine_01"
+    "mon_ruinbat_01"
    ],
    "preyResources": [
-    "플랑크톤·해조"
+    "corpse"
    ],
-   "activity": "always"
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_skeleton_mage_01",
+   "name": "스켈레톤 메이지",
+   "aggression": 0.5,
+   "territoriality": 0.4,
+   "sociality": 0.3,
+   "fear": 0.2,
+   "vengeance": 0.3,
+   "allyPriority": 0.65,
+   "intelligence": 0.362,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "soul",
+    "mana"
+   ],
+   "activity": "nocturnal"
   },
   {
    "id": "mon_skeleton_warrior_01",
@@ -1991,114 +2139,607 @@
    "activity": "nocturnal"
   },
   {
-   "id": "mon_skeleton_mage_01",
-   "name": "스켈레톤 메이지",
-   "aggression": 0.5,
-   "territoriality": 0.4,
-   "sociality": 0.3,
-   "fear": 0.2,
-   "vengeance": 0.3,
-   "allyPriority": 0.65,
-   "intelligence": 0.362,
-   "band": "N",
+   "id": "mon_slime_blue_01",
+   "name": "푸른슬라임",
+   "aggression": 0.2,
+   "territoriality": 0.2,
+   "sociality": 0.9,
+   "fear": 0.65,
+   "vengeance": 0.08,
+   "allyPriority": 0.95,
+   "intelligence": 0.06,
+   "band": "T1",
    "preyIds": [],
    "preyResources": [
-    "soul",
-    "mana"
-   ],
-   "activity": "nocturnal"
-  },
-  {
-   "id": "mon_ossuaryhound_01",
-   "name": "유골수족",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.6,
-   "vengeance": 0.15,
-   "allyPriority": 0.65,
-   "intelligence": 0.341,
-   "band": "T2",
-   "preyIds": [
-    "mon_zombie_01"
-   ],
-   "preyResources": [
+    "organic_waste",
     "corpse"
    ],
    "activity": "always"
   },
   {
-   "id": "mon_imp_01",
-   "name": "임프",
-   "aggression": 0.6,
-   "territoriality": 0.4,
-   "sociality": 0.7,
-   "fear": 0.6,
-   "vengeance": 0.13,
-   "allyPriority": 0.85,
-   "intelligence": 0.316,
-   "band": "T2",
+   "id": "mon_slime_green_01",
+   "name": "초록슬라임",
+   "aggression": 0.2,
+   "territoriality": 0.2,
+   "sociality": 0.9,
+   "fear": 0.65,
+   "vengeance": 0.08,
+   "allyPriority": 0.95,
+   "intelligence": 0.06,
+   "band": "T1",
    "preyIds": [],
    "preyResources": [
-    "soul",
+    "organic_waste",
     "corpse"
    ],
-   "activity": "nocturnal"
+   "activity": "always"
   },
   {
-   "id": "mon_goblin_01",
-   "name": "고블린",
-   "aggression": 0.6,
-   "territoriality": 0.4,
+   "id": "mon_slime_red_01",
+   "name": "붉은슬라임",
+   "aggression": 0.3,
+   "territoriality": 0.3,
    "sociality": 0.8,
-   "fear": 0.6,
-   "vengeance": 0.13,
-   "allyPriority": 0.9,
-   "intelligence": 0.274,
-   "band": "T2",
-   "preyIds": [
-    "mon_slime_green_01",
-    "mon_kobold_01",
-    "mon_ruinbeetle_01"
-   ],
+   "fear": 0.55,
+   "vengeance": 0.1,
+   "allyPriority": 0.8,
+   "intelligence": 0.06,
+   "band": "N",
+   "preyIds": [],
    "preyResources": [
+    "organic_waste",
     "corpse"
    ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spider_queen_01",
+   "name": "거미 여왕",
+   "aggression": 0.8,
+   "territoriality": 0.9,
+   "sociality": 0.4,
+   "fear": 0.3,
+   "vengeance": 0.65,
+   "allyPriority": 0.7,
+   "intelligence": 0.845,
+   "band": "S2",
+   "preyIds": [
+    "mon_giant_spider_01",
+    "mon_kobold_01",
+    "mon_dustbug_01",
+    "mon_rat_01"
+   ],
+   "preyResources": [],
    "activity": "nocturnal"
   },
   {
-   "id": "mon_banshee_01",
-   "name": "밴시",
+   "id": "mon_spirit_dark_01",
+   "name": "먹빛정령",
    "aggression": 0.6,
-   "territoriality": 0.5,
+   "territoriality": 0.6,
    "sociality": 0.2,
-   "fear": 0.2,
+   "fear": 0.05,
    "vengeance": 0.3,
    "allyPriority": 0.6,
-   "intelligence": 0.273,
+   "intelligence": 0.597,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_dark_02",
+   "name": "무광대정령",
+   "aggression": 0.6,
+   "territoriality": 0.7,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.588,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_dark_03",
+   "name": "심연정령왕",
+   "aggression": 0.6,
+   "territoriality": 0.8,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.605,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_earth_01",
+   "name": "지맥정령",
+   "aggression": 0.6,
+   "territoriality": 0.6,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.512,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_earth_02",
+   "name": "지각대정령",
+   "aggression": 0.6,
+   "territoriality": 0.7,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.432,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_earth_03",
+   "name": "대지정령왕",
+   "aggression": 0.6,
+   "territoriality": 0.8,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.553,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_fire_01",
+   "name": "화구정령",
+   "aggression": 0.6,
+   "territoriality": 0.6,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.496,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_fire_02",
+   "name": "불꽃대정령",
+   "aggression": 0.6,
+   "territoriality": 0.7,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.48,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_fire_03",
+   "name": "용암정령왕",
+   "aggression": 0.6,
+   "territoriality": 0.8,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.582,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_light_01",
+   "name": "성광정령",
+   "aggression": 0.6,
+   "territoriality": 0.6,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.536,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_light_02",
+   "name": "거광대정령",
+   "aggression": 0.6,
+   "territoriality": 0.7,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.403,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_light_03",
+   "name": "무량정령왕",
+   "aggression": 0.6,
+   "territoriality": 0.8,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.47,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_void_01",
+   "name": "무아정령",
+   "aggression": 0.6,
+   "territoriality": 0.6,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.581,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_void_02",
+   "name": "공허대정령",
+   "aggression": 0.6,
+   "territoriality": 0.7,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.553,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_void_03",
+   "name": "무상정령왕",
+   "aggression": 0.6,
+   "territoriality": 0.8,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.667,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_water_01",
+   "name": "파도정령",
+   "aggression": 0.6,
+   "territoriality": 0.6,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.498,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_water_02",
+   "name": "물결대정령",
+   "aggression": 0.6,
+   "territoriality": 0.7,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.624,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_water_03",
+   "name": "해류정령왕",
+   "aggression": 0.6,
+   "territoriality": 0.8,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.518,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_wind_01",
+   "name": "들바람정령",
+   "aggression": 0.6,
+   "territoriality": 0.6,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.519,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_wind_02",
+   "name": "산바람대정령",
+   "aggression": 0.6,
+   "territoriality": 0.7,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.524,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_spirit_wind_03",
+   "name": "하늘바람정령왕",
+   "aggression": 0.6,
+   "territoriality": 0.8,
+   "sociality": 0.2,
+   "fear": 0.05,
+   "vengeance": 0.3,
+   "allyPriority": 0.6,
+   "intelligence": 0.587,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [],
+   "activity": "always"
+  },
+  {
+   "id": "mon_stardust_01",
+   "name": "별가루",
+   "aggression": 0.6,
+   "territoriality": 0.8,
+   "sociality": 0.95,
+   "fear": 0.4,
+   "vengeance": 0.05,
+   "allyPriority": 0.95,
+   "intelligence": 0.05,
    "band": "T2",
    "preyIds": [],
    "preyResources": [
-    "soul"
+    "근원 합류"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_starsandworm_01",
+   "name": "별모래 벌레",
+   "aggression": 0.2,
+   "territoriality": 0.3,
+   "sociality": 0.9,
+   "fear": 0.6,
+   "vengeance": 0.05,
+   "allyPriority": 0.6,
+   "intelligence": 0.08,
+   "band": "T2",
+   "preyIds": [],
+   "preyResources": [
+    "근원 합류"
    ],
    "activity": "nocturnal"
   },
   {
-   "id": "mon_graveknight_01",
-   "name": "묘비파수꾼",
+   "id": "mon_storm_giant_01",
+   "name": "폭풍거인",
+   "aggression": 0.6,
+   "territoriality": 0.9,
+   "sociality": 0.3,
+   "fear": 0.3,
+   "vengeance": 0.65,
+   "allyPriority": 0.65,
+   "intelligence": 0.96,
+   "band": "X2",
+   "preyIds": [],
+   "preyResources": [
+    "mana"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_stormcrawler_01",
+   "name": "폭풍진딧물",
    "aggression": 0.7,
    "territoriality": 0.8,
    "sociality": 0.3,
-   "fear": 0.2,
-   "vengeance": 0.3,
+   "fear": 0.55,
+   "vengeance": 0.0,
    "allyPriority": 0.65,
-   "intelligence": 0.264,
-   "band": "T2",
+   "intelligence": 0.006,
+   "band": "T1",
+   "preyIds": [],
+   "preyResources": [
+    "바람씨앗"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_sulfurmite_01",
+   "name": "유황 진드기",
+   "aggression": 0.3,
+   "territoriality": 0.5,
+   "sociality": 0.4,
+   "fear": 0.45,
+   "vengeance": 0.2,
+   "allyPriority": 0.5,
+   "intelligence": 0.1,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "corpse"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_sunveil_01",
+   "name": "검은차양체",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.499,
+   "band": "N",
+   "preyIds": [],
+   "preyResources": [
+    "유리 모래 규조"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_swampknight_01",
+   "name": "늪지기사",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.15,
+   "vengeance": 0.55,
+   "allyPriority": 0.65,
+   "intelligence": 0.666,
+   "band": "S1",
    "preyIds": [
-    "mon_skeleton_01"
+    "mon_frog_01"
    ],
    "preyResources": [
-    "soul"
+    "수생식물"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_templedove_01",
+   "name": "신전비둘기",
+   "aggression": 0.05,
+   "territoriality": 0.1,
+   "sociality": 0.6,
+   "fear": 0.85,
+   "vengeance": 0.02,
+   "allyPriority": 0.55,
+   "intelligence": 0.18,
+   "band": "T2",
+   "preyIds": [],
+   "preyResources": [
+    "성수 이슬"
+   ],
+   "activity": "diurnal"
+  },
+  {
+   "id": "mon_templeward_01",
+   "name": "신전 파수 이끼",
+   "aggression": 0.7,
+   "territoriality": 0.7,
+   "sociality": 0.3,
+   "fear": 0.15,
+   "vengeance": 0.55,
+   "allyPriority": 0.65,
+   "intelligence": 0.682,
+   "band": "S1",
+   "preyIds": [],
+   "preyResources": [
+    "성수 이슬"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_thresholdswift_01",
+   "name": "이음새벌레",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.697,
+   "band": "S1",
+   "preyIds": [
+    "mon_whitelviper_01"
+   ],
+   "preyResources": [
+    "mana"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_tideeel_01",
+   "name": "조류장어",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.65,
+   "intelligence": 0.583,
+   "band": "S1",
+   "preyIds": [
+    "mon_sardine_01",
+    "mon_lanternsquid_01",
+    "mon_dredgerays_01",
+    "mon_fish_01"
+   ],
+   "preyResources": [
+    "조석·물결"
+   ],
+   "activity": "always"
+  },
+  {
+   "id": "mon_tidewarden_01",
+   "name": "조수불가사리",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.15,
+   "vengeance": 0.55,
+   "allyPriority": 0.65,
+   "intelligence": 0.45,
+   "band": "N",
+   "preyIds": [
+    "mon_crab_01",
+    "mon_sardine_01"
+   ],
+   "preyResources": [
+    "플랑크톤·해조"
    ],
    "activity": "always"
   },
@@ -2123,233 +2764,80 @@
    "activity": "always"
   },
   {
-   "id": "mon_skeleton_01",
-   "name": "스켈레톤",
-   "aggression": 0.5,
+   "id": "mon_trenchlanternfish_01",
+   "name": "해구 등불어",
+   "aggression": 0.2,
    "territoriality": 0.3,
-   "sociality": 0.7,
-   "fear": 0.2,
-   "vengeance": 0.3,
-   "allyPriority": 0.85,
-   "intelligence": 0.247,
-   "band": "T2",
-   "preyIds": [
-    "mon_ruinbat_01"
-   ],
-   "preyResources": [
-    "corpse"
-   ],
-   "activity": "nocturnal"
-  },
-  {
-   "id": "mon_zombie_01",
-   "name": "좀비",
-   "aggression": 0.4,
-   "territoriality": 0.2,
-   "sociality": 0.6,
-   "fear": 0.2,
-   "vengeance": 0.3,
-   "allyPriority": 0.8,
-   "intelligence": 0.246,
-   "band": "T2",
-   "preyIds": [
-    "mon_ruinspigeon_01"
-   ],
-   "preyResources": [
-    "corpse"
-   ],
-   "activity": "nocturnal"
-  },
-  {
-   "id": "mon_kobold_01",
-   "name": "코볼드",
-   "aggression": 0.3,
-   "territoriality": 0.5,
    "sociality": 0.9,
-   "fear": 0.6,
-   "vengeance": 0.13,
-   "allyPriority": 0.95,
-   "intelligence": 0.233,
-   "band": "T2",
-   "preyIds": [
-    "mon_slime_green_01"
-   ],
-   "preyResources": [
-    "corpse"
-   ],
-   "activity": "nocturnal"
-  },
-  {
-   "id": "mon_dire_boar_01",
-   "name": "들멧돼지",
-   "aggression": 0.5,
-   "territoriality": 0.5,
-   "sociality": 0.5,
-   "fear": 0.85,
+   "fear": 0.7,
    "vengeance": 0.05,
    "allyPriority": 0.75,
-   "intelligence": 0.224,
+   "intelligence": 0.1,
    "band": "T2",
    "preyIds": [],
    "preyResources": [
-    "grass",
-    "roots"
-   ],
-   "activity": "diurnal"
-  },
-  {
-   "id": "mon_windlessrat_01",
-   "name": "무풍설쥐",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.85,
-   "vengeance": 0.05,
-   "allyPriority": 0.65,
-   "intelligence": 0.222,
-   "band": "T2",
-   "preyIds": [],
-   "preyResources": [
-    "고원 표토 이끼"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_parchmentzombie_01",
-   "name": "양피지 좀비",
-   "aggression": 0.4,
-   "territoriality": 0.2,
-   "sociality": 0.6,
-   "fear": 0.2,
-   "vengeance": 0.3,
-   "allyPriority": 0.8,
-   "intelligence": 0.204,
-   "band": "T2",
-   "preyIds": [
-    "mon_papermoth_01",
-    "mon_papermite_01"
-   ],
-   "preyResources": [
-    "먹광"
+    "열수 분출구 미네랄"
    ],
    "activity": "nocturnal"
   },
   {
-   "id": "mon_raider_01",
-   "name": "잔해탐지충",
-   "aggression": 0.7,
-   "territoriality": 0.5,
-   "sociality": 0.6,
-   "fear": 0.6,
-   "vengeance": 0.13,
-   "allyPriority": 0.8,
-   "intelligence": 0.2,
-   "band": "T2",
+   "id": "mon_troll_01",
+   "name": "트롤",
+   "aggression": 0.9,
+   "territoriality": 0.9,
+   "sociality": 0.3,
+   "fear": 0.3,
+   "vengeance": 0.65,
+   "allyPriority": 0.65,
+   "intelligence": 0.91,
+   "band": "X1",
    "preyIds": [
-    "mon_goblin_01",
-    "mon_kobold_01",
-    "mon_ruinpig_01"
+    "mon_bear_01",
+    "mon_ogre_01",
+    "mon_wolf_01",
+    "mon_dire_wolf_01",
+    "mon_dire_boar_01"
    ],
-   "preyResources": [
-    "corpse"
+   "preyResources": [],
+   "activity": "crepuscular"
+  },
+  {
+   "id": "mon_venom_scorpion_01",
+   "name": "맹독 전갈",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.2,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.6,
+   "intelligence": 0.547,
+   "band": "N",
+   "preyIds": [
+    "mon_scorpion_01",
+    "mon_giant_ant_01",
+    "mon_desertrat_01",
+    "mon_dunelizard_01",
+    "mon_dunewasp_01"
    ],
+   "preyResources": [],
    "activity": "nocturnal"
   },
   {
-   "id": "mon_boar_01",
-   "name": "멧돼지",
-   "aggression": 0.3,
-   "territoriality": 0.4,
-   "sociality": 0.5,
-   "fear": 0.85,
-   "vengeance": 0.05,
-   "allyPriority": 0.75,
-   "intelligence": 0.185,
-   "band": "T1",
-   "preyIds": [],
-   "preyResources": [
-    "grass",
-    "roots"
-   ],
-   "activity": "diurnal"
-  },
-  {
-   "id": "mon_driftvulture_01",
-   "name": "표류수리",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.6,
-   "vengeance": 0.15,
-   "allyPriority": 0.65,
-   "intelligence": 0.153,
-   "band": "T1",
-   "preyIds": [
-    "mon_reefstar_01",
-    "mon_sanddart_01"
-   ],
-   "preyResources": [
-    "corpse",
-    "organic_waste"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_slime_green_01",
-   "name": "초록슬라임",
+   "id": "mon_voidjelly_01",
+   "name": "보이드 젤리",
    "aggression": 0.2,
    "territoriality": 0.2,
    "sociality": 0.9,
-   "fear": 0.65,
-   "vengeance": 0.08,
-   "allyPriority": 0.95,
-   "intelligence": 0.06,
-   "band": "T1",
+   "fear": 0.5,
+   "vengeance": 0.05,
+   "allyPriority": 0.9,
+   "intelligence": 0.08,
+   "band": "S1",
    "preyIds": [],
    "preyResources": [
-    "organic_waste",
-    "corpse"
+    "보이드 이슬"
    ],
    "activity": "always"
-  },
-  {
-   "id": "mon_ooze_01",
-   "name": "오우즈",
-   "aggression": 0.3,
-   "territoriality": 0.3,
-   "sociality": 0.6,
-   "fear": 0.65,
-   "vengeance": 0.08,
-   "allyPriority": 0.8,
-   "intelligence": 0.045,
-   "band": "T1",
-   "preyIds": [
-    "mon_slime_green_01",
-    "mon_marshleech_01"
-   ],
-   "preyResources": [
-    "organic_waste",
-    "corpse"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_giant_ant_01",
-   "name": "둑개미",
-   "aggression": 0.5,
-   "territoriality": 0.8,
-   "sociality": 0.95,
-   "fear": 0.55,
-   "vengeance": 0.03,
-   "allyPriority": 0.975,
-   "intelligence": 0.04,
-   "band": "T1",
-   "preyIds": [],
-   "preyResources": [
-    "plants",
-    "insects"
-   ],
-   "activity": "diurnal"
   },
   {
    "id": "mon_voidmite_01",
@@ -2366,42 +2854,6 @@
    "preyResources": [
     "corpse",
     "detritus"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_dunewasp_01",
-   "name": "사막말벌",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.55,
-   "vengeance": 0.0,
-   "allyPriority": 0.65,
-   "intelligence": 0.013,
-   "band": "T1",
-   "preyIds": [
-    "mon_dunefox_01"
-   ],
-   "preyResources": [
-    "꽃"
-   ],
-   "activity": "always"
-  },
-  {
-   "id": "mon_stormcrawler_01",
-   "name": "폭풍진딧물",
-   "aggression": 0.7,
-   "territoriality": 0.8,
-   "sociality": 0.3,
-   "fear": 0.55,
-   "vengeance": 0.0,
-   "allyPriority": 0.65,
-   "intelligence": 0.006,
-   "band": "T1",
-   "preyIds": [],
-   "preyResources": [
-    "바람씨앗"
    ],
    "activity": "always"
   },
@@ -2424,103 +2876,79 @@
    "activity": "crepuscular"
   },
   {
-   "id": "mon_beetle_01",
-   "name": "장수풍뎅이",
-   "aggression": 0.3,
-   "territoriality": 0.4,
-   "sociality": 0.6,
-   "fear": 0.5,
-   "vengeance": 0.1,
-   "allyPriority": 0.7,
-   "intelligence": 0.082,
-   "band": "T1",
-   "preyIds": [],
-   "preyResources": [
-    "corpse",
-    "rotten_wood",
-    "detritus"
-   ],
-   "activity": "diurnal"
-  },
-  {
-   "id": "mon_foreststagbeetle_01",
-   "name": "숲 사슴벌레",
-   "aggression": 0.3,
-   "territoriality": 0.5,
-   "sociality": 0.6,
-   "fear": 0.45,
-   "vengeance": 0.15,
-   "allyPriority": 0.7,
-   "intelligence": 0.114,
-   "band": "T1",
-   "preyIds": [],
-   "preyResources": [
-    "corpse",
-    "rotten_wood"
-   ],
-   "activity": "diurnal"
-  },
-  {
-   "id": "mon_bee_01",
-   "name": "독벌",
-   "aggression": 0.3,
-   "territoriality": 0.8,
-   "sociality": 0.95,
-   "fear": 0.3,
-   "vengeance": 0.4,
-   "allyPriority": 0.9,
-   "intelligence": 0.191,
-   "band": "T1",
-   "preyIds": [
-    "mon_moth_01"
-   ],
-   "preyResources": [
-    "corpse",
-    "nectar",
-    "flowers"
-   ],
-   "activity": "diurnal"
-  },
-  {
-   "id": "mon_crow_01",
-   "name": "까마귀",
-   "aggression": 0.3,
-   "territoriality": 0.4,
-   "sociality": 0.8,
-   "fear": 0.3,
-   "vengeance": 0.45,
-   "allyPriority": 0.85,
-   "intelligence": 0.617,
-   "band": "T1",
-   "preyIds": [
-    "mon_rabbit_01",
-    "mon_rat_01",
-    "mon_tombworm_01",
-    "mon_graverat_01"
-   ],
-   "preyResources": [
-    "corpse",
-    "organic_waste"
-   ],
-   "activity": "diurnal"
-  },
-  {
-   "id": "mon_slime_blue_01",
-   "name": "슬라임(블루)",
+   "id": "mon_weightlessbug_01",
+   "name": "무게 없는 벌레",
    "aggression": 0.2,
-   "territoriality": 0.2,
+   "territoriality": 0.3,
    "sociality": 0.9,
    "fear": 0.65,
-   "vengeance": 0.08,
-   "allyPriority": 0.95,
+   "vengeance": 0.05,
+   "allyPriority": 0.5,
    "intelligence": 0.06,
-   "band": "T1",
+   "band": "T2",
+   "preyIds": [
+    "mon_gravitymoss_01"
+   ],
+   "preyResources": [
+    "중력 먼지"
+   ],
+   "activity": "nocturnal"
+  },
+  {
+   "id": "mon_windlessrat_01",
+   "name": "무풍설쥐",
+   "aggression": 0.7,
+   "territoriality": 0.8,
+   "sociality": 0.3,
+   "fear": 0.85,
+   "vengeance": 0.05,
+   "allyPriority": 0.65,
+   "intelligence": 0.222,
+   "band": "T2",
    "preyIds": [],
    "preyResources": [
-    "organic_waste",
-    "corpse"
+    "고원 표토 이끼"
    ],
    "activity": "always"
+  },
+  {
+   "id": "mon_wolf_01",
+   "name": "늑대",
+   "aggression": 0.6,
+   "territoriality": 0.6,
+   "sociality": 0.8,
+   "fear": 0.35,
+   "vengeance": 0.4,
+   "allyPriority": 0.9,
+   "intelligence": 0.478,
+   "band": "N",
+   "preyIds": [
+    "mon_boar_01",
+    "mon_goblin_01",
+    "mon_rabbit_01",
+    "mon_rat_01"
+   ],
+   "preyResources": [],
+   "activity": "crepuscular"
+  },
+  {
+   "id": "mon_zombie_01",
+   "name": "좀비",
+   "aggression": 0.4,
+   "territoriality": 0.2,
+   "sociality": 0.6,
+   "fear": 0.2,
+   "vengeance": 0.3,
+   "allyPriority": 0.8,
+   "intelligence": 0.246,
+   "band": "T2",
+   "preyIds": [
+    "mon_ruinspigeon_01"
+   ],
+   "preyResources": [
+    "corpse"
+   ],
+   "activity": "nocturnal"
   }
  ]
 }

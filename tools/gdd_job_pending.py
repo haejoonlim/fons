@@ -215,7 +215,7 @@ def render(found, jobs, kws, doubt=()):
             for _, lineno, ci, toks, cell in rows:
                 new = cell
                 for old, now, _ in sorted(toks, key=lambda t: -len(t[0])):
-                    new = new.replace(old, now)
+                    new = cg.replace_token(new, old, now)
                 left = sorted(t for t in doubt if re.search(WORD % re.escape(t), cell))
                 tail = " †" if left else ""
                 if left:

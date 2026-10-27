@@ -79,14 +79,14 @@ ORIGINAL_PREFIXES = (
     "fons-launcher/",
     "Scripts/",
     "ProjectSettings/",
-    "soul-commander/",
+    "soul-commander/",   # path-ok 원본에만 있는 접두어 목록 — 실행 경로가 아니라 대조표
     "Assets/",
     "game3d/",
 )
 
 # 원본 저장소를 가리키는 문면 표지. 이게 있는 줄은 '원본 이야기'로 본다.
 ORIGINAL_MARKERS = (
-    "soul-commander",
+    "soul-commander",    # path-ok 원본 저장소 표지 — 이 줄이 있는 문서는 '원본 이야기'다
     "fons-web-ver",
     "design-docs",
     "GDD_v8",
@@ -121,30 +121,18 @@ CLAIM_MARKERS = UNVERIFIED_MARKERS + VERIFIED_MARKERS + MEASURED_MARKERS
 REFUTATION_MARKERS = ("원본에 없음", "폐기", "철회", "구값", "삭제", "틀림")
 
 # 아직 안 만든 것이 정상인 미래 산출물. 여기 있으면 참조 검사에서 면제.
+# 이미 생긴 경로는 여기서 빼야 한다 — 남겨 두면 낡은 참조까지 검사가 통과시킨다.
+# 2026-10-24 정리: 실제로 생긴 docs/*, godot/data, godot/assets, art-source, audio-source,
+# title.tscn, estate.gd 를 뺐고, 폐기된 godot/core/summon.gd(→gacha.gd)와
+# godot/game/world/*(→game/view/view_3d/)도 뺐다.
 PLANNED_PATHS = (
-    "docs/README.md",
-    "docs/gdd",
-    "docs/adr",
-    "docs/art",
-    "docs/audio",
-    "godot/data",
-    "godot/assets",
-    "art-source",
-    "audio-source",
-    "godot/game/ui/title/title.tscn",
     "godot/export_presets.cfg",
     "godot/autoload/save_manager.gd",
-    "godot/core/summon.gd",
-    "godot/core/estate.gd",
+    "godot/core/save.gd",
     "godot/core/party.gd",
     "godot/core/tower.gd",
     "godot/core/economy.gd",
-    "godot/game/world",
-    "godot/game/world/scene.gd",
-    "godot/game/world/estate_3d.gd",
-    "godot/game/world/explore_3d.gd",
-    "godot/game/world/monparts.gd",
-    "godot/game/world/title.gd",
+    "godot/game/view/view_3d",
     "godot/tests/unit/test_game.gd",
     "godot/tests/unit/test_w1.gd",
     "godot/tests/unit/test_w2.gd",
@@ -155,9 +143,6 @@ PLANNED_PATHS = (
     "godot/tests/unit/test_g2.gd",
     "godot/tests/unit/test_g3.gd",
     "godot/tests/unit/test_g4.gd",
-    "tools/check_unity_health.sh",
-    "tools/run_editmode_tests.sh",
-    "tools/edit_guard.py",
     "build",
 )
 
@@ -192,6 +177,8 @@ SKIP_DIRS = {
     "node_modules",
     "build",
     "__pycache__",
+    ".claude",
+    ".agents",
 }
 
 # 원본에서 문면 그대로 복사한 문서는 이 리포의 출처 표기 규칙 대상이 아니다.
@@ -279,20 +266,28 @@ def is_path_like(tok):
     return "." in tok.rsplit("/", 1)[-1]
 
 
-def classify_ref(root, rel):
-    """참조 하나를 원본/존재/미래/없음 으로 분류."""
+def classify_ref(root, rel, doc_dir=None):
+    """참조 하나를 원본/존재/미래/없음 으로 분류.
+
+    doc_dir(문서가 있는 디렉터리, root 기준 상대)을 주면 그 문서 기준 상대 경로를
+    먼저 본다 — README 가 같은 폴더의 `sims/gacha_test.py` 를 가리키는 식의
+    문서 안 상대 참조를 "없는 파일"로 오인하지 않기 위해서다.
+    """
     rel = norm(rel)
     if not rel:
         return "original"
     for prefix in ORIGINAL_PREFIXES:
         if rel.startswith(prefix):
             return "original"
+    candidates = []
+    if doc_dir is not None and str(doc_dir) not in ("", "."):
+        candidates.append(norm(str(doc_dir) + "/" + rel))
     for base in RESOLVE_BASES:
-        joined = norm(base + rel) if base else rel
+        candidates.append(norm(base + rel) if base else rel)
+    for joined in candidates:
         if (root / joined).exists():
             return "exists"
-    for base in RESOLVE_BASES:
-        joined = norm(base + rel) if base else rel
+    for joined in candidates:
         if is_planned(joined):
             return "planned"
     if is_planned(rel):
@@ -424,7 +419,7 @@ def check_broken_reference(root, docs, stats):
             for tok in BACKTICK_RE.findall(line):
                 if not is_path_like(tok):
                     continue
-                outcome = classify_ref(root, tok)
+                outcome = classify_ref(root, tok, path.parent.relative_to(root))
                 if outcome in ("exists", "original", "planned"):
                     stats["exempt"] += 1
                     continue

@@ -41,6 +41,20 @@ STEPS = [
     ("gddrev", "GDD 개정 반영본 사본",
      [sys.executable, "tools/gen_gdd_revised.py", "--quiet"]),
     ("text", "데이터 문장 깨짐", [sys.executable, "tools/check_data_text.py"]),
+    # 입력기(IME)로 섞여 들어간 한자·CJK 문장부호. 화면 문자열이라 사람은 뜻이 통해 넘긴다
+    # (2026-10-24 이식 직후 실측 3건: data/basic_attacks.json·godot/core/run_state.gd·promotion_lab.html
+    #  각 1건 — 유입 글자를 그대로 옮기면 이 게이트에 걸리므로 여기 적지 않는다). cjk-ok
+    #  판본 병기는 tools/check_cjk.py ALLOW_TERMS 에 등록된 것만 통과한다.
+    ("cjk", "한자·CJK 문장부호 유입", [sys.executable, "tools/check_cjk.py"]),
+    # 지워진 원본 클론의 경로·옛 저장소 이름이 코드에 남아 이 머신에서만 도는 것을 막는다.
+    # 주석·독스트링은 이력이므로 지운 뒤 보고, 이유를 적은 `path-ok` 만 예외다.
+    ("paths", "절대경로·옛 이름", [sys.executable, "tools/check_paths.py"]),
+    # 생성기를 다시 돌리면 사람이 넣은 필드(regions·gatekeeper·missionWeights…)가 키째로 사라진다.
+    # 원본이 gen_expand_260 재실행으로 겪은 사고다. data/ 가 유일한 정본 사본이면 되돌릴 원본도 없다.
+    ("manfields", "손 필드 존재 (생성기 덮어쓰기)", [sys.executable, "tools/check_manual_fields.py"]),
+    # 키가 남아 있어도 **값**이 0이나 기본값으로 되돌아가는 경우가 있다. 값 해시 기준선과 대조한다.
+    # 바뀐 값이 커밋된 정본이면 FAIL, 미커밋 작업뿐이면 WARN(rc 0). 갱신은 --update --reason 필수.
+    ("manvalues", "손 필드 값 기준선", [sys.executable, "tools/check_manual_values.py"]),
     # 테스트 센터 페이지는 값을 JSON 으로 박아 둔 정적 생성물이다(원본 생성기 없음).
     # 종의 스탯·티어·좌표를 data/ 에서 다시 계산해 어긋나면 --check 로 막고, --write 로 맞힌다.
     ("pages", "테스트 센터 페이지 내장값 ↔ data/",
@@ -58,10 +72,29 @@ STEPS = [
     # prey 가 없는 id 를 가리켜도 통과했다 — 게임은 그 개체를 조용히 기본값으로 돌린다.
     ("monsters", "몬스터 구조·참조 무결성 (M-1~M-10)",
      [sys.executable, "tools/check_monsters.py"]),
+    # 377종 먹이그물의 구조 — 쌍방 위반·고아·순환·0간선 바이옴·근원자원 biomeId.
+    # 종을 추가하고 predators 목록을 반만 고치면 위 게이트들은 전부 통과하는데 그물만 끊긴다.
+    # (2026-10-26 첫 실행에서 채널 쪽 biomeId 2건이 옛 이름 `biome_archive` 인 것을 잡았다)
+    ("foodweb", "먹이그물 구조·근원자원 정합 (E-1~E-7)",
+     [sys.executable, "sim/foodweb.py"]),
+    # 07 §8 의 개체수 모델 — 원본 `audit_sim.py` 포팅. 구조(foodweb)가 맞아도 계절 순환이
+    # 숫자로 돌지 않으면 그 규칙은 문서에만 있는 것이다. 마르코프·φ·Holling·10% 법칙을
+    # 지금 데이터로 다시 돌린다 (S-1~S-7 · Godot 패리티 픽스처 P-1 · 26바이옴 × 12계절 · 약 3.5초).
+    ("ecosim", "계절 순환 모델 재현 (S-1~S-7 · P-1)",
+     [sys.executable, "sim/ecology.py"]),
     # 저층 사육 마물 — 도감 377 불변식 · 성격 기준 · 전투 개체 승격을 대조한다.
     # (2026-10-18 에 마물이 표에는 있는데 게임에는 없는 상태를 만들어서 넣었다)
     ("husbandry", "저층 사육 마물 정합",
      [sys.executable, "sim/center/sims/gen_husbandry_roster.py", "--check"]),
+    # 블록 16·17·20(76~85·96~100) 전투 로스터 — 승격 5종과 정령 6종 habitat 정합을 대조한다.
+    # (2026-10-23 보강. 누가 ambient 로 되돌리거나 habitat 을 다시 합치면 게이트는 통과하고
+    #  게임만 76~85 벽으로 돌아간다 — 사육 마물 게이트와 같은 이유)
+    ("blockroster", "블록 16·17·20 로스터 정합",
+     [sys.executable, "sim/center/sims/gen_block_roster.py", "--check"]),
+    # 먹이층 19종 승격 — 17바이옴이 다시 ambient 로 돌아가면 게이트는 통과하고
+    # 75층의 사슬 사냥만 조용히 사라진다 (블록 로스터 게이트와 같은 이유).
+    ("preyroster", "먹이층 19종 승격 정합",
+     [sys.executable, "sim/center/sims/promote_prey_roster.py", "--check"]),
     # 직업 AI 프로필 — P0-1~P0-7 + 스탤 키 혼입 금지 (J 가 CP 경로에 닿지 못하게).
     ("jobai", "직업 AI 프로필 (P0-1~7)",
      [sys.executable, "tools/check_job_profiles.py"]),
@@ -69,6 +102,28 @@ STEPS = [
     # 표가 바뀌면 생성기를 다시 돌린다: 05 §5-1 role 적합도 · gacha_test 상수.
     ("personality", "성격 데이터 드리프트 (13 main · 52 sub)",
      [sys.executable, "tools/gen_personalities.py", "--check"]),
+    # 바이옴 에셋 키 — biomes.json 의 topologyKit·slots 에서 파생한 키만 담는다 (메시 아님).
+    # 손으로 고치면 사본과 어긋나고, 정본(biomes.json)과 다른 세계 이름이 생긴다.
+    ("biomeassets", "바이옴 에셋 키 드리프트 (biomes 파생)",
+     [sys.executable, "tools/gen_biome_assets.py", "--check"]),
+    # 지형 키트 `.glb` — 생성기(표준 라이브러리)가 뽑은 바이트와 커밋된 결과물이 같은가.
+    # 손으로 메시를 고치면 다음 사람이 같은 결과를 못 만든다 (art-source/README.md 규칙 1).
+    ("kitart", "지형 키트 .glb 드리프트 (생성기 파생)",
+     [sys.executable, "tools/gen_kit_glb.py", "--check"]),
+    # 생물 에셋 키 — 바이옴별 3종 매핑표. monsters.json·ecology_codex.json·biomes.json 파생.
+    # 손으로 고치면 아트가 그 바이옴에 살지 않는 종을 그린다 (habitat 판정이 게임과 갈린다).
+    ("monsterassets", "생물 에셋 키 매핑 (바이옴별 3종)",
+     [sys.executable, "tools/gen_monster_assets.py", "--check"]),
+    # 생물 몸통 `.glb` — 대역 3종. 지형 키트와 같은 규칙: 손으로 메시를 고치면 exit 1.
+    ("creatureart", "생물 몸통 .glb 드리프트 (생성기 파생)",
+     [sys.executable, "tools/gen_monster_glb.py", "--check"]),
+    # 영웅 몸통 `.glb` — 대역 3종(guard·scout·mystic). 같은 규칙.
+    ("heroart", "영웅 몸통 .glb 드리프트 (생성기 파생)",
+     [sys.executable, "tools/gen_hero_glb.py", "--check"]),
+    # 직업 → 몸통 대역 — 34직업이 어느 실루엣을 입는지. job_tree.json 파생.
+    # 손으로 고치면 직업이 늘 때 한 직업이 조용히 키 해시로 떨어진다.
+    ("heroassets", "영웅 에셋 키 매핑 (직업 34)",
+     [sys.executable, "tools/gen_hero_assets.py", "--check"]),
     # 계약 단위 검사만 돈다 (`--unit`) — 게이트 실행은 위에서 이미 했다.
     #   마커(`[PASS]/[FAIL] <단계 id>`)는 이 파일이 각 단계 출력에서 직접 본다(run_step +
     #   marker_gap). 그래서 계약 검사가 게이트를 두 번 돌리지 않는다 (예전엔 그래서 런이 2배).

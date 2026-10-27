@@ -44,24 +44,44 @@ func start(estate_data: Dictionary, monsters: Variant, biomes: Variant,
 	born = []
 
 
-func run(heroes: Array, with_life: bool = true) -> Dictionary:
+func _open_site() -> int:
+	## 아직 안 지운 첫 조우. 청크가 갈리면 번호가 달라지므로 부를 때마다 다시 찾는다.
+	for i in explore.sites.size():
+		if not bool(explore.sites[i]["cleared"]):
+			return i
+	return -1
+
+
+func run(heroes: Array, with_life: bool = true, now: int = 0) -> Dictionary:
 	## `with_life=false` 는 **탐험만** 도는 대조군이다 (영지·저녁 없음).
 	## 전투만 도는 대조군은 부르는 쪽이 `FonsFloorRun` 으로 따로 돌린다.
+	## `now` 는 시계 주입이다 — 0 이면 기기 시각. 정산 검사가 가짜 시계를 쓴다.
 	log_lines = []
 	born = []
 	if with_life:
+		# 섬일 정산 — 여러 층 하루가 같은 섬일에 들어도 한 번만 돈다 (`FonsIslandClock.tick`).
+		# 수지 줄은 영지 로그에 붙으므로, 표시를 먼저 찍고 그 뒤를 그대로 가져온다.
+		var settle_mark := estate.log_lines.size()
+		estate.settle(now)
+		_append(estate.log_lines, settle_mark)
 		var mark := estate.log_lines.size()
 		var shift := estate.shift(heroes)
 		_append(estate.log_lines, mark)
 		born.append_array(shift["born"])
 
 	var turns := 0
-	for i in explore.sites.size():
-		if bool(explore.sites[i]["cleared"]):
-			continue
-		var move := explore.walk_to(i, heroes)
+	# 무한맵 — 활성 조우가 27곳이라 전부 돌지 않는다. 층 목표만 채우고 하루를 닫는다.
+	# 걷는 동안 청크가 갈리면 목록 순서가 바뀌므로, 걸은 뒤에 번호를 다시 고른다.
+	var guard := 0
+	while not explore.mission_done() and guard < explore.sites.size() * 2:
+		guard += 1
+		var index := _open_site()
+		if index < 0:
+			break
+		var move := explore.walk_to(index, heroes)
 		log_lines.append_array(move["log"])
-		var out := explore.fight(i, heroes, _rng)
+		index = _open_site()
+		var out := explore.fight(index, heroes, _rng)
 		log_lines.append_array(out["log"])
 		turns += int(out["turns"])
 		if String(out["winner"]) != "ally":

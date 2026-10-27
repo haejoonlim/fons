@@ -69,8 +69,9 @@ godot/
       view_contract.gd     FonsView — mount/apply/unmount/intent 계약
       projection.gd        FonsProjection — 순수 함수
       view_factory.gd      모드 → PackedScene. 유일한 분기점
-      view_2d/view_2d.tscn Node2D. _draw()로 엔티티를 그린다
-      view_3d/             비어 있다. 3D 착수 시 같은 계약으로 추가
+      view_2d/view_2d.tscn Node2D. _draw()로 엔티티를 그린다 (기본 모드)
+      view_3d/view_3d.tscn Node3D. 같은 계약의 골격 — 기본 도형·지면·격자·카메라
+      party_panel.gd       오른쪽 파티 칸 — 2D·3D가 같은 그림을 쓴다
   autoload/           전역 상태·데이터 로더
 ```
 
@@ -180,6 +181,21 @@ godot/
 | 카메라·조명 | GUT 시뮬 테스트 전부 |
 
 `FonsViewFactory`에 3D 경로를 넣는 순간 전환이 끝난다.
+
+> 2026-10-22: 3D 골격을 추가했다 (`view_3d/`). 기본 모드는 여전히 `2d` — 연출·패널이 2D 쪽에 먼저 있다.
+> 3D는 `FonsViewFactory.create("3d")` 또는 `fons/view_mode="3d"` 로 켜서 나란히 본다.
+>
+> 2026-10-22: 3D 에 에셋 키→메시 자리(`register_asset` — 등록이 없으면 종류별 도형)와
+> HP 바(`FonsHpBar` — 2D 와 같은 그림)를 붙였다.
+>
+> 2026-10-22: 필드 스냅샷도 영웅마다 `asset` 키(`hero:<직업 id>`)를 싣는다. 3D 는 그 키들로
+> 색을 나눠 주므로 다섯이 같은 모습이 아니다. 남은 차이는 실제 자산과 카메라 추적뿐이다.
+>
+> 2026-10-25: 기본 뷰를 `3d` 로 올렸다(`project.godot` 의 `fons/view_mode`). "2D 먼저" 는 **착수 순서**였고
+> 그 순서는 끝났다 — 2D 뷰는 `FonsViewFactory.create("2d")` 폴백으로 남는다. ADR 0003 에도 같은 날 개정 절을 붙였다.
+>
+> 2026-10-25: 카메라 추적도 끝났다 — 정사영 탑뷰를 **3인칭 추적**(원근 50°·거리 4.2·기울기 18°)으로 바꿨다.
+> 위 "남은 차이는 실제 자산과 카메라 추적" 중 카메라 쪽은 해소됐다. 구도·조작은 [ART_BIBLE](../art/ART_BIBLE.md) 카메라 절.
 
 ---
 

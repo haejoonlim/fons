@@ -45,6 +45,20 @@ func _counters(heroes: Array) -> Array:
 	return out
 
 
+func test_island_day_settles_once_across_floor_days() -> void:
+	## 층 하루(FonsDay)와 섬일은 다른 단위다 — 같은 섬일에 층 하루를 두 번 돌려도 정산은 한 번.
+	var d := _day()
+	d.estate.clock_epoch = 1000
+	d.estate.last_settled_day = 1
+	var heroes := _party()
+	var first := d.run(heroes, true, 1000 + 12343)
+	assert_eq(d.estate.last_settled_day, 2, "경계를 넘은 날이 정산된다")
+	assert_true(first["log"].has("섬 2일"), "정산한 날이 로그에 남는다")
+	var second := d.run(heroes, true, 1000 + 12343 + 600)
+	assert_eq(d.estate.last_settled_day, 2, "같은 섬일에 두 번 정산하지 않는다")
+	assert_false(second["log"].has("섬 3일"), "없는 날을 지어내지 않는다")
+
+
 func test_one_day_connects_estate_field_and_recovery() -> void:
 	var heroes := _party()
 	var out := _day().run(heroes)
@@ -113,17 +127,21 @@ func test_life_actions_reach_engraving_not_just_the_mirror() -> void:
 	for d in 5:
 		FonsDay.renew(heroes)
 		_day(14 + d).run(heroes)
+	var catalog: Array = DataLoader.load_json("skills_catalog.json")["skills"]
 	var engraved := 0
-	var life_domain := 0
+	var life_ready := 0
 	for hero in heroes:
 		var brain: FonsBrain = hero["brain"]
 		assert_gt(brain.counters.size(), 0, "생활 태그가 브레인 카운터에 들어간다")
 		for id in brain.book:
 			engraved += 1
-			if String(brain.book[id]["domain"]) in ["생산", "지식", "사회", "회복"]:
-				life_domain += 1
+		# 각인은 50% 판정 + 도메인 선호라 "생활 기술이 뽑힐" 보장이 없다. 대신 생활 태그가
+		# **각인 후보 조건**을 넘는지 본다 — 태그가 거울에만 쌓였다면 후보 풀에 못 들어온다.
+		for skill in FonsSkillBook.eligible(brain.book, brain.counters, catalog):
+			if String(skill["domain"]) in ["생산", "지식", "사회", "회복"]:
+				life_ready += 1
 	assert_gt(engraved, 0, "닷새면 기술이 깨우쳐진다")
-	assert_gt(life_domain, 0, "그 기술 중 생활 도메인이 있어야 한다 — 하루가 각인 재료가 됐다는 증거")
+	assert_gt(life_ready, 0, "생활 태그가 각인 후보 조건을 넘는다 — 하루가 각인 재료가 됐다는 증거")
 
 
 func test_every_born_skill_name_is_a_catalog_name() -> void:

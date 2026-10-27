@@ -1,0 +1,299 @@
+{
+  "meta": {
+    "v80": "hero_assets v1 — S5b 직업별 영웅 몸통 대역 · 2026-10-27",
+    "source": "data/job_tree.json — 직업 role 에서 파생한다. 손으로 고치지 않는다.",
+    "generatedBy": "tools/gen_hero_assets.py",
+    "keyRule": "hero:<job id> — field_state.gd 의 entity.asset 문자열 그대로",
+    "bandRule": "역할 → 대역: guard = 선봉·수호 · scout = 암살·포격·무직 · mystic = 마법·지원·생활",
+    "bands": {
+      "guard": [
+        "선봉",
+        "수호"
+      ],
+      "scout": [
+        "암살",
+        "포격",
+        "무직"
+      ],
+      "mystic": [
+        "마법",
+        "지원",
+        "생활"
+      ]
+    }
+  },
+  "jobs": [
+    {
+      "key": "hero:l1_archer",
+      "id": "l1_archer",
+      "name": "궁수",
+      "stage": 1,
+      "role": "포격",
+      "band": "scout"
+    },
+    {
+      "key": "hero:l1_assassin",
+      "id": "l1_assassin",
+      "name": "암살자",
+      "stage": 1,
+      "role": "암살",
+      "band": "scout"
+    },
+    {
+      "key": "hero:l1_guardian",
+      "id": "l1_guardian",
+      "name": "수호자",
+      "stage": 1,
+      "role": "수호",
+      "band": "guard"
+    },
+    {
+      "key": "hero:l1_mage",
+      "id": "l1_mage",
+      "name": "마법사",
+      "stage": 1,
+      "role": "마법",
+      "band": "mystic"
+    },
+    {
+      "key": "hero:l1_nameless",
+      "id": "l1_nameless",
+      "name": "무명자",
+      "stage": 1,
+      "role": "무직",
+      "band": "scout"
+    },
+    {
+      "key": "hero:l1_supporter",
+      "id": "l1_supporter",
+      "name": "지원가",
+      "stage": 1,
+      "role": "지원",
+      "band": "mystic"
+    },
+    {
+      "key": "hero:l1_warrior",
+      "id": "l1_warrior",
+      "name": "전사",
+      "stage": 1,
+      "role": "선봉",
+      "band": "guard"
+    },
+    {
+      "key": "hero:l2_breaker",
+      "id": "l2_breaker",
+      "name": "파쇄사",
+      "stage": 2,
+      "role": "선봉",
+      "band": "guard"
+    },
+    {
+      "key": "hero:l2_cutthroat",
+      "id": "l2_cutthroat",
+      "name": "자객",
+      "stage": 2,
+      "role": "암살",
+      "band": "scout"
+    },
+    {
+      "key": "hero:l2_druid",
+      "id": "l2_druid",
+      "name": "드루이드",
+      "stage": 2,
+      "role": "지원",
+      "band": "mystic"
+    },
+    {
+      "key": "hero:l2_elementalist",
+      "id": "l2_elementalist",
+      "name": "원소 마도사",
+      "stage": 2,
+      "role": "마법",
+      "band": "mystic"
+    },
+    {
+      "key": "hero:l2_fighter",
+      "id": "l2_fighter",
+      "name": "격투사",
+      "stage": 2,
+      "role": "선봉",
+      "band": "guard"
+    },
+    {
+      "key": "hero:l2_hexcaller",
+      "id": "l2_hexcaller",
+      "name": "주술사",
+      "stage": 2,
+      "role": "마법",
+      "band": "mystic"
+    },
+    {
+      "key": "hero:l2_hierophant",
+      "id": "l2_hierophant",
+      "name": "성술사",
+      "stage": 2,
+      "role": "마법",
+      "band": "mystic"
+    },
+    {
+      "key": "hero:l2_hunter",
+      "id": "l2_hunter",
+      "name": "사역사",
+      "stage": 2,
+      "role": "포격",
+      "band": "scout"
+    },
+    {
+      "key": "hero:l2_ironwall",
+      "id": "l2_ironwall",
+      "name": "철벽기사",
+      "stage": 2,
+      "role": "수호",
+      "band": "guard"
+    },
+    {
+      "key": "hero:l2_jobless",
+      "id": "l2_jobless",
+      "name": "무직",
+      "stage": 2,
+      "role": "무직",
+      "band": "scout"
+    },
+    {
+      "key": "hero:l2_magearrow",
+      "id": "l2_magearrow",
+      "name": "창술사",
+      "stage": 2,
+      "role": "선봉",
+      "band": "guard"
+    },
+    {
+      "key": "hero:l2_marksman",
+      "id": "l2_marksman",
+      "name": "명사수",
+      "stage": 2,
+      "role": "포격",
+      "band": "scout"
+    },
+    {
+      "key": "hero:l2_mentalist",
+      "id": "l2_mentalist",
+      "name": "정신술사",
+      "stage": 2,
+      "role": "지원",
+      "band": "mystic"
+    },
+    {
+      "key": "hero:l2_monk",
+      "id": "l2_monk",
+      "name": "수도사",
+      "stage": 2,
+      "role": "지원",
+      "band": "mystic"
+    },
+    {
+      "key": "hero:l2_paladin",
+      "id": "l2_paladin",
+      "name": "성기사",
+      "stage": 2,
+      "role": "수호",
+      "band": "guard"
+    },
+    {
+      "key": "hero:l2_poisoner",
+      "id": "l2_poisoner",
+      "name": "맹독사",
+      "stage": 2,
+      "role": "암살",
+      "band": "scout"
+    },
+    {
+      "key": "hero:l2_priest",
+      "id": "l2_priest",
+      "name": "신관",
+      "stage": 2,
+      "role": "지원",
+      "band": "mystic"
+    },
+    {
+      "key": "hero:l2_sage",
+      "id": "l2_sage",
+      "name": "현자",
+      "stage": 2,
+      "role": "무직",
+      "band": "scout"
+    },
+    {
+      "key": "hero:l2_spirit_knight",
+      "id": "l2_spirit_knight",
+      "name": "정령기사",
+      "stage": 2,
+      "role": "선봉",
+      "band": "guard"
+    },
+    {
+      "key": "hero:l2_strategist",
+      "id": "l2_strategist",
+      "name": "길잡이",
+      "stage": 2,
+      "role": "지원",
+      "band": "mystic"
+    },
+    {
+      "key": "hero:l2_summoner",
+      "id": "l2_summoner",
+      "name": "소환술사",
+      "stage": 2,
+      "role": "마법",
+      "band": "mystic"
+    },
+    {
+      "key": "hero:l2_swordsman",
+      "id": "l2_swordsman",
+      "name": "검술사",
+      "stage": 2,
+      "role": "선봉",
+      "band": "guard"
+    },
+    {
+      "key": "hero:l2_thief",
+      "id": "l2_thief",
+      "name": "도적",
+      "stage": 2,
+      "role": "암살",
+      "band": "scout"
+    },
+    {
+      "key": "hero:l2_vanguard",
+      "id": "l2_vanguard",
+      "name": "전위기사",
+      "stage": 2,
+      "role": "수호",
+      "band": "guard"
+    },
+    {
+      "key": "hero:l2_vengeance_knight",
+      "id": "l2_vengeance_knight",
+      "name": "광전사",
+      "stage": 2,
+      "role": "선봉",
+      "band": "guard"
+    },
+    {
+      "key": "hero:l2_volley",
+      "id": "l2_volley",
+      "name": "포화사수",
+      "stage": 2,
+      "role": "포격",
+      "band": "scout"
+    },
+    {
+      "key": "hero:l3_life",
+      "id": "l3_life",
+      "name": "생활직",
+      "stage": 3,
+      "role": "생활",
+      "band": "mystic"
+    }
+  ]
+}

@@ -23,6 +23,9 @@ art-source/
 1. 원본 → 결과물 경로를 **스크립트로 고정**한다. 손으로 내보내면 다음 사람이 같은 결과를 못 만든다.
    - Blender: `blender --background --python art-source/export/<name>.py`
    - Aseprite: `aseprite -b <file>.aseprite --sheet <out>.png --data <out>.json`
+   - 3D 지형 키트는 **Blender 를 거치지 않는다** — 이 머신의 Blender 4.5 는 번들 numpy 가
+     Accelerate 심볼을 못 찾아 glTF 익스포터가 죽는다. 메시는 [`tools/gen_kit_glb.py`](../tools/gen_kit_glb.py)
+     가 직접 쓰고, `--check` 로 드리프트를 막는다 ([docs/design/바이옴_에셋_계획.md](../docs/design/바이옴_에셋_계획.md) §6).
 2. 결과물 이름은 **원본과 같게** 유지한다 (`hero_knight.aseprite` → `hero_knight.png`).
    이름이 갈라지면 어느 원본에서 나왔는지 추적이 끊긴다.
 3. 큰 바이너리(수십 MB 이상)는 Git LFS 로 추적한다. `git lfs install` 은 이 머신에 이미 되어 있다
@@ -30,7 +33,25 @@ art-source/
 4. 팔레트·해상도·픽셀 밀도 같은 시각 규칙은 [docs/art/ART_BIBLE.md](../docs/art/ART_BIBLE.md) 가 정본이다.
    여기에 규칙을 복제하지 않는다.
 
+## 종족 스프라이트 (MPFB)
+
+`godot/assets/art/sprites/races/mpfb/` 의 14종 시트는 손으로 옮기지 않는다. 통로는 하나다.
+
+```bash
+./art-source/export/sync_race_sprites.sh              # 빌드 + 게이트 + 복사 + 임포트 (약 2분)
+./art-source/export/sync_race_sprites.sh --no-build   # 이미 뽑힌 시트만 다시 가져오기
+```
+
+생성기(`mpfb_sprite.py`)는 이 저장소 **밖**에 있다 — MPFB 확장·사람 베이스 메시 캐시·
+`morph_plan.json` 이 그 머신에 있어서다. 옮기면 재현이 더 어려워지므로 경로만 고정한다.
+기본 위치는 `~/Desktop/FONS_Character_Assets`, `MPS_SRC` 로 바꾼다.
+스크립트는 프레임 게이트(`~/Desktop/FONS_Character_Assets/export/check_frames.py`)가 실패하면 **복사하지 않는다.**
+게임 쪽 계약 검사는 `godot/tests/unit/test_race_sprites.gd` 다 (576×96·6칸·칸 좌표).
+
 ## 아직 없는 것
 
-원본 파일은 **하나도 없다.** 이 폴더는 규칙과 자리만 잡아 둔 상태다.
-첫 캐릭터 원본이 들어올 때 `characters/` 와 `export/` 를 만든다.
+그림 원본(.aseprite·.psd·.blend)은 **아직 없다.** `characters/` 는 비어 있고, `export/` 에는
+종족 시트 동기화 스크립트 하나뿐이다. 첫 캐릭터 원본이 들어올 때 `characters/` 를 채운다.
+
+3D 지형 키트는 원본이 그림 파일이 아니라 생성기다 — `tools/gen_kit_glb.py` 가 정본이고
+결과물은 `godot/assets/art/models/` 에 있다.

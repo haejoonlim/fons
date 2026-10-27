@@ -7,7 +7,7 @@ config_version=5
 
 config/name="FONS (Godot)"
 config/description="FONS Godot rebuild. Rules/data from soul-commander, assets remade."
-run/main_scene="res://game/main/main.tscn"
+run/main_scene="res://game/ui/title/title.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [editor_plugins]
@@ -18,10 +18,11 @@ enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 
 GameState="*res://autoload/game_state.gd"
 DataLoader="*res://autoload/data_loader.gd"
+SaveManager="*res://autoload/save_manager.gd"
 
 [fons]
 
-view_mode="2d"
+view_mode="3d"
 
 [rendering]
 
