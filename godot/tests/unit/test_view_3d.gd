@@ -662,6 +662,100 @@ func test_camera_boom_clamps_in_the_field_without_colliders() -> void:
 	view.free()
 
 
+## ── 벽 앞 스윙 (2026-10-28) ────────────────────────────────────────
+## 붐이 영웅 몸속까지 접히면 화면이 벽(또는 파티 몸통)으로 꽉 찬다. 그 자리에서는 접는 대신
+## **옆으로 돌아** 뚫린 각도를 찾는다. 작은 프롭은 지금처럼 당긴다 — 스윙은 마지막 수단이다.
+
+func _tower_wall(at: Vector3) -> Dictionary:
+	## 뷰가 탑을 세울 때 쓰는 가림 원통과 같은 크기 (몸통 × `TOWER_BLOCKER_SCALE`).
+	return {"pos": at, "radius": FonsExplore.TOWER_BODY * FonsView3D.TOWER_BLOCKER_SCALE,
+		"top": FonsView3D.TOWER_HEIGHT}
+
+
+func test_camera_swings_around_a_wall_instead_of_going_inside_the_hero() -> void:
+	## 탑 벽(몸통 1.2 × 1.35 = 1.62)에 등지고 시점을 벽 쪽으로 돌린 자리. 옛 규칙은 붐을 0.63 까지
+	## 접어 카메라가 영웅 몸속에 들어갔다 — 화면이 벽과 파티 몸통으로 찼다(2026-10-28).
+	var view := _wall_view()
+	var pitch := deg_to_rad(FonsView3D.CAMERA_PITCH_DEFAULT)
+	var ideal: float = view.camera_free_distance(view.camera_focus(),
+		Vector3(0.0, sin(pitch), cos(pitch)), FonsView3D.CAMERA_DISTANCE)
+	assert_lt(ideal, FonsView3D.CAMERA_AVATAR_FADE_NEAR,
+		"전제 — 벽이 붐을 영웅 몸속까지 접는다 (%.2f)" % ideal)
+	view._place_camera()
+	assert_gt(view.camera_boom(), FonsView3D.CAMERA_AVATAR_FADE_FAR,
+		"붐을 접는 대신 돌았다 — 영웅이 흐려지지 않는다 (%.2f)" % view.camera_boom())
+	assert_almost_eq(view.avatar_transparency(), 0.0, 0.001, "영웅은 불투명하게 남는다")
+	var turned := absf(rad_to_deg(view.camera_swing()))
+	assert_gt(turned, 40.0, "옆으로 돌았다 (%.0f°)" % turned)
+	assert_lt(turned, 121.0, "120° 상한 — 뒤집히지는 않는다")
+	var at: Vector3 = view._camera.position
+	assert_gt(Vector2(at.x - 20.0, at.z - 16.6).length(), 1.62, "카메라가 벽 원통 밖에 선다")
+	view.free()
+
+
+func test_small_props_still_pull_the_boom_in_instead_of_swinging() -> void:
+	## 스윙은 마지막 수단이다 — 나무 하나가 붐을 1.9 로 접는 정도면 지금처럼 당긴다.
+	## 영웅은 반투명하게 남고, 화면도 안 뒤집힌다 (2026-10-25 의 손맛을 지킨다).
+	var view := FonsView3D.new()
+	view.mount({"mode": "field", "field": Vector2(40, 28), "entities": [
+		_entity("avatar", "avatar", Vector3(20, 0, 14)),
+	]})
+	view._yaw = 0.0
+	view._blockers = [{"pos": Vector3(20.0, 0.0, 17.0), "radius": 0.9, "top": 4.0}]
+	view._place_camera()
+	assert_almost_eq(view.camera_swing(), 0.0, 0.001, "옆으로 돌지 않는다")
+	assert_lt(view.camera_boom(), 2.2, "붐은 지금처럼 나무 앞에서 접힌다")
+	assert_gt(view.camera_boom(), FonsView3D.CAMERA_AVATAR_FADE_NEAR, "그래도 영웅이 화면에 남는다")
+	view.free()
+
+
+func test_camera_swing_eases_out_instead_of_snapping() -> void:
+	## 스윙 각도도 시간으로 는다 — 한 프레임에 꽂히면 시점이 튄다. 벽이 사라지면 천천히 돌아온다.
+	var view := _wall_view()
+	view._place_camera()
+	var swung: float = view.camera_swing()
+	assert_gt(absf(swung), 0.5, "먼저 벽을 피해 돌아 있다")
+	view._blockers = []
+	var prev := swung
+	for i in 90:
+		view._place_camera(1.0 / 60.0)
+		assert_lte(absf(view.camera_swing() - prev), 0.12, "프레임당 6.9° 안쪽으로만 돈다")
+		prev = view.camera_swing()
+	var left := absf(rad_to_deg(view.camera_swing()))
+	assert_lt(left, 12.0, "1.5초면 거의 제자리 (남은 %.1f°)" % left)
+	assert_almost_eq(view.camera_boom(), FonsView3D.CAMERA_DISTANCE, 0.1, "붐도 같이 풀린다")
+	view.free()
+
+
+func test_camera_stays_out_of_the_wall_through_a_full_turn() -> void:
+	## 벽 앞에서 시점을 360° 돌려도 카메라가 벽 원통 안이나 영웅 몸속에 들어가지 않는다.
+	## 각도마다 따로 잰다 — 스윙이 시점을 따라 계속 다시 잡아야 한다는 뜻이다.
+	## (탑 가림 원통 반지름 1.62 — 카메라가 그 안이면 화면이 돌 하나다.)
+	var view := _wall_view()
+	var worst := INF
+	for i in 72:
+		view._yaw = TAU * float(i) / 72.0
+		view._place_camera()
+		var at: Vector3 = view._camera.position
+		worst = minf(worst, view.camera_boom())
+		assert_gt(Vector2(at.x - 20.0, at.z - 16.6).length(), 1.62, "%d° 에서 카메라가 벽 밖" % int(rad_to_deg(view._yaw)))
+		assert_gt(view.camera_boom(), FonsView3D.CAMERA_AVATAR_FADE_NEAR,
+			"%d° 에서 영웅이 화면에 남는다 (붐 %.2f)" % [int(rad_to_deg(view._yaw)), worst])
+	view.free()
+
+
+func _wall_view() -> FonsView3D:
+	## 벽 앞 자리 — 영웅이 탑 가림 원통(1.62)에서 2.6, 시점은 벽 쪽(yaw 0 = +z)으로 돌아 있다.
+	## 2.6 은 2026-10-28 이전의 시작 자리와 같은 거리다.
+	var view := FonsView3D.new()
+	view.mount({"mode": "field", "field": Vector2(40, 28), "entities": [
+		_entity("avatar", "avatar", Vector3(20, 0, 14)),
+	]})
+	view._yaw = 0.0
+	view._blockers = [_tower_wall(Vector3(20.0, 0.0, 16.6))]
+	return view
+
+
 func test_avatar_fades_when_the_camera_is_forced_close() -> void:
 	## 카메라가 등에 붙으면 캐릭터가 화면을 덮는다 — 가까울수록 흐려야 나무를 피한 게 보인다.
 	var view := FonsView3D.new()
