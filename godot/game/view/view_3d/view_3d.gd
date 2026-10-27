@@ -109,9 +109,12 @@ const CAMERA_AVATAR_FADE_NEAR := 1.1
 const CAMERA_SWING_STEP := 20.0
 const CAMERA_SWING_MAX := 120.0
 ## 스윙 각도의 지수 스무딩 — 붐(당김 0.04 · 풀림 0.30)과 같은 이유로 시간을 준다.
-## 각도가 한 프레임에 꽂히면 시점이 튄다. 들이는 0.30초 · 빼는 0.70초:
+## 각도가 한 프레임에 꽂히면 시점이 튄다. 들이는 0.20초 · 빼는 0.70초:
 ## 벽에 붙는 순간은 빨리 피해야 하고, 벽을 벗어날 때 빠르면 그게 다시 끊김으로 읽힌다.
-const CAMERA_SWING_TIME_IN := 0.30
+## 들이 0.20 은 **창 모드 실주행**으로 골랐다(22fps · 2026-10-28): 0.30 이면 붐이 영웅 몸속에
+## 붙어 영웅이 사라진 프레임이 25/666, 0.20 이면 15/666 이다. 그때 카메라 방향은 최대
+## 16.3°/프레임 ≈ 390°/s — 사람이 가장 빨리 휘두르는 속도(360°/s)와 비슷하다.
+const CAMERA_SWING_TIME_IN := 0.20
 const CAMERA_SWING_TIME_OUT := 0.70
 ## 점프 — 높이 v²/2g = 0.63유닛. 캐릭터(1유닛)의 절반 남짓이라 발이 땅에서 보인다.
 ## 지금은 **연출**이다. 심은 평면이라 장애물을 넘거나 높이를 타지 않는다.
@@ -810,9 +813,11 @@ func _swing_target(free: float) -> float:
 
 func _smooth_swing(target: float, delta: float) -> float:
 	## 붐과 같은 지수 스무딩 — 각도가 한 프레임에 꽂히면 시점이 튄다.
-	if not _swing_ready or delta <= 0.0:
+	if not _swing_ready:
 		_swing = target
 		_swing_ready = true
+		return _swing
+	if delta <= 0.0:
 		return _swing
 	var time := CAMERA_SWING_TIME_IN if absf(target) > absf(_swing) else CAMERA_SWING_TIME_OUT
 	_swing = target if time <= 0.0 else lerpf(_swing, target, 1.0 - exp(-delta / time))
@@ -852,10 +857,16 @@ func _place_camera(delta: float = 0.0) -> void:
 
 
 func _smooth_boom(target: float, delta: float) -> float:
-	## 목표 붐 길이로 지수 스무딩. `delta <= 0`(장착·테스트)이면 바로 목표로 붙는다.
-	if not _boom_ready or delta <= 0.0:
+	## 목표 붐 길이로 지수 스무딩. **첫 배치·순간이동·줌에서만** 목표로 붙는다(`_boom_ready`).
+	## 시간이 안 흐른 호출(`delta <= 0` — 같은 프레임의 `apply`)은 값을 건드리지 않는다.
+	## 그걸 목표로 꽂으면 스냅샷을 미는 `apply` 가 걷는 내내 매 프레임 카메라를 스냅시켜
+	## 스무딩이 통째로 무너진다 (2026-10-28 실창 실측: 43ms 프레임에서 붐이 1.34 → 2.16 →
+	## 3.32 → 4.20 으로 3프레임에 튐 — 스윙도 같은 자리에서 0↔80° 로 꽂혔다).
+	if not _boom_ready:
 		_boom = target
 		_boom_ready = true
+		return _boom
+	if delta <= 0.0:
 		return _boom
 	var time := CAMERA_BOOM_PULL_TIME if target < _boom else CAMERA_BOOM_PUSH_TIME
 	_boom = target if time <= 0.0 else lerpf(_boom, target, 1.0 - exp(-delta / time))
