@@ -287,12 +287,24 @@ func _ending_summary() -> String:
 	if shown.is_empty():
 		shown = "마지막 문지기"
 	if last.is_empty():
-		return "%s를 지나 이데아 문턱을 지났다" % shown
+		return "%s%s 지나 이데아 문턱을 지났다" % [shown, _object_particle(shown)]
 	var parts: Array = ["%s — %d턴" % [shown, int(last.get("turns", 0))]]
 	parts.append("생존 %d/%d" % [int(last.get("survivors", 0)), _field.heroes.size()])
 	var loot: Dictionary = last.get("loot", {})
 	parts.append("전리품 없음" if loot.is_empty() else "gold %d" % int(loot.get("gold", 0)))
 	return " · ".join(parts)
+
+
+func _object_particle(word: String) -> String:
+	## 목적격 조사 — 마지막 글자에 받침이 있으면 `을`, 없으면 `를`.
+	## 이어하기 엔딩 문장이 이름을 그대로 붙여 `무문의 파수병를 지나` 로 나오던 것을 고친다.
+	## 이름이 한글이 아니면 `를` 로 둔다 (문지기 이름은 `data/` 의 한글이다).
+	if word.is_empty():
+		return "를"
+	var code := word.unicode_at(word.length() - 1)
+	if code < 0xAC00 or code > 0xD7A3:
+		return "를"
+	return "을" if (code - 0xAC00) % 28 != 0 else "를"
 
 
 func _update_hud() -> void:

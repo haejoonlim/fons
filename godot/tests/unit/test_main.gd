@@ -510,6 +510,24 @@ func test_ending_panel_appears_once_and_r_starts_a_new_run() -> void:
 	assert_eq(node._field.floor, 1, "새 런은 1층이다")
 
 
+func test_ending_line_picks_the_object_particle_by_final_syllable() -> void:
+	## 이어하기 엔딩 문장의 조사 — `무문의 파수병를` 이 아니라 `무문의 파수병을` 이어야 한다.
+	## 판 기록이 없을 때 이름에 붙는 조사는 받침으로 갈린다 (main.gd `_object_particle`).
+	var node := _scene()
+	node._field.floor = FonsFieldState.MAX_FLOOR
+	node._field.ending = true
+	node._field.last_gatekeeper = {}
+	node._field._gatekeeper = {"name": "무문의 파수병"}
+	node._push()
+	var line: Label = node.get_node("Hud/EndingPanel/Line")
+	assert_string_contains(line.text, "무문의 파수병을 지나", "받침으로 끝나면 `을`")
+
+	node._ending_shown = false
+	node._field._gatekeeper = {"name": "무명자"}
+	node._push()
+	assert_string_contains(line.text, "무명자를 지나", "받침이 없으면 `를`")
+
+
 func _scene() -> Node:
 	var packed := load("res://game/main/main.tscn") as PackedScene
 	var node: Node = packed.instantiate()
