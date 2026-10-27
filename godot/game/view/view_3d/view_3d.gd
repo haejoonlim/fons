@@ -124,6 +124,10 @@ const CAMERA_SHAKE_HEAVY_ROT := 1.70
 ## 걸어가며 지평선 위로 솟아 랜드마크로 읽힌다.
 const TOWER_HEIGHT := 7.5
 const TOWER_CROWN := 1.8
+## 탑 가림 원통의 반경 = 몸통 × 이 값. 덮개가 몸통의 1.3배라 그 위까지 덮는다.
+## 카메라 붐은 이 원통의 표면 0.35 앞에서 끊긴다 — 그래서 **플레이어가 서서 카메라를 탑
+## 쪽으로 돌릴 자리는 이 반경 + 카메라 기본 거리 밖**이어야 붐이 안 접힌다 (`FonsExplore.SPAWN`).
+const TOWER_BLOCKER_SCALE := 1.35
 ## 마우스 감도 (라디안/픽셀, 약 0.2°/px).
 const CAMERA_SENSITIVITY := 0.0035
 ## 전투·헤드리스처럼 필드가 아닌 화면의 폴백 — 예전 정사영 탑뷰를 그대로 둔다.
@@ -1429,23 +1433,29 @@ func _sync_kit(entities: Array) -> void:
 
 
 func _kit_clear(origin: Vector2) -> Array:
-	## 비워 둘 구역 — **탑 광장**이다. 플레이어가 시작하고 후퇴해 돌아오는 자리라 여기에
-	## 랜드마크가 서면 카메라가 시작하자마자 바위에 막힌다 (2026-10-28 실측: 동굴 청크 (0,0)
-	## 랜드마크 중심이 시작 자리에서 2.54유닛 · 카메라 24방향 중 16방향 붐 접힘).
-	## 반경은 소환진 고리 + **카메라 기본 거리** — 그 자리에서 카메라를 어느 쪽으로 돌려도
-	## 광장 안에서는 부품에 닿지 않는다. 부품 발자국은 키트가 더한다.
+	## 비워 둘 구역 — 플레이어가 **서서 카메라를 돌리는 자리** 둘이다: **탑 광장**과
+	## **시작·후퇴 자리**. 여기 부품이 서면 시작하자마자 붐이 접혀 화면이 막힌다
+	## (2026-10-28 실측: 동굴 청크 (0,0) 에서 랜드마크 중심이 시작 자리 2.54유닛 · 24방향 중
+	## 16방향 접힘). 반경은 **카메라 기본 거리**(탑은 소환진 고리 + 그 거리) — 그 자리에서
+	## 어느 쪽으로 돌려도 부품에 안 닿는다. 부품 발자국은 키트가 더한다.
+	##
+	## 시작 자리는 **심의 상수**(`FonsExplore.SPAWN`)에서 온다 — 아바타 자리를 따라가면
+	## 걸으며 지어지는 청크마다 구역이 달라져 같은 청크의 배치가 어긋난다.
 	var out: Array = []
-	if _tower_mark.is_empty():
-		return out
-	var at: Vector3 = _tower_mark.get("pos", Vector3.ZERO)
-	if at.x < origin.x or at.x > origin.x + _field.x:
-		return out
-	if at.z < origin.y or at.z > origin.y + _field.y:
-		return out
-	out.append({
-		"pos": Vector2(at.x - origin.x, at.z - origin.y),
-		"radius": float(_tower_mark.get("radius", 0.0)) + CAMERA_DISTANCE,
-	})
+	if not _tower_mark.is_empty():
+		var at: Vector3 = _tower_mark.get("pos", Vector3.ZERO)
+		if at.x >= origin.x and at.x <= origin.x + _field.x \
+				and at.z >= origin.y and at.z <= origin.y + _field.y:
+			out.append({
+				"pos": Vector2(at.x - origin.x, at.z - origin.y),
+				"radius": float(_tower_mark.get("radius", 0.0)) + CAMERA_DISTANCE,
+			})
+	if FonsExplore.SPAWN.x >= origin.x and FonsExplore.SPAWN.x <= origin.x + _field.x \
+			and FonsExplore.SPAWN.y >= origin.y and FonsExplore.SPAWN.y <= origin.y + _field.y:
+		out.append({
+			"pos": Vector2(FonsExplore.SPAWN.x - origin.x, FonsExplore.SPAWN.y - origin.y),
+			"radius": CAMERA_DISTANCE,
+		})
 	return out
 
 
@@ -1563,7 +1573,7 @@ func _sync_tower() -> void:
 	_ring_at(_tower_root, radius * 0.55, glow, 0.09)
 
 	# 카메라가 탑을 뚫지 않게 가림 원통을 넣는다 (키트 프롭과 같은 규칙).
-	_tower_blocker = {"pos": Vector3(at.x, ground, at.z), "radius": body * 1.35,
+	_tower_blocker = {"pos": Vector3(at.x, ground, at.z), "radius": body * TOWER_BLOCKER_SCALE,
 		"top": ground + TOWER_HEIGHT + TOWER_CROWN}
 	_blockers.append(_tower_blocker)
 	_tower_key = key

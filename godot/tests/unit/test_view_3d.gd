@@ -314,6 +314,76 @@ func test_the_kit_keeps_off_the_tower_plaza() -> void:
 	view.free()
 
 
+func test_every_biome_keeps_the_camera_open_at_the_start_spot() -> void:
+	## 26바이옴 × 24방향 — 시작 자리에서 카메라를 어느 쪽으로 돌려도 붐이 접히지 않고,
+	## 프롭도 시작 자리 앞에 서지 않는다. 둘은 같은 규칙의 앞뒤다: 탑 가림 원통 때문에 시작
+	## 자리가 멀어졌고(`FonsExplore.SPAWN`), 그 자리도 뷰가 광장으로 넘긴다(`_kit_clear`).
+	##
+	## 2026-10-28 실측(고치기 전 · 탑 몸통 앞 2.6): 624방향 중 182방향이 접혔고 130방향은
+	## 붐이 1.1 미만이라 조종 영웅이 화면에서 사라졌다. 키트 몫은 0 — 전부 탑 가림 원통이었다.
+	## 시작 자리만 옮기고 광장을 안 넓히면 반대가 된다(6.4 에서 키트 몫 5방향 · 7.0 에서 4방향).
+	##
+	## 좌표는 **월드**다 — 심이 청크 목록을 주면 뷰는 청크 로컬에 부품을 두고 뿌리만 옮긴다.
+	var world := Vector3(-20.0, 0.0, -14.0)   # 청크 (0,0) 의 남서 모서리 = 진짜 월드 원점
+	var collapsed := 0
+	var hidden := 0
+	var close := 0
+	var parts := 0
+	var worst := INF
+	var at := ""
+	var nearest := INF
+	for biome in _biomes():
+		var view := FonsView3D.new()
+		view.mount({"mode": "field", "field": Vector2(40, 28), "chunks": [world], "entities": [
+			_entity("avatar", "avatar", Vector3(FonsExplore.SPAWN.x, 0.0, FonsExplore.SPAWN.y)),
+		], "biome": String(biome.get("id", "")), "kit": String(biome.get("topologyKit", "")),
+			"palette": FonsBiomePalette.from_biome(biome),
+			"tower": {"pos": Vector3.ZERO, "radius": 3.4, "body": 1.2}})
+		for root in view._kit_root.get_children():
+			for child in root.get_children():
+				var part := String(child.get_meta("kit_part", ""))
+				if not (part.begins_with("landmark_") or part.begins_with("prop_")):
+					continue
+				var local: Vector3 = (root as Node3D).position + (child as Node3D).position
+				var away := Vector2(local.x, local.z).distance_to(FonsExplore.SPAWN)
+				parts += 1
+				if away < nearest:
+					nearest = away
+				if away < FonsView3D.CAMERA_DISTANCE - 0.01:
+					close += 1
+		var focus: Vector3 = view.camera_focus()
+		var pitch := deg_to_rad(FonsView3D.CAMERA_PITCH_DEFAULT)
+		for i in 24:
+			var yaw := TAU * float(i) / 24.0
+			var dir := Vector3(sin(yaw) * cos(pitch), sin(pitch), cos(yaw) * cos(pitch)).normalized()
+			var boom: float = view.camera_free_distance(focus, dir, FonsView3D.CAMERA_DISTANCE)
+			if boom < FonsView3D.CAMERA_DISTANCE - 0.01:
+				collapsed += 1
+			if boom < FonsView3D.CAMERA_AVATAR_FADE_NEAR:
+				hidden += 1
+			if boom < worst:
+				worst = boom
+				at = "%s %d°" % [String(biome.get("id", "")), int(rad_to_deg(yaw))]
+		view.free()
+	assert_gt(parts, 0, "랜드마크·프롭이 깔려야 검사가 의미 있다")
+	assert_eq(close, 0, "시작 자리 앞에 서는 부품 0 (최단 %.2f)" % nearest)
+	assert_eq(collapsed, 0, "붐이 접히는 방향 0 (최단 %.2f @ %s)" % [worst, at])
+	assert_eq(hidden, 0, "조종 영웅이 화면에서 사라지는 방향 0")
+
+
+func _biomes() -> Array:
+	## 26바이옴 — `data/biomes.json` 의 그룹 순서 그대로.
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/biomes.json"))
+	var out: Array = []
+	if not (parsed is Dictionary):
+		fail_test("biomes.json 을 읽지 못했다")
+		return out
+	for group in (parsed as Dictionary).get("groups", []):
+		for biome in (group as Dictionary).get("biomes", []):
+			out.append(biome)
+	return out
+
+
 func test_field_gets_a_heightfield_and_units_stand_on_it() -> void:
 	## 격자는 타일마다 따로 구운 법선에서 나왔다 — 지면은 한 장의 높이필드다.
 	## 심 좌표는 평면(y=0)이고, 화면만 지형 높이만큼 들어 올린다.
