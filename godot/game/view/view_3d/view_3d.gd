@@ -94,6 +94,25 @@ const CAMERA_COLLISION_SOFT := 0.4
 ## NEAR 아래로는 완전히 가린다 — 카메라가 몸 안에 들어간 상태다.
 const CAMERA_AVATAR_FADE_FAR := 2.4
 const CAMERA_AVATAR_FADE_NEAR := 1.1
+## ── 벽 앞 스윙 (2026-10-28) ──────────────────────────────────────
+## 붐이 영웅 몸속까지 접히는 자리(`CAMERA_AVATAR_FADE_NEAR` 아래 — 영웅이 화면에서 완전히
+## 사라진다)에서는 접는 대신 **옆으로 돌아** 뚫린 각도를 찾는다. 벽(탑·큰 바위)을 등지고
+## 시점을 벽 쪽으로 돌리면 화면이 벽과 파티 몸통으로 꽉 찼다 — 탑 벽 앞 2.6 에서 실측 붐 0.68.
+##
+## 작은 프롭은 그대로 접는다 — 나무 하나가 붐을 1.9 로 당기는 정도면 영웅이 반투명하게 남아
+## 화면이 쓸 만하고(2026-10-25 손맛), 스윙은 돌릴 이유가 없는 자리에서 시점을 흔든다.
+## 그래서 문턱을 `CAMERA_AVATAR_FADE_NEAR`(= 영웅이 완전히 사라지는 붐)로 잡았다.
+## 돌 자리를 고를 때의 목표는 `CAMERA_AVATAR_FADE_FAR` — 흐려지지 않을 만큼 뚫린 첫 각도다.
+##
+## 옆으로 돌 때 훑는 각도 간격과 상한(도). 간격을 좁히면 고른 값이 미세하게 흔들리고,
+## 넓히면 뚫린 각을 놓친다. 120° 를 넘겨 돌면 시점이 뒤집힌다 — 그 뒤로는 그냥 접는다.
+const CAMERA_SWING_STEP := 20.0
+const CAMERA_SWING_MAX := 120.0
+## 스윙 각도의 지수 스무딩 — 붐(당김 0.04 · 풀림 0.30)과 같은 이유로 시간을 준다.
+## 각도가 한 프레임에 꽂히면 시점이 튄다. 들이는 0.30초 · 빼는 0.70초:
+## 벽에 붙는 순간은 빨리 피해야 하고, 벽을 벗어날 때 빠르면 그게 다시 끊김으로 읽힌다.
+const CAMERA_SWING_TIME_IN := 0.30
+const CAMERA_SWING_TIME_OUT := 0.70
 ## 점프 — 높이 v²/2g = 0.63유닛. 캐릭터(1유닛)의 절반 남짓이라 발이 땅에서 보인다.
 ## 지금은 **연출**이다. 심은 평면이라 장애물을 넘거나 높이를 타지 않는다.
 const JUMP_SPEED := 4.2
@@ -324,6 +343,9 @@ const CAMERA_KEY_TURN := 1.8
 ## 지금 프레임에 쓰는 붐 길이 — 가림 때문에 목표보다 뒤처질 수 있다 (`_smooth_boom`).
 var _boom := CAMERA_DISTANCE
 var _boom_ready := false
+## 지금 프레임에 시점이 벽을 피해 돌아 있는 각(라디안) — 목표는 `_swing_target` 이 고른다.
+var _swing := 0.0
+var _swing_ready := false
 var _last_yaw := 0.0
 
 
@@ -414,6 +436,8 @@ func unmount() -> void:
 	_focus_ready = false
 	_boom = CAMERA_DISTANCE
 	_boom_ready = false
+	_swing = 0.0
+	_swing_ready = false
 	_clear_kit()
 	_clear_tower()
 	_clear_terrain()
@@ -678,8 +702,9 @@ func _update_camera(delta: float) -> void:
 	elif delta > 0.0:
 		if _focus.distance_to(target) > CAMERA_SNAP_DISTANCE:
 			_focus = target
-			# 순간이동은 붐도 같이 붙인다 — 안 그러면 카메라가 옛 자리에서 미끄러져 온다.
+			# 순간이동은 붐도 스윙도 같이 붙인다 — 안 그러면 카메라가 옛 자리(와 옛 벽)에서 미끄러져 온다.
 			_boom_ready = false
+			_swing_ready = false
 		else:
 			_focus = _focus.lerp(target, clampf(delta * CAMERA_FOLLOW, 0.0, 1.0))
 	_place_camera(delta)
@@ -754,12 +779,56 @@ static func _soft_clamp(from: Vector3, dir: Vector3, max_distance: float,
 	return lerpf(max_distance, maxf(0.0, hit - pad), weight)
 
 
-func _place_camera(delta: float = 0.0) -> void:
+func _camera_dir(yaw: float) -> Vector3:
+	## 시점의 단위 방향 — 기준점에서 카메라가 서는 쪽.
 	var horizontal := cos(_pitch)
-	var offset := Vector3(sin(_yaw) * horizontal, sin(_pitch), cos(_yaw) * horizontal) * _distance
-	var dir := offset.normalized()
+	return Vector3(sin(yaw) * horizontal, sin(_pitch), cos(yaw) * horizontal).normalized()
+
+
+func _swing_target(free: float) -> float:
+	## 붐이 영웅 몸속까지 접히는 자리에서 **옆으로 돌 각**(라디안)을 고른다.
+	## 흐려지지 않을 만큼(`CAMERA_AVATAR_FADE_FAR`) 뚫린 첫 각도를 찾고, 없으면 0 — 그냥 접는다.
+	if free >= CAMERA_AVATAR_FADE_NEAR:
+		return 0.0
+	var step := deg_to_rad(CAMERA_SWING_STEP)
+	var count := int(round(CAMERA_SWING_MAX / CAMERA_SWING_STEP))
+	# 지금 돌아 있는 쪽부터 본다 — 좌우가 비슷할 때 프레임마다 편이 바뀌면 시점이 흔들린다.
+	var side := -1.0 if _swing < 0.0 else 1.0
+	for i in range(1, count + 1):
+		var away := step * float(i)
+		if camera_free_distance(_focus, _camera_dir(_yaw + side * away), _distance) >= CAMERA_AVATAR_FADE_FAR:
+			return side * away
+	# 지금 쪽이 막혔을 때만 반대로 넘어간다 — 넘어가는 동안 카메라는 벽을 가로지르며
+	# 그 사이 붐이 급히 접힌다(실측: 프레임당 0.36유닛, 옛 규칙 0.083). 그래서 좌우를
+	# 번가라 보지 않고 **한쪽을 끝까지** 본다 — 뒤집힘이 사라지고 안 보는 쪽이 남는다.
+	for i in range(1, count + 1):
+		var away := step * float(i)
+		if camera_free_distance(_focus, _camera_dir(_yaw - side * away), _distance) >= CAMERA_AVATAR_FADE_FAR:
+			return -side * away
+	return 0.0
+
+
+func _smooth_swing(target: float, delta: float) -> float:
+	## 붐과 같은 지수 스무딩 — 각도가 한 프레임에 꽂히면 시점이 튄다.
+	if not _swing_ready or delta <= 0.0:
+		_swing = target
+		_swing_ready = true
+		return _swing
+	var time := CAMERA_SWING_TIME_IN if absf(target) > absf(_swing) else CAMERA_SWING_TIME_OUT
+	_swing = target if time <= 0.0 else lerpf(_swing, target, 1.0 - exp(-delta / time))
+	return _swing
+
+
+func _place_camera(delta: float = 0.0) -> void:
+	var dir := _camera_dir(_yaw)
+	var free := camera_free_distance(_focus, dir, _distance)
+	# 벽이 붐을 영웅 몸속까지 접으면 접는 대신 옆으로 돈다 — 화면이 벽으로 차는 자리다.
+	_swing = _smooth_swing(_swing_target(free), delta)
+	if _swing != 0.0:
+		dir = _camera_dir(_yaw + _swing)
+		free = camera_free_distance(_focus, dir, _distance)
 	# 나무·큰 바위에 파고들지 않게 붐을 앞에서 끊고, 끊긴 길이는 시간으로 늘린다.
-	var boom := _smooth_boom(camera_free_distance(_focus, dir, _distance), delta)
+	var boom := _smooth_boom(free, delta)
 	var pos := _focus + dir * boom
 	_fade_avatar(boom)
 	# 타격 흔들림 — 지면 클리어런스보다 먼저 더한다. 흔들림이 카메라를 땅에 밀어 넣지 않게.
@@ -796,6 +865,11 @@ func _smooth_boom(target: float, delta: float) -> float:
 func camera_boom() -> float:
 	## 테스트·디버그용 — 지금 프레임에 쓴 붐 길이(가림으로 접힌 값).
 	return _boom
+
+
+func camera_swing() -> float:
+	## 테스트·디버그용 — 지금 프레임에 시점이 벽을 피해 돌아 있는 각(라디안).
+	return _swing
 
 
 func _shake(heavy: bool = false) -> void:
