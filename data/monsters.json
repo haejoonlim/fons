@@ -414,6 +414,106 @@
       }
     },
     {
+      "id": "mon_ashland_01",
+      "name": "요흔사슴",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 4,
+      "level": [
+        118,
+        124
+      ],
+      "threatBase": 105.0,
+      "element": "dark",
+      "stats": {
+        "hp": 9200,
+        "atk": 180,
+        "def": 42,
+        "mdef": 10,
+        "aspd": 11,
+        "cri": 5,
+        "cdmg": 150,
+        "sta": 93,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "치명적 약점"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "swarm",
+        "fleeHp": 0.7
+      },
+      "pattern": [
+        {
+          "name": "이빨",
+          "cd": 5,
+          "effect": "1xATK + 출혈",
+          "telegraph": "달려든다",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          91,
+          95
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 3100,
+        "exp": 820
+      },
+      "ecology": {
+        "diet": "omnivore",
+        "role": "prey",
+        "habitat": [
+          "hellscape"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": 34,
+          "max": 60
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.2,
+        "territoriality": 0.3,
+        "sociality": 0.9,
+        "reproduction": 0.95,
+        "predators": [
+          "mon_hell_hound_01"
+        ],
+        "prey": [
+          "corpse",
+          "재"
+        ],
+        "note": "재 위에 남은 풀을 뜯어 먹는 상흔 초식종",
+        "relationTypes": {
+          "corpse": "grazing",
+          "재": "grazing"
+        }
+      }
+    },
+    {
       "id": "mon_ashmoth_01",
       "name": "잿불나방",
       "category": 2,
@@ -509,6 +609,105 @@
         "note": "화산 신규 전투종 — 재 구름 속에서 번지는 불씨 나방 (260종 확장 #63)",
         "relationTypes": {
           "열조류": "grazing"
+        }
+      }
+    },
+    {
+      "id": "mon_backworm_01",
+      "name": "배수충",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 2,
+      "level": [
+        66,
+        68
+      ],
+      "threatBase": 44.0,
+      "element": "poison",
+      "stats": {
+        "hp": 581,
+        "atk": 26,
+        "def": 8,
+        "mdef": 6,
+        "aspd": 13,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 80,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.5,
+        "note": "불에 약함"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          8,
+          12
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "sting"
+      },
+      "pattern": [
+        {
+          "name": "독침",
+          "cd": 6,
+          "effect": "1xATK + 독",
+          "telegraph": "노란 빛",
+          "counter": "방패"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          51,
+          52
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 310,
+        "exp": 162
+      },
+      "ecology": {
+        "diet": "herbivore",
+        "role": "swarm",
+        "habitat": [
+          "sewer"
+        ],
+        "activity": "diurnal",
+        "temperature": {
+          "min": 8,
+          "max": 28
+        },
+        "water_need": 0.5,
+        "food_need": 0.4,
+        "aggression": 0.6,
+        "territoriality": 0.8,
+        "sociality": 0.95,
+        "reproduction": 0.85,
+        "predators": [
+          "mon_culvertcat_01"
+        ],
+        "prey": [
+          "슬러지",
+          "organic_waste"
+        ],
+        "note": "배수관을 지나는 붉은 가시 벌레 떼",
+        "relationTypes": {
+          "슬러지": "grazing",
+          "organic_waste": "grazing"
         }
       }
     },
@@ -1332,6 +1531,106 @@
       }
     },
     {
+      "id": "mon_borderfly_01",
+      "name": "경계눈박이",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 5,
+      "level": [
+        164,
+        169
+      ],
+      "threatBase": 139.0,
+      "element": "wind",
+      "stats": {
+        "hp": 29500,
+        "atk": 380,
+        "def": 62,
+        "mdef": 16,
+        "aspd": 14,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 90,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "치명적 약점"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "swarm",
+        "fleeHp": 0.7
+      },
+      "pattern": [
+        {
+          "name": "이빨",
+          "cd": 5,
+          "effect": "1xATK + 출혈",
+          "telegraph": "달려든다",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          126,
+          130
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 4512,
+        "exp": 1200
+      },
+      "ecology": {
+        "diet": "carnivore",
+        "role": "prey",
+        "habitat": [
+          "ideagate"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": -70,
+          "max": -30
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.2,
+        "territoriality": 0.3,
+        "sociality": 0.9,
+        "reproduction": 0.95,
+        "predators": [
+          "mon_clearhawk_01"
+        ],
+        "prey": [
+          "몸통",
+          "insects"
+        ],
+        "note": "경계선이 움직일 때만 깨어 나는 눈박이 떼",
+        "relationTypes": {
+          "몸통": "grazing",
+          "insects": "grazing"
+        }
+      }
+    },
+    {
       "id": "mon_bugbear_01",
       "name": "버그베어",
       "category": 1,
@@ -1657,6 +1956,104 @@
       }
     },
     {
+      "id": "mon_citypigeon_01",
+      "name": "도시비둘기",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 1,
+      "level": [
+        27,
+        32
+      ],
+      "threatBase": 21.0,
+      "element": "none",
+      "stats": {
+        "hp": 190,
+        "atk": 10,
+        "def": 5,
+        "mdef": 3,
+        "aspd": 9,
+        "cri": 6,
+        "cdmg": 140,
+        "sta": 60,
+        "eva": 10
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "모든 포식자의 먹이"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "flee",
+        "fleeHp": 0.9
+      },
+      "pattern": [
+        {
+          "name": "도주",
+          "cd": 3,
+          "effect": "이동속도 2배 2초",
+          "telegraph": "반짝임",
+          "counter": "포위"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          21,
+          25
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 50,
+        "exp": 20
+      },
+      "ecology": {
+        "diet": "omnivore",
+        "role": "prey",
+        "habitat": [
+          "city"
+        ],
+        "activity": "diurnal",
+        "temperature": {
+          "min": 5,
+          "max": 25
+        },
+        "water_need": 0.6,
+        "food_need": 0.7,
+        "aggression": 0.05,
+        "territoriality": 0.1,
+        "sociality": 0.6,
+        "reproduction": 0.9,
+        "predators": [
+          "mon_mindflayer_01"
+        ],
+        "prey": [
+          "시장 잔반"
+        ],
+        "note": "미궁도시 대표 소음원 — 잔반을 먹고 번식",
+        "relationTypes": {
+          "시장 잔반": "grazing"
+        }
+      }
+    },
+    {
       "id": "mon_cookiewraith_01",
       "name": "절삭 망령",
       "category": 5,
@@ -1751,6 +2148,106 @@
         "note": "심연 신규 전투종 — 큰 체적에 구멍을 파고 마나를 절삭하는 망령 (260종 확장 #63)",
         "relationTypes": {
           "보이드 이슬": "grazing"
+        }
+      }
+    },
+    {
+      "id": "mon_creviceech_01",
+      "name": "틈새우레지",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 4,
+      "level": [
+        125,
+        130
+      ],
+      "threatBase": 105.0,
+      "element": "void",
+      "stats": {
+        "hp": 9200,
+        "atk": 180,
+        "def": 42,
+        "mdef": 10,
+        "aspd": 11,
+        "cri": 5,
+        "cdmg": 150,
+        "sta": 93,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "치명적 약점"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "swarm",
+        "fleeHp": 0.7
+      },
+      "pattern": [
+        {
+          "name": "이빨",
+          "cd": 5,
+          "effect": "1xATK + 출혈",
+          "telegraph": "달려든다",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          96,
+          100
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 3100,
+        "exp": 820
+      },
+      "ecology": {
+        "diet": "mineral",
+        "role": "prey",
+        "habitat": [
+          "abyss"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": -38,
+          "max": 14
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.2,
+        "territoriality": 0.3,
+        "sociality": 0.9,
+        "reproduction": 0.95,
+        "predators": [
+          "mon_noctis_01"
+        ],
+        "prey": [
+          "열수 미네랄",
+          "detritus"
+        ],
+        "note": "바위 틈에 붙어 열수 가루를 걸러 먹는 유레지",
+        "relationTypes": {
+          "열수 미네랄": "grazing",
+          "detritus": "grazing"
         }
       }
     },
@@ -1973,6 +2470,104 @@
           "수정 수액"
         ],
         "note": "수정 숲 신규 전투종 — 수정 틈에 숨어 있다 방출하는 군체형 역류체 (260종 확장 #63)",
+        "relationTypes": {
+          "수정 수액": "grazing"
+        }
+      }
+    },
+    {
+      "id": "mon_crystaldeer_01",
+      "name": "수정노루",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 5,
+      "level": [
+        144,
+        150
+      ],
+      "threatBase": 139.0,
+      "element": "none",
+      "stats": {
+        "hp": 29500,
+        "atk": 380,
+        "def": 62,
+        "mdef": 16,
+        "aspd": 14,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 90,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "치명적 약점"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "swarm",
+        "fleeHp": 0.7
+      },
+      "pattern": [
+        {
+          "name": "이빨",
+          "cd": 5,
+          "effect": "1xATK + 출혈",
+          "telegraph": "달려든다",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          111,
+          115
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 4512,
+        "exp": 1200
+      },
+      "ecology": {
+        "diet": "herbivore",
+        "role": "prey",
+        "habitat": [
+          "crystalgrove"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": -35,
+          "max": 10
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.2,
+        "territoriality": 0.3,
+        "sociality": 0.9,
+        "reproduction": 0.95,
+        "predators": [
+          "mon_thornviper_01"
+        ],
+        "prey": [
+          "수정 수액"
+        ],
+        "note": "수정 숲 신규 서식종 — 뿔이 아직 살아 있는 수정인 노루 (260종 확장 #63)",
         "relationTypes": {
           "수정 수액": "grazing"
         }
@@ -3559,6 +4154,112 @@
       }
     },
     {
+      "id": "mon_frog_01",
+      "name": "개구리",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 3,
+      "level": [
+        79,
+        84
+      ],
+      "threatBase": 87.5,
+      "element": "none",
+      "stats": {
+        "hp": 2633,
+        "atk": 70,
+        "def": 23,
+        "mdef": 13,
+        "aspd": 12,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 80,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "독성 피부"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "leap"
+      },
+      "pattern": [
+        {
+          "name": "도약",
+          "cd": 4,
+          "effect": "3m 도약",
+          "telegraph": "점프",
+          "counter": "예측"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          61,
+          65
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 1465,
+        "exp": 446
+      },
+      "ecology": {
+        "diet": "carnivore",
+        "role": "prey",
+        "habitat": [
+          "swamp",
+          "river",
+          "forest"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": 10,
+          "max": 35
+        },
+        "water_need": 0.9,
+        "food_need": 0.3,
+        "aggression": 0.1,
+        "territoriality": 0.2,
+        "sociality": 0.4,
+        "reproduction": 0.8,
+        "predators": [
+          "mon_snake_01",
+          "mon_hawk_01",
+          "mon_vine_01",
+          "mon_marshleech_01",
+          "mon_reedstork_01",
+          "mon_marshwarden_01",
+          "mon_swampknight_01"
+        ],
+        "prey": [
+          "insects",
+          "mon_rat_01"
+        ],
+        "relationTypes": {
+          "insects": "grazing",
+          "mon_rat_01": "predation"
+        }
+      }
+    },
+    {
       "id": "mon_frostlure_01",
       "name": "서리등벌레",
       "category": 5,
@@ -4214,6 +4915,104 @@
       }
     },
     {
+      "id": "mon_glaciaribou_01",
+      "name": "얼음사슴",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 5,
+      "level": [
+        138,
+        143
+      ],
+      "threatBase": 139.0,
+      "element": "water",
+      "stats": {
+        "hp": 29500,
+        "atk": 380,
+        "def": 62,
+        "mdef": 16,
+        "aspd": 14,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 90,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "치명적 약점"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "swarm",
+        "fleeHp": 0.7
+      },
+      "pattern": [
+        {
+          "name": "이빨",
+          "cd": 5,
+          "effect": "1xATK + 출혈",
+          "telegraph": "달려든다",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          106,
+          110
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 4512,
+        "exp": 1200
+      },
+      "ecology": {
+        "diet": "herbivore",
+        "role": "prey",
+        "habitat": [
+          "frostsea"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": -56,
+          "max": -12
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.2,
+        "territoriality": 0.3,
+        "sociality": 0.9,
+        "reproduction": 0.95,
+        "predators": [
+          "mon_rimewarden_01"
+        ],
+        "prey": [
+          "얼음 밑 플랑크톤"
+        ],
+        "note": "빙판 아래 플랑크톤을 뜯어 먹는 광로들판 초식종",
+        "relationTypes": {
+          "얼음 밑 플랑크톤": "grazing"
+        }
+      }
+    },
+    {
       "id": "mon_glaciermaw_01",
       "name": "빙하 이빨",
       "category": 6,
@@ -4435,6 +5234,109 @@
         "note": "유리 사막 신규 전투종 — carnivore (260종 확장 #63)",
         "relationTypes": {
           "유리 모래 규조": "grazing"
+        }
+      }
+    },
+    {
+      "id": "mon_glasslizard_01",
+      "name": "유리 도마뱀",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 5,
+      "level": [
+        151,
+        156
+      ],
+      "threatBase": 139.0,
+      "element": "none",
+      "stats": {
+        "hp": 29500,
+        "atk": 380,
+        "def": 62,
+        "mdef": 16,
+        "aspd": 14,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 90,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "치명적 약점"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "swarm",
+        "fleeHp": 0.7
+      },
+      "pattern": [
+        {
+          "name": "이빨",
+          "cd": 5,
+          "effect": "1xATK + 출혈",
+          "telegraph": "달려든다",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          116,
+          120
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 4512,
+        "exp": 1200
+      },
+      "ecology": {
+        "diet": "omnivore",
+        "role": "prey",
+        "habitat": [
+          "glassdesert"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": -25,
+          "max": 45
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.2,
+        "territoriality": 0.3,
+        "sociality": 0.9,
+        "reproduction": 0.95,
+        "predators": [
+          "mon_refrionscorpion_01",
+          "mon_glasssnake_01"
+        ],
+        "prey": [
+          "유리 모래 규조",
+          "mon_glassdiatom_01",
+          "mon_glassmoss_01"
+        ],
+        "note": "유리 사막 신규 서식종 — 빛을 굴절해 사라지는 투명 비늘 도마뱀 (260종 확장 #63)",
+        "relationTypes": {
+          "유리 모래 규조": "grazing",
+          "mon_glassdiatom_01": "predation",
+          "mon_glassmoss_01": "predation"
         }
       }
     },
@@ -8353,6 +9255,106 @@
       }
     },
     {
+      "id": "mon_papermite_01",
+      "name": "종이개미",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 1,
+      "level": [
+        21,
+        26
+      ],
+      "threatBase": 21.0,
+      "element": "none",
+      "stats": {
+        "hp": 190,
+        "atk": 10,
+        "def": 5,
+        "mdef": 3,
+        "aspd": 9,
+        "cri": 6,
+        "cdmg": 140,
+        "sta": 60,
+        "eva": 10
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "치명적 약점"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "swarm",
+        "fleeHp": 0.7
+      },
+      "pattern": [
+        {
+          "name": "이빨",
+          "cd": 5,
+          "effect": "1xATK + 출혈",
+          "telegraph": "달려든다",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          16,
+          20
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 50,
+        "exp": 20
+      },
+      "ecology": {
+        "diet": "herbivore",
+        "role": "prey",
+        "habitat": [
+          "library"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": 8,
+          "max": 26
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.2,
+        "territoriality": 0.3,
+        "sociality": 0.9,
+        "reproduction": 0.95,
+        "predators": [
+          "mon_parchmentzombie_01"
+        ],
+        "prey": [
+          "낙엽",
+          "_detritus"
+        ],
+        "note": "장부 표지를 뜯어 섬유를 깎는 서고의 개미",
+        "relationTypes": {
+          "낙엽": "grazing",
+          "_detritus": "grazing"
+        }
+      }
+    },
+    {
       "id": "mon_parchmentzombie_01",
       "name": "양피지 좀비",
       "category": 2,
@@ -8565,6 +9567,106 @@
           "mon_dewlark_01": "predation",
           "mon_grasshoppertrap_01": "predation",
           "mon_hawk_01": "predation"
+        }
+      }
+    },
+    {
+      "id": "mon_plumed_deer_01",
+      "name": "깃털사슴",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 3,
+      "level": [
+        86,
+        91
+      ],
+      "threatBase": 87.5,
+      "element": "none",
+      "stats": {
+        "hp": 2633,
+        "atk": 70,
+        "def": 23,
+        "mdef": 13,
+        "aspd": 12,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 80,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "치명적 약점"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "swarm",
+        "fleeHp": 0.7
+      },
+      "pattern": [
+        {
+          "name": "이빨",
+          "cd": 5,
+          "effect": "1xATK + 출혈",
+          "telegraph": "달려든다",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          66,
+          70
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 1465,
+        "exp": 446
+      },
+      "ecology": {
+        "diet": "herbivore",
+        "role": "prey",
+        "habitat": [
+          "jungle"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": 16,
+          "max": 34
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.2,
+        "territoriality": 0.3,
+        "sociality": 0.9,
+        "reproduction": 0.95,
+        "predators": [
+          "mon_junglepanther_01"
+        ],
+        "prey": [
+          "과실",
+          "수생식물"
+        ],
+        "note": "/liche 잎새만 먹는 우림의 초식종",
+        "relationTypes": {
+          "과실": "grazing",
+          "수생식물": "grazing"
         }
       }
     },
@@ -9127,6 +10229,114 @@
       }
     },
     {
+      "id": "mon_ruinpig_01",
+      "name": "폐허멧돼지",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 2,
+      "level": [
+        53,
+        58
+      ],
+      "threatBase": 44.0,
+      "element": "none",
+      "stats": {
+        "hp": 581,
+        "atk": 26,
+        "def": 8,
+        "mdef": 6,
+        "aspd": 13,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 80,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.2,
+        "note": "불 +20%"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0.3,
+        "patternCooldown": [
+          6,
+          10
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "pack_rush",
+        "fleeHp": 0.3
+      },
+      "pattern": [
+        {
+          "name": "무리 돌진",
+          "cd": 8,
+          "effect": "전방 2m 1.2xATK",
+          "telegraph": "초록 경고선",
+          "counter": "이동"
+        },
+        {
+          "name": "함정 연계",
+          "cd": 20,
+          "effect": "코볼드 함정 발동 유도",
+          "telegraph": "바닥 경고판 1초",
+          "counter": "집중공격으로 사전 제거"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          41,
+          45
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 310,
+        "exp": 162
+      },
+      "ecology": {
+        "diet": "omnivore",
+        "role": "prey",
+        "habitat": [
+          "ruins"
+        ],
+        "activity": "diurnal",
+        "temperature": {
+          "min": 5,
+          "max": 35
+        },
+        "water_need": 0.5,
+        "food_need": 0.6,
+        "aggression": 0.3,
+        "territoriality": 0.4,
+        "sociality": 0.5,
+        "reproduction": 0.7,
+        "predators": [
+          "mon_hobgoblin_01",
+          "mon_raider_01"
+        ],
+        "prey": [
+          "버려진 식량 저장고",
+          "mon_ruinbeetle_01"
+        ],
+        "relationTypes": {
+          "버려진 식량 저장고": "grazing",
+          "mon_ruinbeetle_01": "predation"
+        },
+        "note": "버려진 식량 저장고를 뒤지는 유적 멧돼지 — 흉고블린·잔해탐지충의 수렵 대상"
+      }
+    },
+    {
       "id": "mon_rustkite_01",
       "name": "적갈매",
       "category": 4,
@@ -9432,6 +10642,112 @@
           "선인장": "grazing",
           "mon_dunelizard_01": "predation",
           "mon_ruststag_01": "predation"
+        }
+      }
+    },
+    {
+      "id": "mon_sardine_01",
+      "name": "소어 떼",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 1,
+      "level": [
+        14,
+        20
+      ],
+      "threatBase": 21.0,
+      "element": "water",
+      "stats": {
+        "hp": 190,
+        "atk": 10,
+        "def": 5,
+        "mdef": 3,
+        "aspd": 9,
+        "cri": 6,
+        "cdmg": 140,
+        "sta": 60,
+        "eva": 10
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.5,
+        "note": "물속 유일 자원"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          5,
+          6
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "school_turn"
+      },
+      "pattern": [
+        {
+          "name": "떼 도약",
+          "cd": 6,
+          "effect": "전방 3m 0.9xATK",
+          "telegraph": "물결 하나가 저절로 방향을 튼다",
+          "counter": "산개"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          11,
+          15
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 50,
+        "exp": 20
+      },
+      "ecology": {
+        "diet": "omnivore",
+        "role": "prey",
+        "habitat": [
+          "coral",
+          "ocean"
+        ],
+        "activity": "always",
+        "temperature": {
+          "min": 0,
+          "max": 28
+        },
+        "water_need": 0.4,
+        "food_need": 0.6,
+        "aggression": 0.7,
+        "territoriality": 0.8,
+        "sociality": 0.3,
+        "reproduction": 0.3,
+        "predators": [
+          "mon_reefshark_01",
+          "mon_tideeel_01",
+          "mon_lanternsquid_01",
+          "mon_heronshrike_01",
+          "mon_sanddart_01",
+          "mon_tidewarden_01",
+          "mon_reefneedle_01"
+        ],
+        "prey": [
+          "mon_tidebloom_01",
+          "mon_rockweed_01"
+        ],
+        "note": "여울을 왕복하는 소어 떼 — 산호상어·물수제비 매·조류장어이 노리는 먹이층",
+        "relationTypes": {
+          "mon_tidebloom_01": "predation",
+          "mon_rockweed_01": "grazing"
         }
       }
     },
@@ -9859,6 +11175,104 @@
           "슬러지"
         ],
         "note": "하수도 신규 전투종 — 관로 왕의 잔재가 남긴 소형 분열체 (260종 확장 #63)",
+        "relationTypes": {
+          "슬러지": "grazing"
+        }
+      }
+    },
+    {
+      "id": "mon_sewerslug_01",
+      "name": "슬러지 벌레",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 3,
+      "level": [
+        69,
+        72
+      ],
+      "threatBase": 87.5,
+      "element": "poison",
+      "stats": {
+        "hp": 2633,
+        "atk": 70,
+        "def": 23,
+        "mdef": 13,
+        "aspd": 12,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 80,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "치명적 약점"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "swarm",
+        "fleeHp": 0.7
+      },
+      "pattern": [
+        {
+          "name": "이빨",
+          "cd": 5,
+          "effect": "1xATK + 출혈",
+          "telegraph": "달려든다",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          53,
+          55
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 1465,
+        "exp": 446
+      },
+      "ecology": {
+        "diet": "omnivore",
+        "role": "prey",
+        "habitat": [
+          "sewer"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": 10,
+          "max": 30
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.2,
+        "territoriality": 0.3,
+        "sociality": 0.9,
+        "reproduction": 0.95,
+        "predators": [
+          "mon_sewersnake_01"
+        ],
+        "prey": [
+          "슬러지"
+        ],
+        "note": "하수도 신규 서식종 — 슬러지를 걸러 먹는 연한 벌레 (260종 확장 #63)",
         "relationTypes": {
           "슬러지": "grazing"
         }
@@ -13936,6 +15350,206 @@
       }
     },
     {
+      "id": "mon_stardust_01",
+      "name": "별가루",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 5,
+      "level": [
+        136,
+        136
+      ],
+      "threatBase": 139.0,
+      "element": "none",
+      "stats": {
+        "hp": 29500,
+        "atk": 380,
+        "def": 62,
+        "mdef": 16,
+        "aspd": 14,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 90,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.5,
+        "note": "불에 약함"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          8,
+          12
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "sting"
+      },
+      "pattern": [
+        {
+          "name": "독침",
+          "cd": 6,
+          "effect": "1xATK + 독",
+          "telegraph": "노란 빛",
+          "counter": "방패"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          105,
+          105
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 4512,
+        "exp": 1200
+      },
+      "ecology": {
+        "diet": "mana",
+        "role": "swarm",
+        "habitat": [
+          "astral"
+        ],
+        "activity": "diurnal",
+        "temperature": {
+          "min": -35,
+          "max": 50
+        },
+        "water_need": 0.5,
+        "food_need": 0.4,
+        "aggression": 0.6,
+        "territoriality": 0.8,
+        "sociality": 0.95,
+        "reproduction": 0.85,
+        "predators": [
+          "mon_beholder_01",
+          "mon_dracolich_01",
+          "mon_astralhawk_01",
+          "mon_moonvine_01"
+        ],
+        "prey": [
+          "근원 합류"
+        ],
+        "note": "별빛이 응결한 가루 군체 — 정점 생태의 먹이 바닥",
+        "relationTypes": {
+          "근원 합류": "grazing"
+        }
+      }
+    },
+    {
+      "id": "mon_starsandworm_01",
+      "name": "별모래 벌레",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 4,
+      "level": [
+        131,
+        135
+      ],
+      "threatBase": 105.0,
+      "element": "light",
+      "stats": {
+        "hp": 9200,
+        "atk": 180,
+        "def": 42,
+        "mdef": 10,
+        "aspd": 11,
+        "cri": 5,
+        "cdmg": 150,
+        "sta": 93,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "치명적 약점"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "swarm",
+        "fleeHp": 0.7
+      },
+      "pattern": [
+        {
+          "name": "이빨",
+          "cd": 5,
+          "effect": "1xATK + 출혈",
+          "telegraph": "달려든다",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          101,
+          104
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 3100,
+        "exp": 820
+      },
+      "ecology": {
+        "diet": "herbivore",
+        "role": "prey",
+        "habitat": [
+          "astral",
+          "dragon_lair",
+          "lair"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": -40,
+          "max": 60
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.2,
+        "territoriality": 0.3,
+        "sociality": 0.9,
+        "reproduction": 0.95,
+        "predators": [
+          "mon_moonvine_01"
+        ],
+        "prey": [
+          "근원 합류"
+        ],
+        "note": "정점 신규 서식종 — 별가루가 쌓인 모래를 훑는 벌레 (260종 확장 #63)",
+        "relationTypes": {
+          "근원 합류": "grazing"
+        }
+      }
+    },
+    {
       "id": "mon_storm_giant_01",
       "name": "폭풍거인",
       "category": 1,
@@ -14448,6 +16062,104 @@
         "relationTypes": {
           "수생식물": "grazing",
           "mon_frog_01": "predation"
+        }
+      }
+    },
+    {
+      "id": "mon_templedove_01",
+      "name": "신전비둘기",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 2,
+      "level": [
+        40,
+        46
+      ],
+      "threatBase": 44.0,
+      "element": "none",
+      "stats": {
+        "hp": 581,
+        "atk": 26,
+        "def": 8,
+        "mdef": 6,
+        "aspd": 13,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 80,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "모든 포식자의 먹이"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "flee",
+        "fleeHp": 0.9
+      },
+      "pattern": [
+        {
+          "name": "도주",
+          "cd": 3,
+          "effect": "이동속도 2배 2초",
+          "telegraph": "반짝임",
+          "counter": "포위"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          31,
+          35
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 310,
+        "exp": 162
+      },
+      "ecology": {
+        "diet": "herbivore",
+        "role": "prey",
+        "habitat": [
+          "temple"
+        ],
+        "activity": "diurnal",
+        "temperature": {
+          "min": 8,
+          "max": 25
+        },
+        "water_need": 0.6,
+        "food_need": 0.7,
+        "aggression": 0.05,
+        "territoriality": 0.1,
+        "sociality": 0.6,
+        "reproduction": 0.9,
+        "predators": [
+          "mon_gardensnake_01"
+        ],
+        "prey": [
+          "성수 이슬"
+        ],
+        "note": "성수를 마시고 살찌는 흰 비둘기",
+        "relationTypes": {
+          "성수 이슬": "grazing"
         }
       }
     },
@@ -14980,6 +16692,106 @@
           "corpse": "grazing",
           "꽃": "grazing",
           "mon_graverat_01": "predation"
+        }
+      }
+    },
+    {
+      "id": "mon_trenchlanternfish_01",
+      "name": "해구 등불어",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 2,
+      "level": [
+        60,
+        65
+      ],
+      "threatBase": 44.0,
+      "element": "water",
+      "stats": {
+        "hp": 581,
+        "atk": 26,
+        "def": 8,
+        "mdef": 6,
+        "aspd": 13,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 80,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "치명적 약점"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "swarm",
+        "fleeHp": 0.7
+      },
+      "pattern": [
+        {
+          "name": "이빨",
+          "cd": 5,
+          "effect": "1xATK + 출혈",
+          "telegraph": "달려든다",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          46,
+          50
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "하"
+        ],
+        "gold": 310,
+        "exp": 162
+      },
+      "ecology": {
+        "diet": "herbivore",
+        "role": "prey",
+        "habitat": [
+          "deep_ocean",
+          "deep",
+          "trench"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": 0,
+          "max": 15
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.2,
+        "territoriality": 0.3,
+        "sociality": 0.9,
+        "reproduction": 0.95,
+        "predators": [
+          "mon_abyssjellylet_01"
+        ],
+        "prey": [
+          "열수 분출구 미네랄"
+        ],
+        "note": "심해 신규 서식종 — 작은 등불로 플랑크톤을 모으는 소형어 (260종 확장 #63)",
+        "relationTypes": {
+          "열수 분출구 미네랄": "grazing"
         }
       }
     },
@@ -15526,6 +17338,108 @@
           "detritus": "scavenge"
         },
         "note": "버려진 폐기물이 뭉친 거체 — 슬러지·잔반·사체를 흡수해 정화"
+      }
+    },
+    {
+      "id": "mon_weightlessbug_01",
+      "name": "무게 없는 벌레",
+      "category": 4,
+      "aiType": "melee",
+      "tier": 5,
+      "level": [
+        157,
+        162
+      ],
+      "threatBase": 139.0,
+      "element": "dark",
+      "stats": {
+        "hp": 29500,
+        "atk": 380,
+        "def": 62,
+        "mdef": 16,
+        "aspd": 14,
+        "cri": 6,
+        "cdmg": 150,
+        "sta": 90,
+        "eva": 8
+      },
+      "weakness": {
+        "element": [
+          "fire"
+        ],
+        "bonus": 0.3,
+        "note": "치명적 약점"
+      },
+      "resistance": {
+        "physical": 0,
+        "bleed": 0
+      },
+      "statusImmune": [],
+      "aiDecision": {
+        "enrageHp": 0,
+        "patternCooldown": [
+          10,
+          15
+        ],
+        "crowdAoeRadius": 0,
+        "specialSkill": "swarm",
+        "fleeHp": 0.7
+      },
+      "pattern": [
+        {
+          "name": "이빨",
+          "cd": 5,
+          "effect": "1xATK + 출혈",
+          "telegraph": "달려든다",
+          "counter": "이동"
+        }
+      ],
+      "parts": [],
+      "spawn": {
+        "floors": [
+          121,
+          125
+        ],
+        "mode": "encounter"
+      },
+      "loot": {
+        "soul": [
+          "중"
+        ],
+        "gold": 4512,
+        "exp": 1200
+      },
+      "ecology": {
+        "diet": "herbivore",
+        "role": "prey",
+        "habitat": [
+          "skylapse"
+        ],
+        "activity": "nocturnal",
+        "temperature": {
+          "min": -50,
+          "max": 0
+        },
+        "water_need": 0.3,
+        "food_need": 0.5,
+        "aggression": 0.2,
+        "territoriality": 0.3,
+        "sociality": 0.9,
+        "reproduction": 0.95,
+        "predators": [
+          "mon_floatjelly_01",
+          "mon_lapsehawk_01",
+          "mon_collapserat_01"
+        ],
+        "prey": [
+          "중력 먼지",
+          "mon_gravitymoss_01"
+        ],
+        "note": "붕괴 천창 신규 서식종 — 걷는 게 아니라 천천히 떨어지는 벌레 (260종 확장 #63)",
+        "relationTypes": {
+          "중력 먼지": "grazing",
+          "mon_gravitymoss_01": "predation"
+        }
       }
     },
     {

@@ -1,10 +1,11 @@
 {
   "meta": {
-    "v80": "biome_assets v1 — data/biomes.json v1.3 파생 · 2026-10-23",
+    "v80": "biome_assets v2 — data/biomes.json v1.3 파생 · 2026-10-26",
     "source": "data/biomes.json — kit = topologyKit, slot = slots[0]. 값은 전부 파생이며 손으로 고치지 않는다.",
     "generatedBy": "tools/gen_biome_assets.py",
-    "keyRule": "ground:<kit> · lit:<biome_id> · ambient:<biome_id> · prop:<kit>:<n>",
-    "propsRule": "프롭은 아트 스타일 확정 뒤 S4 에서 채운다 — 지금은 빈 배열 (개수를 지어내지 않는다)."
+    "keyRule": "ground:<kit> · lit:<biome_id> · ambient:<biome_id> · prop:<kit>:<part>",
+    "propsRule": "props = [{key, part, n}] — habitat·difficulty.mods·climate·category 에서 파생. 같은 키트를 쓰는 바이옴이 갈라지도록 부품 배분과 총량을 바이옴마다 다르게 뽑는다 (규칙은 tools/gen_biome_assets.py 머리말).",
+    "lightingRule": "lit:<biome_id> 는 키다. 수치(태양·채움광·안개)는 godot/core/biome_palette.gd 가 같은 정본에서 파생한다 — 여기에 손 수치를 두지 않는다."
   },
   "kits": [
     "topo_dry_fire",
@@ -25,7 +26,28 @@
       "ground": "ground:topo_natural_surface",
       "lighting": "lit:biome_plains",
       "ambient": "ambient:biome_plains",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_natural_surface:bush",
+          "part": "bush",
+          "n": 9
+        },
+        {
+          "key": "prop:topo_natural_surface:rock",
+          "part": "rock",
+          "n": 1
+        },
+        {
+          "key": "prop:topo_natural_surface:flower",
+          "part": "flower",
+          "n": 7
+        },
+        {
+          "key": "prop:topo_natural_surface:stump",
+          "part": "stump",
+          "n": 3
+        }
+      ]
     },
     {
       "id": "biome_forest",
@@ -34,7 +56,28 @@
       "ground": "ground:topo_natural_surface",
       "lighting": "lit:biome_forest",
       "ambient": "ambient:biome_forest",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_natural_surface:bush",
+          "part": "bush",
+          "n": 12
+        },
+        {
+          "key": "prop:topo_natural_surface:rock",
+          "part": "rock",
+          "n": 2
+        },
+        {
+          "key": "prop:topo_natural_surface:flower",
+          "part": "flower",
+          "n": 4
+        },
+        {
+          "key": "prop:topo_natural_surface:stump",
+          "part": "stump",
+          "n": 4
+        }
+      ]
     },
     {
       "id": "biome_coastal_sea",
@@ -43,7 +86,28 @@
       "ground": "ground:topo_wetland_water",
       "lighting": "lit:biome_coastal_sea",
       "ambient": "ambient:biome_coastal_sea",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_wetland_water:lily",
+          "part": "lily",
+          "n": 5
+        },
+        {
+          "key": "prop:topo_wetland_water:cattail",
+          "part": "cattail",
+          "n": 14
+        },
+        {
+          "key": "prop:topo_wetland_water:driftwood",
+          "part": "driftwood",
+          "n": 2
+        },
+        {
+          "key": "prop:topo_wetland_water:shell",
+          "part": "shell",
+          "n": 3
+        }
+      ]
     },
     {
       "id": "biome_library",
@@ -52,7 +116,28 @@
       "ground": "ground:topo_urban_ruins",
       "lighting": "lit:biome_library",
       "ambient": "ambient:biome_library",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_urban_ruins:crate",
+          "part": "crate",
+          "n": 3
+        },
+        {
+          "key": "prop:topo_urban_ruins:barrel",
+          "part": "barrel",
+          "n": 6
+        },
+        {
+          "key": "prop:topo_urban_ruins:post",
+          "part": "post",
+          "n": 5
+        },
+        {
+          "key": "prop:topo_urban_ruins:shelf",
+          "part": "shelf",
+          "n": 6
+        }
+      ]
     },
     {
       "id": "biome_maze_city",
@@ -61,7 +146,28 @@
       "ground": "ground:topo_urban_ruins",
       "lighting": "lit:biome_maze_city",
       "ambient": "ambient:biome_maze_city",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_urban_ruins:crate",
+          "part": "crate",
+          "n": 5
+        },
+        {
+          "key": "prop:topo_urban_ruins:barrel",
+          "part": "barrel",
+          "n": 4
+        },
+        {
+          "key": "prop:topo_urban_ruins:post",
+          "part": "post",
+          "n": 14
+        },
+        {
+          "key": "prop:topo_urban_ruins:shelf",
+          "part": "shelf",
+          "n": 7
+        }
+      ]
     },
     {
       "id": "biome_skyreach",
@@ -70,7 +176,28 @@
       "ground": "ground:topo_sky_interior",
       "lighting": "lit:biome_skyreach",
       "ambient": "ambient:biome_skyreach",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_sky_interior:ice_floe",
+          "part": "ice_floe",
+          "n": 3
+        },
+        {
+          "key": "prop:topo_sky_interior:spire_small",
+          "part": "spire_small",
+          "n": 4
+        },
+        {
+          "key": "prop:topo_sky_interior:banner",
+          "part": "banner",
+          "n": 11
+        },
+        {
+          "key": "prop:topo_sky_interior:feather",
+          "part": "feather",
+          "n": 4
+        }
+      ]
     },
     {
       "id": "biome_temple",
@@ -79,7 +206,28 @@
       "ground": "ground:topo_sacred_sanctuary",
       "lighting": "lit:biome_temple",
       "ambient": "ambient:biome_temple",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_sacred_sanctuary:candle",
+          "part": "candle",
+          "n": 3
+        },
+        {
+          "key": "prop:topo_sacred_sanctuary:urn",
+          "part": "urn",
+          "n": 3
+        },
+        {
+          "key": "prop:topo_sacred_sanctuary:grave",
+          "part": "grave",
+          "n": 7
+        },
+        {
+          "key": "prop:topo_sacred_sanctuary:offering",
+          "part": "offering",
+          "n": 7
+        }
+      ]
     },
     {
       "id": "biome_cave",
@@ -88,7 +236,28 @@
       "ground": "ground:topo_rock_cavern_mountain",
       "lighting": "lit:biome_cave",
       "ambient": "ambient:biome_cave",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_rock_cavern_mountain:pebble",
+          "part": "pebble",
+          "n": 8
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:slab",
+          "part": "slab",
+          "n": 4
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:mushroom",
+          "part": "mushroom",
+          "n": 2
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:crystal",
+          "part": "crystal",
+          "n": 2
+        }
+      ]
     },
     {
       "id": "biome_ruins",
@@ -97,7 +266,28 @@
       "ground": "ground:topo_urban_ruins",
       "lighting": "lit:biome_ruins",
       "ambient": "ambient:biome_ruins",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_urban_ruins:crate",
+          "part": "crate",
+          "n": 10
+        },
+        {
+          "key": "prop:topo_urban_ruins:barrel",
+          "part": "barrel",
+          "n": 5
+        },
+        {
+          "key": "prop:topo_urban_ruins:post",
+          "part": "post",
+          "n": 4
+        },
+        {
+          "key": "prop:topo_urban_ruins:shelf",
+          "part": "shelf",
+          "n": 9
+        }
+      ]
     },
     {
       "id": "biome_deep_sea",
@@ -106,7 +296,28 @@
       "ground": "ground:topo_underwater_specialist",
       "lighting": "lit:biome_deep_sea",
       "ambient": "ambient:biome_deep_sea",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_underwater_specialist:kelp",
+          "part": "kelp",
+          "n": 10
+        },
+        {
+          "key": "prop:topo_underwater_specialist:anemone",
+          "part": "anemone",
+          "n": 12
+        },
+        {
+          "key": "prop:topo_underwater_specialist:shell",
+          "part": "shell",
+          "n": 1
+        },
+        {
+          "key": "prop:topo_underwater_specialist:tube",
+          "part": "tube",
+          "n": 1
+        }
+      ]
     },
     {
       "id": "biome_sewer",
@@ -115,7 +326,28 @@
       "ground": "ground:topo_urban_ruins",
       "lighting": "lit:biome_sewer",
       "ambient": "ambient:biome_sewer",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_urban_ruins:crate",
+          "part": "crate",
+          "n": 7
+        },
+        {
+          "key": "prop:topo_urban_ruins:barrel",
+          "part": "barrel",
+          "n": 8
+        },
+        {
+          "key": "prop:topo_urban_ruins:post",
+          "part": "post",
+          "n": 4
+        },
+        {
+          "key": "prop:topo_urban_ruins:shelf",
+          "part": "shelf",
+          "n": 9
+        }
+      ]
     },
     {
       "id": "biome_mountain_range",
@@ -124,7 +356,28 @@
       "ground": "ground:topo_rock_cavern_mountain",
       "lighting": "lit:biome_mountain_range",
       "ambient": "ambient:biome_mountain_range",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_rock_cavern_mountain:pebble",
+          "part": "pebble",
+          "n": 3
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:slab",
+          "part": "slab",
+          "n": 14
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:mushroom",
+          "part": "mushroom",
+          "n": 1
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:crystal",
+          "part": "crystal",
+          "n": 4
+        }
+      ]
     },
     {
       "id": "biome_swamp",
@@ -133,7 +386,28 @@
       "ground": "ground:topo_wetland_water",
       "lighting": "lit:biome_swamp",
       "ambient": "ambient:biome_swamp",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_wetland_water:lily",
+          "part": "lily",
+          "n": 4
+        },
+        {
+          "key": "prop:topo_wetland_water:cattail",
+          "part": "cattail",
+          "n": 17
+        },
+        {
+          "key": "prop:topo_wetland_water:driftwood",
+          "part": "driftwood",
+          "n": 2
+        },
+        {
+          "key": "prop:topo_wetland_water:shell",
+          "part": "shell",
+          "n": 1
+        }
+      ]
     },
     {
       "id": "biome_jungle",
@@ -142,7 +416,28 @@
       "ground": "ground:topo_natural_surface",
       "lighting": "lit:biome_jungle",
       "ambient": "ambient:biome_jungle",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_natural_surface:bush",
+          "part": "bush",
+          "n": 17
+        },
+        {
+          "key": "prop:topo_natural_surface:rock",
+          "part": "rock",
+          "n": 5
+        },
+        {
+          "key": "prop:topo_natural_surface:flower",
+          "part": "flower",
+          "n": 5
+        },
+        {
+          "key": "prop:topo_natural_surface:stump",
+          "part": "stump",
+          "n": 1
+        }
+      ]
     },
     {
       "id": "biome_graveyard",
@@ -151,7 +446,28 @@
       "ground": "ground:topo_sacred_sanctuary",
       "lighting": "lit:biome_graveyard",
       "ambient": "ambient:biome_graveyard",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_sacred_sanctuary:candle",
+          "part": "candle",
+          "n": 3
+        },
+        {
+          "key": "prop:topo_sacred_sanctuary:urn",
+          "part": "urn",
+          "n": 2
+        },
+        {
+          "key": "prop:topo_sacred_sanctuary:grave",
+          "part": "grave",
+          "n": 9
+        },
+        {
+          "key": "prop:topo_sacred_sanctuary:offering",
+          "part": "offering",
+          "n": 4
+        }
+      ]
     },
     {
       "id": "biome_volcano",
@@ -160,7 +476,28 @@
       "ground": "ground:topo_dry_fire",
       "lighting": "lit:biome_volcano",
       "ambient": "ambient:biome_volcano",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_dry_fire:charred_stump",
+          "part": "charred_stump",
+          "n": 3
+        },
+        {
+          "key": "prop:topo_dry_fire:ember_rock",
+          "part": "ember_rock",
+          "n": 14
+        },
+        {
+          "key": "prop:topo_dry_fire:bone",
+          "part": "bone",
+          "n": 1
+        },
+        {
+          "key": "prop:topo_dry_fire:dead_shrub",
+          "part": "dead_shrub",
+          "n": 4
+        }
+      ]
     },
     {
       "id": "biome_desert",
@@ -169,7 +506,28 @@
       "ground": "ground:topo_dry_fire",
       "lighting": "lit:biome_desert",
       "ambient": "ambient:biome_desert",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_dry_fire:charred_stump",
+          "part": "charred_stump",
+          "n": 1
+        },
+        {
+          "key": "prop:topo_dry_fire:ember_rock",
+          "part": "ember_rock",
+          "n": 15
+        },
+        {
+          "key": "prop:topo_dry_fire:bone",
+          "part": "bone",
+          "n": 3
+        },
+        {
+          "key": "prop:topo_dry_fire:dead_shrub",
+          "part": "dead_shrub",
+          "n": 3
+        }
+      ]
     },
     {
       "id": "biome_windless_plateau",
@@ -178,7 +536,28 @@
       "ground": "ground:topo_frozen_crystal",
       "lighting": "lit:biome_windless_plateau",
       "ambient": "ambient:biome_windless_plateau",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_frozen_crystal:icicle",
+          "part": "icicle",
+          "n": 12
+        },
+        {
+          "key": "prop:topo_frozen_crystal:frozen_rock",
+          "part": "frozen_rock",
+          "n": 5
+        },
+        {
+          "key": "prop:topo_frozen_crystal:snow_bush",
+          "part": "snow_bush",
+          "n": 2
+        },
+        {
+          "key": "prop:topo_frozen_crystal:crystal",
+          "part": "crystal",
+          "n": 3
+        }
+      ]
     },
     {
       "id": "biome_hell",
@@ -187,7 +566,28 @@
       "ground": "ground:topo_dry_fire",
       "lighting": "lit:biome_hell",
       "ambient": "ambient:biome_hell",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_dry_fire:charred_stump",
+          "part": "charred_stump",
+          "n": 3
+        },
+        {
+          "key": "prop:topo_dry_fire:ember_rock",
+          "part": "ember_rock",
+          "n": 4
+        },
+        {
+          "key": "prop:topo_dry_fire:bone",
+          "part": "bone",
+          "n": 9
+        },
+        {
+          "key": "prop:topo_dry_fire:dead_shrub",
+          "part": "dead_shrub",
+          "n": 2
+        }
+      ]
     },
     {
       "id": "biome_chasm",
@@ -196,7 +596,28 @@
       "ground": "ground:topo_rock_cavern_mountain",
       "lighting": "lit:biome_chasm",
       "ambient": "ambient:biome_chasm",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_rock_cavern_mountain:pebble",
+          "part": "pebble",
+          "n": 4
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:slab",
+          "part": "slab",
+          "n": 3
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:mushroom",
+          "part": "mushroom",
+          "n": 2
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:crystal",
+          "part": "crystal",
+          "n": 9
+        }
+      ]
     },
     {
       "id": "biome_summit",
@@ -205,7 +626,28 @@
       "ground": "ground:topo_wetland_water",
       "lighting": "lit:biome_summit",
       "ambient": "ambient:biome_summit",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_wetland_water:lily",
+          "part": "lily",
+          "n": 8
+        },
+        {
+          "key": "prop:topo_wetland_water:cattail",
+          "part": "cattail",
+          "n": 6
+        },
+        {
+          "key": "prop:topo_wetland_water:driftwood",
+          "part": "driftwood",
+          "n": 8
+        },
+        {
+          "key": "prop:topo_wetland_water:shell",
+          "part": "shell",
+          "n": 6
+        }
+      ]
     },
     {
       "id": "biome_frozen_ocean",
@@ -214,7 +656,28 @@
       "ground": "ground:topo_sky_interior",
       "lighting": "lit:biome_frozen_ocean",
       "ambient": "ambient:biome_frozen_ocean",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_sky_interior:ice_floe",
+          "part": "ice_floe",
+          "n": 7
+        },
+        {
+          "key": "prop:topo_sky_interior:spire_small",
+          "part": "spire_small",
+          "n": 7
+        },
+        {
+          "key": "prop:topo_sky_interior:banner",
+          "part": "banner",
+          "n": 2
+        },
+        {
+          "key": "prop:topo_sky_interior:feather",
+          "part": "feather",
+          "n": 6
+        }
+      ]
     },
     {
       "id": "biome_crystal_forest",
@@ -223,7 +686,28 @@
       "ground": "ground:topo_rock_cavern_mountain",
       "lighting": "lit:biome_crystal_forest",
       "ambient": "ambient:biome_crystal_forest",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_rock_cavern_mountain:pebble",
+          "part": "pebble",
+          "n": 5
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:slab",
+          "part": "slab",
+          "n": 4
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:mushroom",
+          "part": "mushroom",
+          "n": 1
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:crystal",
+          "part": "crystal",
+          "n": 12
+        }
+      ]
     },
     {
       "id": "biome_glass_desert",
@@ -232,7 +716,28 @@
       "ground": "ground:topo_rock_cavern_mountain",
       "lighting": "lit:biome_glass_desert",
       "ambient": "ambient:biome_glass_desert",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_rock_cavern_mountain:pebble",
+          "part": "pebble",
+          "n": 6
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:slab",
+          "part": "slab",
+          "n": 7
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:mushroom",
+          "part": "mushroom",
+          "n": 1
+        },
+        {
+          "key": "prop:topo_rock_cavern_mountain:crystal",
+          "part": "crystal",
+          "n": 8
+        }
+      ]
     },
     {
       "id": "biome_shattered_skylight",
@@ -241,7 +746,28 @@
       "ground": "ground:topo_sky_interior",
       "lighting": "lit:biome_shattered_skylight",
       "ambient": "ambient:biome_shattered_skylight",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_sky_interior:ice_floe",
+          "part": "ice_floe",
+          "n": 4
+        },
+        {
+          "key": "prop:topo_sky_interior:spire_small",
+          "part": "spire_small",
+          "n": 7
+        },
+        {
+          "key": "prop:topo_sky_interior:banner",
+          "part": "banner",
+          "n": 2
+        },
+        {
+          "key": "prop:topo_sky_interior:feather",
+          "part": "feather",
+          "n": 9
+        }
+      ]
     },
     {
       "id": "biome_idea_gate",
@@ -250,7 +776,28 @@
       "ground": "ground:topo_frozen_crystal",
       "lighting": "lit:biome_idea_gate",
       "ambient": "ambient:biome_idea_gate",
-      "props": []
+      "props": [
+        {
+          "key": "prop:topo_frozen_crystal:icicle",
+          "part": "icicle",
+          "n": 4
+        },
+        {
+          "key": "prop:topo_frozen_crystal:frozen_rock",
+          "part": "frozen_rock",
+          "n": 9
+        },
+        {
+          "key": "prop:topo_frozen_crystal:snow_bush",
+          "part": "snow_bush",
+          "n": 2
+        },
+        {
+          "key": "prop:topo_frozen_crystal:crystal",
+          "part": "crystal",
+          "n": 7
+        }
+      ]
     }
   ]
 }

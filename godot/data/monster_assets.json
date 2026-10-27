@@ -1,0 +1,968 @@
+{
+  "meta": {
+    "v80": "monster_assets v1 — S5 바이옴별 생물 3종 · 2026-10-26",
+    "source": "data/monsters.json · data/ecology_codex.json · data/biomes.json — 값은 전부 파생이며 손으로 고치지 않는다.",
+    "generatedBy": "tools/gen_monster_assets.py",
+    "keyRule": "monster:<mon_id> — run_state.gd 의 entity.asset 문자열 그대로",
+    "pickRule": "habitat 교집합(encounter·elite) → spawnBlock 우선 → 온도 적합 우선 → 몸집 대역 heavy·small·odd 하나씩. 규칙은 tools/gen_monster_assets.py 머리말.",
+    "bands": {
+      "heavy": [
+        "apex",
+        "elemental",
+        "guardian",
+        "hunter",
+        "predator"
+      ],
+      "small": [
+        "decomposer",
+        "prey",
+        "scavenger",
+        "swarm"
+      ],
+      "odd": [
+        "ambusher",
+        "corruptor",
+        "mimic",
+        "undead"
+      ]
+    }
+  },
+  "biomes": [
+    {
+      "id": "biome_plains",
+      "slot": 1,
+      "monsters": [
+        {
+          "key": "monster:mon_plainshawk_01",
+          "id": "mon_plainshawk_01",
+          "name": "들매",
+          "role": "hunter",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 1,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_beetle_01",
+          "id": "mon_beetle_01",
+          "name": "장수풍뎅이",
+          "role": "scavenger",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 1,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_boar_01",
+          "id": "mon_boar_01",
+          "name": "멧돼지",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 1,
+          "source": "neighbour"
+        }
+      ]
+    },
+    {
+      "id": "biome_forest",
+      "slot": 2,
+      "monsters": [
+        {
+          "key": "monster:mon_lycanthrope_01",
+          "id": "mon_lycanthrope_01",
+          "name": "늑대인간",
+          "role": "apex",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_frog_01",
+          "id": "mon_frog_01",
+          "name": "개구리",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_bugbear_01",
+          "id": "mon_bugbear_01",
+          "name": "버그베어",
+          "role": "ambusher",
+          "band": "odd",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_coastal_sea",
+      "slot": 3,
+      "monsters": [
+        {
+          "key": "monster:mon_reefwarden_01",
+          "id": "mon_reefwarden_01",
+          "name": "산호껍질게",
+          "role": "guardian",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_driftvulture_01",
+          "id": "mon_driftvulture_01",
+          "name": "표류수리",
+          "role": "scavenger",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 1,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_sanddart_01",
+          "id": "mon_sanddart_01",
+          "name": "모래화살",
+          "role": "ambusher",
+          "band": "odd",
+          "mode": "encounter",
+          "tier": 1,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_library",
+      "slot": 4,
+      "monsters": [
+        {
+          "key": "monster:mon_shelfwarden_01",
+          "id": "mon_shelfwarden_01",
+          "name": "책장먼지벌레",
+          "role": "guardian",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_papermite_01",
+          "id": "mon_papermite_01",
+          "name": "종이개미",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 1,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_skeleton_mage_01",
+          "id": "mon_skeleton_mage_01",
+          "name": "스켈레톤 메이지",
+          "role": "undead",
+          "band": "odd",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "neighbour"
+        }
+      ]
+    },
+    {
+      "id": "biome_maze_city",
+      "slot": 5,
+      "monsters": [
+        {
+          "key": "monster:mon_labythrower_01",
+          "id": "mon_labythrower_01",
+          "name": "미궁 재배치체",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_citypigeon_01",
+          "id": "mon_citypigeon_01",
+          "name": "도시비둘기",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 1,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_skeleton_warrior_01",
+          "id": "mon_skeleton_warrior_01",
+          "name": "스켈레톤 워리어",
+          "role": "undead",
+          "band": "odd",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_skyreach",
+      "slot": 6,
+      "monsters": [
+        {
+          "key": "monster:mon_cirruswarden_01",
+          "id": "mon_cirruswarden_01",
+          "name": "권운매",
+          "role": "guardian",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_stormcrawler_01",
+          "id": "mon_stormcrawler_01",
+          "name": "폭풍진딧물",
+          "role": "swarm",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 1,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_cirruskite_01",
+          "id": "mon_cirruskite_01",
+          "name": "구름표범",
+          "role": "hunter",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_temple",
+      "slot": 7,
+      "monsters": [
+        {
+          "key": "monster:mon_spirit_light_02",
+          "id": "mon_spirit_light_02",
+          "name": "거광대정령",
+          "role": "elemental",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_templedove_01",
+          "id": "mon_templedove_01",
+          "name": "신전비둘기",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_skeleton_yaksha_01",
+          "id": "mon_skeleton_yaksha_01",
+          "name": "스켈레톤 야차",
+          "role": "undead",
+          "band": "odd",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "habitat"
+        }
+      ]
+    },
+    {
+      "id": "biome_cave",
+      "slot": 8,
+      "monsters": [
+        {
+          "key": "monster:mon_spider_queen_01",
+          "id": "mon_spider_queen_01",
+          "name": "거미 여왕",
+          "role": "apex",
+          "band": "heavy",
+          "mode": "elite",
+          "tier": 3,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_giant_ant_01",
+          "id": "mon_giant_ant_01",
+          "name": "둑개미",
+          "role": "swarm",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_bugbear_01",
+          "id": "mon_bugbear_01",
+          "name": "버그베어",
+          "role": "ambusher",
+          "band": "odd",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "habitat"
+        }
+      ]
+    },
+    {
+      "id": "biome_ruins",
+      "slot": 9,
+      "monsters": [
+        {
+          "key": "monster:mon_hobgoblin_01",
+          "id": "mon_hobgoblin_01",
+          "name": "흉고블린",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_raider_01",
+          "id": "mon_raider_01",
+          "name": "잔해탐지충",
+          "role": "scavenger",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_banshee_01",
+          "id": "mon_banshee_01",
+          "name": "밴시",
+          "role": "undead",
+          "band": "odd",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "habitat"
+        }
+      ]
+    },
+    {
+      "id": "biome_deep_sea",
+      "slot": 10,
+      "monsters": [
+        {
+          "key": "monster:mon_spider_queen_01",
+          "id": "mon_spider_queen_01",
+          "name": "거미 여왕",
+          "role": "apex",
+          "band": "heavy",
+          "mode": "elite",
+          "tier": 3,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_trenchlanternfish_01",
+          "id": "mon_trenchlanternfish_01",
+          "name": "해구 등불어",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_sea_serpent_01",
+          "id": "mon_sea_serpent_01",
+          "name": "바다 뱀",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "elite",
+          "tier": 3,
+          "source": "habitat"
+        }
+      ]
+    },
+    {
+      "id": "biome_sewer",
+      "slot": 11,
+      "monsters": [
+        {
+          "key": "monster:mon_sewertroll_01",
+          "id": "mon_sewertroll_01",
+          "name": "하수 트롤",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_backworm_01",
+          "id": "mon_backworm_01",
+          "name": "배수충",
+          "role": "swarm",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_wastegolem_01",
+          "id": "mon_wastegolem_01",
+          "name": "폐기물 골렘",
+          "role": "decomposer",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "habitat"
+        }
+      ]
+    },
+    {
+      "id": "biome_mountain_range",
+      "slot": 12,
+      "monsters": [
+        {
+          "key": "monster:mon_ridgewarden_01",
+          "id": "mon_ridgewarden_01",
+          "name": "설선염소",
+          "role": "guardian",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_dire_boar_01",
+          "id": "mon_dire_boar_01",
+          "name": "들멧돼지",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_dire_bear_01",
+          "id": "mon_dire_bear_01",
+          "name": "산곰",
+          "role": "apex",
+          "band": "heavy",
+          "mode": "elite",
+          "tier": 3,
+          "source": "habitat"
+        }
+      ]
+    },
+    {
+      "id": "biome_swamp",
+      "slot": 13,
+      "monsters": [
+        {
+          "key": "monster:mon_swampknight_01",
+          "id": "mon_swampknight_01",
+          "name": "늪지기사",
+          "role": "guardian",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_frog_01",
+          "id": "mon_frog_01",
+          "name": "개구리",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_marshwarden_01",
+          "id": "mon_marshwarden_01",
+          "name": "늪도마뱀",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_jungle",
+      "slot": 14,
+      "monsters": [
+        {
+          "key": "monster:mon_junglesentinel_01",
+          "id": "mon_junglesentinel_01",
+          "name": "밀림부엉이",
+          "role": "guardian",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_plumed_deer_01",
+          "id": "mon_plumed_deer_01",
+          "name": "깃털사슴",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_dunewalker_01",
+          "id": "mon_dunewalker_01",
+          "name": "모래표범",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_graveyard",
+      "slot": 15,
+      "monsters": [
+        {
+          "key": "monster:mon_ossuaryhound_01",
+          "id": "mon_ossuaryhound_01",
+          "name": "유골수족",
+          "role": "scavenger",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_graveknight_01",
+          "id": "mon_graveknight_01",
+          "name": "묘비파수꾼",
+          "role": "undead",
+          "band": "odd",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_tombmoth_01",
+          "id": "mon_tombmoth_01",
+          "name": "무덤나방",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_volcano",
+      "slot": 16,
+      "monsters": [
+        {
+          "key": "monster:mon_hell_hound_01",
+          "id": "mon_hell_hound_01",
+          "name": "지옥사냥개",
+          "role": "hunter",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "habitat"
+        },
+        {
+          "key": "monster:mon_slime_red_01",
+          "id": "mon_slime_red_01",
+          "name": "붉은슬라임",
+          "role": "decomposer",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_sulfurmite_01",
+          "id": "mon_sulfurmite_01",
+          "name": "유황 진드기",
+          "role": "scavenger",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_desert",
+      "slot": 17,
+      "monsters": [
+        {
+          "key": "monster:mon_rustkite_01",
+          "id": "mon_rustkite_01",
+          "name": "적갈매",
+          "role": "hunter",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_dunewasp_01",
+          "id": "mon_dunewasp_01",
+          "name": "사막말벌",
+          "role": "swarm",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_sandreaver_01",
+          "id": "mon_sandreaver_01",
+          "name": "모래갈퀴",
+          "role": "ambusher",
+          "band": "odd",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_windless_plateau",
+      "slot": 18,
+      "monsters": [
+        {
+          "key": "monster:mon_silentwarden_01",
+          "id": "mon_silentwarden_01",
+          "name": "무풍나방",
+          "role": "guardian",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_windlessrat_01",
+          "id": "mon_windlessrat_01",
+          "name": "무풍설쥐",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_silentsludge_01",
+          "id": "mon_silentsludge_01",
+          "name": "무풍진흙",
+          "role": "corruptor",
+          "band": "odd",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "habitat"
+        }
+      ]
+    },
+    {
+      "id": "biome_hell",
+      "slot": 19,
+      "monsters": [
+        {
+          "key": "monster:mon_hellarchon_01",
+          "id": "mon_hellarchon_01",
+          "name": "지옥사제",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 5,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_ashland_01",
+          "id": "mon_ashland_01",
+          "name": "요흔사슴",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_lesser_demon_01",
+          "id": "mon_lesser_demon_01",
+          "name": "하급악마",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "neighbour"
+        }
+      ]
+    },
+    {
+      "id": "biome_chasm",
+      "slot": 20,
+      "monsters": [
+        {
+          "key": "monster:mon_voidjelly_01",
+          "id": "mon_voidjelly_01",
+          "name": "보이드 젤리",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_voidmite_01",
+          "id": "mon_voidmite_01",
+          "name": "공허먼지",
+          "role": "decomposer",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_creviceech_01",
+          "id": "mon_creviceech_01",
+          "name": "틈새우레지",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_summit",
+      "slot": 21,
+      "monsters": [
+        {
+          "key": "monster:mon_spirit_dark_02",
+          "id": "mon_spirit_dark_02",
+          "name": "무광대정령",
+          "role": "elemental",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_stardust_01",
+          "id": "mon_stardust_01",
+          "name": "별가루",
+          "role": "swarm",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 5,
+          "source": "neighbour"
+        },
+        {
+          "key": "monster:mon_spirit_dark_03",
+          "id": "mon_spirit_dark_03",
+          "name": "심연정령왕",
+          "role": "elemental",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_frozen_ocean",
+      "slot": 22,
+      "monsters": [
+        {
+          "key": "monster:mon_glaciermaw_01",
+          "id": "mon_glaciermaw_01",
+          "name": "빙하 이빨",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "neighbour"
+        },
+        {
+          "key": "monster:mon_glaciaribou_01",
+          "id": "mon_glaciaribou_01",
+          "name": "얼음사슴",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 5,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_frostlure_01",
+          "id": "mon_frostlure_01",
+          "name": "서리등벌레",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "neighbour"
+        }
+      ]
+    },
+    {
+      "id": "biome_crystal_forest",
+      "slot": 23,
+      "monsters": [
+        {
+          "key": "monster:mon_crystalsentinel_01",
+          "id": "mon_crystalsentinel_01",
+          "name": "수정거미",
+          "role": "guardian",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "neighbour"
+        },
+        {
+          "key": "monster:mon_crystaldeer_01",
+          "id": "mon_crystaldeer_01",
+          "name": "수정노루",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 5,
+          "source": "neighbour"
+        },
+        {
+          "key": "monster:mon_cryoshard_01",
+          "id": "mon_cryoshard_01",
+          "name": "결로파편체",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 2,
+          "source": "neighbour"
+        }
+      ]
+    },
+    {
+      "id": "biome_glass_desert",
+      "slot": 24,
+      "monsters": [
+        {
+          "key": "monster:mon_glassmonk_01",
+          "id": "mon_glassmonk_01",
+          "name": "유리승려",
+          "role": "guardian",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_glasslizard_01",
+          "id": "mon_glasslizard_01",
+          "name": "유리 도마뱀",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 5,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_glassrefract_01",
+          "id": "mon_glassrefract_01",
+          "name": "굴절망령",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_shattered_skylight",
+      "slot": 25,
+      "monsters": [
+        {
+          "key": "monster:mon_grieyer_01",
+          "id": "mon_grieyer_01",
+          "name": "어긋난 눈",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 4,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_weightlessbug_01",
+          "id": "mon_weightlessbug_01",
+          "name": "무게 없는 벌레",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 5,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_gravityworm_01",
+          "id": "mon_gravityworm_01",
+          "name": "천창 중력 벌레",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 3,
+          "source": "block"
+        }
+      ]
+    },
+    {
+      "id": "biome_idea_gate",
+      "slot": 26,
+      "monsters": [
+        {
+          "key": "monster:mon_thresholdswift_01",
+          "id": "mon_thresholdswift_01",
+          "name": "이음새벌레",
+          "role": "predator",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 5,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_borderfly_01",
+          "id": "mon_borderfly_01",
+          "name": "경계눈박이",
+          "role": "prey",
+          "band": "small",
+          "mode": "encounter",
+          "tier": 5,
+          "source": "block"
+        },
+        {
+          "key": "monster:mon_ideavigil_01",
+          "id": "mon_ideavigil_01",
+          "name": "이데아거울나비",
+          "role": "guardian",
+          "band": "heavy",
+          "mode": "encounter",
+          "tier": 5,
+          "source": "block"
+        }
+      ]
+    }
+  ]
+}

@@ -119,12 +119,17 @@
     "early_end_food_days": 1
   },
   "decrees": {
-    "_doc": "칙령 3종 (04 §3.7 — 10층 해금·1슬롯). 파업 중에 식량 흑자면 칙령을 바꿔 파업을 조기 종료한다 (04 §3.12). 효과는 §3.7 표 그대로다.",
-    "schema_version": "0.2",
+    "_doc": "칙령 3종 (04 §3.7 — 10층 해금·1칸, 30층부터 2칸). 파업 중에 식량 흑자면 칙령을 바꿔 파업을 조기 종료한다 (04 §3.12). 효과는 §3.7 표 그대로다. 칸 선택·5층 쿨다운은 ADR 0011, 분배주의 상한 초과 골드는 ADR 0012.",
+    "schema_version": "0.4",
     "unlock_floor": 10,
+    "slot_count_by_floor": [
+      { "min_floor": 1, "slots": 1 },
+      { "min_floor": 30, "slots": 2 }
+    ],
+    "change_cooldown_floors": 5,
     "list": [
       { "id": "mercantilism", "name_ko": "중상주의", "morale_delta": -15, "tax_mul": 1.3 },
-      { "id": "distribution", "name_ko": "분배주의", "morale_delta": 15, "tax_mul": 0.8, "natural_growth_mul": 1.5 },
+      { "id": "distribution", "name_ko": "분배주의", "morale_delta": 15, "tax_mul": 0.8, "natural_growth_mul": 1.5, "overflow_gold_per_pop": 4 },
       { "id": "gathering", "name_ko": "채집장려", "morale_delta": -5, "harvest_mul": 1.2 }
     ]
   },
