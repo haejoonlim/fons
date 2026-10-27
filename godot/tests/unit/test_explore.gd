@@ -53,6 +53,30 @@ func test_sites_are_placed_inside_their_own_chunk_and_deterministic() -> void:
 		assert_eq(e.sites[i]["pos"], again.sites[i]["pos"], "같은 시드 = 같은 배치")
 
 
+func test_the_start_spot_keeps_the_camera_clear_of_the_tower() -> void:
+	## 시작·후퇴 자리에서 카메라를 탑 쪽으로 돌렸을 때 붐이 접히면 안 된다.
+	## 필요 거리 = 탑 가림 원통(몸통 × `FonsView3D.TOWER_BLOCKER_SCALE`) + 카메라 기본 거리 + 여유.
+	## 2026-10-28 실측: 몸통 바로 바깥(2.6)에 세우면 26바이옴 24방향 중 182방향이 접혔고
+	## 130방향은 붐이 1.1 미만 — 조종 영웅이 화면에서 사라졌다. 5.82 밖에서 0 이 된다.
+	var need := FonsExplore.TOWER_BODY * FonsView3D.TOWER_BLOCKER_SCALE + FonsView3D.CAMERA_DISTANCE
+	assert_gte(FonsExplore.SPAWN.length(), need, "시작 자리가 탑 가림 + 카메라 기본 거리 밖이다")
+
+
+func test_encounters_keep_clear_of_the_start_spot() -> void:
+	## 시작하자마자 교전이 뜨면 걸어 볼 틈이 없다 — 조우는 시작·후퇴 자리에서 떨어져 있다.
+	## 2026-10-28 실측(규칙 없이 시작 자리만 6.0 으로 옮긴 경우): 80층×3시드 중 20판이
+	## 반경 2.5 안에 조우를 세웠고 최단 0.08유닛(층 15)이었다 — 접촉 반경은 1.5 다.
+	var nearest := INF
+	for floor in range(1, 41):
+		for seed_value in [20261021, 7, 99]:
+			var e := FonsExplore.new()
+			e.start(DataLoader.get_monsters(), DataLoader.get_biomes(), floor, seed_value)
+			for s in e.sites:
+				nearest = minf(nearest, Vector2(s["pos"].x, s["pos"].y).distance_to(FonsExplore.SPAWN))
+	assert_gte(nearest, FonsExplore.SPAWN_CLEAR - 0.001,
+		"조우는 시작 자리 여유 밖에 선다 (최단 %.2f)" % nearest)
+
+
 func test_walking_into_a_site_reports_contact() -> void:
 	var e := _explore()
 	assert_eq(e.contact_index(), -1, "입구에서는 조우가 없다")
