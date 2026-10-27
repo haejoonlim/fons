@@ -749,9 +749,10 @@
       "mult": 1.1,
       "mods": {
        "poison": 0.15,
-       "spawnRate": 1.5
+       "spawnRate": 1.5,
+       "light": "dim"
       },
-      "note": "독 공격 +15%p · 몬스터 스폰 밀도 ×1.5 (개체 수)"
+      "note": "독 공격 +15%p · 몬스터 스폰 밀도 ×1.5 (개체 수) · 조명 dim(지하 수로 — 채움광이 낮고 안개가 짙다)"
      },
      "climate": {
       "ambient": 17,

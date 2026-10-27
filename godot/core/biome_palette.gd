@@ -112,6 +112,11 @@ const DEFAULT_LIGHTING := {"sun": 1.00, "fill": 0.90, "fog": 1.00}
 ## `light:dark` 모드(동굴)는 카테고리 위에 한 번 더 얹는다 — 어둠 카테고리만으로는
 ## 동굴 안이 낮의 어둠과 구분되지 않는다.
 const DARK_MOD := {"sun": 0.55, "fill": 0.60, "fog": 1.25}
+## `light:dim` 모드(침전수로) — 지하 수로는 동굴만큼 어둡지 않지만 채광이 없고 김이 긴다.
+## 미궁도시와 같은 `chaos`·같은 키트라 카테고리 프리셋만으로는 두 칸이 화면에서 붙었다
+## (2026-10-28 시트). 한 단만 내려앗혀 서고 > 미궁도시 > 수로 > 동굴 순으로 세운다.
+const DIM_MOD := {"sun": 0.82, "fill": 0.70, "fog": 1.30}
+const LIGHT_MODS := {"dark": DARK_MOD, "dim": DIM_MOD}
 
 ## 바이옴을 모르는 화면(전투·헤드리스)의 지금 모습 — 3D 뷰가 쓰던 상수 그대로다.
 const DEFAULT_SKY := Color(0.04, 0.05, 0.07, 1.0)
@@ -166,15 +171,15 @@ static func from_biome(biome: Dictionary) -> Dictionary:
 
 
 static func _lighting(category: String, biome: Dictionary) -> Dictionary:
-	## 카테고리 프리셋에 `light:dark` 모드를 곱한다. 다른 모드(물·용암)는 색·배치가 맡고,
-	## 광량을 직접 깎는 것은 어둠 하나다 — 용암 바이옴은 밝아야 맞다.
+	## 카테고리 프리셋에 `light` 모드를 곱한다. 다른 모드(물·용암)는 색·배치가 맡고,
+	## 광량을 직접 깎는 것은 `dark`(동굴)와 `dim`(수로) 둘이다 — 용암 바이옴은 밝아야 맞다.
 	var preset: Dictionary = LIGHTING.get(category, DEFAULT_LIGHTING).duplicate()
 	# `(x or {})` 는 bool 을 내놓는다 — GDScript 의 `or` 는 값이 아니라 진리값이다 (2026-10-26 실측).
 	var difficulty: Dictionary = biome.get("difficulty", {})
 	var mods: Dictionary = difficulty.get("mods", {})
-	if String(mods.get("light", "")) == "dark":
-		for key in DARK_MOD:
-			preset[key] = float(preset.get(key, DARK_MOD[key])) * float(DARK_MOD[key])
+	var mod: Dictionary = LIGHT_MODS.get(String(mods.get("light", "")), {})
+	for key in mod:
+		preset[key] = float(preset.get(key, 1.0)) * float(mod[key])
 	return preset
 
 
