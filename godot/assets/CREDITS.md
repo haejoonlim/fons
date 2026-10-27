@@ -5,7 +5,7 @@
 
 ## 외부 에셋
 
-**없음.** 지금 `godot/assets/` 에 있는 것은 이 저장소가 생성한 지형 키트(`art/models/topo_natural_surface.glb`,
+**없음.** 지금 `godot/assets/` 에 있는 것은 이 저장소가 생성한 지형 키트 9벌(`art/models/<kit>.glb`,
 생성기 `tools/gen_kit_glb.py`)뿐이다.
 
 ## 적는 형식

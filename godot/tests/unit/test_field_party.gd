@@ -16,6 +16,15 @@ func _field() -> FonsFieldState:
 	return field
 
 
+func _field_at(floor: int) -> FonsFieldState:
+	var field := FonsFieldState.new()
+	field.start(DataLoader.load_json("races.json"), DataLoader.get_monsters(),
+		DataLoader.get_biomes(), 20261022, floor,
+		DataLoader.load_json("job_tree.json"), DataLoader.load_json("equipment.json"),
+		DataLoader.load_json("job_coef.json"), _ai())
+	return field
+
+
 func _ai() -> Dictionary:
 	return {
 		"personalities": DataLoader.load_json("personalities.json"),
@@ -69,6 +78,73 @@ func test_snapshot_carries_the_biome_and_its_derived_palette() -> void:
 		"같은 바이옴 = 같은 지면·조명색")
 
 
+func test_the_party_you_will_fight_stands_at_the_encounter_site() -> void:
+	## 접촉 전에 무엇과 싸우는지가 보여야 한다 — 스냅샷에 그 지점의 실제 편성이 실린다.
+	## 편성은 전투와 **같은 함수**(`FonsEncounter.build_party`)에서 나와야 한다. 따로 굴리면
+	## 화면에 선 종과 실제로 싸우는 종이 갈린다.
+	var field := _field()
+	var site: Dictionary = field.explore.sites[0]
+	field.explore.avatar = site["pos"]
+	var snapshot := field.snapshot()
+	var expected := FonsEncounter.build_party(DataLoader.get_monsters(), DataLoader.get_biomes(),
+		field.floor, int(site.get("contact_index", 0)))
+	var got: Array = []
+	for entity in snapshot["entities"]:
+		if String(entity.get("kind", "")) != "monster":
+			continue
+		got.append(String(entity.get("asset", "")))
+	var want: Array = []
+	for monster in expected:
+		want.append("monster:%s" % String(monster.get("id", "")))
+	assert_eq(got.size(), want.size(), "편성 수만큼 선다")
+	assert_eq(got, want, "같은 순서·같은 종")
+	assert_false(expected.is_empty(), "1층 조우는 비어 있지 않다")
+
+
+func test_the_preview_stands_around_the_site_not_on_the_avatar() -> void:
+	## 생물은 지점 둘레에 서고 아바타는 그 바깥에 있다 — 같이 서면 몸이 겹친다.
+	var field := _field()
+	var site: Dictionary = field.explore.sites[0]
+	field.explore.avatar = site["pos"] + Vector2(1.2, 0.0)
+	var snapshot := field.snapshot()
+	var site_at := Vector3(float(site["pos"].x), 0.0, float(site["pos"].y))
+	var avatar: Vector3 = snapshot["avatar"]
+	var seen := 0
+	for entity in snapshot["entities"]:
+		if String(entity.get("kind", "")) != "monster":
+			continue
+		seen += 1
+		var at: Vector3 = entity["pos"]
+		assert_between(at.distance_to(site_at), 1.0, FonsFieldState.PREVIEW_RADIUS + 0.5,
+			"%s 가 지점 둘레에 선다" % String(entity["id"]))
+		assert_gt(at.distance_to(avatar), 0.4, "%s 가 아바타와 겹치지 않는다" % String(entity["id"]))
+	assert_gt(seen, 0, "미리보기가 있다")
+
+
+func test_no_party_is_drawn_away_from_every_encounter() -> void:
+	var field := _field()
+	field.explore.avatar = Vector2(4000.0, 4000.0)
+	var seen := 0
+	for entity in field.snapshot()["entities"]:
+		if String(entity.get("kind", "")) == "monster":
+			seen += 1
+	assert_eq(seen, 0, "조우가 시야 밖이면 생물도 없다")
+
+
+func test_a_cleared_encounter_stops_showing_its_party() -> void:
+	var field := _field()
+	var site: Dictionary = field.explore.sites[0]
+	for other in field.explore.sites:
+		if (other as Dictionary)["pos"].distance_to(site["pos"]) <= FonsFieldState.ENCOUNTER_SIGHT:
+			(other as Dictionary)["cleared"] = true
+	field.explore.avatar = site["pos"]
+	var seen := 0
+	for entity in field.snapshot()["entities"]:
+		if String(entity.get("kind", "")) == "monster":
+			seen += 1
+	assert_eq(seen, 0, "이미 지운 조우는 다시 서지 않는다")
+
+
 func test_switching_moves_the_avatar_and_the_radius_center() -> void:
 	var field := _field()
 	var before: Vector2 = field.party_pos[3]
@@ -95,10 +171,10 @@ func test_allies_stay_inside_the_radius_while_the_player_walks() -> void:
 			continue
 		assert_lte(field.party_pos[i].distance_to(center), FonsFieldState.PARTY_RADIUS + 0.5,
 			"%d번 동료가 범위 밖으로 나갔다" % (i + 1))
-		assert_gte(field.party_pos[i].x, 0.0)
-		assert_lte(field.party_pos[i].x, FonsExplore.FIELD_WIDTH)
-		assert_gte(field.party_pos[i].y, 0.0)
-		assert_lte(field.party_pos[i].y, FonsExplore.FIELD_DEPTH)
+	# 무한맵 — 예전 40×28 경계는 없다. 동료가 그 밖에 서 있어도 정상이고,
+	# 붙어 있어야 하는 것은 **플레이어 반경**뿐이다 (위 검사).
+	assert_gt(field.explore.avatar.y, FonsExplore.FIELD_DEPTH,
+		"예전 필드 아래 경계를 넘어서까지 걸었다")
 
 
 func test_allies_actually_move_on_their_own() -> void:
@@ -173,6 +249,9 @@ func test_ally_touching_an_encounter_blinks_three_times() -> void:
 	var field := _field()
 	var index := 1
 	var site: Dictionary = field.explore.sites[0]
+	# 무한맵에서는 조우가 파티 범위 밖에 있으면 동료가 먼저 끌려온다 — 실제처럼 함께 걸어간다.
+	field.explore.avatar = site["pos"]
+	field.party_pos[field.controlled] = site["pos"]
 	field.party_pos[index] = site["pos"]
 	assert_eq(_pulses(field, index, 20), 3, "위험 신호는 세 번만 — 재촉이 아니라 제안")
 
@@ -181,10 +260,12 @@ func test_same_encounter_never_signals_twice() -> void:
 	var field := _field()
 	var index := 1
 	var site: Dictionary = field.explore.sites[0]
+	field.explore.avatar = site["pos"]
+	field.party_pos[field.controlled] = site["pos"]
 	field.party_pos[index] = site["pos"]
 	_pulses(field, index, 20)
 	# 멀어졌다가 같은 조우로 돌아와도 다시 안 빛난다.
-	field.party_pos[index] = Vector2.ZERO
+	field.party_pos[index] = site["pos"] + Vector2(0, 4)
 	field.tick(0.2)
 	field.party_pos[index] = site["pos"]
 	assert_eq(_pulses(field, index, 20), 0, "같은 조우는 한 번만")
@@ -288,6 +369,9 @@ func test_engage_reports_the_strike_for_the_view() -> void:
 	assert_eq(int(snapshot["strike"]["seq"]), 1, "교전 한 번 = 연출 한 번")
 	assert_eq(int(snapshot["strike"]["site"]), 0, "연출은 그 조우 자리에")
 	assert_eq(int(snapshot["strike"]["damage"]), int(out["last_hit"]), "화면 숫자 = 로그 마지막 일격")
+	assert_true(snapshot["strike"].has("heavy"), "연출은 세기 단계를 함께 싣는다")
+	assert_eq(bool(snapshot["strike"]["heavy"]), bool(out.get("last_crit", false)),
+		"치명타 = 강한 일격")
 	assert_gt(int(out["last_hit"]), 0, "때렸으면 피해가 0 보다 크다")
 
 
@@ -340,3 +424,53 @@ func test_next_floor_and_restart_keep_the_party_inside_the_field() -> void:
 	field.restart()
 	assert_eq(field.controlled, 0, "재시작은 첫 영웅으로 돌린다")
 	assert_eq(field.explore.avatar, field.party_pos[0])
+
+
+func test_idea_gate_floors_pass_or_ask_for_the_gatekeeper() -> void:
+	## 126~130 은 일반 조우가 없다 (biomes noCombat). 진행은 문지기가 진다.
+	var pass_floor := _field_at(129)
+	assert_eq(pass_floor.explore.sites.size(), 0, "문턱에는 조우 지점이 없다")
+	assert_true(pass_floor.mission_done(), "문지기가 없는 129층은 그냥 통과다")
+	assert_true(pass_floor.next_floor(), "통과 층은 바로 다음 층으로 간다")
+	assert_eq(pass_floor.floor, 130)
+
+	var gate := _field_at(128)
+	assert_false(gate.mission_done(), "문지기를 이기기 전에는 진행이 없다")
+	assert_true(gate.gatekeeper_ready(), "F 가 문지기 판을 연다")
+	assert_string_contains(gate.hint(), "문지기", "힌트가 문지기를 알린다")
+	assert_false(gate.next_floor(), "문지기 없이는 다음 층이 없다")
+	assert_eq(gate.floor, 128)
+	var out := gate.engage()
+	assert_true(out.has("winner"), "F 는 문지기와 한 판을 돌린다")
+	assert_eq(gate.mission_done(), String(out["winner"]) == "ally", "격파했을 때만 진행이 열린다")
+
+	var last := _field_at(130)
+	assert_eq(String(last.snapshot()["gatekeeper"]["name"]), "무문의 파수병", "130층 문지기는 바이옴 정본")
+	assert_false(last.mission_done(), "130층도 문지기를 이겨야 끝난다")
+
+
+func test_first_gatekeeper_clear_pays_the_loot_once() -> void:
+	## 설계 §5 — 데이터 `loot` 를 **첫 격파 1회만**. 126 이데아수문장은 ★5 5인으로 이긴다.
+	var field := _field_at(126)
+	var out := field.engage()
+	assert_eq(String(out["winner"]), "ally", "126 문지기는 5인 파티가 잡는다")
+	assert_true(bool(out["first_clear"]), "첫 격파다")
+	assert_eq(int(out["loot"]["gold"]), 3410, "지급액은 monsters.json loot 그대로")
+	assert_true(field.log_lines.any(func(line): return String(line).begins_with("전리품 —")),
+		"전리품 줄이 로그에 남는다")
+	assert_true(field.claim_gatekeeper_loot().is_empty(), "같은 층 두 번째 격파는 빈손이다")
+	# 엔딩 화면이 적을 숫자 — 이름·턴·생존·전리품.
+	assert_eq(String(field.last_gatekeeper["name"]), "이데아수문장", "마지막 판 이름")
+	assert_gt(int(field.last_gatekeeper["turns"]), 0, "걸린 턴")
+	assert_eq(int(field.last_gatekeeper["survivors"]), field.party_alive(), "살아남은 수")
+	assert_eq(int(field.last_gatekeeper["loot"]["gold"]), 3410, "받은 전리품")
+
+
+func test_field_log_tells_which_layer_you_walked_into() -> void:
+	## 출현표가 화면에 닿는 자리 — 조우에 다가가면 로그가 그 조우의 사슬층을 적는다 (08 §4).
+	var field := _field()
+	var site: Dictionary = field.explore.sites[0]
+	field.explore.avatar = Vector2(site["pos"]) - Vector2(0.5, 0)
+	field.walk(Vector2.ZERO, 0.0)
+	assert_true(field.log_lines.any(func(line): return String(line).begins_with("접촉 —")),
+		"필드 로그에 접촉 층이 찍힌다")

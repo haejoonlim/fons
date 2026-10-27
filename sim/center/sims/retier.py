@@ -138,8 +138,8 @@ def report(jobs: list) -> dict:
 if __name__ == '__main__':
     import json
     import os
-    p = os.path.join(os.path.dirname(__file__), '..', '..',
-                     'unity', 'Assets', 'Resources', 'Data', 'job_tree.json')
+    p = os.path.join(os.path.dirname(__file__), '..', '..', '..',
+                     'data', 'job_tree.json')
     with open(p, encoding='utf-8') as fh:
         root = json.load(fh)
     print(json.dumps(report(reassign(root['jobs'])), ensure_ascii=False, indent=1))

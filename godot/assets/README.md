@@ -18,7 +18,7 @@ assets/
     tilesets/     # 타일셋 + .tres (TileSet)
     ui/           # 9-slice 패널, 아이콘
     vfx/          # 파티클 텍스처
-    models/       # 3D 지형 키트 (.glb) — tools/gen_kit_glb.py 가 뽑는다
+    models/       # 3D 지형 키트 · 생물 몸통 (.glb) — tools/gen_kit_glb.py · tools/gen_monster_glb.py
   audio/
     music/        # OGG Vorbis, 루프 지점 포함
     sfx/          # OGG Vorbis
@@ -48,6 +48,20 @@ assets/
 스프라이트·오디오·폰트는 **아직 없다.** 지금 2D 뷰는 `kind` 별 색 사각형으로 그린다.
 첫 스프라이트가 들어오는 시점에 `sprites/` 와 매핑표를 함께 만든다.
 
-3D 는 지형 키트 **1벌**(`art/models/topo_natural_surface.glb`)만 있다 — 부품 이름 접두사가 계약이고
-(`ground_`·`height_`·`landmark_`·`prop_`), 배치는 `game/view/view_3d/biome_kit.gd` 가 진다.
+3D 는 지형 키트 **9벌**이 있다 — `data/biome_assets.json` 의 `topologyKit` 9종이 그대로 파일 이름이고
+(`art/models/<kit>.glb`, 26바이옴이 나눠 쓴다), 부품 이름 접두사가 계약이다
+(`ground_`·`height_`·`landmark_`·`prop_`). 배치는 `game/view/view_3d/biome_kit.gd` 가 진다.
 결과물은 [`tools/gen_kit_glb.py`](../../tools/gen_kit_glb.py) 가 쓰고 `--check` 로 드리프트를 막는다.
+전투몬 몸통은 **3벌**이 있다 — `creature_heavy` · `creature_small` · `creature_odd`
+(`art/models/creature_<band>.glb`). `data/monster_assets.json` 의 `band` 가 어느 벌을 쓸지 정하고,
+`monsters.json` 의 `element` · `tier` 가 색과 크기를 만든다
+([monster_body.gd](../game/view/view_3d/monster_body.gd)). 생성기는
+[`tools/gen_monster_glb.py`](../../tools/gen_monster_glb.py) 이고, 드리프트는 게이트 `creatureart` 가 막는다.
+부품 이름 다섯(`body_hide` · `body_belly` · `skin_limb` · `horn_spike` · `eye_dark`)이 계약이다 —
+틴트는 몸통·다리 부품만 바꾸므로 뿔과 눈은 구운 색을 지킨다.
+
+영웅 몸통도 **3벌**이다 — `hero_guard` · `hero_scout` · `hero_mystic`
+(`art/models/hero_<band>.glb`). 생성기는 [`tools/gen_hero_glb.py`](../../tools/gen_hero_glb.py),
+드리프트는 게이트 `heroart` 가 막고, 런타임 해석은
+[hero_body.gd](../game/view/view_3d/hero_body.gd) 이 진다. 부품 다섯(`body_hide` · `skin_limb` ·
+`gear_metal` · `gear_shine` · `eye_dark`)이 계약이고 틴트는 `body_`·`skin_`·`head_` 만 바꾼다.

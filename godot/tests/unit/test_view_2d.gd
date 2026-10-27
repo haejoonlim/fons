@@ -123,6 +123,32 @@ func test_field_entities_use_the_field_scale_not_the_combat_scale() -> void:
 	view.free()
 
 
+func test_field_uses_the_biome_palette_for_background_and_ground() -> void:
+	## 2D 폴백도 3D 와 같은 바이옴을 같은 색으로 불러야 한다 — 폴백에서만 다른 세계로 보이면 안 된다.
+	## 다만 2D 는 지도·HUD 화면이라 명도는 화면 톤으로 옴긴다 (색상각은 그대로).
+	var view := FonsView2D.new()
+	var sky := Color(0.20, 0.30, 0.50)
+	var ground := Color(0.10, 0.20, 0.08)
+	view.mount({"mode": "field", "field": Vector2(40, 28), "entities": [],
+		"palette": {"sky": sky, "ground": ground}})
+	var back := view.field_background()
+	assert_almost_eq(back.h, sky.h, 0.01, "배경 색상각 = 심이 준 하늘")
+	assert_lt(back.v, sky.v, "밝은 하늘을 그대로 깔면 흰 글씨가 안 읽힌다 — 명도만 내린다")
+	var area := view.field_area_color()
+	assert_almost_eq(area.h, ground.h, 0.01, "판 색상각 = 심이 준 지면")
+	assert_gt(area.v, ground.v, "지면색은 어두워서 그대로 깔면 격자가 안 보인다 — 조금 올린다")
+	view.free()
+
+
+func test_field_without_a_palette_keeps_the_dark_map() -> void:
+	## 바이옴을 모르는 화면(전투·헤드리스)은 예전 색 그대로다.
+	var view := FonsView2D.new()
+	view.mount({"mode": "field", "field": Vector2(40, 28), "entities": []})
+	assert_eq(view.field_background(), FonsView2D.FIELD_BG)
+	assert_eq(view.field_area_color(), FonsView2D.FIELD_AREA)
+	view.free()
+
+
 func test_screen_position_uses_projection_and_scale() -> void:
 	var view := FonsView2D.new()
 	view.pixels_per_unit = 10.0
@@ -130,4 +156,15 @@ func test_screen_position_uses_projection_and_scale() -> void:
 	var got := view.screen_position(Vector3(2.0, 0.0, 3.0))
 	assert_almost_eq(got.x, 120.0, 0.0001, "origin.x + x*scale")
 	assert_almost_eq(got.y, 70.0, 0.0001, "origin.y - z*scale")
+	view.free()
+
+
+func test_tower_is_drawn_at_the_same_spot_as_the_3d_view() -> void:
+	## 2D 폴백도 같은 스냅샷 표를 읽는다 — 폴백에서만 탑이 없는 세계로 보이면 안 된다.
+	var view := FonsView2D.new()
+	view.mount({"mode": "field", "field": Vector2(40, 28), "avatar": Vector3(20, 0, 14),
+		"tower": {"pos": Vector3(20, 0, 14), "radius": 3.4, "body": 1.2}, "entities": []})
+	assert_almost_eq(view.tower_radius(), 3.4, 0.001, "반경은 심이 준 값")
+	view.mount({"mode": "field", "field": Vector2(40, 28), "entities": []})
+	assert_almost_eq(view.tower_radius(), 0.0, 0.001, "표가 없으면 안 그린다")
 	view.free()

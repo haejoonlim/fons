@@ -29,6 +29,12 @@ const ALLY_ACTION_SECONDS := 2.5
 ## 동료가 같은 반경에 닿으면 위험 신호를 한 번 보낸다 — 오른쪽 칸이 세 번 빛난다 (제안서 §6-3).
 const SIGNAL_SECONDS := 1.5
 const SIGNAL_HALF := 0.25
+## 조우가 보이는 거리 — 이 안의 가장 가까운 지점에 실제 편성을 세운다.
+## 접촉 판정(1.5)만 쓰면 이미 코앞이라, "무엇과 싸우는지"를 보고 물러설 틈이 없다.
+## 지점 간격이 한 청크에 2~4개라 8 이면 보통 한 곳만 들어온다.
+const ENCOUNTER_SIGHT := 8.0
+## 미리보기 생물이 지점 둘레에 서는 반경. 지점 판정(1.2)보다 밖이라 발밑을 안 막는다.
+const PREVIEW_RADIUS := 2.4
 
 var floor := START_FLOOR
 var heroes: Array = []
@@ -38,6 +44,18 @@ var controlled := 0
 var explore: FonsExplore = null
 var log_lines: Array = []
 var winner := ""
+## 이데아 문턱(126~130)은 일반 조우가 없다 — 문지기 한 체가 그 층의 전투다.
+## 격파가 미션 자리를 대신하고, 문지기가 없는 층(129)은 그냥 통과다.
+var _combatless := false
+var _gatekeeper := {}
+var _gatekeeper_cleared := false
+## 이미 전리품을 준 층 — 같은 층 재도전으로 무한 파밍을 만들지 않는다 (설계 §5).
+## 저장한다: 불러와서 같은 문지기를 또 잡아도 전리품은 안 나온다. 재시작(새 런)하면 비운다.
+var _rewarded_floors := {}
+## 130층 격파 — 엔딩 조건. 저장한다 (설계 §5 "130 격파 + 엔딩").
+var ending := false
+## 마지막 문지기 판 — 이름·턴·생존·전리품. 엔딩 화면이 이 숫자를 적는다 (연출 전용).
+var last_gatekeeper := {}
 
 var _races: Dictionary = {}
 var _monsters: Variant = null
@@ -65,11 +83,15 @@ var _ally_decided: Dictionary = {}
 var _ally_battle: Array = []
 ## 이번 tick 에 화면이 달라졌는가 — 안 움직여도 점멸·행동·전투 결과는 다시 밀어야 한다.
 var _changed := false
+## 미리보기 편성 캐시 — "층:접촉번호" → 편성. 스냅샷은 걷는 동안 매번 불린다.
+var _preview_cache: Dictionary = {}
 ## 마지막 교전 — 뷰는 `seq` 가 늘어난 순간에만 그 자리에 타격 연출을 낸다.
 ## 전투는 한 프레임에 끝나므로 "지금 싸우는 중" 대신 "방금 한 판"을 실어 보낸다.
 var _strike_seq := 0
 var _strike_site := -1
 var _strike_damage := 0
+## 마지막 일격이 치명타였나 — 뷰가 흔들림 세기를 고르는 기준 (약한 일격 / 강한 일격).
+var _strike_heavy := false
 
 
 func configure(races: Dictionary, monsters: Variant, biomes: Variant,
@@ -111,6 +133,9 @@ func to_save() -> Dictionary:
 		"start_floor": _start_floor,
 		"floor": floor,
 		"heroes": FonsRunState.heroes_to_save(heroes),
+		"ending": ending,
+		## JSON 이 정수를 float 로 돌려주므로 복원할 때 다시 int 로 읽는다 (설계 §2).
+		"rewarded": _rewarded_floors.keys(),
 	}
 
 
@@ -124,14 +149,24 @@ func restore(saved: Dictionary) -> bool:
 	heroes = _make_party()
 	FonsRunState.apply_hero_save(heroes, saved.get("heroes", []))
 	_open_field()
+	# 저장분이 필드 시작값을 덮는다 — 여기는 "변한 것"이다 (ADR 0008).
+	ending = bool(saved.get("ending", false))
+	_rewarded_floors.clear()
+	for f in saved.get("rewarded", []):
+		_rewarded_floors[int(f)] = true
+	if ending and floor >= MAX_FLOOR:
+		# 이미 넘은 문턱을 다시 세우지 않는다 — 불러오면 격파 상태로 선다.
+		_gatekeeper_cleared = true
 	log_lines = []
 	winner = ""
 	return true
 
 
 func restart() -> void:
+	## 새 런이다 — 첫 격파 기억도 같이 비운다. 엔딩은 기록이라 남긴다.
 	floor = _start_floor
 	controlled = 0
+	_rewarded_floors.clear()
 	heroes = _make_party()
 	_open_field()
 	log_lines = []
@@ -141,9 +176,12 @@ func restart() -> void:
 func walk(direction: Vector2, seconds: float) -> void:
 	if explore == null or not winner.is_empty():
 		return
-	explore.walk(direction, seconds)
+	var walked: Dictionary = explore.walk(direction, seconds)
 	if controlled < party_pos.size():
 		party_pos[controlled] = explore.avatar
+	# 접촉 로그가 방금 늘었을 때만 로그 꼬리를 다시 집는다 — 매 프레임 배열을 새로 만들지 않는다.
+	if not Array(walked.get("log", [])).is_empty():
+		log_lines = explore.log_lines.slice(maxi(0, explore.log_lines.size() - LOG_TAIL))
 
 
 func switch_hero(index: int) -> bool:
@@ -204,8 +242,8 @@ func tick(seconds: float) -> bool:
 		var step: Vector2 = target - party_pos[i]
 		if step.length() > 0.001:
 			party_pos[i] += step.normalized() * minf(step.length(), ALLY_SPEED * maxf(0.0, seconds))
-			party_pos[i] = Vector2(clampf(party_pos[i].x, 0.0, FonsExplore.FIELD_WIDTH),
-				clampf(party_pos[i].y, 0.0, FonsExplore.FIELD_DEPTH))
+			# 무한맵 — 좌표를 청크 경계로 묶지 않는다. 묶으면 동료가 경계에 붙어 늘어서고
+			# 아바타만 넘어가면 파티가 벽에 걸린 것처럼 보인다.
 			moved = true
 		# 범위는 결과로 강제한다 — 한 걸음이 커도 밖으로 나가지 않는다.
 		var off: Vector2 = party_pos[i] - center
@@ -379,8 +417,6 @@ func _pick_target(index: int) -> Vector2:
 		var angle := rng.randf() * TAU
 		var dist := PARTY_RADIUS * 0.7 * sqrt(rng.randf())
 		var point := center + Vector2(cos(angle), sin(angle)) * dist
-		point.x = clampf(point.x, 0.5, FonsExplore.FIELD_WIDTH - 0.5)
-		point.y = clampf(point.y, 0.5, FonsExplore.FIELD_DEPTH - 0.5)
 		if point.distance_to(center) <= PARTY_RADIUS and _free_spot(index, point):
 			return point
 	return center
@@ -398,13 +434,58 @@ func contact_index() -> int:
 
 
 func engage() -> Dictionary:
-	## 접촉 중인 조우 하나를 친다. 접촉이 없거나 파티가 전멸했으면 빈 Dictionary.
+	## 접촉 중인 조우 하나를 친다. 접촉이 없고 이 층에 문지기가 있으면 문지기와 싸운다.
+	## 접촉도 문지기도 없거나 파티가 전멸했으면 빈 Dictionary.
 	if explore == null or not winner.is_empty():
 		return {}
 	var index := contact_index()
 	if index < 0:
-		return {}
+		return fight_gatekeeper()
 	return _fight(index)
+
+
+func gatekeeper_ready() -> bool:
+	## 이 층에 문지기가 있고 아직 안 이겼다 — F 가 그 판을 연다.
+	return not _gatekeeper.is_empty() and not _gatekeeper_cleared and winner.is_empty()
+
+
+func fight_gatekeeper() -> Dictionary:
+	## 이데아 문턱의 전투 — 문지기 한 체. 일반 조우가 없어 필드에 지점을 세우지 않는다.
+	## 지면 파티가 전멸해 `winner` 가 `enemy` 가 된다 — 재도전은 기존 R 경로다.
+	if not gatekeeper_ready():
+		return {}
+	_changed = true
+	var out := FonsFloorRun.simulate_gatekeeper(_rng, _monsters, _biomes, floor, heroes)
+	for line in out.get("log", []):
+		explore.log_lines.append(String(line))
+	var gk_name := String(_gatekeeper.get("name", ""))
+	var loot := {}
+	if String(out["winner"]) == "ally":
+		_gatekeeper_cleared = true
+		explore.log_lines.append("문지기 %s — 격파 (%d턴)" % [gk_name, int(out["turns"])])
+		loot = claim_gatekeeper_loot()
+		out["first_clear"] = not loot.is_empty()
+		out["loot"] = loot
+		explore.log_lines.append(_loot_line(loot) if not loot.is_empty()
+			else "전리품 — 이미 받은 층")
+		if floor >= MAX_FLOOR:
+			ending = true
+			explore.log_lines.append("문턱을 넘었다 — 엔딩")
+		for item in _judge_fusion():
+			explore.log_lines.append("%s → 융합 「%s」" % [String(item["hero"]), String(item["name"])])
+	else:
+		explore.log_lines.append("문지기 %s — %s (%d턴)" % [gk_name,
+			"패배" if String(out["winner"]) == "enemy" else "무승부", int(out["turns"])])
+	log_lines = explore.log_lines.slice(maxi(0, explore.log_lines.size() - LOG_TAIL))
+	_update_winner()
+	## 엔딩 화면이 읽는 한 판의 요약 — 규칙이 아니라 연출이 쓴다.
+	last_gatekeeper = {
+		"name": gk_name,
+		"turns": int(out["turns"]),
+		"survivors": party_alive(),
+		"loot": loot.duplicate(),
+	}
+	return out
 
 
 func _fight(index: int) -> Dictionary:
@@ -417,6 +498,7 @@ func _fight(index: int) -> Dictionary:
 		_strike_seq += 1
 		_strike_site = index
 		_strike_damage = int(out.get("last_hit", 0))
+		_strike_heavy = bool(out.get("last_crit", false))
 	# 이 조우에서 겪은 세계(물가·동굴·문지기)를 문맥 카운터로 남긴다.
 	var world := FonsFusion.place_context(_biomes, floor)
 	for hero in heroes:
@@ -453,18 +535,59 @@ func _cancel_ally_battles() -> void:
 
 
 func mission_done() -> bool:
-	return explore != null and explore.mission_done()
+	if explore == null:
+		return false
+	if explore.mission_done():
+		return true
+	## 일반 조우가 없는 층 — 문지기 격파가 미션 자리를 대신한다. 문지기가 없는 층(129)은 통과다.
+	return _gatekeeper_cleared or (_combatless and _gatekeeper.is_empty())
 
 
 func next_floor() -> bool:
 	## 미션을 끝냈을 때만 다음 층. 영웅 HP 는 이어진다 — 쉬어서 회복하는 규칙은 아직 없다.
-	if explore == null or not explore.mission_done() or floor >= MAX_FLOOR:
+	if explore == null or not mission_done() or floor >= MAX_FLOOR:
 		return false
 	floor += 1
 	_open_field()
 	log_lines = []
 	winner = ""
 	return true
+
+
+func gatekeeper_name() -> String:
+	## 이 층 문지기의 이름 — 엔딩 화면·힌트가 쓴다. 없으면 빈 문자열.
+	return String(_gatekeeper.get("name", ""))
+
+
+func claim_gatekeeper_loot() -> Dictionary:
+	## 첫 격파 전리품 — 데이터 `loot` 그대로. 같은 층에서 두 번 부르면 빈 Dictionary.
+	## 지갑에 넣는 것은 호출처(`main.gd`)다 — 여기는 무엇을 줄지만 정한다 (estate.settle 과 같은 결).
+	if not _gatekeeper_cleared or _rewarded_floors.has(floor):
+		return {}
+	_rewarded_floors[floor] = true
+	return _gatekeeper.get("loot", {}).duplicate()
+
+
+func _loot_line(loot: Dictionary) -> String:
+	## HUD 로그 한 줄 — 영혼·exp 는 아직 받을 곳이 없어 숫자만 적는다.
+	var souls: Array = loot.get("soul", [])
+	var names: Array[String] = []
+	for s in souls:
+		names.append(String(s))
+	var soul := "없음" if names.is_empty() else "/".join(names)
+	return "전리품 — 영혼 %s · gold %d · exp %d" % [soul, int(loot.get("gold", 0)), int(loot.get("exp", 0))]
+
+
+func floor_progress() -> String:
+	## HUD 한 칸 — 일반 조우 층은 조우 수, 문턱은 문지기 이름과 상태다.
+	## `explore.required` 는 상수 3 이라 문턱에서 "0/3" 이 거짓 진행처럼 보인다.
+	if explore == null:
+		return ""
+	if _combatless:
+		if _gatekeeper.is_empty():
+			return "통과"
+		return "문지기 %s%s" % [String(_gatekeeper.get("name", "")), " 격파" if _gatekeeper_cleared else ""]
+	return "탐험 %d/%d" % [explore.cleared, explore.required]
 
 
 func party_alive() -> int:
@@ -484,12 +607,16 @@ func hint() -> String:
 	for i in range(_ally_state.size()):
 		if String(_ally_state[i]) == "교전":
 			return "동료 교전 준비 중 — R 로 물린다"
-	if explore.mission_done():
-		return "미션 완료 — 스페이스로 다음 층"
+	if gatekeeper_ready():
+		return "문지기 %s — F 로 싸운다" % String(_gatekeeper.get("name", ""))
+	if mission_done():
+		if floor >= MAX_FLOOR:
+			return "문턱을 넘었다" if ending else "미션 완료"
+		return "미션 완료 — F 로 다음 층"
 	var index := contact_index()
 	if index >= 0:
-		return "조우 접촉 — 스페이스로 싸운다"
-	return "WASD — 걷기 · 1~5 — 조종 전환 · R — 후퇴 · 미션: 조우 %d/%d" % [explore.cleared, explore.required]
+		return "조우 접촉 — F 로 싸운다"
+	return "WASD — 걷기 · Space — 점프 · 마우스 — 시점 · 휠 — 거리 · F — 교전 · 1~5 — 전환 · R — 후퇴 · 미션: 조우 %d/%d" % [explore.cleared, explore.required]
 
 
 func snapshot() -> Dictionary:
@@ -516,6 +643,8 @@ func snapshot() -> Dictionary:
 		"hp": int(heroes[controlled].get("hp", 0)),
 		"max_hp": int(heroes[controlled].get("maxHp", 0)),
 	})
+	# 지금 향하는 조우에 무엇이 서 있는지 — 교전 전에 보이게 한다 (S5b 필드 확인).
+	_append_preview(entities)
 	# 동료 4명 — 조종 영웅은 위의 avatar 하나로 그린다(같은 자리에 두 번 그리지 않는다).
 	for i in party_pos.size():
 		if i == controlled:
@@ -555,18 +684,85 @@ func snapshot() -> Dictionary:
 		"controlled": controlled,
 		"radius": PARTY_RADIUS,
 		"party": party,
-		"field": Vector2(FonsExplore.FIELD_WIDTH, FonsExplore.FIELD_DEPTH),
+		# `field` 는 이제 **청크 크기**다. 뷰는 이 크기로 지형 타일을 뜨고, `chunks` 목록만 그린다.
+		"field": Vector2(FonsExplore.CHUNK_WIDTH, FonsExplore.CHUNK_DEPTH),
+		"chunks": explore.active_chunks() if explore != null else [],
+		# 탑·소환진 — 월드 원점의 랜드마크. 자리와 반경만 준다 (메시는 뷰가 만든다).
+		"tower": explore.tower_mark() if explore != null else {},
 		"avatar": Vector3(explore.avatar.x, 0.0, explore.avatar.y),
 		"contact": contact,
 		"cleared": explore.cleared,
 		"required": explore.required,
-		"done": explore.mission_done(),
+		"done": mission_done(),
+		"ending": ending,
+		# 이 층의 문지기 — 이름·이겼는지·지금 칠 수 있는지. 없으면 빈 이름이다.
+		"gatekeeper": {
+			"name": String(_gatekeeper.get("name", "")),
+			"cleared": _gatekeeper_cleared,
+			"ready": gatekeeper_ready(),
+		},
 		"wiped": not winner.is_empty(),
 		# 방금 끝난 교전 — seq 가 바뀐 순간에만 뷰가 그 자리에 짧게 그린다.
-		"strike": {"seq": _strike_seq, "site": _strike_site, "damage": _strike_damage},
+		"strike": {"seq": _strike_seq, "site": _strike_site, "damage": _strike_damage,
+			"heavy": _strike_heavy},
 		"entities": entities,
 		"log": log_lines.duplicate(),
 	}
+
+
+func _append_preview(entities: Array) -> void:
+	## 시야 안의 가장 가까운, 아직 안 지운 조우 하나에 그 편성을 세운다.
+	## 편성은 전투와 같은 함수에서 나온다 — 따로 굴리면 화면에 선 종과 실제로 싸우는 종이 갈린다.
+	var index := _sight_index()
+	if index < 0:
+		return
+	var site: Dictionary = explore.sites[index]
+	var party: Array = _preview_party(int(site.get("contact_index", 0)))
+	if party.is_empty():
+		return
+	var center := Vector3(float(site["pos"].x), 0.0, float(site["pos"].y))
+	var facing := Vector3(explore.avatar.x, 0.0, explore.avatar.y) - center
+	if facing.length() < 0.01:
+		facing = Vector3(0.0, 0.0, 1.0)
+	facing = facing.normalized()
+	var side := Vector3(-facing.z, 0.0, facing.x)
+	for i in party.size():
+		var monster: Dictionary = party[i]
+		# 반원으로 늘어서 플레이어를 마주 본다 — 한 줄이면 뒤 생물이 가린다.
+		var t := 0.0 if party.size() == 1 else lerpf(-0.85, 0.85, float(i) / float(party.size() - 1))
+		entities.append({
+			"id": "preview:%d" % i,
+			"kind": "monster",
+			"asset": "monster:%s" % String(monster.get("id", "")),
+			"pos": center + (facing * cos(t) + side * sin(t)) * PREVIEW_RADIUS,
+			"size": Vector2(1.0, 1.0),
+			"name": String(monster.get("name", "?")),
+			"preview": true,
+		})
+
+
+func _sight_index() -> int:
+	## 문지기 층·지운 조우는 세지 않는다. 접촉 판정과 같은 "가장 가까운 하나" 규칙.
+	if explore == null:
+		return -1
+	var best := -1
+	var best_d := ENCOUNTER_SIGHT
+	for i in explore.sites.size():
+		var site: Dictionary = explore.sites[i]
+		if bool(site["cleared"]):
+			continue
+		var d := explore.avatar.distance_to(site["pos"])
+		if d <= best_d:
+			best_d = d
+			best = i
+	return best
+
+
+func _preview_party(contact: int) -> Array:
+	var key := "%d:%d" % [floor, contact]
+	if not _preview_cache.has(key):
+		_preview_cache[key] = FonsEncounter.build_party(_monsters, _biomes, floor, contact)
+	return _preview_cache[key]
 
 
 func _hero_asset(index: int) -> String:
@@ -591,6 +787,12 @@ func _judge_fusion() -> Array:
 func _open_field() -> void:
 	explore = FonsExplore.new()
 	explore.start(_monsters, _biomes, floor, _seed)
+	# 일반 조우가 없는 바이옴은 문지기가 그 층의 유일한 전투다 (`biomes.json` noCombat).
+	# 층마다 다시 고른다 — 130층은 바이옴 이름으로 무문의 파수병이 잡힌다.
+	_combatless = FonsEncounter.is_combatless_biome(FonsEncounter.biome_for_floor(_biomes, floor))
+	_gatekeeper = FonsEncounter.gatekeeper_for_floor(_monsters, floor, _biomes) if _combatless else {}
+	_gatekeeper_cleared = false
+	_preview_cache.clear()
 	_rng.seed = _seed * 31 + floor
 	_reset_party_positions()
 	# 브레인도 지금 층을 안다 — 성장 예산(층당 상한)과 연계 세션 경계가 이 값을 쓴다.
@@ -631,7 +833,7 @@ func _reset_party_positions() -> void:
 		var rng := RandomNumberGenerator.new()
 		rng.seed = _seed * 131 + floor * 17 + i
 		_ally_rng.append(rng)
-	party_pos[controlled] = Vector2.ZERO
+	party_pos[controlled] = FonsExplore.SPAWN
 	explore.avatar = party_pos[controlled]
 	for i in heroes.size():
 		if i != controlled:

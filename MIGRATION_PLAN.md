@@ -142,13 +142,13 @@ diff /tmp/original_data.txt /tmp/manifest_data.txt
 
 | 순서 | 원본 | 대상 | 상태 |
 |---|---|---|---|
-| 1 | `fons-web-ver/app/src/summon.ts` | `godot/core/gacha.gd` (13단계 생성 파이프라인까지 이 파일에서 이어 간다 — 분리할 경우에만 `godot/core/summon.gd`) | **부분 완료** — 확정 #32 확률표·#11 종족 롤을 옮겼고 게이트로 검증한다 (자체 실측). 남은 것: 13단계 생성 파이프라인·pity 카운터 |
-| 2 | `fons-web-ver/app/src/combat.ts` | `godot/core/combat.gd` | 착수 전 — 관통식·위치보정·전술게이지 (확정 #6) (원본 대조) |
+| 1 | `fons-web-ver/app/src/summon.ts` | `godot/core/gacha.gd` (13단계 생성 파이프라인까지 이 파일에서 이어 간다 — 분리할 때만 별도 파일) | **부분 완료** — 확정 #32 확률표·#11 종족 롤을 옮겼고 게이트로 검증한다 (자체 실측). 남은 것: 13단계 생성 파이프라인·pity 카운터 |
+| 2 | `fons-web-ver/app/src/combat.ts` | `godot/core/combat.gd` | **완료** — 감소식·회피·치명타·전술게이지·`combatStep` 턴 루프 (2026-10-18 · [GODOT_PORTING_MAP](docs/dev/GODOT_PORTING_MAP.md) §2 · 자체 실측) |
 | 3 | `fons-web-ver/app/src/party.ts` | `godot/core/party.gd` | 착수 전 — 5인·영구사망·보상 (확정 #3·#4) (원본 대조) |
-| 4 | `fons-web-ver/app/src/estate.ts` | `godot/core/estate.gd` | 착수 전 — 시설·인구·세금·식량 (원본 대조) |
+| 4 | `fons-web-ver/app/src/estate.ts` | `godot/core/estate.gd` | **부분** — 하루 일과 10종·수확만. 시설·인구·세금·식량 미구현 (자체 실측) |
 | 5 | `fons-web-ver/app/src/tower.ts` · `economy_snapshot.ts` | `godot/core/tower.gd` · `economy.gd` | 착수 전 (원본 대조) |
 | 6 | `fons-web-ver/app/src/game.ts` | `godot/autoload/game_state.gd` | 부분 — 상태머신 골격만 (자체 실측) |
-| 7 | `fons-web-ver/app/src/game3d/` | `godot/game/world/` | 착수 전 — game3d 6종 대응 (원본 대조) |
+| 7 | `fons-web-ver/app/src/game3d/` | `godot/game/view/view_3d/` | **부분** — 탐험 화면·지형 키트까지. 타이틀·영지·파츠·소환 연출 남음 (2026-10-24 · 자체 실측) |
 
 - 각 단계의 완료 조건은 `godot/tests/unit/test_*.gd`와 `tools/gate_all.py` 통과다.
 - 원본 게이트 중 포팅할 것: `verify_w1.mjs`(소환 분포 — `N = 100000`) · `verify_w2.mjs`(전투 1런) · `verify_w3.mjs`(탑·도감) · `verify_w4.mjs`(영지 수지) — 전부 VERIFY OK 상태다 (원본 대조).

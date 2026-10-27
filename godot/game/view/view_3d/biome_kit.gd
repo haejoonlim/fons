@@ -23,7 +23,8 @@ extends RefCounted
 ## 아직 파일럿이다: 길·물은 키트 모듈이 늘어난 뒤(S3) 정한다.
 
 const TILE_SIZE := 5.0
-## 프롭 수 — 파일럿 값이다. 바이옴별 확정 수는 `data/biome_assets.json` 의 props 가 정한다 (S2 이후).
+## 프롭 수 폴백 — 바이옴 계획(`plan()`)이 없을 때만 쓴다 (전투·헤드리스 화면).
+## 필드의 바이옴별 수는 `data/biome_assets.json` 의 props 가 정한다 (S4).
 ## 12 로는 40×28 에서 성향별 무리가 안 보이고 알갱이 12개로 읽혔다 (2026-10-25 렌더).
 const PROP_COUNT := 24
 ## 지면은 **한 부품**으로 깐다. 5유닛 타일 4색을 섞으면(순환·가중 무관) 5m 격자무늬로 읽힌다.
@@ -62,8 +63,16 @@ const CLUMP_RADIUS := 3.0
 const FOOTPRINT_MAX := 1.6
 ## 프롭이 필드 가장자리에 붙지 않게 두는 여백.
 const EDGE_MARGIN := 2.5
+## 오솔길 좌우로 비워 두는 폭 — 길이 풀숲에 묻히지 않고, 나무 발치가 길을 덮지 않는다.
+const PATH_CLEARANCE := 1.4
+## 랜드마크를 길에서 옆으로 비키는 거리. 줄기(반지름 0.22)가 길에 안 서고 잎만 살짝 걸친다.
+const LANDMARK_OFFSET := 4.0
 ## 카메라 가림으로 보고할 최소 높이 — 이보다 낮은 풀·꽃·바위는 시선을 안 막는다.
 const BLOCKER_HEIGHT := 1.2
+## 안개가 짙어지는 거리에서 키트 부품을 끈다. 그 무렵 프롭은 땅과 같은 안개색이라 사라져도
+## 보이지 않고, 지평선 위로 솟는 옅은 실루엣만 없어진다 (2026-10-26 렌더).
+## 끄는 거리는 뷰가 안개 끝보다 앞에서 주고(`draw_end`), 여기서는 페이드 폭만 정한다.
+const DRAW_END_FADE := 10.0
 
 const GROUND := "ground_"
 const HEIGHT := "height_"
@@ -72,18 +81,63 @@ const PROP := "prop_"
 const FAMILIES := [GROUND, HEIGHT, LANDMARK, PROP]
 
 
+## 바이옴 → {부품 접미사: 개수}. 파일을 한 번만 읽고 캐시한다.
+static var _plans: Dictionary = {}
+
+
+static func plan(biome_id: String) -> Dictionary:
+	## `prop:<kit>:<part>` 계획을 {part: n} 으로 돌려준다. 모르는 바이옴은 빈 사전 —
+	## 그때 `build()` 는 예전처럼 `PROP_COUNT` 를 순환한다 (동작이 바뀌지 않는다).
+	if biome_id.is_empty():
+		return {}
+	if _plans.is_empty():
+		_plans = _load_plans()
+	return _plans.get(biome_id, {})
+
+
+static func _load_plans() -> Dictionary:
+	## 데이터가 없거나 깨졌으면 빈 사전이다 — 필드가 프롭 없이 뜨는 것보다 낫다.
+	var text := FileAccess.get_file_as_string("res://data/biome_assets.json")
+	if text.is_empty():
+		return {}
+	var doc: Variant = JSON.parse_string(text)
+	if not (doc is Dictionary):
+		return {}
+	var out := {}
+	for row in (doc as Dictionary).get("biomes", []):
+		if not (row is Dictionary):
+			continue
+		var counts := {}
+		for entry in (row as Dictionary).get("props", []):
+			if not (entry is Dictionary):
+				continue
+			var part := String((entry as Dictionary).get("part", ""))
+			var count := int((entry as Dictionary).get("n", 0))
+			if not part.is_empty() and count > 0:
+				counts[part] = count
+		if not counts.is_empty():
+			out[String((row as Dictionary).get("id", ""))] = counts
+	return out
+
+
 static func build(parent: Node3D, scene: PackedScene, field: Vector2,
 		seed_value: int, avoid: Array = [], tints: Dictionary = {},
 		lay_ground: bool = true, height: Callable = Callable(),
-		normal: Callable = Callable(), blockers: Array = []) -> int:
+		normal: Callable = Callable(), blockers: Array = [], trails: Array = [],
+		draw_end: float = 0.0, prop_plan: Dictionary = {}) -> int:
 	## 부품을 parent 아래에 깔고 놓은 수를 돌려준다. parent·scene 이 없으면 0.
 	## `lay_ground` 가 false 면 지면 타일을 깔지 않는다 — 높이필드 지형이 바닥을 맡을 때다.
 	## `height` 는 (x, z) → y 함수다. 주면 높이·랜드마크·프롭이 땅에 붙는다.
 	## `normal` 은 (x, z) → 법선이다. 주면 바위가 경사면에 눕는다.
 	## `blockers` 를 주면 카메라를 가리는 **키 큰 부품**의 원통(자리·반경·높이)을 담아 준다.
 	## 카메라가 프롭을 뚫지 않게 하는 유일한 정보원이다 — 물리 콜라이더는 없다.
+	## `trails` 는 오솔길 폴리라인(`PackedVector2Array`) 배열이다. 프롭은 길을 비우고
+	## 랜드마크는 길가에 선다 — 길 한가운데 나무가 서면 길이 막힌 것처럼 읽힌다.
+	## `draw_end` 를 주면 이번에 놓은 부품이 그 거리에서 꺼진다 (스트리밍 필드의 안개 끝 부근).
+	## 0 이면 예전처럼 거리 제한 없음 — 전투·헤드리스 화면은 안개가 없다.
 	if parent == null or scene == null or field.x <= 0.0 or field.y <= 0.0:
 		return 0
+	var before := parent.get_child_count()
 	var source := scene.instantiate()
 	# 부품을 찾는 동안에만 원본 씬을 살려 둔다 — 인스턴스는 duplicate() 라 원본과 무관하다.
 	var parts := _collect(source)
@@ -96,11 +150,28 @@ static func build(parent: Node3D, scene: PackedScene, field: Vector2,
 		count += _lay_ground(parent, parts[GROUND], field, tints, materials)
 	# 높이 모듈은 땅 자체라 가림이 아니다 — 카메라를 밀면 지형이 아니라 프롭만 피해야 한다.
 	count += _place_at(parent, parts[HEIGHT], _edge_spots(field), rng, tints, materials, height, normal, [])
-	count += _place_at(parent, parts[LANDMARK], [Vector2(field.x * 0.5, TILE_SIZE * 0.5)],
+	count += _place_at(parent, parts[LANDMARK], [_landmark_spot(field, trails, avoid)],
 		rng, tints, materials, height, normal, blockers)
-	count += _scatter_props(parent, parts[PROP], field, rng, avoid, tints, materials, height, normal, blockers)
+	count += _scatter_props(parent, parts[PROP], field, rng, avoid, tints, materials, height, normal,
+		blockers, trails, prop_plan)
+	if draw_end > 0.0:
+		for i in range(before, parent.get_child_count()):
+			_apply_draw_end(parent.get_child(i), draw_end)
 	source.free()
 	return count
+
+
+static func _apply_draw_end(node: Node, end: float) -> void:
+	## 안개가 100%가 되는 거리에서 인스턴스를 흐려 끈다. 안개 밖 프롭은 땅과 같은 색이라
+	## 끈다고 화면이 비지 않고, 하늘 위로 솟던 옅은 실루엣만 걷힌다.
+	## 페이드는 화면 도트 흔들림이라 반투명 정렬이 필요 없다 — 재질은 불투명 그대로다.
+	if node is MeshInstance3D:
+		var mesh := node as MeshInstance3D
+		mesh.visibility_range_end = end
+		mesh.visibility_range_end_margin = DRAW_END_FADE
+		mesh.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+	for child in node.get_children():
+		_apply_draw_end(child, end)
 
 
 static func _role(material: StandardMaterial3D) -> String:
@@ -264,7 +335,9 @@ static func _append_blocker(blockers: Array, node: Node3D, part: Node) -> void:
 				continue
 			var base := mesh.position.y + box.position.y * mesh.scale.y
 			var top := base + box.size.y * mesh.scale.y
-			if top - base < BLOCKER_HEIGHT:
+			# 돌은 낮아도 단단하다 — 경사에서 카메라가 내려앉으면 무릎 높이 바위에도 박힌다.
+			# 풀·꽃·덤불은 낮으면 그냥 지나간다. 판정은 틴트와 같은 재질색 규칙이다.
+			if top - base < BLOCKER_HEIGHT and not _is_rock(mesh.mesh, i):
 				continue
 			var center := mesh.position * mesh.scale + box.get_center() * mesh.scale
 			var offset := node.basis * Vector3(center.x, 0.0, center.z)
@@ -279,9 +352,16 @@ static func _append_blocker(blockers: Array, node: Node3D, part: Node) -> void:
 			})
 
 
+static func _is_rock(mesh: Mesh, index: int) -> bool:
+	var material := mesh.surface_get_material(index) as StandardMaterial3D
+	return material != null and _role(material) == ROLE_ROCK
+
+
 static func _surface_box(mesh: Mesh, index: int) -> AABB:
 	## 표면 하나의 로컬 AABB. `ArrayMesh.get_aabb()` 는 메시 전체라 표면 구분이 안 된다.
 	var arrays := mesh.surface_get_arrays(index)
+	if arrays.is_empty():
+		return AABB()
 	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
 	if vertices.is_empty():
 		return AABB()
@@ -330,21 +410,86 @@ static func _slope_basis(up: Vector3, yaw: float) -> Basis:
 	return Basis(x, y, z)
 
 
+static func _landmark_spot(field: Vector2, trails: Array, avoid: Array) -> Vector2:
+	## 길가 랜드마크 — 길 길이의 55% 지점에서 수직으로 비킨 자리.
+	## 조우·길과 겹치면 반대쪽, 둘 다 막히면 기본값.
+	var fallback := Vector2(field.x * 0.5, TILE_SIZE * 0.5)
+	if trails.is_empty():
+		return fallback
+	var trail: PackedVector2Array = trails[0]
+	var at := _trail_at(trail, 0.55)
+	var spot_center: Vector2 = at[0]
+	var dir: Vector2 = at[1]
+	if dir.length_squared() <= 0.0:
+		return fallback
+	var side := Vector2(-dir.y, dir.x) * LANDMARK_OFFSET
+	for side_sign in [1.0, -1.0]:
+		var spot: Vector2 = spot_center + side * side_sign
+		if spot.x < EDGE_MARGIN or spot.x > field.x - EDGE_MARGIN:
+			continue
+		if spot.y < EDGE_MARGIN or spot.y > field.y - EDGE_MARGIN:
+			continue
+		if _blocked(spot, avoid) or _on_trail(spot, trails):
+			continue
+		return spot
+	return fallback
+
+
+static func _trail_at(trail: PackedVector2Array, t: float) -> Array:
+	## 폴리라인 **길이** 기준 t 지점과 진행 방향. 점 개수가 아니라 거리로 잡아야
+	## 꺾인 길에서도 "55%"가 55%다.
+	if trail.size() < 2:
+		return [Vector2.ZERO, Vector2.ZERO]
+	var total := 0.0
+	for i in trail.size() - 1:
+		total += trail[i].distance_to(trail[i + 1])
+	var want := total * clampf(t, 0.0, 1.0)
+	var walked := 0.0
+	for i in trail.size() - 1:
+		var segment := trail[i].distance_to(trail[i + 1])
+		if segment > 0.0 and walked + segment >= want:
+			var local := (want - walked) / segment
+			return [trail[i].lerp(trail[i + 1], local), (trail[i + 1] - trail[i]).normalized()]
+		walked += segment
+	return [trail[trail.size() - 1], (trail[trail.size() - 1] - trail[0]).normalized()]
+
+
+static func _blocked(point: Vector2, avoid: Array) -> bool:
+	for entry in avoid:
+		var pos: Vector3 = entry
+		if point.distance_to(Vector2(pos.x, pos.z)) <= PROP_CLEARANCE + 1.0:
+			return true
+	return false
+
+
+static func _on_trail(point: Vector2, trails: Array) -> bool:
+	for trail in trails:
+		if FonsTerrain.trail_distance(point, trail) <= PATH_CLEARANCE:
+			return true
+	return false
+
+
 static func _scatter_props(parent: Node3D, parts: Array, field: Vector2,
 		rng: RandomNumberGenerator, avoid: Array, tints: Dictionary, materials: Dictionary,
-		height: Callable, normal: Callable, blockers: Array) -> int:
+		height: Callable, normal: Callable, blockers: Array, trails: Array,
+		prop_plan: Dictionary = {}) -> int:
 	if parts.is_empty():
 		return 0
+	var slots := _prop_slots(parts, prop_plan)
+	if slots.is_empty():
+		return 0
+	var index_of := {}
+	for i in parts.size():
+		index_of[String((parts[i] as Node).name)] = i
 	var margin := minf(EDGE_MARGIN, minf(field.x, field.y) * 0.1)
 	# 프롭마다 무작위로 한 점을 던지면 성향을 못 쓴다 — 후보를 미리 깔고 점수를 매긴 뒤
 	# 부품 성향에 가장 맞는 자리를 고른다. 쓴 자리는 다시 안 쓴다(겹치면 하나로 뭉친다).
-	var spots := _spots(field, margin, rng, avoid, height)
+	var spots := _spots(field, margin, rng, avoid, height, trails)
 	var used := {}
 	var anchors := {}
 	var count := 0
-	for slot in PROP_COUNT:
-		var index := slot % parts.size()
-		var part: Node = parts[index]
+	for part in slots:
+		var index: int = index_of.get(String((part as Node).name), 0)
 		var fit := _part_fit(part)
 		if not anchors.has(index):
 			# 이 종류가 모일 자리 — 성향에 가장 맞는 자리 하나. 첫 하나는 반드시 여기 선다.
@@ -370,8 +515,24 @@ static func _scatter_props(parent: Node3D, parts: Array, field: Vector2,
 	return count
 
 
+static func _prop_slots(parts: Array, prop_plan: Dictionary) -> Array:
+	## 계획이 있으면 그 개수만큼, 없으면 예전처럼 `PROP_COUNT` 를 부품 순서로 순환한다.
+	## 계획의 부품 이름은 GLB 노드 이름에서 `prop_` 를 뗀 접미사다 (`bush`, `shelf`).
+	var slots: Array = []
+	if prop_plan.is_empty():
+		for slot in PROP_COUNT:
+			slots.append(parts[slot % parts.size()])
+		return slots
+	for part in parts:
+		var part_name := String((part as Node).name)
+		var suffix := part_name.trim_prefix(PROP)
+		for _i in maxi(0, int(prop_plan.get(suffix, 0))):
+			slots.append(part)
+	return slots
+
+
 static func _spots(field: Vector2, margin: float, rng: RandomNumberGenerator,
-		avoid: Array, height: Callable) -> Array:
+		avoid: Array, height: Callable, trails: Array) -> Array:
 	## 후보 자리 — 격자에 흔들어 깔고, 그 자리의 성향 점수(능선 +1 ↔ 골 −1)를 함께 적는다.
 	var out: Array = []
 	var cols := maxi(1, int(floor((field.x - margin * 2.0) / SPOT_STEP)) + 1)
@@ -383,7 +544,7 @@ static func _spots(field: Vector2, margin: float, rng: RandomNumberGenerator,
 				rng.randf_range(-SPOT_JITTER, SPOT_JITTER))
 			point = Vector2(clampf(point.x, margin, field.x - margin),
 				clampf(point.y, margin, field.y - margin))
-			if _too_close(point, avoid):
+			if _too_close(point, avoid) or _on_trail(point, trails):
 				continue
 			out.append({"pos": point, "ridge": _ridge_score(point, height)})
 	return out

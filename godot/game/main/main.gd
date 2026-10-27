@@ -28,6 +28,8 @@ var _field: FonsFieldState = null
 var _estate: FonsEstate = null
 var _view: FonsView = null
 var _edict: Control = null
+## 엔딩 화면을 이미 보여 줬나 — 기록(`ending`)은 저장에 남지만 화면은 한 번이다.
+var _ending_shown := false
 var _move_dir := Vector2.ZERO
 var _clock_accum := 0.0
 
@@ -38,6 +40,9 @@ var _clock_accum := 0.0
 @onready var _unrest: ColorRect = get_node_or_null("Hud/UnrestGauge")
 @onready var _unrest_fill: ColorRect = get_node_or_null("Hud/UnrestGauge/Fill")
 @onready var _unrest_label: Label = get_node_or_null("Hud/UnrestLabel")
+## 엔딩 화면 — 130층 격파 순간에만 뜬다. 구성은 씬이 갖고, 여기는 채우고 닫는다.
+@onready var _ending_panel: Control = get_node_or_null("Hud/EndingPanel")
+@onready var _ending_line: Label = get_node_or_null("Hud/EndingPanel/Line")
 
 
 func _ready() -> void:
@@ -49,6 +54,7 @@ func _ready() -> void:
 		_field.start(data["races"], data["monsters"], data["biomes"], SEED,
 			FonsFieldState.START_FLOOR, data["job_tree"], data["equipment"],
 			data["job_coef"], data["ai"], data["basics"])
+	_sync_estate_floor()
 	# 시작하자마자 한 번 본다 — 미접속으로 지난 날이 있으면 여기서 한 번만 건너뛴다.
 	_apply_settlement(_estate.settle(0, GameState.gold, _field.heroes))
 
@@ -145,6 +151,9 @@ func _note_floor_cleared() -> void:
 	## 층 클리어 — 식량이 바닥이면 민심이 준다 (04 §3.14 "식량 0: 즉시 민심 -5/층").
 	## 정산(섬일)과 주기가 다른 이유는 정본이 두 주기를 나눠 두었기 때문이다 (§3.4).
 	## 파업도 층 단위라 여기서 시작·종료를 알린다 (§3.5 — 민심 20 미만 3층 → 전 생산 정지 5층).
+	if _estate == null or _field == null:
+		return
+	_sync_estate_floor()
 	var out := _estate.note_floor_cleared()
 	if bool(out["strike_started"]):
 		_log("파업 — 전 생산 정지 %d층" % int(out["strike"]))
@@ -152,6 +161,13 @@ func _note_floor_cleared() -> void:
 		_log("파업 끝 — 생산 재개")
 	if int(out["delta"]) != 0:
 		_log("민심 %+d" % int(out["delta"]))
+
+
+func _sync_estate_floor() -> void:
+	## 영지 층은 런 층의 파생이다 — 세이브에 따로 넣지 않고 필드 층에서 맞춘다 (ADR 0008).
+	## 수확 배율(`1+floor/50`)과 칙령 10층 해금이 둘 다 이 값을 읽는다.
+	if _estate != null and _field != null:
+		_estate.floor = _field.floor
 
 
 func _log(text: String) -> void:
@@ -191,15 +207,25 @@ func _on_intent(kind: StringName, payload: Dictionary) -> void:
 			_move_dir = payload.get("dir", Vector2.ZERO)
 			return
 		"interact":
-			if _field.contact_index() >= 0:
-				_field.engage()
+			# 문턱층(126~130)은 조우 지점이 없다 — F 가 문지기를 연다.
+			if _field.contact_index() >= 0 or _field.gatekeeper_ready():
+				var out := _field.engage()
+				# 첫 격파 전리품 — 지갑에 넣는 것은 여기다. 영혼·exp 는 받을 곳이 아직 없다.
+				if bool(out.get("first_clear", false)):
+					GameState.gold += int(Dictionary(out.get("loot", {})).get("gold", 0))
 			elif _field.mission_done():
 				if _field.next_floor():
 					_note_floor_cleared()
 					_save()
 		"retreat":
 			_move_dir = Vector2.ZERO
-			_field.retreat()
+			# 필드의 R 은 후퇴다. 다만 전멸한 뒤와 엔딩 화면 앞에서는 힌트가 약속한 대로 재시작이다.
+			if _ending_panel != null and _ending_panel.visible:
+				_restart_run()
+			elif _field.winner.is_empty():
+				_field.retreat()
+			else:
+				_restart_run()
 		"switch_hero":
 			# 조종을 바꾸면 범위의 중심만 옮긴다 — 성향은 각자 브레인에 남는다.
 			_move_dir = Vector2.ZERO
@@ -215,16 +241,54 @@ func _on_intent(kind: StringName, payload: Dictionary) -> void:
 				_save()
 		"restart":
 			_move_dir = Vector2.ZERO
-			_field.restart()
+			_restart_run()
 		_:
 			return
 	_push()
+
+
+func _restart_run() -> void:
+	## 새 런 — 엔딩 화면도 닫고 처음 층으로 돌린다.
+	_field.restart()
+	_sync_estate_floor()
+	_estate.reset_decree_cooldown()
+	if _ending_panel != null:
+		_ending_panel.visible = false
+	_ending_shown = false
 
 
 func _push() -> void:
 	if _view != null:
 		_view.apply(_field.snapshot())
 	_update_hud()
+	_sync_ending_panel()
+
+
+func _sync_ending_panel() -> void:
+	## 130층을 격파한 순간에만 뜬다. 기록은 세이브에 남지만 화면은 다시 띄우지 않는다.
+	## (재시작하면 층이 1로 내려가므로 저장된 기록만으로는 뜨지 않는다.)
+	if _ending_panel == null or _field == null:
+		return
+	if _ending_shown or not _field.ending or _field.floor < FonsFieldState.MAX_FLOOR:
+		return
+	_ending_shown = true
+	if _ending_line != null:
+		_ending_line.text = _ending_summary()
+	_ending_panel.visible = true
+
+
+func _ending_summary() -> String:
+	## 마지막 판 요약 — 이름 · 턴 · 생존 · 전리품. 판 기록이 없으면(이어하기) 이름만 적는다.
+	var gk := _field.gatekeeper_name()
+	var shown := gk if not gk.is_empty() else "마지막 문지기"
+	var last: Dictionary = _field.last_gatekeeper
+	if last.is_empty():
+		return "%s를 지나 이데아 문턱을 지났다" % shown
+	var parts: Array = ["%s — %d턴" % [shown, int(last.get("turns", 0))]]
+	parts.append("생존 %d/%d" % [int(last.get("survivors", 0)), _field.heroes.size()])
+	var loot: Dictionary = last.get("loot", {})
+	parts.append("전리품 없음" if loot.is_empty() else "gold %d" % int(loot.get("gold", 0)))
+	return " · ".join(parts)
 
 
 func _update_hud() -> void:
@@ -235,12 +299,15 @@ func _update_hud() -> void:
 			strike = " · 파업 %d층" % _estate.strike_floors_left
 		if _estate != null:
 			# 켜진 칙령은 세금·자연증가를 계속 바꾼다 — 화면에 남기지 않으면 왜 수치가 다른지 알 수 없다.
-			var active := _estate.decree()
-			if not active.is_empty():
-				strike += " · 칙령 %s" % String(active.get("name_ko", ""))
-		_floor_label.text = "%d층 · 섬 %d일 · 탐험 %d/%d · 생존 %d/%d · %dG · 식량 %d · 민심 %d%s" % [
+			# 2칸 시대에는 둘 다 적는다 (ADR 0011).
+			var names: Array = []
+			for entry in _estate.active_decrees():
+				names.append(String(entry.get("name_ko", "")))
+			if not names.is_empty():
+				strike += " · 칙령 %s" % ", ".join(names)
+		_floor_label.text = "%d층 · 섬 %d일 · %s · 생존 %d/%d · %dG · 식량 %d · 민심 %d%s" % [
 			_field.floor, _estate.last_settled_day if _estate != null else 1,
-			_field.explore.cleared, _field.explore.required,
+			_field.floor_progress(),
 			_field.party_alive(), _field.heroes.size(), GameState.gold,
 			int(_estate.stores.get("food", 0)) if _estate != null else 0,
 			_estate.morale if _estate != null else 50, strike
@@ -264,7 +331,9 @@ func _toggle_edict() -> void:
 		_edict.hide()
 		get_tree().paused = false
 		return
-	_edict.open(_estate.decrees(), _estate.decree_id, _edict_note())
+	# 칸 번호의 기준은 칸 위치다 — 빈 칸을 건너뛴 목록을 넘기면 2번 칸이 1번으로 보인다 (ADR 0011).
+	_edict.open(_estate.decrees(), _estate.slot_ids(), _edict_note(),
+		_estate.slot_count(), _estate.cooldown_left() > 0 and not _estate.is_striking())
 	get_tree().paused = true
 
 
@@ -275,11 +344,13 @@ func _edict_note() -> String:
 		return String(gate["reason"])
 	if _estate.is_striking():
 		return "파업 중 — 칙령을 바꾸면 파업이 끝난다"
-	return "1슬롯 — 하나만 켜진다"
+	if _estate.slot_count() > 1:
+		return "2칸 — 칸을 골라 바꾼다"
+	return "1칸 — 하나만 켜진다"
 
 
-func _on_edict_chosen(id: String) -> void:
-	var out := _estate.set_decree(id)
+func _on_edict_chosen(id: String, slot: int) -> void:
+	var out := _estate.set_decree(id, slot)
 	if not bool(out["ok"]):
 		_edict.set_note(String(out["reason"]))   # 화면에 이유를 남기고 다시 고르게 둔다
 		return

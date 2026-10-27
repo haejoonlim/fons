@@ -34,10 +34,43 @@ func test_cold_vegetation_is_teal_and_hot_is_olive() -> void:
 	assert_gt(cold.b, hot.b + 0.05, "한랭 식생에는 파랑이 남아 있다")
 
 
-func test_temperate_biomes_keep_a_neutral_sky() -> void:
-	## 15℃ 를 한 직선의 65% 에 놓으면 풀바다가 갈색으로 읽혔다 — 온대는 중립으로 둔다.
+func test_temperate_sky_is_daylight_and_cool() -> void:
+	## 15℃ 를 한 직선의 65% 에 놓으면 풀바다가 갈색으로 읽혔고, sky 값을 낮게 두면
+	## 해 질 녘으로 읽혔다 (2026-10-23 · 2026-10-25 스크린샷). 온대는 **파랑이 살아 있는 낮**이다.
 	var sky: Color = FonsBiomePalette.from_biome(_biome(15.0, "calm"))["sky"]
-	assert_lte(absf(sky.r - sky.b), 0.05, "온대 하늘은 난색도 한색도 아니다")
+	assert_gt(sky.v, 0.6, "낮 하늘 밝기 — 0.145 는 밤이다")
+	assert_gt(sky.b, sky.r, "온대 하늘은 한색 쪽 — 갈색이 아니다")
+	assert_gt(sky.g, sky.r, "초록 채널도 파랑 쪽에 붙는다 (노랑으로 안 간다)")
+
+
+func test_every_biome_sky_is_daylit() -> void:
+	## 26바이옴 전부. 하늘은 카메라가 늘 보는 배경이라 바이옴마다 시간대가 바뀌면
+	## 세계가 아니라 조명을 보게 된다 — 어두운 카테고리도 '흐린 낮'이지 밤이 아니다.
+	for ambient in [FonsBiomePalette.TEMP_MIN, -30.0, 0.0, 15.0, 45.0, FonsBiomePalette.TEMP_MAX]:
+		for category in ["calm", "chaos", "dark", "extreme", "waterside", ""]:
+			var sky: Color = FonsBiomePalette.from_biome(_biome(ambient, category))["sky"]
+			assert_gte(sky.v, 0.55, "%s℃ %s — 낮 밝기" % [ambient, category])
+			assert_lt(sky.s, 0.45, "%s℃ %s — 노을이 될 만큼 진하지 않다" % [ambient, category])
+
+
+func test_temperate_sky_is_clear_and_hot_sky_stays_sand() -> void:
+	## 2026-10-25: 0.30 은 평온이 흐린 회색이었다. 카테고리 편차를 절반만 따라 올렸다.
+	## 상한은 0.46 — 그 위에서는 먼지벌판 하늘이 노란 필터가 되어 낮으로 안 읽힌다(시트 비교).
+	var calm: Color = FonsBiomePalette.from_biome(_biome(15.0, "calm"))["sky"]
+	assert_gte(calm.s, 0.28, "풀바다 하늘은 맑은 파랑 — 흐린 회색이 아니다")
+	var hot: Color = FonsBiomePalette.from_biome(_biome(55.0, "extreme"))["sky"]
+	assert_lte(hot.s, 0.44, "고온 하늘 채도 상한 — 노을로 돌아가기 전")
+	assert_gte(hot.v, 0.75, "그래도 낮 밝기다")
+	assert_gt(hot.h, 0.05, "색상각이 주황(0.05) 아래로 내려가지 않는다")
+
+
+func test_hot_sky_is_hazier_than_cold_sky() -> void:
+	## 고온 하늘은 먼지 섞인 옅은 모래빛, 한랭은 맑은 파랑 — 같은 파랑으로 접히면 안 된다.
+	var cold: Color = FonsBiomePalette.from_biome(_biome(-60.0, "extreme"))["sky"]
+	var hot: Color = FonsBiomePalette.from_biome(_biome(55.0, "extreme"))["sky"]
+	assert_gt(cold.b, cold.r + 0.05, "한랭 하늘은 파랑이 앞선다")
+	assert_gt(hot.r, hot.b, "고온 하늘은 따뜻한 쪽으로 돈다")
+	assert_lt(hot.s, cold.s + 0.25, "그래도 노을만큼 진하지는 않다")
 
 
 func test_category_drives_vegetation_saturation_and_light() -> void:

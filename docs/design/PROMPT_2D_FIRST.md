@@ -7,7 +7,7 @@
 
 ```
 너는 ~/Desktop/폰즈 에서 FONS(폰즈) Godot 4.7 프로젝트를 작업한다.
-Unity 원본은 ~/soul-commander 에 있다(읽기 전용). 렌더링은 2D 먼저, 3D는 나중에 같은 심 위에 갈아 끼운다.
+Unity 원본은 ~/Desktop/soul-commander-archive-2026-10-24/ 의 tar 안에 있다(필요하면 풀어서 읽기 전용으로). 렌더링은 2D 먼저, 3D는 나중에 같은 심 위에 갈아 끼운다.
 
 읽어라: docs/design/PLAN_2D_FIRST.md, docs/dev/DEV_PLAN.md, docs/dev/GODOT_PORTING_MAP.md, MIGRATION_PLAN.md.
 수치의 정본은 docs/original/ 이다. 거기 없는 값을 만들지 마라.

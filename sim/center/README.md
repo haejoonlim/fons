@@ -156,6 +156,6 @@ import 해 쓴다. 두 벌로 쓰면 화면은 초록인데 게이트가 우는 
 | `sims/gacha_test.py` | `skill_catalog_gen.py` 를 파일 경로로 읽는다 — 형제 모듈이라 같이 옮겼다 |
 | `sims/playthrough_audit.py` | `sim_economy.py` 를 `design-docs/_tools/` 에서 찾던 것 → `sims/` 옆 파일 |
 | `sims/test_gacha_revisions.py` | `gacha.html` 이 `sims/` 가 아니라 `pages/` 에 있다 |
-| `sims/audit_sim.py` | (옮기지 않음 — 위 표. 계산 규칙은 `sync_pages.py` 가 대신한다) |
+| `audit_sim.py` | (옮기지 않음 — 위 표. 계산 규칙은 `sync_pages.py` 가 대신한다) |
 | `server.py` | 원본의 "루트 밖 HTML 허용" 규칙을 지웠다. 모든 탭이 `pages/` 안에 있어 필요 없고, 경로 탈출 구멍도 함께 사라진다 |
 | `pages/test_center.html` | iframe `../` 제거 · 클론 재현성 검사 제거(폰즈에 `check_clone_selfconsistent.py` 가 없다) · 게이트/가이드 문구를 폰즈 명령으로 |

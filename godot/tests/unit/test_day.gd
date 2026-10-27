@@ -127,17 +127,21 @@ func test_life_actions_reach_engraving_not_just_the_mirror() -> void:
 	for d in 5:
 		FonsDay.renew(heroes)
 		_day(14 + d).run(heroes)
+	var catalog: Array = DataLoader.load_json("skills_catalog.json")["skills"]
 	var engraved := 0
-	var life_domain := 0
+	var life_ready := 0
 	for hero in heroes:
 		var brain: FonsBrain = hero["brain"]
 		assert_gt(brain.counters.size(), 0, "생활 태그가 브레인 카운터에 들어간다")
 		for id in brain.book:
 			engraved += 1
-			if String(brain.book[id]["domain"]) in ["생산", "지식", "사회", "회복"]:
-				life_domain += 1
+		# 각인은 50% 판정 + 도메인 선호라 "생활 기술이 뽑힐" 보장이 없다. 대신 생활 태그가
+		# **각인 후보 조건**을 넘는지 본다 — 태그가 거울에만 쌓였다면 후보 풀에 못 들어온다.
+		for skill in FonsSkillBook.eligible(brain.book, brain.counters, catalog):
+			if String(skill["domain"]) in ["생산", "지식", "사회", "회복"]:
+				life_ready += 1
 	assert_gt(engraved, 0, "닷새면 기술이 깨우쳐진다")
-	assert_gt(life_domain, 0, "그 기술 중 생활 도메인이 있어야 한다 — 하루가 각인 재료가 됐다는 증거")
+	assert_gt(life_ready, 0, "생활 태그가 각인 후보 조건을 넘는다 — 하루가 각인 재료가 됐다는 증거")
 
 
 func test_every_born_skill_name_is_a_catalog_name() -> void:

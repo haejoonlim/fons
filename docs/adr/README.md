@@ -34,3 +34,6 @@
 | [0007](0007-encounter-depth-tier.md) | 조우 tier 를 탑 깊이에 맞춘다 | 채택 |
 | [0008](0008-save-schema.md) | 세이브는 입력과 변한 것만 저장하고, 파생은 다시 만든다 | 채택 |
 | [0009](0009-season-on-island-days.md) | 계절은 섬일로 센다 | 채택 |
+| [0010](0010-decree-second-slot.md) | 칙령 2슬롯 — 30층 설계는 남기고 구현은 보류 | 보류 · 규칙은 0011 |
+| [0011](0011-decree-second-slot-rules.md) | 칙령 2슬롯 — 칸 선택·5층 쿨다운·화면 조작 | 채택 |
+| [0012](0012-decree-overflow-gold.md) | 분배주의는 상한 초과 자연증가를 골드로 전환한다 | 채택 |

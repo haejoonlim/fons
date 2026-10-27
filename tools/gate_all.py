@@ -117,6 +117,13 @@ STEPS = [
     # 생물 몸통 `.glb` — 대역 3종. 지형 키트와 같은 규칙: 손으로 메시를 고치면 exit 1.
     ("creatureart", "생물 몸통 .glb 드리프트 (생성기 파생)",
      [sys.executable, "tools/gen_monster_glb.py", "--check"]),
+    # 영웅 몸통 `.glb` — 대역 3종(guard·scout·mystic). 같은 규칙.
+    ("heroart", "영웅 몸통 .glb 드리프트 (생성기 파생)",
+     [sys.executable, "tools/gen_hero_glb.py", "--check"]),
+    # 직업 → 몸통 대역 — 34직업이 어느 실루엣을 입는지. job_tree.json 파생.
+    # 손으로 고치면 직업이 늘 때 한 직업이 조용히 키 해시로 떨어진다.
+    ("heroassets", "영웅 에셋 키 매핑 (직업 34)",
+     [sys.executable, "tools/gen_hero_assets.py", "--check"]),
     # 계약 단위 검사만 돈다 (`--unit`) — 게이트 실행은 위에서 이미 했다.
     #   마커(`[PASS]/[FAIL] <단계 id>`)는 이 파일이 각 단계 출력에서 직접 본다(run_step +
     #   marker_gap). 그래서 계약 검사가 게이트를 두 번 돌리지 않는다 (예전엔 그래서 런이 2배).

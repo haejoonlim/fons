@@ -27,6 +27,9 @@ REQUIRED = [
     "docs/dev/DEV_PLAN.md",
     "docs/dev/DOC_REVIEW.md",
     "docs/dev/GODOT_PORTING_MAP.md",
+    # 원본 대비 격차와 클론 처분 — 이 둘이 없으면 "무엇이 남았나"를 매번 처음부터 다시 센다.
+    "docs/dev/유니티_Godot_차이표.md",
+    "docs/dev/원본클론_정리_선택지.md",
     "docs/dev/STRUCTURE_RESEARCH.md",
     "docs/dev/AGENT_SKILLS.md",
     "docs/design/PLAN_2D_FIRST.md",
@@ -110,6 +113,11 @@ REQUIRED = [
     "godot/tests/unit/test_encounter.gd",
     # 턴 순서·전술게이지·대상 선택 — 원본 로그와 8줄 대조 포함.
     "godot/tests/unit/test_battle.gd",
+    # 직업별 기본 공격 102종 — 데이터 정본과 전투 후보·쿨 소비를 함께 잠근다.
+    "godot/core/basic_attacks.gd",
+    "godot/core/status.gd",
+    "godot/tests/unit/test_basic_attacks.gd",
+    "godot/tests/unit/test_status.gd",
     # 층 한 판 — 130층 전수 종결·승자 판정·결정론.
     "godot/tests/unit/test_floor_run.gd",
 ]

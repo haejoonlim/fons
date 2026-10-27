@@ -33,10 +33,25 @@ art-source/
 4. 팔레트·해상도·픽셀 밀도 같은 시각 규칙은 [docs/art/ART_BIBLE.md](../docs/art/ART_BIBLE.md) 가 정본이다.
    여기에 규칙을 복제하지 않는다.
 
+## 종족 스프라이트 (MPFB)
+
+`godot/assets/art/sprites/races/mpfb/` 의 14종 시트는 손으로 옮기지 않는다. 통로는 하나다.
+
+```bash
+./art-source/export/sync_race_sprites.sh              # 빌드 + 게이트 + 복사 + 임포트 (약 2분)
+./art-source/export/sync_race_sprites.sh --no-build   # 이미 뽑힌 시트만 다시 가져오기
+```
+
+생성기(`mpfb_sprite.py`)는 이 저장소 **밖**에 있다 — MPFB 확장·사람 베이스 메시 캐시·
+`morph_plan.json` 이 그 머신에 있어서다. 옮기면 재현이 더 어려워지므로 경로만 고정한다.
+기본 위치는 `~/Desktop/FONS_Character_Assets`, `MPS_SRC` 로 바꾼다.
+스크립트는 프레임 게이트(`~/Desktop/FONS_Character_Assets/export/check_frames.py`)가 실패하면 **복사하지 않는다.**
+게임 쪽 계약 검사는 `godot/tests/unit/test_race_sprites.gd` 다 (576×96·6칸·칸 좌표).
+
 ## 아직 없는 것
 
-그림 원본(.aseprite·.psd·.blend)은 **아직 없다.** 이 폴더는 규칙과 자리만 잡아 둔 상태다.
-첫 캐릭터 원본이 들어올 때 `characters/` 와 `export/` 를 만든다.
+그림 원본(.aseprite·.psd·.blend)은 **아직 없다.** `characters/` 는 비어 있고, `export/` 에는
+종족 시트 동기화 스크립트 하나뿐이다. 첫 캐릭터 원본이 들어올 때 `characters/` 를 채운다.
 
 3D 지형 키트는 원본이 그림 파일이 아니라 생성기다 — `tools/gen_kit_glb.py` 가 정본이고
 결과물은 `godot/assets/art/models/` 에 있다.

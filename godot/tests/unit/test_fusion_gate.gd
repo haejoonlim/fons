@@ -2,7 +2,7 @@ extends GutTest
 ## 융합 게이트 — 세 심사자가 0.62 를 넘겨야 새 스킬이 태어난다 (GDD 09 §6).
 ##
 ## 이 파일이 잠그는 것:
-##   · Rule 은 점수가 아니라 **탈락**이다 (증거 3회 미만·부모 미각인·32개 상한 → 후보 제거)
+##   · Rule 은 점수가 아니라 **탈락**이다 (증거 3회 미만·부모 미각인·층당 성장 예산·32개 상한 → 후보 제거)
 ##   · Neural 이 낮으면 **보류**(defer) — 탈락이 아니다. 반복이 쌓이면 다시 온다
 ##   · JEV 가 낮으면 보류 — 문맥이 안 맞는 밤에는 태어나지 않는다
 ##   · 0.62 경계에서 뒤집힌다
@@ -80,6 +80,25 @@ func test_rule_rejects_at_the_32_skill_cap() -> void:
 	var v := FonsFusion.evaluate(_pair(b), b, {}, _catalog())
 	assert_eq(String(v["state"]), "reject")
 	assert_string_contains(String(v["reason"]), "상한")
+
+
+func test_rule_rejects_when_the_floor_growth_budget_is_spent() -> void:
+	## 40층 예산은 22. 32 상한 전에 융합도 멈춰야 책이 넘치지 않는다.
+	## 130층 예산은 32 — 40층 이후에도 9층마다 한 칸이 열린다.
+	var b := _brain(true, 5, 6)
+	b.floor = 40
+	while b.book.size() < FonsSkillBook.growth_limit(40):
+		b.book["filler_%d" % b.book.size()] = {"name": "filler", "rarity": 1, "tags": [],
+			"stage": 1, "level": 1, "xp": 0}
+	var v := FonsFusion.evaluate(_pair(b), b, {}, _catalog())
+	assert_eq(String(v["state"]), "reject")
+	assert_string_contains(String(v["reason"]), "성장 예산")
+	b.floor = 48
+	var blocked := FonsFusion.evaluate(_pair(b), b, {}, _catalog())
+	assert_string_contains(String(blocked["reason"]), "성장 예산", "46~48층은 아직 같은 칸")
+	b.floor = 49
+	var open := FonsFusion.evaluate(_pair(b), b, {}, _catalog())
+	assert_ne(String(open["reason"]), "성장 예산 소진 (층당 상한)", "49층 예산 23 — 다시 자리가 난다")
 
 
 func test_low_neural_defers_not_rejects() -> void:

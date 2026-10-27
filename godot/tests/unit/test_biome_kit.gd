@@ -36,6 +36,68 @@ func _names(parent: Node, prefix: String) -> Array:
 	return out
 
 
+func _meshes(node: Node) -> Array:
+	## 메시 인스턴스만 모은다 — 거리 컬링은 메시에만 걸린다.
+	var out: Array = []
+	if node is MeshInstance3D:
+		out.append(node)
+	for child in node.get_children():
+		out.append_array(_meshes(child))
+	return out
+
+
+func _mesh_scene(names: Array) -> PackedScene:
+	## `_scene` 과 같은 부품 구성인데 **메시를 씬에 넣는다**. `PackedScene.pack` 은
+	## owner 가 붙은 노드만 저장하므로, 메시 검사(거리 컬링)는 이 헬퍼로 해야 한다.
+	var root := Node3D.new()
+	root.name = "Kit"
+	for name in names:
+		var part := Node3D.new()
+		part.name = name
+		var mesh := MeshInstance3D.new()
+		mesh.mesh = BoxMesh.new()
+		root.add_child(part)
+		part.add_child(mesh)
+		# owner 는 부모가 붙은 **뒤**에 정한다 — 미리 정하면 owner_valid 경고가 난다.
+		mesh.owner = root
+		part.owner = root
+	var scene := PackedScene.new()
+	scene.pack(root)
+	root.free()
+	return scene
+
+
+func test_far_parts_switch_off_where_the_air_is_fully_opaque() -> void:
+	## 무한맵 2단계 마무리 — 안개가 100%가 된 거리의 프롭은 땅과 같은 안개색이라
+	## 사라져도 화면이 비지 않고, 지평선 위로 솟던 **옅은 판**만 없어진다 (2026-10-26 렌더).
+	## 끄는 거리는 부르는 쪽이 안개 끝에서 준다 — 여기서 정하지 않는다.
+	var parent := Node3D.new()
+	FonsBiomeKit.build(parent, _mesh_scene(["ground_a", "height_hill", "landmark_tree", "prop_bush"]),
+		Vector2(40, 28), 7, [], {}, false, Callable(), Callable(), [], [], 70.0)
+	var meshes := _meshes(parent)
+	assert_gt(meshes.size(), 0, "부품이 깔렸다")
+	for mesh in meshes:
+		assert_almost_eq(mesh.visibility_range_end, 70.0, 0.001,
+			"%s 가 안개 끝에서 꺼진다" % mesh.name)
+		assert_almost_eq(mesh.visibility_range_end_margin, FonsBiomeKit.DRAW_END_FADE, 0.001,
+			"끄는 자리가 까딱 끊기지 않게 페이드 폭을 준다")
+		assert_eq(mesh.visibility_range_fade_mode, GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF,
+			"화면 도트 흔들림 페이드 — 반투명 정렬이 필요 없다")
+	parent.free()
+
+
+func test_parts_stay_unfaded_when_no_draw_end_is_given() -> void:
+	## 전투·헤드리스 화면은 안개가 없다. 여기서 끄면 프롭이 지평선에서 통째로 사라진다.
+	var parent := Node3D.new()
+	FonsBiomeKit.build(parent, _mesh_scene(["prop_bush"]), Vector2(40, 28), 7, [], {}, false)
+	var meshes := _meshes(parent)
+	assert_gt(meshes.size(), 0, "부품이 깔렸다")
+	for mesh in meshes:
+		assert_eq(mesh.visibility_range_end, 0.0, "거리 제한 없음")
+		assert_eq(mesh.visibility_range_fade_mode, GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED)
+	parent.free()
+
+
 func test_ground_tiles_cover_the_whole_field() -> void:
 	## 필드 40×28 · 타일 5 → 8 × 6 = 48칸. 빈 칸이 남으면 지면 판이 비친다.
 	var parent := Node3D.new()
@@ -383,6 +445,81 @@ func test_pilot_kit_imports_with_every_family() -> void:
 	root.free()
 
 
+func test_every_topology_kit_imports_with_every_family() -> void:
+	## S3 — 9키트 전부 실제 파일로 임포트되고 네 부품군을 갖는가. 하나라도 빠지면
+	## 그 키트를 쓰는 바이옴(최대 5곳)의 필드가 빈 판이 된다.
+	var doc: Variant = JSON.parse_string(
+		FileAccess.get_file_as_string("res://data/biome_assets.json"))
+	assert_true(doc is Dictionary, "biome_assets.json 을 읽는다")
+	var kits: Array = (doc as Dictionary).get("kits", [])
+	assert_eq(kits.size(), 9, "정본 키트는 9종")
+	for kit in kits:
+		var path := "res://assets/art/models/%s.glb" % String(kit)
+		assert_true(ResourceLoader.exists(path), "%s 가 임포트되어 있다" % kit)
+		var scene := load(path) as PackedScene
+		assert_not_null(scene, "%s 는 PackedScene 으로 임포트된다" % kit)
+		var root := scene.instantiate()
+		var families := {}
+		_collect_families(root, families)
+		for prefix in ["ground_", "height_", "landmark_", "prop_"]:
+			assert_true(families.has(prefix), "%s 에 %s 부품이 있다" % [kit, prefix])
+		# 실제 파일이 배치까지 가는가 — 부품이 있어도 키트가 안 깔리면 그 바이옴은 빈 판이다.
+		var field := Node3D.new()
+		var blockers: Array = []
+		var placed := FonsBiomeKit.build(field, scene, Vector2(40, 28), 3, [], {}, false,
+			Callable(), Callable(), blockers)
+		assert_gt(placed, 0, "%s 가 필드에 부품을 깐다" % kit)
+		assert_gt(blockers.size(), 0, "%s 의 키 큰 부품이 카메라 가림으로 나온다" % kit)
+		field.free()
+		root.free()
+
+
+func test_the_imported_kit_keeps_its_front_on_plus_z() -> void:
+	## 회전 기준축 계약 — glTF 2.0 도 Godot 도 **에셋 정면을 +Z** 로 둔다.
+	## 계약을 몸으로 보이는 부품은 무너진 아치 하나다(상인방이 뒤(-Z)로 빠져 있다).
+	## 지금 부품 대부분이 방사 대칭이라, 임포트가 축을 뒤집어도 화면에서 안 보인다 —
+	## 그 뒤집힘을 여기서 잡는다. 생성기 쪽 같은 계약은 `axis_check()` 가 막는다.
+	var scene := load("res://assets/art/models/topo_urban_ruins.glb") as PackedScene
+	assert_not_null(scene, "도시 폐허 키트가 있어야 한다")
+	var root := scene.instantiate()
+	var part := _find_prefixed(root, "landmark_")
+	assert_not_null(part, "무너진 아치 부품이 있다")
+	var bounds := _mesh_bounds(part)
+	var center_z := (bounds.position.z + bounds.end.z) / 2.0
+	assert_lt(center_z, -0.2, "잔해가 뒤(-Z)로 빠져 있다 — 정면은 +Z")
+	assert_almost_eq(bounds.position.y, 0.0, 0.02, "피벗은 바닥 중앙(y=0)")
+	root.free()
+
+
+func _find_prefixed(node: Node, prefix: String) -> Node3D:
+	if String(node.name).begins_with(prefix) and node is Node3D:
+		return node as Node3D
+	for child in node.get_children():
+		var found := _find_prefixed(child, prefix)
+		if found != null:
+			return found
+	return null
+
+
+func _mesh_bounds(node: Node3D) -> AABB:
+	## 부품 노드의 경계 — 메시가 여러 겹이면 합친다. 로컬 좌표라 축 부호가 그대로 보인다.
+	var bounds := AABB()
+	var first := true
+	var mesh := node as MeshInstance3D
+	if mesh != null:
+		bounds = mesh.get_aabb()
+		first = false
+	for child in node.get_children():
+		var sub := _mesh_bounds(child as Node3D)
+		if sub.size == Vector3.ZERO:
+			continue
+		var moved := sub
+		moved.position += child.position
+		bounds = moved if first else bounds.merge(moved)
+		first = false
+	return bounds
+
+
 func test_pilot_kit_reports_tall_camera_blockers() -> void:
 	## 실제 .glb 로도 카메라 가림이 나와야 한다 — 테스트용 상자 장면만 통과하면 의미가 없다.
 	var scene := load("res://assets/art/models/topo_natural_surface.glb") as PackedScene
@@ -459,4 +596,44 @@ func test_tree_reports_trunk_and_canopy_as_separate_cylinders() -> void:
 		wide = maxf(wide, radius)
 	assert_lt(thin, 0.5, "줄기는 얇은 원통으로 따로 나온다")
 	assert_gt(wide, 1.0, "잎은 넓은 원통으로 따로 나온다")
+	parent.free()
+
+
+func test_low_rocks_report_camera_blockers() -> void:
+	## 무릎 높이 돌도 단단하다 — 경사에서 카메라가 내려앉으면 박힌다.
+	## 풀·꽃·덤불(식생)은 낮으면 가림이 아니다 — 그건 카메라를 지나가게 둔다.
+	var scene := load("res://assets/art/models/topo_natural_surface.glb") as PackedScene
+	assert_not_null(scene, "파일럿 키트가 있어야 한다")
+	var parent := Node3D.new()
+	var blockers: Array = []
+	FonsBiomeKit.build(parent, scene, Vector2(40, 28), 5, [], {}, false,
+		Callable(), Callable(), blockers)
+	var low := 0
+	for entry in blockers:
+		if float(entry["top"]) - (entry["pos"] as Vector3).y < 1.2:
+			low += 1
+	assert_gt(low, 0, "낮은 바위도 가림으로 나온다")
+	parent.free()
+
+
+func test_props_keep_off_the_trail_and_the_landmark_sits_beside_it() -> void:
+	## 길이 있어도 프롭이 그 위에 서면 길이 풀숲에 묻힌다. 랜드마크는 길을 막지 않고 옆에 선다.
+	var scene := load("res://assets/art/models/topo_natural_surface.glb") as PackedScene
+	assert_not_null(scene, "파일럿 키트가 있어야 한다")
+	var trail := PackedVector2Array([Vector2(20.0, 0.0), Vector2(20.0, 28.0)])
+	var parent := Node3D.new()
+	FonsBiomeKit.build(parent, scene, Vector2(40, 28), 5, [], {}, false,
+		Callable(), Callable(), [], [trail])
+	var landmark: Node3D = null
+	for child in parent.get_children():
+		var part := String(child.get_meta("kit_part", ""))
+		var point := Vector2(child.position.x, child.position.z)
+		if part.begins_with("prop_"):
+			assert_gt(FonsTerrain.trail_distance(point, trail), FonsBiomeKit.PATH_CLEARANCE - 0.001,
+				"프롭은 길을 비운다")
+		elif part.begins_with("landmark_"):
+			landmark = child
+	assert_not_null(landmark, "랜드마크가 있다")
+	var landmark_point := Vector2(landmark.position.x, landmark.position.z)
+	assert_gt(FonsTerrain.trail_distance(landmark_point, trail), 1.0, "랜드마크는 길가에 선다")
 	parent.free()

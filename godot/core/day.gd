@@ -44,6 +44,14 @@ func start(estate_data: Dictionary, monsters: Variant, biomes: Variant,
 	born = []
 
 
+func _open_site() -> int:
+	## 아직 안 지운 첫 조우. 청크가 갈리면 번호가 달라지므로 부를 때마다 다시 찾는다.
+	for i in explore.sites.size():
+		if not bool(explore.sites[i]["cleared"]):
+			return i
+	return -1
+
+
 func run(heroes: Array, with_life: bool = true, now: int = 0) -> Dictionary:
 	## `with_life=false` 는 **탐험만** 도는 대조군이다 (영지·저녁 없음).
 	## 전투만 도는 대조군은 부르는 쪽이 `FonsFloorRun` 으로 따로 돌린다.
@@ -62,12 +70,18 @@ func run(heroes: Array, with_life: bool = true, now: int = 0) -> Dictionary:
 		born.append_array(shift["born"])
 
 	var turns := 0
-	for i in explore.sites.size():
-		if bool(explore.sites[i]["cleared"]):
-			continue
-		var move := explore.walk_to(i, heroes)
+	# 무한맵 — 활성 조우가 27곳이라 전부 돌지 않는다. 층 목표만 채우고 하루를 닫는다.
+	# 걷는 동안 청크가 갈리면 목록 순서가 바뀌므로, 걸은 뒤에 번호를 다시 고른다.
+	var guard := 0
+	while not explore.mission_done() and guard < explore.sites.size() * 2:
+		guard += 1
+		var index := _open_site()
+		if index < 0:
+			break
+		var move := explore.walk_to(index, heroes)
 		log_lines.append_array(move["log"])
-		var out := explore.fight(i, heroes, _rng)
+		index = _open_site()
+		var out := explore.fight(index, heroes, _rng)
 		log_lines.append_array(out["log"])
 		turns += int(out["turns"])
 		if String(out["winner"]) != "ally":

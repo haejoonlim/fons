@@ -1,0 +1,16 @@
+{
+  "name": "fons-tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "폰즈 개발 도구 — Node 쪽 스크립트 (Godot/Python 게이트와 별개로 돈다)",
+  "scripts": {
+    "archil:check": "node tools/archil_persist.mjs"
+  },
+  "dependencies": {
+    "disk": "1.8.0"
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  }
+}

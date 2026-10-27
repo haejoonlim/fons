@@ -35,6 +35,9 @@ const FIELD_AREA := Color(0.11, 0.13, 0.16, 1.0)
 const FIELD_GRID := Color(0.20, 0.23, 0.27, 0.6)
 const FIELD_BORDER := Color(0.34, 0.40, 0.47, 1.0)
 const SITE_CLEARED := Color(0.32, 0.34, 0.36, 1.0)
+## 2D 명도 배율 — 배경은 하늘을 UI 톤으로 내리고(0.35), 판은 지면을 격자가 보일 만큼 올린다(1.6).
+const BACKGROUND_GAIN := 0.35
+const GROUND_GAIN := 1.6
 const SITE_CONTACT := Color(1.0, 0.95, 0.55)
 const AVATAR_RING := Color(0.85, 1.0, 0.90, 0.9)
 ## 동료가 따라다니는 범위 — 심이 준 반경을 그린다. 숫자는 심이 정한다.
@@ -54,11 +57,17 @@ class Canvas extends Node2D:
 
 var _entities: Dictionary = {}
 var _canvas: Canvas = null
+## 심이 준 바이옴 파생색. 배경 = 하늘, 판 = 지면 — 3D 와 같은 바이옴을 같은 색으로 부른다.
+var _palette: Dictionary = {}
 var _field := Vector2.ZERO
 var _is_field := false
 var _contact := -1
 var _radius := 0.0
 var _avatar_pos := Vector3.ZERO
+## 탑·소환진 — 3D 와 같은 스냅샷 표를 같은 자리에 그린다.
+var _tower: Dictionary = {}
+## 이 창이 보는 월드 중심 — 아바타다. 2D 는 무한맵을 창 하나로 보여 준다.
+var _center := Vector2.ZERO
 var _party: Array = []
 var _last_dir := Vector2.ZERO
 
@@ -79,19 +88,26 @@ func apply(snapshot: Dictionary) -> void:
 	for entity in snapshot.get("entities", []):
 		_entities[entity["id"]] = entity
 	_field = snapshot.get("field", Vector2.ZERO)
+	var palette: Variant = snapshot.get("palette", {})
+	_palette = palette if palette is Dictionary else {}
 	_is_field = String(snapshot.get("mode", "")) == "field" and _field.x > 0.0 and _field.y > 0.0
 	_contact = int(snapshot.get("contact", -1))
 	_radius = float(snapshot.get("radius", 0.0))
 	_avatar_pos = snapshot.get("avatar", Vector3.ZERO)
+	_center = Vector2(_avatar_pos.x, _avatar_pos.z)
+	var tower: Variant = snapshot.get("tower", {})
+	_tower = tower if tower is Dictionary else {}
 	_party = snapshot.get("party", [])
 	_redraw()
 
 
 func unmount() -> void:
 	_entities.clear()
+	_palette = {}
 	_field = Vector2.ZERO
 	_is_field = false
 	_contact = -1
+	_tower = {}
 	_party = []
 	_mounted = false
 	_redraw()
@@ -113,8 +129,9 @@ func screen_position(world_pos: Vector3) -> Vector2:
 	if _is_field:
 		# 탐험 필드는 **탑다운 지도**다 — x 오른쪽, z 아래. `FonsProjection` 은 전투용 축 접기라
 		# z 부호를 뒤집어(y 감소) 필드가 위로 솟는다. 여기서는 필드 좌표를 그대로 쓴다.
+		# 창은 아바타를 중심으로 월드를 미리 빌린다 — 걸어도 지도가 따라오고 탑만 움직인다.
 		var metrics := field_metrics()
-		var local := Vector2(world_pos.x, world_pos.z)
+		var local := Vector2(world_pos.x, world_pos.z) - _center + _field * 0.5
 		return Vector2(metrics["origin"]) + local * float(metrics["scale"])
 	return origin + FonsProjection.to_screen(world_pos, axes) * pixels_per_unit
 
@@ -175,23 +192,69 @@ func _draw_field(canvas: Node2D) -> void:
 	var scale_value := float(metrics["scale"])
 	var origin_at: Vector2 = metrics["origin"]
 	var area := Rect2(origin_at, _field * scale_value)
-	canvas.draw_rect(Rect2(Vector2.ZERO, _viewport_size()), FIELD_BG)
-	canvas.draw_rect(area, FIELD_AREA)
-	# 5유닛 격자 — 좌표를 읽을 수 있게만 둔다 (타일맵은 Phase 3).
+	canvas.draw_rect(Rect2(Vector2.ZERO, _viewport_size()), field_background())
+	canvas.draw_rect(area, field_area_color())
+	# 5유닛 격자 — **월드 좌표**에 고정한다. 창에 붙이면 걸을 때 격자가 같이 흘러 바닥이 미끄러진다.
 	var step := 5.0
-	var x := step
-	while x < _field.x:
-		var px := origin_at.x + x * scale_value
+	var low := _center - _field * 0.5
+	var x := ceilf(low.x / step) * step
+	while x <= low.x + _field.x + 0.01:
+		var px := origin_at.x + (x - low.x) * scale_value
 		canvas.draw_line(Vector2(px, area.position.y), Vector2(px, area.end.y), FIELD_GRID, 1.0)
 		x += step
-	var z := step
-	while z < _field.y:
-		var pz := origin_at.y + z * scale_value
+	var z := ceilf(low.y / step) * step
+	while z <= low.y + _field.y + 0.01:
+		var pz := origin_at.y + (z - low.y) * scale_value
 		canvas.draw_line(Vector2(area.position.x, pz), Vector2(area.end.x, pz), FIELD_GRID, 1.0)
 		z += step
 	canvas.draw_rect(area, FIELD_BORDER, false, 2.0)
+	_draw_tower(canvas, scale_value)
 	if _radius > 0.0:
 		canvas.draw_circle(screen_position(_avatar_pos), _radius * scale_value, PARTY_RING, false, 1.5)
+
+
+func _draw_tower(canvas: Node2D, scale_value: float) -> void:
+	## 중심 랜드마크 — 소환진 고리 둘과 탑 몸통. 3D 와 같은 자리·같은 반경이다.
+	if _tower.is_empty():
+		return
+	var at: Variant = _tower.get("pos", null)
+	if not (at is Vector3):
+		return
+	var radius := float(_tower.get("radius", 0.0))
+	var body := float(_tower.get("body", 0.0))
+	if radius <= 0.0:
+		return
+	var center: Vector2 = screen_position(at)
+	var glow: Variant = _palette.get("light", null)
+	var ring: Color = glow if glow is Color else SITE_CLEARED
+	canvas.draw_circle(center, radius * scale_value, ring, false, 2.0)
+	canvas.draw_circle(center, radius * 0.55 * scale_value, ring, false, 1.5)
+	if body > 0.0:
+		canvas.draw_circle(center, maxf(3.0, body * scale_value), Color(0.72, 0.70, 0.66))
+
+
+func tower_radius() -> float:
+	## 테스트·디버그용 — 지금 그리는 소환진 반경 (없으면 0).
+	return float(_tower.get("radius", 0.0))
+
+
+func field_background() -> Color:
+	## 바이옴을 모르는 스냅샷(전투·헤드리스)은 예전 색 그대로 — 화면이 바뀌지 않는다.
+	## 하늘색을 그대로 칠하지는 않는다: 2D 는 지도·HUD 화면이라 밝은 하늘을 깔면 흰 글씨가 안 읽힌다.
+	## 색상각은 팔레트, 명도만 UI 범위로 내린 파생값이다 (3D 헤이즈와 같은 규칙).
+	var sky: Variant = _palette.get("sky", null)
+	return _shade(sky, BACKGROUND_GAIN) if sky is Color else FIELD_BG
+
+
+func field_area_color() -> Color:
+	## 3D 지면과 같은 파생색. 지면색은 3D 조명까지 곱한 값보다 어두워서, 그대로 깔면 격자가 안 보인다.
+	var ground: Variant = _palette.get("ground", null)
+	return _shade(ground, GROUND_GAIN) if ground is Color else FIELD_AREA
+
+
+func _shade(color: Color, value_gain: float) -> Color:
+	## 색상각·채도는 팔레트 그대로, 명도만 화면 톤으로 옴긴다.
+	return Color.from_hsv(color.h, color.s, clampf(color.v * value_gain, 0.0, 1.0))
 
 
 func _draw_site(canvas: Node2D, entity: Dictionary) -> void:
@@ -264,7 +327,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	var key := (event as InputEventKey).keycode
 	if _is_field:
 		match key:
-			KEY_SPACE, KEY_ENTER:
+			KEY_SPACE, KEY_ENTER, KEY_F:
+				# 3D 는 Space 가 점프라 F 가 교전 키다 — 폴백도 같이 알아둔다.
 				intent.emit(&"interact", {})
 			KEY_R:
 				intent.emit(&"retreat", {})

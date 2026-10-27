@@ -100,7 +100,11 @@ const REST := [
 
 ## 수확 표시 이름 — 화면 로그 전용. 자원 id(`food`…)는 데이터가 정하고 이 표는 읽기용이다.
 const ITEM_NAMES := {"food": "식량", "herb": "약초", "wood": "목재", "ore": "광석"}
+## 칙령 칸 상한 — 데이터가 더 큰 값을 줘도 저장 배열과 화면은 둘까지다 (ADR 0011).
+const MAX_SLOTS := 2
 
+## 런 층의 파생값 — 저장하지 않고 `main` 이 필드 층에서 맞춘다 (ADR 0008).
+## 수확 배율(`1+floor/50`)과 칙령 10층 해금이 이 값을 읽는다.
 var floor := 1
 ## 수확 누적 — `food`·`herb`·`wood`·`ore`. 소비는 섬일 정산이 한다.
 var stores := {}
@@ -127,8 +131,12 @@ var _seasons: Array = []
 var _morale_rules: Dictionary = {}
 var _unrest_rules: Dictionary = {}
 var _decrees: Dictionary = {}
-## 켜져 있는 칙령 id ("" = 없음). 1슬롯이라 교체는 곱 바꾸기다.
-var decree_id := ""
+var _decree_slots: Array = []
+var _change_cooldown := 0
+## 켜진 칙령 id — 칸 순서대로. 30층 미만에서는 `slot_count()` 가 1이라 2번 칸은 쉰다.
+var decree_ids: Array = ["", ""]
+## 마지막 교체 층 — 5층 쿨다운 (ADR 0011). 0 이면 아직 바꾼 적 없다.
+var last_change_floor := 0
 var _facility_levels := 0
 ## 파업 잔여 층과 민심 미달 연속 층 — 둘 다 층 단위다 (04 §3.14).
 var strike_floors_left := 0
@@ -147,6 +155,8 @@ func start(estate_data: Dictionary, floor_value: int, rng: RandomNumberGenerator
 	_morale_rules = estate_data.get("morale", {})
 	_unrest_rules = estate_data.get("morale_unrest", {})
 	_decrees = estate_data.get("decrees", {})
+	_decree_slots = _decrees.get("slot_count_by_floor", [])
+	_change_cooldown = maxi(0, int(_decrees.get("change_cooldown_floors", 0)))
 	_maintenance_per_level = int(estate_data.get("maintenance_gold_per_level_per_island_day", 0))
 	_stage_caps = _population_rules.get("max_by_stage", [])
 	_seasons = estate_data.get("farming", {}).get("seasons", [])
@@ -166,7 +176,8 @@ func start(estate_data: Dictionary, floor_value: int, rng: RandomNumberGenerator
 	strike_floors_left = 0
 	unrest_floors = 0
 	recovering = false
-	decree_id = ""
+	decree_ids = _empty_decree_slots()
+	last_change_floor = 0
 	log_lines = []
 	clock_epoch = int(Time.get_unix_time_from_system())
 	last_settled_day = 1
@@ -255,6 +266,10 @@ func _gained_line(held: Dictionary) -> String:
 func _settle_day(day: int, gold: int, result: Dictionary, work_line: String = "") -> void:
 	## 하루치 수지. 순서: 세금 → 유지비 → 식량 → 인구 → 아사 → 민심.
 	## 인구는 그날의 계절 배율을 받고, 아사는 3일째부터 그 위에 곱해진다.
+	## 상한을 넘긴 성장 시도분은 분배주의가 골드로 바꾼다 (ADR 0012).
+	var cap := population_cap()
+	if cap > 0 and population > float(cap):
+		population = float(cap)   # 예전·손상 세이브가 상한을 넘겨 있으면 먼저 자른다
 	var residents := roundi(population)
 	var tax := roundi(residents * float(_tax_rules.get("gold_per_pop_per_island_day", 0))
 		* _decree_mul("tax_mul"))
@@ -266,13 +281,19 @@ func _settle_day(day: int, gold: int, result: Dictionary, work_line: String = ""
 	stores["food"] = held - eaten
 	var short := need - eaten
 
-	var cap := population_cap()
 	var season := FonsIslandClock.season_of(day, _seasons)
 	var rate := float(_population_rules.get("natural_growth_rate_per_island_day", 0.0)) \
 		* float(season.get("natural_growth_mul", 1.0)) * _decree_mul("natural_growth_mul")
 	var before := population
-	if population < cap:
-		population = minf(float(cap), population + population * rate)
+	var overflow := 0.0
+	if cap > 0:
+		var raw := population + population * rate
+		if raw > float(cap):
+			overflow = raw - float(cap)
+			population = float(cap)
+		else:
+			population = raw
+	var overflow_gold := roundi(overflow * _decree_overflow_gold_per_pop())
 
 	# 아사 — 연속 부족일이 기준을 넘으면 그날부터 인구가 준다 (04 §3.14).
 	var starved := 0.0
@@ -293,7 +314,7 @@ func _settle_day(day: int, gold: int, result: Dictionary, work_line: String = ""
 	var after := gold
 	var unpaid := 0
 	if gold >= 0:
-		after = gold + tax - upkeep
+		after = gold + tax + overflow_gold - upkeep
 		if after < 0:
 			unpaid = -after
 			after = 0
@@ -308,6 +329,8 @@ func _settle_day(day: int, gold: int, result: Dictionary, work_line: String = ""
 	result["shortage_days"] = shortage_days
 	result["population"] = population
 	result["cap"] = cap
+	result["overflow"] = overflow
+	result["overflow_gold"] = overflow_gold
 	result["gold"] = after
 	result["unpaid"] = unpaid
 
@@ -316,6 +339,8 @@ func _settle_day(day: int, gold: int, result: Dictionary, work_line: String = ""
 		lines.append(work_line)
 	if tax != 0 or upkeep != 0:
 		lines.append("세금 +%dG · 유지비 -%dG" % [tax, upkeep])
+	if overflow_gold != 0:
+		lines.append("상한 초과 +%dG" % overflow_gold)
 	if need > 0:
 		lines.append("식량 -%d · 남은 %d" % [eaten, int(stores["food"])])
 	if short > 0:
@@ -384,15 +409,71 @@ func decrees() -> Array:
 
 
 func decree() -> Dictionary:
-	## 켜져 있는 칙령. 없으면 빈 사전.
-	if decree_id.is_empty():
-		return {}
-	return _decree_by_id(decree_id)
+	## 첫 번째 켜진 칙령. 없으면 빈 사전 — 1슬롯 시절 호출 호환.
+	var ids := active_decree_ids()
+	return _decree_by_id(String(ids[0])) if not ids.is_empty() else {}
 
 
-func can_set_decree(decree_id_value: String = "") -> Dictionary:
-	## 칙령 교체 조건 — 10층 해금(04 §3.7), 파업 중이면 하루치 식량(04 §3.12).
-	## 안 되면 이유를 돌려준다 — 화면이 그대로 보여 준다.
+func slot_count() -> int:
+	## 칸 수 — `decrees.slot_count_by_floor` 의 층 임계값 표를 그대로 읽는다 (ADR 0011).
+	var count := 1
+	for entry in _decree_slots:
+		if floor >= int(entry.get("min_floor", 1)):
+			count = int(entry.get("slots", count))
+	return clampi(count, 1, MAX_SLOTS)
+
+
+func active_decree_ids() -> Array:
+	## 지금 효과를 내는 칸의 id 만 — 30층 미만이면 2번 칸이 빠진다.
+	var out: Array = []
+	for i in slot_count():
+		var id := String(decree_ids[i])
+		if not id.is_empty():
+			out.append(id)
+	return out
+
+
+func slot_ids() -> Array:
+	## 칸 순서 그대로 — 빈 칸은 "" 로 남긴다. 화면이 인덱스를 칸 번호로 읽는다 (ADR 0011).
+	## `active_decree_ids()` 처럼 빈 칸을 건너뛰면 2번 칸만 켰을 때 1번으로 보인다.
+	var out: Array = []
+	for i in slot_count():
+		out.append(String(decree_ids[i]))
+	return out
+
+
+func active_decrees() -> Array:
+	## 켜진 칙령 사전들 — 화면·HUD 가 읽는다.
+	var out: Array = []
+	for id in active_decree_ids():
+		var entry := _decree_by_id(id)
+		if not entry.is_empty():
+			out.append(entry)
+	return out
+
+
+func decree_name(id: String) -> String:
+	if id.is_empty():
+		return ""
+	var entry := _decree_by_id(id)
+	return String(entry.get("name_ko", id)) if not entry.is_empty() else id
+
+
+func cooldown_left() -> int:
+	## 남은 교체 쿨다운(층). 파업 중이어도 값은 그대로 — 허용 여부는 `can_set_decree` 가 가른다.
+	if _change_cooldown <= 0 or last_change_floor <= 0 or floor < last_change_floor:
+		return 0
+	return maxi(0, last_change_floor + _change_cooldown - floor)
+
+
+func reset_decree_cooldown() -> void:
+	## 재시작처럼 층이 뒤로 돌아갈 때 — 쿨다운 기준도 새 런에 맞춘다 (ADR 0011).
+	last_change_floor = 0
+
+
+func can_set_decree(decree_id_value: String = "", slot: int = -1) -> Dictionary:
+	## 칙령 교체 조건 — 10층 해금(04 §3.7), 칸 수(ADR 0011), 5층 쿨다운,
+	## 파업 중이면 하루치 식량(04 §3.12). 안 되면 이유를 돌려준다 — 화면이 그대로 보여 준다.
 	if _decrees.get("list", []).is_empty():
 		return {"ok": false, "reason": "칙령이 없다"}
 	var unlock := int(_decrees.get("unlock_floor", 1))
@@ -400,6 +481,23 @@ func can_set_decree(decree_id_value: String = "") -> Dictionary:
 		return {"ok": false, "reason": "%d층에 열립니다" % unlock}
 	if not decree_id_value.is_empty() and _decree_by_id(decree_id_value).is_empty():
 		return {"ok": false, "reason": "칙령이 없다"}
+	if slot >= 0:
+		if slot >= slot_count():
+			return {"ok": false, "reason": "%d층부터 %d번 칸" % [_slot_unlock_floor(slot), slot + 1]}
+		var current := String(decree_ids[slot])
+		if not decree_id_value.is_empty() and current == decree_id_value:
+			return {"ok": false, "reason": "이미 %s 다" % decree_name(current)}
+	# 쉬는 2번 칸도 검사한다 — 30층 아래에서 숨은 칙령을 1번 칸에 또 넣으면
+	# 30층에서 같은 칙령이 두 칸에 켜진다 (ADR 0011). 쉬는 칸은 화면에 안 보이므로
+	# «이미» 대신 어느 칸에 있고 언제 다시 켜지는지 말한다.
+	var held_slot := decree_ids.find(decree_id_value)
+	if not decree_id_value.is_empty() and held_slot >= 0:
+		if held_slot >= slot_count():
+			return {"ok": false,
+				"reason": "%d번 칸에 있다 — %d층부터 다시 켜진다" % [held_slot + 1, _slot_unlock_floor(held_slot)]}
+		return {"ok": false, "reason": "이미 %s 다" % decree_name(decree_id_value)}
+	if cooldown_left() > 0 and not is_striking():
+		return {"ok": false, "reason": "%d층 뒤에 바꿀 수 있다" % cooldown_left()}
 	if is_striking():
 		var need := _day_food_need() * maxi(1, int(_unrest_rules.get("early_end_food_days", 1)))
 		var held := int(stores.get("food", 0))
@@ -408,30 +506,41 @@ func can_set_decree(decree_id_value: String = "") -> Dictionary:
 	return {"ok": true, "reason": ""}
 
 
-func set_decree(decree_id_value: String) -> Dictionary:
+func set_decree(decree_id_value: String, slot: int = -1) -> Dictionary:
 	## 칙령 교체 (04 §3.7). 파업 중이면 교체가 곧 조기 종료다 (04 §3.12).
+	## 30층 이상에서는 칸을 반드시 고른다 — 빈 칸이 있어도 자동으로 채우지 않는다 (ADR 0011).
 	## `recovering` 을 켜 두는 이유: 04 §3.14 가 파업 뒤 식량 흑자 회복(+5/층)을 묶어 두었다.
-	var gate := can_set_decree(decree_id_value)
+	if decree_id_value.is_empty():
+		return {"ok": false, "reason": "칙령이 없다"}
+	var target := slot
+	if target < 0:
+		if slot_count() <= 1:
+			target = 0
+		else:
+			return {"ok": false, "reason": "칸을 골라야 한다"}
+	var gate := can_set_decree(decree_id_value, target)
 	if not bool(gate["ok"]):
 		return gate
 	var pick := _decree_by_id(decree_id_value)
 	if pick.is_empty():
 		return {"ok": false, "reason": "칙령이 없다"}
 	var id := String(pick.get("id", ""))
-	if id == decree_id and not is_striking():
-		return {"ok": false, "reason": "이미 %s 다" % String(pick.get("name_ko", id))}
 	var ended := is_striking()
-	decree_id = id
+	decree_ids[target] = id
+	last_change_floor = floor
 	morale = clampi(morale + int(pick.get("morale_delta", 0)), _morale_min(), _morale_max())
 	if ended:
 		strike_floors_left = 0
 		unrest_floors = 0
 		recovering = true
 	var line := "칙령 %s" % String(pick.get("name_ko", id))
+	if slot_count() > 1:
+		line += " — %d번 칸" % (target + 1)
 	if ended:
 		line += " — 파업 종료"
 	log_lines.append(line)
-	return {"ok": true, "reason": "", "decree": pick, "morale": morale,
+	return {"ok": true, "reason": "", "decree": pick, "slot": target,
+		"decrees": decree_ids.duplicate(), "morale": morale,
 		"ended_strike": ended, "line": line}
 
 
@@ -449,9 +558,36 @@ func _decree_by_id(id: String) -> Dictionary:
 
 
 func _decree_mul(key: String) -> float:
-	## 칙령 배율 — 없으면 1.0. 값을 코드에 적지 않고 `decrees.list` 에서 읽는다.
-	var active := decree()
-	return float(active.get(key, 1.0)) if not active.is_empty() else 1.0
+	## 칙령 배율 — 켜진 칸을 모두 곱한다. 없으면 1.0. 값을 코드에 적지 않고 `decrees.list` 에서 읽는다.
+	var mul := 1.0
+	for entry in active_decrees():
+		mul *= float(entry.get(key, 1.0))
+	return mul
+
+
+func _decree_overflow_gold_per_pop() -> float:
+	## 상한 초과 1명당 골드 — 분배주의만 이 키를 갖는다 (ADR 0012).
+	## 합으로 둔 이유: 나중에 다른 칙령이 같은 키를 주면 자연스럽게 더해진다.
+	var total := 0.0
+	for entry in active_decrees():
+		total += float(entry.get("overflow_gold_per_pop", 0.0))
+	return total
+
+
+func _empty_decree_slots() -> Array:
+	var out: Array = []
+	for i in MAX_SLOTS:
+		out.append("")
+	return out
+
+
+func _slot_unlock_floor(slot_index: int) -> int:
+	## 그 칸이 열리는 첫 층 — 데이터 표에서 찾는다. 없으면 해금 층.
+	var need := slot_index + 1
+	for entry in _decree_slots:
+		if int(entry.get("slots", 1)) >= need:
+			return int(entry.get("min_floor", 1))
+	return int(_decrees.get("unlock_floor", 1))
 
 
 func _day_food_need() -> int:
@@ -516,7 +652,8 @@ func to_save() -> Dictionary:
 		"strike_floors_left": strike_floors_left,
 		"unrest_floors": unrest_floors,
 		"recovering": recovering,
-		"decree": decree_id,
+		"decrees": decree_ids.duplicate(),
+		"last_change_floor": last_change_floor,
 	}
 
 
@@ -533,7 +670,18 @@ func from_save(saved: Dictionary, now: int = 0) -> void:
 	strike_floors_left = maxi(0, int(saved.get("strike_floors_left", strike_floors_left)))
 	unrest_floors = maxi(0, int(saved.get("unrest_floors", unrest_floors)))
 	recovering = bool(saved.get("recovering", recovering))
-	decree_id = String(saved.get("decree", decree_id))
+	decree_ids = _empty_decree_slots()
+	if saved.get("decrees", null) is Array:
+		var saved_ids: Array = saved["decrees"]
+		for i in mini(MAX_SLOTS, saved_ids.size()):
+			var id := String(saved_ids[i])
+			if not id.is_empty() and not _decree_by_id(id).is_empty():
+				decree_ids[i] = id
+	elif saved.has("decree"):
+		var old_id := String(saved["decree"])
+		if not old_id.is_empty() and not _decree_by_id(old_id).is_empty():
+			decree_ids[0] = old_id
+	last_change_floor = maxi(0, int(saved.get("last_change_floor", 0)))
 	var saved_stores: Dictionary = saved.get("stores", {})
 	for key in stores:
 		if saved_stores.has(key):

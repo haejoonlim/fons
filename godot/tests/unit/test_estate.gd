@@ -430,6 +430,13 @@ func _strike(floor_value: int = 12, food: int = 1000) -> FonsEstate:
 	return e
 
 
+func _settle_on(e: FonsEstate, day: int, gold: int = 0) -> Dictionary:
+	## 지정한 섬일의 정산 — 시계를 주입해 계절을 고정한다.
+	e.clock_epoch = 1000
+	e.last_settled_day = day - 1
+	return e.settle(1000 + (day - 1) * 12343, gold)
+
+
 func test_decrees_are_the_three_from_the_gdd_table() -> void:
 	# 04 §3.7 — 중상주의 · 분배주의 · 채집장려. 없는 종을 만들지 않는다.
 	var e := _estate(12)
@@ -518,7 +525,181 @@ func test_the_edict_survives_the_save() -> void:
 	var back := FonsEstate.new()
 	back.start(_estate_data(), 12)
 	back.from_save(e.to_save())
-	assert_eq(String(back.decree_id), "gathering", "칙령이 저장된다")
+	assert_eq(back.active_decree_ids(), ["gathering"], "칙령이 저장된다")
+
+
+func test_the_second_slot_opens_at_floor_thirty() -> void:
+	# 04 §3.7 · §3.10 — 10층 1칸, 30층부터 2칸.
+	assert_eq(_estate(29).slot_count(), 1, "29층은 1칸")
+	assert_eq(_estate(30).slot_count(), 2, "30층부터 2칸")
+
+
+func test_two_decrees_apply_together() -> void:
+	var e := _estate(30)
+	assert_true(bool(e.set_decree("mercantilism", 0)["ok"]))
+	e.floor = 35
+	assert_true(bool(e.set_decree("gathering", 1)["ok"]))
+	assert_eq(e.active_decree_ids(), ["mercantilism", "gathering"])
+	assert_eq(e.morale, 30, "-15 + -5")
+	assert_almost_eq(e._decree_mul("tax_mul"), 1.3, 0.001, "중상주의 세금")
+	assert_almost_eq(e._decree_mul("harvest_mul"), 1.2, 0.001, "채집장려 수확")
+
+
+func test_replacing_one_slot_keeps_the_other() -> void:
+	var e := _estate(30)
+	e.set_decree("distribution", 0)
+	e.floor = 35
+	e.set_decree("gathering", 1)
+	e.floor = 40
+	assert_true(bool(e.set_decree("mercantilism", 0)["ok"]))
+	assert_eq(e.active_decree_ids(), ["mercantilism", "gathering"], "0번 칸만 바뀐다")
+
+
+func test_the_same_decree_cannot_fill_both_slots() -> void:
+	var e := _estate(30)
+	e.set_decree("distribution", 0)
+	e.floor = 35
+	var out := e.set_decree("distribution", 1)
+	assert_false(bool(out["ok"]))
+	assert_string_contains(String(out["reason"]), "이미")
+	assert_eq(e.active_decree_ids(), ["distribution"])
+
+
+func test_a_sleeping_second_slot_still_blocks_a_duplicate() -> void:
+	# 30층 미만에서는 2번 칸이 효과를 내지 않지만 저장은 남는다 (ADR 0011).
+	# 그 칙령을 1번 칸에 또 넣으면 30층에서 같은 칙령이 두 칸에 켜진다.
+	var e := _estate(29)
+	e.from_save({"decrees": ["", "gathering"]})
+	var out := e.set_decree("gathering", 0)
+	assert_false(bool(out["ok"]))
+	# 쉬는 칸은 화면에 안 보인다 — «이미» 가 아니라 어느 칸에 있고 언제 다시 켜지는지 말한다.
+	assert_string_contains(String(out["reason"]), "2번 칸")
+	assert_string_contains(String(out["reason"]), "30층")
+
+
+func test_a_change_waits_five_floors() -> void:
+	var e := _estate(30)
+	e.set_decree("distribution", 0)
+	assert_eq(e.cooldown_left(), 5, "30층에서 바꾸면 35층까지")
+	var out := e.set_decree("gathering", 1)
+	assert_false(bool(out["ok"]))
+	assert_string_contains(String(out["reason"]), "5층")
+	e.floor = 34
+	assert_eq(e.cooldown_left(), 1)
+	e.floor = 35
+	assert_eq(e.cooldown_left(), 0)
+	assert_true(bool(e.set_decree("gathering", 1)["ok"]), "35층부터 다시 바꿀 수 있다")
+
+
+func test_a_strike_ignores_the_change_cooldown() -> void:
+	# 04 §3.12 — 파업 조기 종료가 쿨다운에 막히면 안 된다.
+	var e := _estate(30)
+	e.stores["food"] = 1000
+	e.set_decree("mercantilism", 0)
+	e.morale = 19
+	for i in 3:
+		e.note_floor_cleared()
+	assert_true(e.is_striking())
+	assert_eq(e.cooldown_left(), 5, "전제 — 쿨다운 중")
+	var out := e.set_decree("distribution", 1)
+	assert_true(bool(out["ok"]), "파업 중에는 쿨다운을 무시한다")
+	assert_true(bool(out["ended_strike"]))
+	assert_eq(e.active_decree_ids(), ["mercantilism", "distribution"])
+
+
+func test_the_second_slot_stops_below_thirty_but_keeps_its_decree() -> void:
+	var e := _estate(30)
+	e.set_decree("distribution", 0)
+	e.floor = 35
+	e.set_decree("gathering", 1)
+	assert_eq(e.active_decree_ids().size(), 2)
+	e.floor = 29
+	assert_eq(e.active_decree_ids(), ["distribution"], "2번 칸은 30층 미만에서 쉰다")
+	assert_almost_eq(e._decree_mul("harvest_mul"), 1.0, 0.001)
+	e.floor = 35
+	assert_eq(e.active_decree_ids().size(), 2, "다시 30층이면 되살아난다")
+
+
+func test_two_slot_ids_and_cooldown_survive_the_save() -> void:
+	var e := _estate(30)
+	e.set_decree("distribution", 0)
+	e.floor = 35
+	e.set_decree("gathering", 1)
+	var saved := e.to_save()
+	assert_eq(saved["decrees"], ["distribution", "gathering"])
+	assert_eq(int(saved["last_change_floor"]), 35)
+	var back := FonsEstate.new()
+	back.start(_estate_data(), 35)
+	back.from_save(saved)
+	assert_eq(back.active_decree_ids(), ["distribution", "gathering"])
+	assert_eq(back.cooldown_left(), 5, "35층에서 바꿨으니 40층까지")
+
+
+func test_distribution_turns_overflow_growth_into_gold_at_the_cap() -> void:
+	# ADR 0012 — 상한에 닿은 성장분을 분배주의가 골드로 돌린다.
+	var e := _estate(50)
+	e.population = 60.0
+	e.stores["food"] = 1000
+	assert_true(bool(e.set_decree("distribution", 0)["ok"]))
+	var out := _settle_on(e, 101)
+	# 60 × 2% × 1.5 = 1.8명 초과 × 4G = 7G. 세금 60 × 0.8 = 48G, 유지비 10G.
+	assert_almost_eq(float(out["overflow"]), 1.8, 0.001, "상한을 넘으려던 성장분")
+	assert_eq(int(out["overflow_gold"]), 7, "1.8 × 4 반올림")
+	assert_eq(int(out["tax"]), 48, "세금은 그대로 -20%")
+	assert_eq(int(out["gold"]), 45, "48 + 7 - 10")
+	assert_eq(int(e.population), 60, "인구는 상한에 머문다")
+	assert_true(out["log"].has("상한 초과 +7G"), "정산 로그가 따로 적는다")
+
+
+func test_overflow_gold_needs_distribution() -> void:
+	var e := _estate(50)
+	e.population = 60.0
+	e.stores["food"] = 1000
+	var out := _settle_on(e, 101)
+	assert_eq(int(out["overflow_gold"]), 0, "분배주의가 없으면 버린다")
+	assert_eq(int(out["gold"]), 50, "세금 60 - 유지비 10")
+	assert_false(out["log"].any(func(line): return String(line).begins_with("상한 초과")))
+
+
+func test_overflow_gold_follows_the_seasonal_growth_bonus() -> void:
+	# 봄 자연증가 ×1.5 → 60 × 2% × 1.5(분배) × 1.5(계절) = 2.7명 초과 × 4G = 11G.
+	var e := _estate(50)
+	e.population = 60.0
+	e.stores["food"] = 1000
+	e.set_decree("distribution", 0)
+	var out := _settle_on(e, 2)
+	assert_almost_eq(float(out["overflow"]), 2.7, 0.001)
+	assert_eq(int(out["overflow_gold"]), 11)
+
+
+func test_overflow_gold_does_not_run_below_the_cap() -> void:
+	var e := _estate(50)
+	e.population = 30.0
+	e.stores["food"] = 1000
+	e.set_decree("distribution", 0)
+	var out := _settle_on(e, 101)
+	assert_eq(int(out["overflow_gold"]), 0, "상한 전에는 초과분이 없다")
+	assert_almost_eq(e.population, 30.9, 0.001, "자연증가는 그대로 돈다")
+
+
+func test_overflow_gold_clamps_an_over_cap_save() -> void:
+	# 예전·손상 세이브가 상한을 넘겨도 초과분을 무한히 골드로 바꾸지 않는다.
+	var e := _estate(50)
+	e.population = 999.0
+	e.stores["food"] = 1000
+	e.set_decree("distribution", 0)
+	var out := _settle_on(e, 101)
+	assert_eq(int(e.population), 60, "먼저 상한으로 자른다")
+	assert_almost_eq(float(out["overflow"]), 1.8, 0.001, "자른 인구의 성장분만 센다")
+	assert_eq(int(out["overflow_gold"]), 7)
+
+
+func test_resetting_the_cooldown_clears_the_wait() -> void:
+	var e := _estate(30)
+	e.set_decree("distribution", 0)
+	assert_eq(e.cooldown_left(), 5)
+	e.reset_decree_cooldown()
+	assert_eq(e.cooldown_left(), 0)
 
 
 func test_unrest_gauge_appears_below_25_and_warns_at_15() -> void:

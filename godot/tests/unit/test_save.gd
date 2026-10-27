@@ -67,6 +67,24 @@ func _payload(seed_value: int) -> Dictionary:
 		{"gold": 10, "pull_count": 2}, "2026-10-24T00:00:00")
 
 
+func test_save_keeps_the_second_slot_and_the_cooldown() -> void:
+	## ADR 0011 — 저장은 칸 배열과 마지막 교체 층을 적는다.
+	var estate := FonsEstate.new()
+	estate.start(DataLoader.load_json("estate.json"), 30)
+	assert_true(bool(estate.set_decree("distribution", 0)["ok"]))
+	estate.floor = 35
+	assert_true(bool(estate.set_decree("gathering", 1)["ok"]))
+	var payload := FonsSave.to_dict(_run(265).to_save(), estate.to_save(),
+		{"gold": 10, "pull_count": 2})
+	assert_eq(payload["estate"]["decrees"], ["distribution", "gathering"])
+	assert_eq(int(payload["estate"]["last_change_floor"]), 35)
+	var back := FonsEstate.new()
+	back.start(DataLoader.load_json("estate.json"), 35)
+	back.from_save(payload["estate"])
+	assert_eq(back.active_decree_ids(), ["distribution", "gathering"])
+	assert_eq(back.cooldown_left(), 5, "불러와도 쿨다운이 이어진다")
+
+
 func test_save_roundtrip() -> void:
 	var run := _run(265)
 	var back := _restored(run.to_save())
@@ -104,6 +122,50 @@ func test_field_save_roundtrip() -> void:
 	assert_eq(int(back.heroes[0]["hp"]), int(field.heroes[0]["hp"]), "HP")
 	assert_eq(back.heroes[0]["brain"].counters, field.heroes[0]["brain"].counters, "카운터")
 	assert_eq(back.explore.cleared, 0, "조우는 저장하지 않고 층 시작에서 다시 만든다")
+
+
+func _field_at(seed_value: int, start_floor: int) -> FonsFieldState:
+	var field := FonsFieldState.new()
+	field.start(DataLoader.load_json("races.json"), DataLoader.get_monsters(),
+		DataLoader.get_biomes(), seed_value, start_floor,
+		DataLoader.load_json("job_tree.json"), DataLoader.load_json("equipment.json"),
+		DataLoader.load_json("job_coef.json"), _ai(), DataLoader.load_json("basic_attacks.json"))
+	return field
+
+
+func _restored_at(saved: Dictionary, seed_value: int, start_floor: int) -> FonsFieldState:
+	var field := FonsFieldState.new()
+	field.configure(DataLoader.load_json("races.json"), DataLoader.get_monsters(),
+		DataLoader.get_biomes(), seed_value, start_floor,
+		DataLoader.load_json("job_tree.json"), DataLoader.load_json("equipment.json"),
+		DataLoader.load_json("job_coef.json"), _ai(), DataLoader.load_json("basic_attacks.json"))
+	assert_true(field.restore(saved), "필드 복원 성공")
+	return field
+
+
+func test_field_save_keeps_the_ending_and_the_paid_floors() -> void:
+	## 엔딩 플래그와 첫 격파 기억은 "변한 것"이다 — 불러와서 전리품을 또 받으면 안 된다 (설계 §7).
+	var field := _field_at(265, 126)
+	var out := field.engage()
+	assert_eq(String(out["winner"]), "ally", "126 문지기는 5인 파티가 잡는다")
+	assert_true(bool(out["first_clear"]), "첫 격파는 지급된다")
+	var saved := field.to_save()
+	assert_eq(saved["rewarded"], [126], "받은 층이 저장된다")
+	assert_false(bool(saved["ending"]), "126 은 엔딩이 아니다")
+
+	var back := _restored_at(saved, 265, 126)
+	assert_true(back.claim_gatekeeper_loot().is_empty(), "불러와도 전리품은 다시 안 나온다")
+	assert_false(back.ending, "엔딩은 안 켜진다")
+
+	## 130 격파 저장본 — 불러오면 문지기가 다시 서지 않고 문턱 상태로 선다.
+	var last := saved.duplicate(true)
+	last["floor"] = 130
+	last["ending"] = true
+	var gate := _restored_at(last, 265, 130)
+	assert_true(gate.ending, "엔딩 플래그가 살아난다")
+	assert_true(gate.mission_done(), "넘은 문턱은 다시 싸우지 않는다")
+	assert_false(gate.gatekeeper_ready(), "문지기가 다시 서지 않는다")
+	assert_string_contains(gate.hint(), "문턱", "힌트가 엔딩 상태를 알린다")
 
 
 func test_save_whitelist() -> void:
@@ -148,9 +210,20 @@ func test_save_corrupt_quarantines_and_recovers() -> void:
 func test_save_migrates_old_shape() -> void:
 	var result := FonsSave.migrate({"run": {"seed": "5", "floor": 3}})
 	assert_eq(String(result["status"]), "ok")
-	assert_eq(int(result["data"]["schema"]), 1, "schema 1 로 올라온다")
+	assert_eq(int(result["data"]["schema"]), 2, "schema 2 로 올라온다")
 	assert_true(result["data"]["wallet"] is Dictionary, "빠진 칸은 기본값")
 	assert_true(result["data"]["estate"] is Dictionary)
+
+
+func test_save_v1_decree_becomes_the_first_slot() -> void:
+	## ADR 0011 — 문자열 하나이던 `decree` 는 첫 칸으로 읽는다.
+	var result := FonsSave.migrate({"schema": 1, "run": {},
+		"estate": {"decree": "gathering", "morale": 44}})
+	assert_eq(String(result["status"]), "ok")
+	assert_eq(int(result["data"]["schema"]), 2)
+	assert_eq(result["data"]["estate"]["decrees"], ["gathering"], "첫 칸으로 옮긴다")
+	assert_false(result["data"]["estate"].has("decree"), "옛 키는 남기지 않는다")
+	assert_eq(int(result["data"]["estate"]["morale"]), 44, "나머지 값은 그대로")
 
 
 func test_save_newer_keeps_file() -> void:

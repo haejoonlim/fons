@@ -21,12 +21,13 @@ races.json                    scenes.json                skills_catalog.json
 synergy.json                  world_laws.json
 ```
 
-## 폰즈에서 더한 데이터 (manifest 24종)
+## 폰즈에서 더한 데이터 (manifest 25종)
 
-원본 17종 밖에 폰즈에서 저작·생성한 7종이 있다. `basic_attacks.json` 은 원본 36차 기본 공격 표를
+원본 17종 밖에 폰즈에서 저작·생성한 8종이 있다. `basic_attacks.json` 은 원본 36차 기본 공격 표를
 직업 id·태그 기준으로 옮긴 **직접 저작 정본**이다 — 34직업 × 3 = 102종, 생성물이 아니다.
-나머지 여섯(`job_ai_profiles` · `job_coef` · `monster_husbandry` · `personalities` · `biome_assets` · `monster_assets`)은
-생성기 출력이므로 손으로 고치지 않는다 (각 생성기의 `--check` 가 드리프트를 잡는다).
+나머지 일곱(`job_ai_profiles` · `job_coef` · `monster_husbandry` · `personalities` · `biome_assets` ·
+`monster_assets` · `hero_assets`)은 생성기 출력이므로 손으로 고치지 않는다
+(각 생성기의 `--check` 가 드리프트를 잡는다).
 
 ## 정본은 어디인가 (원본 대조)
 

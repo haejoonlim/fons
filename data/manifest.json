@@ -1,7 +1,10 @@
 {
   "source": "soul-commander 원본 저장소의 데이터 폴더 (원본 대조)",
   "reconciled": "2026-10-17 — 원본 트리와 전수 대조 완료 (원본 대조). 이전 목록은 추정이었고 실제와 달랐다: 없던 파일 3개(estate_web·state·game_const), 빠져 있던 파일 2개(scenes·world_laws).",
-  "generated_in_original": ["skills_catalog.json", "fusion_pairs.json"],
+  "generated_in_original": [
+    "skills_catalog.json",
+    "fusion_pairs.json"
+  ],
   "files": [
     "ambient.json",
     "biome_assets.json",
@@ -17,7 +20,7 @@
     "job_coef.json",
     "job_tree.json",
     "monster_assets.json",
-  "monster_husbandry.json",
+    "monster_husbandry.json",
     "monster_personality.json",
     "monsters.json",
     "races.json",
@@ -26,7 +29,8 @@
     "synergy.json",
     "world_laws.json",
     "personalities.json",
-    "basic_attacks.json"
+    "basic_attacks.json",
+    "hero_assets.json"
   ],
-  "notes": "원본에서 이 폴더는 런타임 직로드용이다. 이 중 skills_catalog 와 fusion_pairs 두 종은 원본 스크립트가 한글 키 정본에서 생성한 것이고, 나머지 열다섯은 원본에서 직접 저작한 파일이다 — 어느 쪽이든 이관 원본은 이 폴더다. .meta 와 .gitkeep 은 제외한다. monster_husbandry.json 은 폰즈 쪽에서 새로 저작한 파일(사역사 마물 사육 규칙), job_ai_profiles.json 은 폰즈 쪽에서 새로 저작한 파일(직업 AI 행동 가중 — 생성기 sim/center/sims/gen_job_ai_profiles.py)이다. job_coef.json 도 폰즈 쪽 생성물이다(직업계수 L1 7·L2 26·전직 티어 — 생성기 sim/center/sims/gen_job_coef.py, 정본은 gacha_test.py). personalities.json 은 폰즈 쪽 생성물이다(성격 13+52 → AI 행동 선호 — 생성기 tools/gen_personalities.py, 정본은 GDD 05 §5-1 · GDD 09 §4-4 · gacha_test 상수). biome_assets.json 도 폰즈 쪽 생성물이다(바이옴 에셋 키 — 생성기 tools/gen_biome_assets.py, 정본은 biomes.json 의 topologyKit·slots). basic_attacks.json 은 폰즈 쪽에서 새로 이관한 파일이다(직업별 기본 공격 102종 — 원본 36차 재설계 표를 옮기고 폰즈 직업 id·태그로 대조)."
+  "notes": "원본에서 이 폴더는 런타임 직로드용이다. 이 중 skills_catalog 와 fusion_pairs 두 종은 원본 스크립트가 한글 키 정본에서 생성한 것이고, 나머지 열다섯은 원본에서 직접 저작한 파일이다 — 어느 쪽이든 이관 원본은 이 폴더다. .meta 와 .gitkeep 은 제외한다. monster_husbandry.json 은 폰즈 쪽에서 새로 저작한 파일(사역사 마물 사육 규칙), job_ai_profiles.json 은 폰즈 쪽에서 새로 저작한 파일(직업 AI 행동 가중 — 생성기 sim/center/sims/gen_job_ai_profiles.py)이다. job_coef.json 도 폰즈 쪽 생성물이다(직업계수 L1 7·L2 26·전직 티어 — 생성기 sim/center/sims/gen_job_coef.py, 정본은 gacha_test.py). personalities.json 은 폰즈 쪽 생성물이다(성격 13+52 → AI 행동 선호 — 생성기 tools/gen_personalities.py, 정본은 GDD 05 §5-1 · GDD 09 §4-4 · gacha_test 상수). biome_assets.json 도 폰즈 쪽 생성물이다(바이옴 에셋 키 — 생성기 tools/gen_biome_assets.py, 정본은 biomes.json 의 topologyKit·slots). basic_attacks.json 은 폰즈 쪽에서 새로 이관한 파일이다(직업별 기본 공격 102종 — 원본 36차 재설계 표를 옮기고 폰즈 직업 id·태그로 대조). hero_assets.json 도 폰즈 쪽 생성물이다(직업 → 몸통 대역 — 생성기 tools/gen_hero_assets.py)."
 }

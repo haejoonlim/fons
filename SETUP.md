@@ -170,4 +170,4 @@ godot --headless --path godot --export-release "macOS" ../build/FONS.app
 - GUT → `2 scripts / 6 tests / 6 passing / 8 asserts`, exit 0
 - `tools/gate_all.py` → `DOCS OK` + `GATE OK: W0 pulls=130 expected_shaped=6.5 legacy=0.95` → `GATE ALL OK`, exit 0
 
-**원본 대조 완료 (2026-10-17):** 이 문서가 참조하는 원본 레포(`haejoonlim/soul-commander`)는 이제 이 머신에 클론돼 있다 (`~/soul-commander` · 워킹트리 213MB · 커밋 252개 · 파일 1,523개 · 자체 실측). 원본 경로·수치의 근거는 [docs/original/](docs/original/00_읽는법.md) 사실표 4종이다. 위 검증값은 **이 머신과 이 레포에 대한 것**이고, 원본 수치·구조는 사실표를 보면 된다.
+**원본 대조 완료 (2026-10-17):** 이 문서가 참조하는 원본 레포(`haejoonlim/soul-commander`)는 이제 이 머신에 클론돼 있다 (`~/soul-commander` · 워킹트리 213MB · 커밋 252개 · 파일 1,523개 · 자체 실측). 원본 경로·수치의 근거는 [docs/original/](docs/original/00_읽는법.md) 사실표 4종이다. 위 검증값은 **이 머신과 이 레포에 대한 것**이고, 원본 수치·구조는 사실표를 보면 된다. 원본 워킹트리는 2026-10-24에 아카이브 후 삭제됐다 — `~/Desktop/soul-commander-archive-2026-10-24/` 의 tar 가 마지막 사본이다 ([docs/dev/원본클론_정리_선택지.md](docs/dev/원본클론_정리_선택지.md) §5).

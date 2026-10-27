@@ -14,6 +14,15 @@ cd "$HERE/godot"
 JUNIT="$HERE/godot/.gut_junit.xml"
 rm -f "$JUNIT"
 
+# --- 편집 중 실행 방지: 실행 전에 시각을 찍는다 ---
+# 다른 에이전트나 사람이 소스를 고치는 도중에 돌리면 통과·실패가 실행마다 뒤집힌다.
+# 2026-10-25 실측: 같은 코드에서 테스트 수가 451 → 465 → 471 → 475 로 늘었고,
+# 실패 파일도 test_estate.gd(8건) → test_main.gd(7건) → 0건 으로 갈아탔다.
+# 그때 초록이었던 실행도, 이후 편집을 반영하지 않은 결과라 근거로 쓸 수 없다.
+# 그래서 실행이 끝난 뒤 이 시각 이후에 바뀐 소스가 있으면 초록을 내지 않고 실패한다.
+STAMP="$(mktemp -t fons_gate_stamp)"
+trap 'rm -f "$STAMP"' EXIT
+
 # 게이트 계약 G-1·G-2 (`tools/gate_contract.py`) — 마지막 줄이 `[PASS] godot` /
 # `[FAIL] godot — 이유`, 종료코드는 0 또는 1. 표식은 stdout 으로 낸다 (gate_all 이 거기서 읽는다).
 fail() {
@@ -54,6 +63,18 @@ if [ -n "$missing_scripts" ]; then
   echo "FAIL: 아래 테스트 스크립트가 실행되지 않았습니다 (파싱 실패? 클래스 이름 오타?):" >&2
   echo "$missing_scripts" | sed 's/^/  - /' >&2
   fail "테스트 스크립트 누락 (실행 안 됨)"
+fi
+
+# --- 편집 중 실행 방지: GUT 가 도는 동안 소스가 바뀌었는지 ---
+# `.godot/`(임포트 캐시)는 Godot 이 스스로 만지므로 뺀다. junit 결과 파일은 필터에 안 걸린다.
+changed="$(find . -path ./.godot -prune -o -type f \
+  \( -name '*.gd' -o -name '*.tscn' -o -name '*.tres' -o -name '*.json' -o -name 'project.godot' \) \
+  -newer "$STAMP" -print 2>/dev/null | sed 's|^\./||' | head -20 || true)"
+if [ -n "$changed" ]; then
+  echo "FAIL: 실행 중에 아래 소스가 바뀌었습니다 — 편집 중 실행이라 결과를 신뢰할 수 없습니다:" >&2
+  echo "$changed" | sed 's/^/  - /' >&2
+  echo "편집을 멈춘 뒤 다시 돌리세요." >&2
+  fail "실행 중 소스 변경 (편집 중 실행)"
 fi
 
 if [ "$gut_status" -ne 0 ]; then

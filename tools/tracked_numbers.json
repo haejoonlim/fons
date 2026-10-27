@@ -145,6 +145,87 @@
    ],
    "sources": [],
    "note": "기본 공격 도발 지속 턴. 정본 없음(가안)"
+  },
+  {
+   "name": "DECREE_CHANGE_COOLDOWN_FLOORS",
+   "value": "5",
+   "aliases": [
+    "DECREE_CHANGE_COOLDOWN_FLOORS"
+   ],
+   "sources": [],
+   "note": "04 §3.7 · ADR 0011 — 칙령 교체 쿨다운 5층. data/estate.json 의 change_cooldown_floors"
+  },
+  {
+   "name": "DECREE_OVERFLOW_GOLD_PER_POP",
+   "value": "4",
+   "aliases": [
+    "DECREE_OVERFLOW_GOLD_PER_POP"
+   ],
+   "sources": [],
+   "note": "ADR 0012 — 분배주의 상한 초과 1명당 골드 (가안). data/estate.json 의 overflow_gold_per_pop"
+  },
+  {
+   "name": "BAND_LOW",
+   "value": "0.45",
+   "aliases": [
+    "BAND_LOW"
+   ],
+   "sources": [],
+   "note": "툰 밴드 아래 문턱 — godot/game/view/view_3d/toon_shade.gd (sim 사본 없음, gacha 와 무관)"
+  },
+  {
+   "name": "BAND_HIGH",
+   "value": "0.72",
+   "aliases": [
+    "BAND_HIGH"
+   ],
+   "sources": [],
+   "note": "툰 밴드 위 문턱 — toon_shade.gd"
+  },
+  {
+   "name": "BAND_MID",
+   "value": "0.82",
+   "aliases": [
+    "BAND_MID"
+   ],
+   "sources": [],
+   "note": "툰 중간 단 배율 — toon_shade.gd"
+  },
+  {
+   "name": "BAND_FLOOR",
+   "value": "0.60",
+   "aliases": [
+    "BAND_FLOOR"
+   ],
+   "sources": [],
+   "note": "툰 그늘 바닥 — toon_shade.gd"
+  },
+  {
+   "name": "AMBIENT_FILL",
+   "value": "2.6",
+   "aliases": [
+    "AMBIENT_FILL"
+   ],
+   "sources": [],
+   "note": "툰 그늘 환경광 배율 — toon_shade.gd. unshaded 모델에서 격자로 맞췄다 (docs/art/셰이딩_조각수_선택지.md §3.9)"
+  },
+  {
+   "name": "EXPOSURE",
+   "value": "0.63",
+   "aliases": [
+    "EXPOSURE"
+   ],
+   "sources": [],
+   "note": "툰 태양 항 노출 — toon_shade.gd. unshaded 모델에서 격자로 맞췄다 (docs/art/셰이딩_조각수_선택지.md §3.9)"
+  },
+  {
+   "name": "SPECULAR_GAIN",
+   "value": "0.035",
+   "aliases": [
+    "SPECULAR_GAIN"
+   ],
+   "sources": [],
+   "note": "툰 넓은 광택 — 태양 색을 albedo 무관하게 더해 색을 맞춘다. toon_shade.gd. 색 오차 0.104 → 0.045 (§3.9)"
   }
  ]
 }

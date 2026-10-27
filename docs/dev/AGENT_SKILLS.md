@@ -67,7 +67,7 @@ GitHub 저장소 이름으로 `spirite`·`spirite-gen`·`spirit-gen`을 검색�
 ### 3.2 `balance-review` — 지금 가장 큰 열린 질문에 붙는다
 
 열린 항목은 "111~130층을 열 것인가"와 턴 상한을 어떻게 잡을가의 결정이다 (HANDOFF §6-2 · 자체 실측으로 확인된 사실).
-이 스킬은 그 결정에 필요한 **판정 기준**을 준다 — `references/difficulty-curve.md`·`references/progression.md`·`references/character-balance.md`·`references/gotchas.md`.
+이 스킬은 그 결정에 필요한 **판정 기준**을 준다 — 스킬 폴더의 `difficulty-curve.md`·`progression.md`·`character-balance.md`·`gotchas.md`.
 쓰지 않는 것 두 가지:
 
 - **셸 preamble은 실행하지 않는다.** 이 스킬의 맨 앞 블록은 `~/.gstack/`에 세션·분석 파일을 만들고, 함께 설치된 `gstack-game` 바이너리를 찾는다. 저장소 밖 파일을 쓰는 블록이라 실행 대상이 아니다. 참고 자료로만 읽는다.

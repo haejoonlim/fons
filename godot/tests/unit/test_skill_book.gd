@@ -66,6 +66,41 @@ func test_engrave_never_exceeds_32() -> void:
 	assert_eq(book.size(), FonsSkillBook.CAP)
 
 
+func test_growth_budget_lasts_the_whole_130_floor_run() -> void:
+	## 1층 6 → 40층 22 → 130층 32. 직선 0.55 였다면 48층에 포화돼 82층이 비었다.
+	assert_eq(FonsSkillBook.growth_limit(1), 6)
+	assert_eq(FonsSkillBook.growth_limit(40), 22, "40층 22 — 상한 32까지 10칸을 남긴다")
+	assert_eq(FonsSkillBook.growth_limit(49), 23, "40층 뒤에도 9층마다 한 칸씩 열린다")
+	assert_eq(FonsSkillBook.growth_limit(130), FonsSkillBook.CAP, "마지막 칸은 최대 층에서")
+	assert_eq(FonsSkillBook.growth_limit(200), FonsSkillBook.CAP, "최대 층을 넘겨도 상한 그대로")
+	# 새 칸이 10층 넘게 비면 플레이어에게는 성장이 멈춘 것으로 보인다.
+	var prev := FonsSkillBook.growth_limit(1)
+	var last_open := 1
+	var widest := 0
+	for f in range(2, 131):
+		var now := FonsSkillBook.growth_limit(f)
+		assert_gte(now, prev, "%d층에서 예산이 줄면 안 된다" % f)
+		if now > prev:
+			widest = maxi(widest, f - last_open)
+			last_open = f
+		prev = now
+	assert_lte(widest, 10, "가장 긴 공백이 %d층 — 10층을 넘으면 안 된다" % widest)
+	assert_eq(prev, FonsSkillBook.CAP, "130층에는 상한에 닿아 있다")
+
+
+func test_growth_budget_blocks_then_reopens_at_the_next_slot() -> void:
+	var catalog := _catalog()
+	var book := {}
+	for i in FonsSkillBook.growth_limit(40):
+		book["dummy_%d" % i] = _d_entry()
+	var blocked := FonsSkillBook.try_engrave(book, {"근접타격": 999}, catalog, _rng(), 1.0, {}, 40)
+	assert_eq(blocked.size(), 0, "예산을 다 쓰면 그 층에서는 안 는다")
+	var still := FonsSkillBook.try_engrave(book, {"근접타격": 999}, catalog, _rng(), 1.0, {}, 48)
+	assert_eq(still.size(), 0, "다음 칸 전까지는 그대로 막힌다")
+	var opened := FonsSkillBook.try_engrave(book, {"근접타격": 999}, catalog, _rng(), 1.0, {}, 49)
+	assert_eq(opened.size(), 1, "49층에 한 칸이 열려 다시 각인된다")
+
+
 func test_fifty_percent_roll_can_fail_without_cost() -> void:
 	var catalog := _catalog()
 	var book := {}

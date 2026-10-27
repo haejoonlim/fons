@@ -119,3 +119,49 @@ func test_rock_tint_reaches_steep_vertices() -> void:
 			changed += 1
 	assert_gt(changed, 0, "암석 틴트가 닿는 경사 정점이 있다")
 	assert_lt(changed, plain.size(), "평지까지 돌로 칠하지 않는다 — 경사 축은 좁다")
+
+
+func test_a_trail_paints_earth_into_the_grass() -> void:
+	## 오솔길은 새 메시가 아니라 정점색이다 — 지형 높이·법선은 그대로 두고 색만 간다.
+	var trail := PackedVector2Array([Vector2(20.0, 0.0), Vector2(20.0, 28.0)])
+	var terrain := FonsTerrain.new(Vector2(40, 28), 7, 1.0, [], FonsTerrain.FLAT_RADIUS, [trail])
+	assert_almost_eq(terrain.path_weight(20.0, 14.0), 1.0, 0.0001, "길 위는 1")
+	assert_almost_eq(terrain.path_weight(23.0, 14.0), 0.0, 0.0001, "3유닛 밖은 0")
+	var mesh := terrain.build(Color(0.57, 0.74, 0.35))
+	var colors: PackedColorArray = (mesh.surface_get_arrays(0) as Array)[Mesh.ARRAY_COLOR]
+	var vertices: PackedVector3Array = (mesh.surface_get_arrays(0) as Array)[Mesh.ARRAY_VERTEX]
+	var on_path := Color.TRANSPARENT
+	var off_path := Color.TRANSPARENT
+	for i in vertices.size():
+		var point := vertices[i]
+		if not is_equal_approx(point.z, 14.0):
+			continue
+		if is_equal_approx(point.x, 20.0):
+			on_path = colors[i]
+		elif is_equal_approx(point.x, 5.0):
+			off_path = colors[i]
+	# 흙은 빨강이 초록보다 강하고, 식생은 그 반대다. 조명 얼룩이 섞여도 이 차이는 남는다.
+	assert_gt(on_path.r - on_path.g, off_path.r - off_path.g + 0.02, "길 위는 흙색으로 기운다")
+
+
+func test_adjacent_chunk_meshes_meet_at_the_same_edge() -> void:
+	## 청크 스트리밍 — 이웃 메시의 경계 정점(높이·색)이 같아야 세로 이음새가 안 생긴다.
+	## 색은 한 칸 바깥까지 뜬 이웃으로 계산해야 한다. 배열 끝에서 자르면 경계 한 줄만
+	## 기울기·오목 판정이 달라져 청크마다 세로 띠가 남는다.
+	var base := Color(0.57, 0.74, 0.35)
+	var a := FonsTerrain.new(Vector2(40, 28), 7, 1.0, [], FonsTerrain.FLAT_RADIUS, [],
+		Vector2(20, -14), 0.0)
+	var b := FonsTerrain.new(Vector2(40, 28), 7, 1.0, [], FonsTerrain.FLAT_RADIUS, [],
+		Vector2(60, -14), 0.0)
+	var arrays_a := a.build_region(Rect2(20, -14, 40, 28), base).surface_get_arrays(0)
+	var arrays_b := b.build_region(Rect2(60, -14, 40, 28), base).surface_get_arrays(0)
+	var va: PackedVector3Array = arrays_a[Mesh.ARRAY_VERTEX]
+	var vb: PackedVector3Array = arrays_b[Mesh.ARRAY_VERTEX]
+	var ca: PackedColorArray = arrays_a[Mesh.ARRAY_COLOR]
+	var cb: PackedColorArray = arrays_b[Mesh.ARRAY_COLOR]
+	var stride := 41
+	for j in 29:
+		var ia := j * stride + stride - 1
+		var ib := j * stride
+		assert_almost_eq(va[ia].y, vb[ib].y, 0.0001, "행 %d 높이가 같다" % j)
+		assert_eq(ca[ia].to_html(false), cb[ib].to_html(false), "행 %d 색이 같다" % j)

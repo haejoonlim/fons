@@ -20,7 +20,7 @@
 | 소환 숫자 게이트 | 통과 — 원본 확정 확률표 재현 (자체 실측) | `./.venv/bin/python sim/gacha.py` → exit 0 |
 | Python 게이트 | 통과 · 필수 산출물 52종 (자체 실측) | `./.venv/bin/python tools/gate_all.py` → exit 0 |
 | 문서 검수 도구 | 동작 (검사 7종, advisory) | `./.venv/bin/python tools/review_docs.py` |
-| 원본 클론·대조 | 완료 — `~/soul-commander` (자체 실측) | 원본에서 확인한 값은 [docs/original/](docs/original/00_읽는법.md) 4종에 있다 |
+| 원본 클론·대조 | 완료 — 클론은 아카이브 후 삭제 (2026-10-24 · 자체 실측) | 원본은 `~/Desktop/soul-commander-archive-2026-10-24/` 의 tar 에 있고, 확인한 값은 [docs/original/](docs/original/00_읽는법.md) 4종에 있다 |
 | 런타임 데이터 이관 | 완료 — 17종 × 2 (data/ · godot/data/) (자체 실측) | `tools/sync_data.py` |
 | 테스트 센터 | 동작 — 시뮬 22/22 통과 · 게이트 6종 (자체 실측) | `./.venv/bin/python sim/center/server.py 8741` → `/api/sims` 22종 |
 | 3D 월드 | 없음 — 타이틀 자리표시자뿐 | `godot/game/ui/title/title.tscn` |

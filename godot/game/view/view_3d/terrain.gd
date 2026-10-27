@@ -25,9 +25,12 @@ extends RefCounted
 
 ## 정점 간격 — 1유닛. 40×28 이면 41×29 = 1189정점, 삼각형 2240장. 충분히 싸다.
 const STEP := 1.0
-## 판 바깥으로 더 뜨는 폭. 3인칭 카메라가 필드 밖으로 나가므로, 지면이 거기서 끝나면
-## 허공이 보인다. 플레이 경계는 그대로 40×28 이고 이 여유는 **보이는 땅**만 늘린다.
-const MARGIN := 12.0
+## 판 바깥으로 더 뜨는 폭 — **최대 카메라 거리(30)보다 넓어야** 한다.
+## 필드 가장자리에 선 캐릭터를 최대로 당겨 뒤로 빼면 카메라가 필드 밖 (최대 29.8)에 선다.
+## 12 였을 때 그 자리에서 지면 끝이 보여 필드가 공중에 뜬 판으로 읽혔다 (2026-10-25 렌더).
+## 플레이 경계는 그대로 40×28 이고 이 여유는 **보이는 땅**만 늘린다.
+## 32 → 105×93 = 9765정점 · 19136삼각형. 1유닛 격자라 여전히 싸다.
+const MARGIN := 32.0
 ## 큰 결 — 0.03 은 33유닛 파장. 필드 폭 40 에 결이 하나 남짓 걸린다.
 const HILL_FREQ := 0.03
 const HILL_OCTAVES := 3
@@ -62,12 +65,26 @@ const ROCK_SOFT := 0.05
 ## 암석은 식생과 **명도가 같아야** 한다. 어둡게 두면 경사가 그림자 얼룩으로 읽힌다(2026-10-24 렌더).
 const ROCK_DRY := Color(0.64, 0.62, 0.57)
 const ROCK_MAX := 0.40
+## 오솔길 — 정점색으로만 긴다. 폭 1.4유닛(캐릭터 1.4폭)에 좌우 0.45씩 부드럽게 섞는다.
+## 폭을 넓히면 발밑에서 화면 1/3을 길이 차지한다 — 3인칭 기본 거리 4.2에서 화면 폭이 약 7유닛이다.
+const PATH_HALF := 0.7
+const PATH_SOFT := 0.45
+## 흙색 — 바이옴 틴트를 15% 섞어 눈·화산 지형에서도 그 바이옴의 흙으로 읽힌다.
+## 너무 많이 섞으면 잔디와 대비가 죽어 멀리서 길이 안 보인다(2026-10-25 첫 렌더).
+const PATH_EARTH := Color(0.58, 0.45, 0.30)
 
 var field: Vector2
+## 이 지형이 놓이는 **월드** 위치. 청크 스트리밍이 청크마다 다른 원점을 준다.
+## 높이함수는 월드 좌표계의 함수다 — 원점이 달라도 이음매가 생기지 않는다.
+var origin := Vector2.ZERO
+## 판 바깥으로 더 뜨는 폭. 청크 메시는 0 — 이웃 청크가 그 자리를 채운다.
+var margin := MARGIN
 var seed_value: int
 var relief: float
 ## 평탄화할 지점(x, z) — 조우 자리. 비어 있으면 지형 그대로다.
 var flats: Array = []
+## 오솔길 — `PackedVector2Array` 폴리라인의 배열. 정점색만 바꾸므로 지형 높이는 그대로다.
+var trails: Array = []
 var flat_radius := FLAT_RADIUS
 var _flat_heights: Array = []
 var _hill: FastNoiseLite
@@ -78,12 +95,17 @@ var _grain: FastNoiseLite
 
 
 func _init(field_size: Vector2, scene_seed: int, relief_amount: float,
-		flat_points: Array = [], radius: float = FLAT_RADIUS) -> void:
+		flat_points: Array = [], radius: float = FLAT_RADIUS,
+		trail_lines: Array = [], origin_at: Vector2 = Vector2.ZERO,
+		margin_size: float = MARGIN) -> void:
 	field = field_size
+	origin = origin_at
+	margin = margin_size
 	seed_value = scene_seed
 	relief = relief_amount
 	flats = flat_points
 	flat_radius = radius
+	trails = trail_lines
 	_hill = _make_noise(HILL_FREQ, HILL_OCTAVES)
 	_detail = _make_noise(DETAIL_FREQ, DETAIL_OCTAVES)
 	_warp = _make_noise(WARP_FREQ, 2)
@@ -93,6 +115,47 @@ func _init(field_size: Vector2, scene_seed: int, relief_amount: float,
 	# 평탄화가 자기 자신을 참조하게 된다.
 	for point in flats:
 		_flat_heights.append(_raw_height(point.x, point.y))
+
+
+static func make_trail(field_size: Vector2, scene_seed: int) -> PackedVector2Array:
+	## 필드를 세로로 가로지르는 오솔길 — 남쪽(카메라 쪽)에서 북쪽으로 세 번 꺾인다.
+	## 시드가 같으면 같은 길이다 — 스크린샷·눈 검토가 흔들리지 않는다.
+	var rng := RandomNumberGenerator.new()
+	rng.seed = scene_seed
+	var points := PackedVector2Array()
+	var steps := 4
+	for i in steps + 1:
+		var t := float(i) / float(steps)
+		var bend := 0.0
+		if i > 0 and i < steps:
+			bend = rng.randf_range(-1.0, 1.0) * field_size.x * 0.12
+		points.append(Vector2(clampf(field_size.x * 0.45 + bend, 4.0, field_size.x - 4.0),
+			field_size.y * t))
+	return points
+
+
+static func trail_distance(point: Vector2, trail: PackedVector2Array) -> float:
+	## 폴리라인까지의 최단 거리. 선분마다 내린 발의 거리 중 최소.
+	if trail.size() < 2:
+		return INF
+	var best := INF
+	for i in trail.size() - 1:
+		var a := trail[i]
+		var ab := trail[i + 1] - a
+		var length_squared := ab.length_squared()
+		var t := 0.0 if length_squared <= 0.0 else clampf((point - a).dot(ab) / length_squared, 0.0, 1.0)
+		best = minf(best, point.distance_to(a + ab * t))
+	return best
+
+
+func path_weight(x: float, z: float) -> float:
+	## 길 위면 1, 가장자리로 갈수록 0. 정점색에서만 쓴다.
+	if trails.is_empty():
+		return 0.0
+	var best := INF
+	for trail in trails:
+		best = minf(best, trail_distance(Vector2(x, z), trail))
+	return 1.0 - smoothstep(PATH_HALF, PATH_HALF + PATH_SOFT, best)
 
 
 func _make_noise(frequency: float, octaves: int) -> FastNoiseLite:
@@ -134,35 +197,61 @@ func vertex_count() -> int:
 
 
 func _cols() -> int:
-	return int(ceil((field.x + MARGIN * 2.0) / STEP))
+	return int(ceil((field.x + margin * 2.0) / STEP))
 
 
 func _rows() -> int:
-	return int(ceil((field.y + MARGIN * 2.0) / STEP))
+	return int(ceil((field.y + margin * 2.0) / STEP))
+
+
+func window_rect() -> Rect2:
+	## 기본 창 — 필드 + 사방 여백. 카메라가 필드 끝에서 뒤로 물러나도 뜬 땅이 보인다.
+	return Rect2(origin - Vector2(margin, margin), field + Vector2(margin, margin) * 2.0)
 
 
 func build(base: Color, tints: Dictionary = {}) -> ArrayMesh:
-	## 높이필드 한 장. 법선은 높이 함수의 기울기로 직접 계산한다 — 삼각형 격자가
-	## 법선에 새지 않아 플랫 셰이딩처럼 면이 드러나지 않는다.
-	var cols := _cols()
-	var rows := _rows()
+	## 높이필드 한 장 — 기본 창(필드 + 여백).
+	return build_region(window_rect(), base, tints)
+
+
+func build_region(rect: Rect2, base: Color, tints: Dictionary = {}) -> ArrayMesh:
+	## **임의 구역**의 메시. 청크 스트리밍이 청크 하나씩 뜨는 데 쓴다.
+	## 높이함수는 월드 좌표의 함수라 이웃 청크와 경계 정점이 정확히 만난다 (이음새 없음).
+	## 법선은 높이 함수의 기울기로 직접 계산한다 — 삼각형 격자가 법선에 새지 않는다.
+	var cols := int(ceil(rect.size.x / STEP))
+	var rows := int(ceil(rect.size.y / STEP))
 	var heights := PackedFloat32Array()
-	var raw := PackedFloat32Array()
 	heights.resize((cols + 1) * (rows + 1))
-	raw.resize((cols + 1) * (rows + 1))
+	# 이 구역에 닿는 평탄 자리·길만 추린다 — 청크마다 49개 길을 전부 훑으면 정점 하나가
+	# 길 49개 × 선분을 재느라 생성이 청크 수에 비례해 느려진다 (2026-10-26 실측).
+	var near_flats := _near_flats(rect)
+	var near_trails := _near_trails(rect)
 	for j in rows + 1:
 		for i in cols + 1:
-			heights[j * (cols + 1) + i] = height_at(i * STEP - MARGIN, j * STEP - MARGIN)
-			raw[j * (cols + 1) + i] = _raw_height(i * STEP - MARGIN, j * STEP - MARGIN)
+			var wx := rect.position.x + i * STEP
+			var wz := rect.position.y + j * STEP
+			heights[j * (cols + 1) + i] = _height_local(near_flats, wx, wz)
+	# 정점색 이웃 샘플은 **한 칸 바깥까지** 뜬다. 청크 경계에서 배열 끝으로 자르면
+	# 기울기·오목 판정이 실제 지형이 아니라 경계값을 보아, 청크 사이에 세로 이음새가 생긴다.
+	var pad := 1
+	var stride := cols + 1 + pad * 2
+	var raw := PackedFloat32Array()
+	raw.resize(stride * (rows + 1 + pad * 2))
+	for j in rows + 1 + pad * 2:
+		for i in stride:
+			var wx := rect.position.x + (i - pad) * STEP
+			var wz := rect.position.y + (j - pad) * STEP
+			raw[j * stride + i] = _raw_height(wx, wz)
 
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for j in rows + 1:
 		for i in cols + 1:
-			var x := i * STEP - MARGIN
-			var z := j * STEP - MARGIN
+			var x := rect.position.x + i * STEP
+			var z := rect.position.y + j * STEP
 			var h := heights[j * (cols + 1) + i]
-			tool.set_color(_vertex_color(base, tints, raw, cols, i, j))
+			tool.set_color(_vertex_color(base, tints, raw, stride - 1, i + pad, j + pad,
+				rect.position - Vector2(pad, pad) * STEP, near_trails))
 			tool.set_normal(_normal_at(x, z))
 			tool.add_vertex(Vector3(x, h, z))
 	for j in rows:
@@ -177,6 +266,67 @@ func build(base: Color, tints: Dictionary = {}) -> ArrayMesh:
 	return tool.commit()
 
 
+func _near_flats(rect: Rect2) -> Array:
+	## 이 구역의 높이에 영향을 주는 평탄 자리만 — [자리, 고정 높이] 쌍.
+	var pad := flat_radius + FLAT_FEATHER
+	var grown := rect.grow(pad)
+	var out: Array = []
+	for i in flats.size():
+		var point: Vector2 = flats[i]
+		if grown.has_point(point):
+			out.append([point, float(_flat_heights[i])])
+	return out
+
+
+func _near_trails(rect: Rect2) -> Array:
+	## 이 구역의 색에 닿는 오솔길만. 그 밖의 길은 `path_weight` 가 0 이라 결과가 같다.
+	if trails.is_empty():
+		return []
+	var grown := rect.grow(PATH_HALF + PATH_SOFT)
+	var out: Array = []
+	for trail in trails:
+		if _trail_touches(trail, grown):
+			out.append(trail)
+	return out
+
+
+static func _trail_touches(trail: PackedVector2Array, rect: Rect2) -> bool:
+	## 정점은 밖인데 선분이 구역을 가로지르는 경우가 있다 — 선분 상자로 본다.
+	for point in trail:
+		if rect.has_point(point):
+			return true
+	for i in trail.size() - 1:
+		var a := trail[i]
+		var b := trail[i + 1]
+		var box := Rect2(Vector2(minf(a.x, b.x), minf(a.y, b.y)), (b - a).abs())
+		if rect.intersects(box):
+			return true
+	return false
+
+
+func _height_local(near_flats: Array, x: float, z: float) -> float:
+	## 구역 안 평탄 자리만 적용한 높이. 반경 밖은 이미 weight 0 이라 전역 값과 같다.
+	if relief <= 0.0:
+		return 0.0
+	var h := _raw_height(x, z)
+	for pair in near_flats:
+		var point: Vector2 = pair[0]
+		var away := Vector2(x - point.x, z - point.y).length()
+		var weight := 1.0 - smoothstep(flat_radius, flat_radius + FLAT_FEATHER, away)
+		if weight > 0.0:
+			h = lerpf(h, float(pair[1]), weight)
+	return h
+
+
+func _path_local(near_trails: Array, x: float, z: float) -> float:
+	if near_trails.is_empty():
+		return 0.0
+	var best := INF
+	for trail in near_trails:
+		best = minf(best, trail_distance(Vector2(x, z), trail))
+	return 1.0 - smoothstep(PATH_HALF, PATH_HALF + PATH_SOFT, best)
+
+
 func _normal_at(x: float, z: float) -> Vector3:
 	# 중심차분. 2*STEP 로 나눠 유닛당 기울기를 얻는다.
 	# **평탄화를 빼고** 잰다. 평탄면 정점이 모두 위를 보면 조우 자리가 밝은 원판으로 뜬다 —
@@ -187,7 +337,8 @@ func _normal_at(x: float, z: float) -> Vector3:
 
 
 func _vertex_color(base: Color, tints: Dictionary,
-		raw: PackedFloat32Array, cols: int, i: int, j: int) -> Color:
+		raw: PackedFloat32Array, cols: int, i: int, j: int,
+		start: Vector2 = Vector2.ZERO, near_trails: Array = []) -> Color:
 	## 높이 → 골은 차갑게, 능선은 따뜻하게. 경사 → 암석. 얼룩 → 한 색으로 눕지 않게.
 	## 색은 전부 **평탄화를 뺀** 높이에서 낸다 — 조우를 누른 자리가 밝은 원판으로 뜨지 않게.
 	var row := cols + 1
@@ -197,8 +348,8 @@ func _vertex_color(base: Color, tints: Dictionary,
 	var dz := raw[mini(j + 1, last_row) * row + i] - raw[maxi(j - 1, 0) * row + i]
 	var slope := sqrt(dx * dx + dz * dz) / (2.0 * STEP)
 
-	var x := i * STEP - MARGIN
-	var z := j * STEP - MARGIN
+	var x := start.x + i * STEP
+	var z := start.y + j * STEP
 	var patch := _patch.get_noise_2d(x, z) * 0.5 + 0.5
 	var grain := _grain.get_noise_2d(x, z) * 0.5 + 0.5
 	var shade := 1.0 - PATCH_GAIN * 0.5 + PATCH_GAIN * patch
@@ -218,6 +369,11 @@ func _vertex_color(base: Color, tints: Dictionary,
 		tint = tint.lerp(Color.from_hsv(base.h, minf(1.0, base.s + 0.06), base.v * 0.90), minf(1.0, -here / span) * 0.5)
 	else:
 		tint = tint.lerp(Color.from_hsv(base.h + 0.02, base.s * 0.92, base.v * 1.10), minf(1.0, here / span) * 0.5)
+	# 오솔길 — 높이·경사보다 먼저 칠하되 돌은 위에 덮게 둔다(급경사에 난 길은 자연스럽다).
+	var path_mix := _path_local(near_trails, x, z)
+	if path_mix > 0.0:
+		var earth := PATH_EARTH * shade
+		tint = tint.lerp(earth.lerp(tint, 0.15), path_mix)
 	var rock := ROCK_DRY
 	var rock_tint: Variant = tints.get("rock", null)
 	if rock_tint is Color:
