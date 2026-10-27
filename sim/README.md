@@ -3,6 +3,7 @@
 | 파일 | 무엇을 잠그는가 |
 |---|---|
 | `gacha.py` | 소환 확률표·천장·종족 롤 재현 (확정 #32·#33·#11·#16·#17) |
+| `foodweb.py` | 377종 먹이그물 구조와 26바이옴 근원자원 정합 (E-1~E-7) |
 | `ecology.py` | 12시즌 순환 모델 재현 — 원본 `audit_sim.py` 포팅 (S-1~S-7 · Godot 패리티 P-1) |
 
 ## `gacha.py` 가 하는 일
@@ -50,34 +51,39 @@ GATE OK: 확정 #32 확률표·#11 종족 롤 재현 (표본 200000, seed 265)
 | ★N 분포가 정본 밖입니다 | 그 등급의 관측 비율이 정본에서 3시그마를 넘었다 — 확률표나 추첨 방식이 틀렸다 |
 | shaped 비율이 정본 밖입니다 | 종족 롤이 shaped 5% 계약에서 벗어났다 |
 
-## GDScript 본체
+## `foodweb.py` — 먹이그물 정적 감사
 
-`godot/core/gacha.gd` 가 같은 상수를 선언하고, `godot/tests/unit/test_gacha.gd` 가 그 값을 검사한다.
-포팅 순서(예정): combat → summon → estate → party → tower → economy.
+생태계 시스템(출현·사체·분해)을 붙이기 전에 **관계 데이터가 스스로 모순되지 않는지** 잠그는 게이트다.
+읽는 곳은 `data/monsters.json`(143) · `data/ambient.json`(234) · `data/ecology_codex.json`(377) ·
+`data/biomes.json`(26) · `data/ecology_energy_channels.json`(근원자원 K·r · 채널 이름) 다섯이다.
 
-## 이전 판이 틀렸던 것 (기록)
-
-| 이전 판 | 바로잡은 내용 |
+| 검사 | 계약 |
 |---|---|
-| `PULLS = 130` — "W0 130연 게이트 재현" | 원본에 그런 게이트가 없다. W0 는 웹 껍데기 단계이고 소환 분포 게이트는 W1 이다 (원본 대조) |
-| `expected_shaped = 6.5` (= 없는 횟수 × 5%) | 5% 는 종족 롤의 shaped 비율이지 소환 횟수에 곱하는 배율이 아니다 (원본 대조) |
-| `D-265` 를 소환 게이트로 표기 | D-265 는 층 미션 시스템 — 주 미션 7종 + 세계 전용 특수 20종 (원본 대조) |
-| 상수 이름 `LEGACY_COVERAGE` | `LEGACY_RATE` 로 바꿨다 — 값 0.95 는 그대로다 (원본 대조) |
-| "원본 소스는 아직 한 줄도 읽지 못했다" | 2026-10-17에 클론해서 읽었다 (원본 대조) |
+| E-1 | 종 377 = 전투 143 + 비전투 234 · id 중복 0 · 도감 총계와 일치 |
+| E-2 | `predators` 가 실존 종만 가리킨다 — `prey` 의 모르는 이름은 미등재 자원으로 보고만 한다 (08) |
+| E-3 | 쌍방 정합 — `A.prey` 에 B 가 있으면 `B.predators` 에 A 가 있다 (08 §3-6) |
+| E-4 | 고아 0 — `prey`·`predators` 가 둘 다 빈 종 (`elemental`·`mimic` 제외, 08 §2) |
+| E-5 | 순환 0 — A→B→A |
+| E-6 | 0간선 바이옴 0 |
+| E-7 | 근원자원·채널의 `biomeId` 가 `biomes.json` 의 id 와 일치 (26/26) |
 
-## 다음 작업 — 상수 단일 소스화
+```bash
+./.venv/bin/python sim/foodweb.py           # 26바이옴 표 + 판정
+./.venv/bin/python sim/foodweb.py --json    # 기계용
+./.venv/bin/python sim/foodweb.py --data-dir /tmp/eco   # 검사기 자체 시험
+```
 
-같은 상수가 `sim/gacha.py` · `godot/core/gacha.gd` · `godot/tests/unit/test_gacha.gd` 세 곳에 따로 박혀 있다.
-이전 판은 "값을 대조하기 전에 통합하면 틀린 숫자를 한 곳에 예쁘게 모으는 것"이라며 통합을 미뤘고, 그 판단은 그때는 맞았다.
-지금은 값이 원본 대조로 확정됐으므로 통합할 수 있다. 계획:
+**판정에 쓰지 않는 것**: 사슬 깊이(GDD 는 하한을 정하지 않았다) · 미등재 자원 이름(08 은 자원 표기라 했다).
+둘 다 표에 숫자만 낸다. **조우 편성·출현표는 이 도구가 다시 계산하지 않는다** — 런타임 규칙을 그대로 도는
+게임 쪽 도구가 정본이고, 파이썬에 두 번째 규칙을 만들면 둘이 갈라진다.
 
-1. `data/` 아래에 상수 JSON 하나를 만든다 (이름은 아직 미정 — 예: game_const.json).
-2. `sim/gacha.py` 와 `godot/core/gacha.gd` 가 그 JSON을 읽는다.
-3. 테스트는 값을 다시 적지 않고 JSON에서 읽어 비교한다 — 그래야 JSON을 고쳤을 때 테스트가 실제로 깨진다.
-4. `tools/review_docs.py` 의 CONST_DRIFT·NUMBER_CONFLICT 검사가 코드 상수와 JSON·문서 표기의 불일치를 잡는다.
+### 서고 별칭 (`biome_archive` ↔ `biome_library`)
 
-아직 하지 않았다. 세 곳이 지금 같은 값인 것은 맞지만, 한 곳만 고치고 나머지를 잊으면
-파이썬 게이트와 Godot 런타임이 조용히 다른 게임이 된다.
+`ecology_energy_channels.json` 의 근원자원·채널은 서고를 `biome_archive` 로 부르는데
+`biomes.json` 의 id 는 `biome_library` 다. 데이터가 틀린 것이 아니다 — 원본 생성기가 그 이름을 쓰고,
+`sim/center/sync_pages.py` 61-64 가 같은 별칭을 문서화한다. 06 §G2 도 "데이터 코드 `biome_library` 유지"다.
+E-7 은 이 쌍만 별칭으로 풀어 26/26 을 확인한다. **모르는 id 가 새로 생기면 실패한다** — 별칭을 늘리려면
+여기와 `sync_pages.py` 를 같이 고쳐야 한다.
 
 ## `ecology.py` — 계절 순환 모델 재현 (S-1~S-7)
 
@@ -139,3 +145,32 @@ P-1 검사가 픽스처가 낡지 않았는지 매 게이트에서 확인한다.
 
 **이 도구가 하지 않는 것**: 플레이어 사냥 압력(원본에도 식이 없다) · 원본의 나머지 검사 중
 이 저장소 데이터에 없는 것(JS 소스 존재 확인 등). 마르코프·φ 수치는 원본에서 온 것이고 우리가 고른 값이 아니다.
+
+## GDScript 본체
+
+`godot/core/gacha.gd` 가 같은 상수를 선언하고, `godot/tests/unit/test_gacha.gd` 가 그 값을 검사한다.
+포팅 순서(예정): combat → summon → estate → party → tower → economy.
+
+## 이전 판이 틀렸던 것 (기록)
+
+| 이전 판 | 바로잡은 내용 |
+|---|---|
+| `PULLS = 130` — "W0 130연 게이트 재현" | 원본에 그런 게이트가 없다. W0 는 웹 껍데기 단계이고 소환 분포 게이트는 W1 이다 (원본 대조) |
+| `expected_shaped = 6.5` (= 없는 횟수 × 5%) | 5% 는 종족 롤의 shaped 비율이지 소환 횟수에 곱하는 배율이 아니다 (원본 대조) |
+| `D-265` 를 소환 게이트로 표기 | D-265 는 층 미션 시스템 — 주 미션 7종 + 세계 전용 특수 20종 (원본 대조) |
+| 상수 이름 `LEGACY_COVERAGE` | `LEGACY_RATE` 로 바꿨다 — 값 0.95 는 그대로다 (원본 대조) |
+| "원본 소스는 아직 한 줄도 읽지 못했다" | 2026-10-17에 클론해서 읽었다 (원본 대조) |
+
+## 다음 작업 — 상수 단일 소스화
+
+같은 상수가 `sim/gacha.py` · `godot/core/gacha.gd` · `godot/tests/unit/test_gacha.gd` 세 곳에 따로 박혀 있다.
+이전 판은 "값을 대조하기 전에 통합하면 틀린 숫자를 한 곳에 예쁘게 모으는 것"이라며 통합을 미뤘고, 그 판단은 그때는 맞았다.
+지금은 값이 원본 대조로 확정됐으므로 통합할 수 있다. 계획:
+
+1. `data/` 아래에 상수 JSON 하나를 만든다 (이름은 아직 미정 — 예: game_const.json).
+2. `sim/gacha.py` 와 `godot/core/gacha.gd` 가 그 JSON을 읽는다.
+3. 테스트는 값을 다시 적지 않고 JSON에서 읽어 비교한다 — 그래야 JSON을 고쳤을 때 테스트가 실제로 깨진다.
+4. `tools/review_docs.py` 의 CONST_DRIFT·NUMBER_CONFLICT 검사가 코드 상수와 JSON·문서 표기의 불일치를 잡는다.
+
+아직 하지 않았다. 세 곳이 지금 같은 값인 것은 맞지만, 한 곳만 고치고 나머지를 잊으면
+파이썬 게이트와 Godot 런타임이 조용히 다른 게임이 된다.

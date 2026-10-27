@@ -42,10 +42,12 @@ GATES = [
     ("tools/check_fusion.py", "fusion", []),
     ("tools/check_numbers.py", "numbers", []),
     ("tools/check_monsters.py", "monsters", []),
+    ("sim/foodweb.py", "foodweb", []),
     ("tools/check_job_profiles.py", "jobai", []),
     ("sim/gacha.py", "gacha", []),
     ("sim/center/sims/gen_husbandry_roster.py", "husbandry", ["--check"]),
     ("sim/center/sims/gen_block_roster.py", "blockroster", ["--check"]),
+    ("sim/center/sims/promote_prey_roster.py", "preyroster", ["--check"]),
     ("sim/center/sync_pages.py", "pages", ["--quiet"]),
 ]
 SLOW = [("tools/gdd_job_pending.py", "gddjob"), ("tools/gen_gdd_revised.py", "gddrev")]
