@@ -1,6 +1,10 @@
 extends SceneTree
 ## 실플레이 하네스 — 진짜 게임 루프를 창 모드로 돌리며 탑까지 걸어가 시점을 벽으로 돌린다.
-## `godot --path godot -s tools/shot_wall_feel.gd` (실시간 — headless 아님)
+## `godot --path godot --fixed-fps 60 -s tools/shot_wall_feel.gd` (창 모드 — headless 아님)
+## 스텝을 60fps 로 고정하는 이유 — 스텝(초×60프레임)과 시점 입력(프레임당 도)이 60fps 기준으로
+## 적혀 있다. 고정 없이 돌리면 기계 fps(이 맥에서 22fps)만큼 입력 회전도 같이 느려져
+## "60°/s" 가 실제로는 43°/s 가 된다. 그래도 **프레임당 수치·게임 시간**은 같은 뜻이므로
+## 두 값(고정/비고정)을 나란히 견줄 수 있다.
 ## 결과: `screenshots/wall_feel/sheet.png` + 프레임별 카메라 수치 출력
 ##
 ## 재는 것 — 스윙이 도는 동안 **카메라 방향이 프레임당 몇 도를 도는가**와 **붐이 몇 유닛 움직이는가**.
@@ -48,6 +52,8 @@ func _initialize() -> void:
 	var hide_lo := INF
 	var hide_hi := 0.0
 	var dts: Array = []
+	var game_time := 0.0
+	var hidden_time := 0.0
 	var t0 := Time.get_ticks_usec()
 	# ── 1단계: 탑까지 걷는다 (실제 move 의도 — 속도·조향 전부 게임 경로).
 	var walked := 0
@@ -73,6 +79,8 @@ func _initialize() -> void:
 			var now := Time.get_ticks_usec()
 			dts.append(float(now - t0) / 1000000.0)
 			t0 = now
+			var dt := node.get_process_delta_time()
+			game_time += dt
 			var yaw: float = view.camera_yaw()
 			var swing: float = view.camera_swing()
 			var boom: float = view.camera_boom()
@@ -91,6 +99,7 @@ func _initialize() -> void:
 			step_min = minf(step_min, boom)
 			if boom < FonsView3D.CAMERA_AVATAR_FADE_NEAR:
 				hidden += 1
+				hidden_time += dt
 				step_hidden += 1
 				hide_lo = minf(hide_lo, boom)
 				hide_hi = maxf(hide_hi, boom)
@@ -105,10 +114,10 @@ func _initialize() -> void:
 			rad_to_deg(view.camera_yaw()), step_hidden])
 	dts.sort()
 	print("카메라 방향 최대 회전 %.1f°/프레임 (%s) · 프레임당 최대 붐 변화 %.3f유닛" % [max_turn, at_step, max_boom])
-	print("붐 최단 %.2f · 영웅이 사라진 프레임 %d/%d (붐 %.2f~%.2f)" % [min_boom, hidden, frame,
-		0.0 if hide_lo == INF else hide_lo, hide_hi])
-	print("프레임 간격 — 최소 %.0fms · 중간 %.0fms · 최대 %.0fms (평균 %.0f fps)" % [dts[0] * 1000.0,
-		dts[dts.size() / 2] * 1000.0, dts[-1] * 1000.0, float(frame) / maxf(0.001, dts.reduce(func(a, b): return a + b, 0.0))])
+	print("붐 최단 %.2f · 영웅이 사라진 프레임 %d/%d = 게임 시간 %.2f초 (붐 %.2f~%.2f)" % [min_boom, hidden, frame,
+		hidden_time, 0.0 if hide_lo == INF else hide_lo, hide_hi])
+	print("게임 시간 %.2f초 / 실시간 %.2f초 — 프레임당 평균 %.1fms (스텝 고정이면 앞의 둘이 다르다)" % [
+		game_time, dts.reduce(func(a, b): return a + b, 0.0), 1000.0 * game_time / maxf(1.0, float(frame))])
 	await _sheet(shots)
 	quit()
 
