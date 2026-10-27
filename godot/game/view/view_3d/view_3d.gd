@@ -1372,11 +1372,12 @@ func _sync_kit(entities: Array) -> void:
 		var coord := FonsExplore.chunk_of(origin)
 		want_coords[coord] = true
 		var avoid := _kit_avoid(entities, origin)
+		var clear := _kit_clear(origin)
 		# 조우가 스트리밍되면 그 청크만 다시 깐다 — 나머지는 그대로 둔다.
-		var key := str(avoid)
+		var key := "%s|%s" % [str(avoid), str(clear)]
 		if _chunk_kits.has(coord) and String(_chunk_kit_key.get(coord, "")) == key:
 			continue
-		pending.append({"coord": coord, "origin": origin, "avoid": avoid, "key": key})
+		pending.append({"coord": coord, "origin": origin, "avoid": avoid, "clear": clear, "key": key})
 	for coord in _chunk_kits.keys():
 		if not want_coords.has(coord):
 			_drop_chunk_kit(coord)
@@ -1395,6 +1396,7 @@ func _sync_kit(entities: Array) -> void:
 		var coord: Vector2i = item["coord"]
 		var origin: Vector2 = item["origin"]
 		var avoid: Array = item["avoid"]
+		var clear: Array = item["clear"]
 		_drop_chunk_kit(coord)
 		# 키트는 청크 로컬 좌표로 놓는다 — 뿌리만 월드로 옮겼다.
 		var root := Node3D.new()
@@ -1412,7 +1414,7 @@ func _sync_kit(entities: Array) -> void:
 		var normal := func(x: float, z: float) -> Vector3:
 			return terrain_normal(x + origin.x, z + origin.y)
 		var count := FonsBiomeKit.build(root, scene, _field, _chunk_seed(origin), avoid, tints,
-			false, height, normal, blockers, trails, draw_end, FonsBiomeKit.plan(_biome))
+			false, height, normal, blockers, trails, draw_end, FonsBiomeKit.plan(_biome), clear)
 		# 가림 원통은 로컬 좌표로 나온다 — 카메라는 월드로 보므로 여기서 옮긴다.
 		for entry in blockers:
 			entry["pos"] = (entry["pos"] as Vector3) + Vector3(origin.x, 0.0, origin.y)
@@ -1424,6 +1426,27 @@ func _sync_kit(entities: Array) -> void:
 	_rebuild_blockers()
 	# 새로 깐 키트만 덮는다(모듈이 이미 덮은 면은 건너뛴다).
 	_toon.apply(_kit_root)
+
+
+func _kit_clear(origin: Vector2) -> Array:
+	## 비워 둘 구역 — **탑 광장**이다. 플레이어가 시작하고 후퇴해 돌아오는 자리라 여기에
+	## 랜드마크가 서면 카메라가 시작하자마자 바위에 막힌다 (2026-10-28 실측: 동굴 청크 (0,0)
+	## 랜드마크 중심이 시작 자리에서 2.54유닛 · 카메라 24방향 중 16방향 붐 접힘).
+	## 반경은 소환진 고리 + **카메라 기본 거리** — 그 자리에서 카메라를 어느 쪽으로 돌려도
+	## 광장 안에서는 부품에 닿지 않는다. 부품 발자국은 키트가 더한다.
+	var out: Array = []
+	if _tower_mark.is_empty():
+		return out
+	var at: Vector3 = _tower_mark.get("pos", Vector3.ZERO)
+	if at.x < origin.x or at.x > origin.x + _field.x:
+		return out
+	if at.z < origin.y or at.z > origin.y + _field.y:
+		return out
+	out.append({
+		"pos": Vector2(at.x - origin.x, at.z - origin.y),
+		"radius": float(_tower_mark.get("radius", 0.0)) + CAMERA_DISTANCE,
+	})
+	return out
 
 
 func _kit_avoid(entities: Array, origin: Vector2) -> Array:

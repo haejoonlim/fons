@@ -637,3 +637,67 @@ func test_props_keep_off_the_trail_and_the_landmark_sits_beside_it() -> void:
 	var landmark_point := Vector2(landmark.position.x, landmark.position.z)
 	assert_gt(FonsTerrain.trail_distance(landmark_point, trail), 1.0, "랜드마크는 길가에 선다")
 	parent.free()
+
+
+func _plaza() -> Array:
+	## 소환진 고리(3.4) + 카메라 기본 거리(4.2) — 뷰가 넘기는 광장 구역과 같은 반경.
+	return [{"pos": Vector2(20.0, 14.0), "radius": 7.6}]
+
+
+func test_the_landmark_keeps_out_of_the_plaza() -> void:
+	## 탑 광장은 플레이어가 시작하고 후퇴해 돌아오는 자리다. 그 위에 5.6유닛 봉우리가 서면
+	## 시작하자마자 카메라가 바위에 막힌다 (2026-10-28 실측: 동굴 청크 0,0 랜드마크 중심이
+	## 시작 자리에서 2.54유닛 · 카메라 24방향 중 16방향 붐 접힘 · 최단 0.06).
+	var scene := load("res://assets/art/models/topo_rock_cavern_mountain.glb") as PackedScene
+	assert_not_null(scene, "동굴 키트가 있어야 한다")
+	var trail := FonsTerrain.make_trail(Vector2(40, 28), 7)
+	var parent := Node3D.new()
+	FonsBiomeKit.build(parent, scene, Vector2(40, 28), 7, [], {}, false,
+		Callable(), Callable(), [], [trail], 0.0, {}, _plaza())
+	var landmarks := _names(parent, "landmark_")
+	assert_eq(landmarks.size(), 1, "랜드마크는 하나다")
+	var at := Vector2(landmarks[0].position.x, landmarks[0].position.z)
+	var reach := at.distance_to(Vector2(20.0, 14.0))
+	# 발자국은 **원본 부품**에서 잰다 — 배치된 노드 자신이 메시라 자기가 놓인 자리가 섞인다.
+	var footprint := _source_footprint(scene, "landmark_")
+	assert_gte(reach - footprint, 7.6, "발자국까지 광장 밖이다 (중심 %.2f · 발자국 %.2f)" % [reach, footprint])
+	parent.free()
+
+
+func _source_footprint(scene: PackedScene, prefix: String) -> float:
+	var src := scene.instantiate()
+	var out := 0.0
+	for child in src.get_children():
+		if String(child.name).begins_with(prefix):
+			out = FonsBiomeKit._footprint_radius(child)
+	src.free()
+	return out
+
+
+func test_props_keep_off_the_plaza() -> void:
+	## 소환진 위에 프롭이 서면 플레이어가 서는 자리가 어질러지고, 키 큰 프롭은 카메라도 막는다.
+	var parent := Node3D.new()
+	var count := FonsBiomeKit.build(parent, _scene(["ground_a", "prop_bush"]),
+		Vector2(40, 28), 7, [], {}, false, Callable(), Callable(), [], [], 0.0, {}, _plaza())
+	assert_eq(count, FonsBiomeKit.PROP_COUNT, "광장을 비우고도 프롭은 전부 놓인다")
+	for child in _names(parent, "prop_"):
+		var flat := Vector2(child.position.x, child.position.z)
+		assert_gte(flat.distance_to(Vector2(20.0, 14.0)), 7.6 - 0.001, "프롭은 광장을 비운다")
+	parent.free()
+
+
+func test_the_plaza_slides_the_landmark_along_the_trail() -> void:
+	## 광장을 비운다고 랜드마크를 기본값(남쪽 끝)으로 떨어뜨리면 "길가 랜드마크"라는 뜻이 사라진다.
+	## 자리를 비켜야 하면 길을 따라 밀어 낸다 — 길에서의 거리는 그대로다.
+	var scene := load("res://assets/art/models/topo_rock_cavern_mountain.glb") as PackedScene
+	var trail := FonsTerrain.make_trail(Vector2(40, 28), 7)
+	var parent := Node3D.new()
+	FonsBiomeKit.build(parent, scene, Vector2(40, 28), 7, [], {}, false,
+		Callable(), Callable(), [], [trail], 0.0, {}, _plaza())
+	var landmark: Node3D = _names(parent, "landmark_")[0]
+	var at := Vector2(landmark.position.x, landmark.position.z)
+	var along := FonsTerrain.trail_distance(at, trail)
+	assert_lte(along, FonsBiomeKit.LANDMARK_OFFSET + 0.01, "길에서 비킨 거리는 그대로 (실측 %.2f)" % along)
+	assert_gt(along, FonsBiomeKit.PATH_CLEARANCE, "길 위에 서지는 않는다")
+	assert_gt(at.distance_to(Vector2(20.0, 2.5)), 1.0, "기본값(남쪽 끝)으로 떨어지지 않는다")
+	parent.free()

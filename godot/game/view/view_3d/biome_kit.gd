@@ -67,6 +67,14 @@ const EDGE_MARGIN := 2.5
 const PATH_CLEARANCE := 1.4
 ## 랜드마크를 길에서 옆으로 비키는 거리. 줄기(반지름 0.22)가 길에 안 서고 잎만 살짝 걸친다.
 const LANDMARK_OFFSET := 4.0
+## 랜드마크를 길을 따라 밀어 낼 때의 후보 지점(길 길이 비율). 첫 값이 기본 자리다.
+## 막히면 **길 끝 쪽**으로 민다 — 앞(15% · 북쪽)을 먼저, 그다음 뒤(85%)를 본다.
+## 기본 카메라가 남쪽에 서므로 시작 시야는 북쪽이다: 앞에 선 랜드마크라야 지평선의
+## 표지로 읽히고, 뒤에 서면 플레이어 등 뒤에서 줌을 막는다 (2026-10-28 시트 비교).
+## 한 걸음이 28유닛 길에서 약 5유닛이라 밀린 자리가 원래 자리와 헷갈리지 않는다.
+## 2026-10-28: 탑 광장은 길 한가운데와 겹친다 — 청크 (0,0) 의 55% 자리는 시작 자리에서
+## 2.54유닛이라 카메라 24방향 중 16방향이 접혔다(최단 0.06).
+const LANDMARK_T := [0.55, 0.15, 0.85, 0.3, 0.7]
 ## 카메라 가림으로 보고할 최소 높이 — 이보다 낮은 풀·꽃·바위는 시선을 안 막는다.
 const BLOCKER_HEIGHT := 1.2
 ## 안개가 짙어지는 거리에서 키트 부품을 끈다. 그 무렵 프롭은 땅과 같은 안개색이라 사라져도
@@ -124,7 +132,7 @@ static func build(parent: Node3D, scene: PackedScene, field: Vector2,
 		seed_value: int, avoid: Array = [], tints: Dictionary = {},
 		lay_ground: bool = true, height: Callable = Callable(),
 		normal: Callable = Callable(), blockers: Array = [], trails: Array = [],
-		draw_end: float = 0.0, prop_plan: Dictionary = {}) -> int:
+		draw_end: float = 0.0, prop_plan: Dictionary = {}, clear: Array = []) -> int:
 	## 부품을 parent 아래에 깔고 놓은 수를 돌려준다. parent·scene 이 없으면 0.
 	## `lay_ground` 가 false 면 지면 타일을 깔지 않는다 — 높이필드 지형이 바닥을 맡을 때다.
 	## `height` 는 (x, z) → y 함수다. 주면 높이·랜드마크·프롭이 땅에 붙는다.
@@ -135,6 +143,8 @@ static func build(parent: Node3D, scene: PackedScene, field: Vector2,
 	## 랜드마크는 길가에 선다 — 길 한가운데 나무가 서면 길이 막힌 것처럼 읽힌다.
 	## `draw_end` 를 주면 이번에 놓은 부품이 그 거리에서 꺼진다 (스트리밍 필드의 안개 끝 부근).
 	## 0 이면 예전처럼 거리 제한 없음 — 전투·헤드리스 화면은 안개가 없다.
+	## `clear` 는 **비워 둘 구역** `[{pos: Vector2, radius: float}]` (필드 로컬 좌표)이다. 탑 광장처럼
+	## 플레이어가 서서 카메라를 돌리는 자리 — 거기 랜드마크가 서면 시작하자마자 화면이 막힌다.
 	if parent == null or scene == null or field.x <= 0.0 or field.y <= 0.0:
 		return 0
 	var before := parent.get_child_count()
@@ -150,10 +160,14 @@ static func build(parent: Node3D, scene: PackedScene, field: Vector2,
 		count += _lay_ground(parent, parts[GROUND], field, tints, materials)
 	# 높이 모듈은 땅 자체라 가림이 아니다 — 카메라를 밀면 지형이 아니라 프롭만 피해야 한다.
 	count += _place_at(parent, parts[HEIGHT], _edge_spots(field), rng, tints, materials, height, normal, [])
-	count += _place_at(parent, parts[LANDMARK], [_landmark_spot(field, trails, avoid)],
+	# 랜드마크 발자국까지 구역 밖으로 민다 — 중심만 보면 5유닛짜리 봉우리 어깨가 광장에 걸친다.
+	var landmarks: Array = parts[LANDMARK]
+	var landmark_reach := 0.0 if landmarks.is_empty() else _footprint_radius(landmarks[0])
+	count += _place_at(parent, landmarks,
+		[_landmark_spot(field, trails, avoid, clear, landmark_reach)],
 		rng, tints, materials, height, normal, blockers)
 	count += _scatter_props(parent, parts[PROP], field, rng, avoid, tints, materials, height, normal,
-		blockers, trails, prop_plan)
+		blockers, trails, prop_plan, clear)
 	if draw_end > 0.0:
 		for i in range(before, parent.get_child_count()):
 			_apply_draw_end(parent.get_child(i), draw_end)
@@ -410,29 +424,42 @@ static func _slope_basis(up: Vector3, yaw: float) -> Basis:
 	return Basis(x, y, z)
 
 
-static func _landmark_spot(field: Vector2, trails: Array, avoid: Array) -> Vector2:
+static func _landmark_spot(field: Vector2, trails: Array, avoid: Array,
+		clear: Array = [], reach: float = 0.0) -> Vector2:
 	## 길가 랜드마크 — 길 길이의 55% 지점에서 수직으로 비킨 자리.
-	## 조우·길과 겹치면 반대쪽, 둘 다 막히면 기본값.
+	## 그 자리가 막혔으면 `LANDMARK_T` 순서로 **길을 따라** 다른 지점으로, 다 막히면 기본값.
 	var fallback := Vector2(field.x * 0.5, TILE_SIZE * 0.5)
 	if trails.is_empty():
 		return fallback
 	var trail: PackedVector2Array = trails[0]
-	var at := _trail_at(trail, 0.55)
-	var spot_center: Vector2 = at[0]
-	var dir: Vector2 = at[1]
-	if dir.length_squared() <= 0.0:
-		return fallback
-	var side := Vector2(-dir.y, dir.x) * LANDMARK_OFFSET
-	for side_sign in [1.0, -1.0]:
-		var spot: Vector2 = spot_center + side * side_sign
-		if spot.x < EDGE_MARGIN or spot.x > field.x - EDGE_MARGIN:
+	for at_t in LANDMARK_T:
+		var at := _trail_at(trail, at_t)
+		var spot_center: Vector2 = at[0]
+		var dir: Vector2 = at[1]
+		if dir.length_squared() <= 0.0:
 			continue
-		if spot.y < EDGE_MARGIN or spot.y > field.y - EDGE_MARGIN:
-			continue
-		if _blocked(spot, avoid) or _on_trail(spot, trails):
-			continue
-		return spot
+		var side := Vector2(-dir.y, dir.x) * LANDMARK_OFFSET
+		for side_sign in [1.0, -1.0]:
+			var spot: Vector2 = spot_center + side * side_sign
+			if spot.x < EDGE_MARGIN or spot.x > field.x - EDGE_MARGIN:
+				continue
+			if spot.y < EDGE_MARGIN or spot.y > field.y - EDGE_MARGIN:
+				continue
+			if _blocked(spot, avoid) or _on_trail(spot, trails) or _clear_hit(spot, clear, reach):
+				continue
+			return spot
 	return fallback
+
+
+static func _clear_hit(point: Vector2, clear: Array, reach: float = 0.0) -> bool:
+	## 비워 둘 구역과 겹치는가. `reach` 는 부품 발자국 반경이다.
+	for entry in clear:
+		var row: Dictionary = entry
+		var at: Vector2 = row.get("pos", Vector2.ZERO)
+		var radius := float(row.get("radius", 0.0)) + reach
+		if radius > 0.0 and point.distance_to(at) < radius:
+			return true
+	return false
 
 
 static func _trail_at(trail: PackedVector2Array, t: float) -> Array:
@@ -472,7 +499,7 @@ static func _on_trail(point: Vector2, trails: Array) -> bool:
 static func _scatter_props(parent: Node3D, parts: Array, field: Vector2,
 		rng: RandomNumberGenerator, avoid: Array, tints: Dictionary, materials: Dictionary,
 		height: Callable, normal: Callable, blockers: Array, trails: Array,
-		prop_plan: Dictionary = {}) -> int:
+		prop_plan: Dictionary = {}, clear: Array = []) -> int:
 	if parts.is_empty():
 		return 0
 	var slots := _prop_slots(parts, prop_plan)
@@ -484,7 +511,7 @@ static func _scatter_props(parent: Node3D, parts: Array, field: Vector2,
 	var margin := minf(EDGE_MARGIN, minf(field.x, field.y) * 0.1)
 	# 프롭마다 무작위로 한 점을 던지면 성향을 못 쓴다 — 후보를 미리 깔고 점수를 매긴 뒤
 	# 부품 성향에 가장 맞는 자리를 고른다. 쓴 자리는 다시 안 쓴다(겹치면 하나로 뭉친다).
-	var spots := _spots(field, margin, rng, avoid, height, trails)
+	var spots := _spots(field, margin, rng, avoid, height, trails, clear)
 	var used := {}
 	var anchors := {}
 	var count := 0
@@ -532,7 +559,7 @@ static func _prop_slots(parts: Array, prop_plan: Dictionary) -> Array:
 
 
 static func _spots(field: Vector2, margin: float, rng: RandomNumberGenerator,
-		avoid: Array, height: Callable, trails: Array) -> Array:
+		avoid: Array, height: Callable, trails: Array, clear: Array = []) -> Array:
 	## 후보 자리 — 격자에 흔들어 깔고, 그 자리의 성향 점수(능선 +1 ↔ 골 −1)를 함께 적는다.
 	var out: Array = []
 	var cols := maxi(1, int(floor((field.x - margin * 2.0) / SPOT_STEP)) + 1)
@@ -544,7 +571,7 @@ static func _spots(field: Vector2, margin: float, rng: RandomNumberGenerator,
 				rng.randf_range(-SPOT_JITTER, SPOT_JITTER))
 			point = Vector2(clampf(point.x, margin, field.x - margin),
 				clampf(point.y, margin, field.y - margin))
-			if _too_close(point, avoid) or _on_trail(point, trails):
+			if _too_close(point, avoid) or _on_trail(point, trails) or _clear_hit(point, clear):
 				continue
 			out.append({"pos": point, "ridge": _ridge_score(point, height)})
 	return out
