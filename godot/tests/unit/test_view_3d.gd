@@ -654,6 +654,8 @@ func test_camera_boom_clamps_in_the_field_without_colliders() -> void:
 	]})
 	view._yaw = 0.0
 	view._blockers = [{"pos": Vector3(20.0, 0.0, 17.0), "radius": 0.9, "top": 4.0}]
+	# 시간이 안 흔른 호출은 스무딩을 안 밀므로(2026-10-28), 자리 잡힌 배치를 따로 청한다.
+	view._boom_ready = false
 	view._place_camera()
 	var focus: Vector3 = view.camera_focus()
 	var away: float = view._camera.position.distance_to(focus)
@@ -702,10 +704,33 @@ func test_small_props_still_pull_the_boom_in_instead_of_swinging() -> void:
 	]})
 	view._yaw = 0.0
 	view._blockers = [{"pos": Vector3(20.0, 0.0, 17.0), "radius": 0.9, "top": 4.0}]
+	view._boom_ready = false
+	view._swing_ready = false
 	view._place_camera()
 	assert_almost_eq(view.camera_swing(), 0.0, 0.001, "옆으로 돌지 않는다")
 	assert_lt(view.camera_boom(), 2.2, "붐은 지금처럼 나무 앞에서 접힌다")
 	assert_gt(view.camera_boom(), FonsView3D.CAMERA_AVATAR_FADE_NEAR, "그래도 영웅이 화면에 남는다")
+	view.free()
+
+
+func test_apply_does_not_snap_the_camera_smoothing() -> void:
+	## 걷는 동안에는 스냅샷을 미는 `apply` 가 매 프레임 카메라를 놓는다 — 그때 시간이 안 흘렀다고
+	## 목표로 꽂으면(`delta <= 0` 을 스냅으로 보면) 붐·스윙 스무딩이 통째로 무너진다.
+	## 2026-10-28 실창 실측: 43ms 프레임에서 붐이 1.34 → 4.20 으로 3프레임에 튀었다.
+	var view := FonsView3D.new()
+	var snapshot := {"mode": "field", "field": Vector2(40, 28), "entities": [
+		_entity("avatar", "avatar", Vector3(20, 0, 14)),
+	]}
+	view.mount(snapshot)
+	view._yaw = 0.0
+	view._place_camera()
+	assert_almost_eq(view.camera_boom(), FonsView3D.CAMERA_DISTANCE, 0.01, "전제 — 가림 없음")
+	view._blockers = [{"pos": Vector3(20.0, 0.0, 17.0), "radius": 0.9, "top": 4.0}]
+	view.apply(snapshot)
+	assert_almost_eq(view.camera_boom(), FonsView3D.CAMERA_DISTANCE, 0.01,
+		"apply 는 붐을 목표로 꽂지 않는다 (걷는 중 스냅 금지)")
+	view._process(1.0 / 60.0)
+	assert_lt(view.camera_boom(), FonsView3D.CAMERA_DISTANCE - 0.2, "프레임이 지나면 당겨진다")
 	view.free()
 
 
@@ -735,6 +760,9 @@ func test_camera_stays_out_of_the_wall_through_a_full_turn() -> void:
 	var worst := INF
 	for i in 72:
 		view._yaw = TAU * float(i) / 72.0
+		# 각 방향에서 "자리 잡힌" 자세를 잰다 — 스무딩이 흐르는 중간값이 아니라.
+		view._boom_ready = false
+		view._swing_ready = false
 		view._place_camera()
 		var at: Vector3 = view._camera.position
 		worst = minf(worst, view.camera_boom())
@@ -753,6 +781,10 @@ func _wall_view() -> FonsView3D:
 	]})
 	view._yaw = 0.0
 	view._blockers = [_tower_wall(Vector3(20.0, 0.0, 16.6))]
+	# `mount` 가 이미 한 번 놓았으므로 스무딩을 풀어 둔다 — 테스트의 첫 `_place_camera()` 가
+	# 그 자리에 “자리 잡힌” 배치를 내도록 (2026-10-28: 델타 0 은 스무딩을 안 민다).
+	view._boom_ready = false
+	view._swing_ready = false
 	return view
 
 
