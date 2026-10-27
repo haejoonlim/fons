@@ -289,6 +289,31 @@ func test_pilot_kit_is_laid_into_the_field() -> void:
 	view.free()
 
 
+func test_the_kit_keeps_off_the_tower_plaza() -> void:
+	## 시작 자리(탑 앞 광장)에 랜드마크가 서면 시작하자마자 카메라가 바위에 막힌다.
+	## 뷰가 광장을 키트에 알려 주는지 — 안 알려주면 키트는 소환진 위에 봉우리를 세운다.
+	## 2026-10-28 실측(동굴 청크 0,0): 랜드마크 중심이 시작 자리에서 2.54유닛 ·
+	## 카메라 24방향 중 16방향 붐 접힘. 광장 반경 = 소환진 고리 + 카메라 기본 거리.
+	var view := FonsView3D.new()
+	var tower := {"pos": Vector3(20, 0, 14), "radius": 3.4, "body": 1.2}
+	view.mount({"mode": "field", "field": Vector2(40, 28), "entities": [
+		_entity("avatar", "avatar", Vector3(20, 0, 16.6)),
+	], "biome": "biome_cave", "kit": "topo_rock_cavern_mountain", "tower": tower})
+	var keep := 3.4 + FonsView3D.CAMERA_DISTANCE
+	var checked := 0
+	for root in view._kit_root.get_children():
+		for child in root.get_children():
+			var part := String(child.get_meta("kit_part", ""))
+			if not (part.begins_with("landmark_") or part.begins_with("prop_")):
+				continue
+			var flat := Vector2((child as Node3D).position.x, (child as Node3D).position.z)
+			var away := flat.distance_to(Vector2(20.0, 14.0))
+			assert_gte(away, keep - 0.01, "%s 가 광장 밖에 선다 (%.2f)" % [part, away])
+			checked += 1
+	assert_gt(checked, 0, "랜드마크·프롭이 깔려야 검사가 의미 있다")
+	view.free()
+
+
 func test_field_gets_a_heightfield_and_units_stand_on_it() -> void:
 	## 격자는 타일마다 따로 구운 법선에서 나왔다 — 지면은 한 장의 높이필드다.
 	## 심 좌표는 평면(y=0)이고, 화면만 지형 높이만큼 들어 올린다.
