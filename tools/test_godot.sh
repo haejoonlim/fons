@@ -32,8 +32,45 @@ fail() {
   exit 1
 }
 
-echo "+ godot --headless --import"
-godot --headless --import
+# --- 임포트 단계에 시간 상한을 둔다 ---
+# 2026-10-29 실측: 마운트된 볼륨 하나(/Volumes/BOOTCAMP)의 사용자 공간 파일시스템
+# 데몬이 죽어 마운트가 고아가 되자, 그 볼륨의 메타데이터 조회가 커널에서 영원히 블록됐다.
+# Godot 에디터는 시작할 때 마운트된 볼륨을 열거하므로(샘플러: NSFileManager
+# mountedVolumeURLsIncludingResourceValuesForKeys -> __getattrlist) `--import` 가
+# 첫 줄만 찍고 10분 넘게 멈췄고, 같은 이유로 `/sbin/mount` 까지 멈췄다.
+# 상한이 없으면 게이트가 조용히 매달린다. 임포트가 상한을 넘기면 건너뛰고 GUT 로 간다 —
+# 임포트는 편의 단계이고, 거짓 통과를 실제로 막는 것은 아래 junit 검사다
+# (0건 실행·스크립트 누락). 둘은 그대로 둔다.
+IMPORT_TIMEOUT="${FONS_IMPORT_TIMEOUT:-180}"
+
+bounded() { # bounded <초> <명령...> — 넘기면 SIGKILL, 137 반환
+  local secs="$1"
+  shift
+  "$@" &
+  local cmd_pid=$!
+  ( sleep "$secs"; kill -9 "$cmd_pid" 2>/dev/null ) &
+  local watcher=$!
+  local rc=0
+  wait "$cmd_pid" || rc=$?
+  kill "$watcher" 2>/dev/null || true
+  wait "$watcher" 2>/dev/null || true
+  return "$rc"
+}
+
+echo "+ godot --headless --import (상한 ${IMPORT_TIMEOUT}초)"
+import_status=0
+bounded "$IMPORT_TIMEOUT" godot --headless --import || import_status=$?
+import_skipped=0
+if [ "$import_status" -eq 137 ] || [ "$import_status" -eq 143 ]; then
+  import_skipped=1
+  echo "WARN: 임포트가 ${IMPORT_TIMEOUT}초 안에 끝나지 않아 건너뜁니다 (GUT 는 계속 돈다)." >&2
+  echo "      흔한 원인: 응답하지 않는 마운트 볼륨 때문에 Godot 이 볼륨 열거에서 블록." >&2
+  # 백틱을 쓰지 않는다 — 쌍따옴표 안의 백틱은 명령 치환으로 실행돼, 멈춘 볼륨을
+  # 진단하려는 문구가 그 자리에서 같이 멈춘다 (2026-10-29 실측, 직접 밟음).
+  echo "      확인(macOS): ls -la /Volumes/* 중 멈추는 볼륨이 있는지. 재부팅하면 풀린다." >&2
+elif [ "$import_status" -ne 0 ]; then
+  fail "임포트 실패 (exit=$import_status)"
+fi
 
 echo "+ godot --headless -s addons/gut/gut_cmdln.gd -gexit"
 set +e
@@ -86,5 +123,8 @@ if [ "$gut_status" -ne 0 ]; then
   fail "GUT 실패 (exit=$gut_status) · 테스트 ${tests}건"
 fi
 
+if [ "$import_skipped" -eq 1 ]; then
+  echo "주의: 임포트를 건너뛴 실행입니다 (기존 .godot 캐시 사용). 위 WARN 을 확인하세요."
+fi
 echo "OK: GUT $tests tests passed (junit: $JUNIT)"
 echo "[PASS] godot"
