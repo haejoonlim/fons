@@ -474,3 +474,46 @@ func test_field_log_tells_which_layer_you_walked_into() -> void:
 	field.walk(Vector2.ZERO, 0.0)
 	assert_true(field.log_lines.any(func(line): return String(line).begins_with("접촉 —")),
 		"필드 로그에 접촉 층이 찍힌다")
+
+
+func test_memory_waits_for_the_split_and_lands_once() -> void:
+	## 101층에서 10점을 화력·생존에 나눈다 — 한 번뿐이고 이 런에서 못 바꾼다 (설계 §3-2).
+	var field := _field_at(101)
+	var plain := _field_at(101)
+	assert_true(field.memory_pending(), "101층은 배분을 기다린다")
+	assert_false(field.allocate_memory(5, 6), "10점이 아니면 안 받는다")
+	assert_true(field.allocate_memory(5, 5), "5:5 는 받는다")
+	assert_false(field.memory_pending(), "한 번 받으면 끝")
+	assert_false(field.allocate_memory(10, 0), "두 번째는 안 받는다")
+	assert_eq(field.memory_attack, 5)
+	assert_eq(field.memory_guard, 5)
+	assert_almost_eq(float(field.heroes[0]["atk"]) / float(plain.heroes[0]["atk"]), 3.71293, 0.001,
+		"ATK ×3.71")
+	assert_almost_eq(float(field.heroes[0]["maxHp"]) / float(plain.heroes[0]["maxHp"]), 3.71293, 0.001,
+		"HP ×3.71")
+	assert_true(field.log_lines.any(func(line): return String(line).begins_with("기억 10점 —")),
+		"나눈 값이 로그에 남는다")
+
+
+func test_memory_survives_save_and_load() -> void:
+	## 배분은 런의 일부다 — 불러오면 같은 배율로 서야 한다 (설계 §6).
+	var field := _field_at(101)
+	assert_true(field.allocate_memory(10, 0))
+	var saved := field.to_save()
+	var loaded := FonsFieldState.new()
+	loaded.configure(DataLoader.load_json("races.json"), DataLoader.get_monsters(),
+		DataLoader.get_biomes(), 20261022, 1,
+		DataLoader.load_json("job_tree.json"), DataLoader.load_json("equipment.json"),
+		DataLoader.load_json("job_coef.json"), _ai())
+	assert_true(loaded.restore(saved), "저장을 되살린다")
+	assert_eq(loaded.memory_attack, 10, "화력 10점이 남는다")
+	assert_eq(loaded.memory_guard, 0)
+	assert_almost_eq(float(loaded.heroes[0]["atk"]) / float(_field_at(101).heroes[0]["atk"]),
+		13.785849, 0.01, "ATK ×13.79")
+
+
+func test_memory_is_not_asked_below_the_memory_floor() -> void:
+	## 1~100층은 안 바뀐다 — 배분은 101층에서만 열린다 (설계 §5).
+	var field := _field_at(100)
+	assert_false(field.memory_pending(), "100층에는 물어보지 않는다")
+	assert_false(field.allocate_memory(5, 5), "100층에서는 안 받는다")

@@ -18,6 +18,8 @@ extends Node
 
 const SEED := 20261020
 const EDICT_SCENE := "res://game/ui/edict/edict.tscn"
+## 101층 기억 배분 — 한 번뿐인 선택이라 칙령처럼 HUD 위에 얹고 세계를 멈춘다.
+const MEMORY_SCENE := "res://game/ui/memory/memory.tscn"
 ## 영지 시계를 몇 초마다 보는가. 정산 자체는 하루 한 번이라 이 값은 반응 속도만 정한다.
 const CLOCK_STEP := 1.0
 ## 불만 게이지 색 — 평시는 파티 패널 경보와 같은 호박색, 경고는 붉은색.
@@ -28,6 +30,7 @@ var _field: FonsFieldState = null
 var _estate: FonsEstate = null
 var _view: FonsView = null
 var _edict: Control = null
+var _memory: Control = null
 ## 엔딩 화면을 이미 보여 줬나 — 기록(`ending`)은 저장에 남지만 화면은 한 번이다.
 var _ending_shown := false
 var _move_dir := Vector2.ZERO
@@ -72,6 +75,9 @@ func _ready() -> void:
 	$Hud.add_child(_edict)
 	_edict.chosen.connect(_on_edict_chosen)
 	_edict.closed.connect(_on_edict_closed)
+	_memory = (load(MEMORY_SCENE) as PackedScene).instantiate()
+	$Hud.add_child(_memory)
+	_memory.chosen.connect(_on_memory_chosen)
 	_view.mount(_field.snapshot())
 	_push()
 
@@ -254,6 +260,9 @@ func _restart_run() -> void:
 	_estate.reset_decree_cooldown()
 	if _ending_panel != null:
 		_ending_panel.visible = false
+	if _memory != null:
+		_memory.hide()
+	get_tree().paused = false
 	_ending_shown = false
 
 
@@ -262,6 +271,30 @@ func _push() -> void:
 		_view.apply(_field.snapshot())
 	_update_hud()
 	_sync_ending_panel()
+	_sync_memory_panel()
+
+
+func _sync_memory_panel() -> void:
+	## 101층에 처음 들어선 순간 한 번 — 세계를 멈추고 배분을 받는다.
+	## 나누면 `memory_pending()` 이 거짓이라 다시 묻지 않는다.
+	if _memory == null or _field == null or _memory.visible:
+		return
+	if not _field.memory_pending():
+		return
+	_memory.open(5)
+	get_tree().paused = true
+
+
+func _on_memory_chosen(attack: int, guard: int) -> void:
+	## 101층 배분 — 규칙은 심이 지고, 화면은 고른 숫자만 준다.
+	## 화면은 먼저 닫는다 — 배분이 거절돼도 세계가 멈춘 채로 남으면 안 된다.
+	if _memory != null:
+		_memory.hide()
+	get_tree().paused = false
+	if _field == null or not _field.allocate_memory(attack, guard):
+		return
+	_save()
+	_push()
 
 
 func _sync_ending_panel() -> void:

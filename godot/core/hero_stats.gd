@@ -36,6 +36,14 @@ const LEVEL_AXES := ["HP", "ATK", "MAG", "DEF", "MDEF"]
 const MAX_GRADE := 7        ## ★1~★7 (01 §2)
 const MAX_LEVEL := 130      ## 확정 #34
 
+## 101층 기억 — 100층을 올라온 런이 101층에서 10점을 화력·생존에 나눈다.
+## 1점당 ×1.30 **곱연산**이라 5점이면 ×3.71, 10점이면 ×13.79다.
+## 근거·측정: docs/design/★5_101_120_기억_성장축_설계.md
+const MEMORY_MAX := 10
+const MEMORY_STEP := 0.30
+const MEMORY_ATTACK_AXES := ["ATK", "MAG"]
+const MEMORY_GUARD_AXES := ["HP", "DEF", "MDEF"]
+
 var base: Dictionary = {}
 var weights: Dictionary = {}
 
@@ -80,6 +88,24 @@ static func grade_coeff(grade: int) -> float:
 static func level_coeff(level: int) -> float:
 	## 확정 #34 — 1 + (Lv−1) × 0.05. Lv130 ×7.45.
 	return 1.0 + float(clampi(level, 1, MAX_LEVEL) - 1) * 0.05
+
+
+static func memory_multiplier(points: int) -> float:
+	## 나눈 점수가 만드는 배율. 0점 1.00 · 5점 3.71 · 10점 13.79.
+	return pow(1.0 + MEMORY_STEP, float(clampi(points, 0, MEMORY_MAX)))
+
+
+static func apply_memory(stats: Dictionary, attack: int, guard: int) -> Dictionary:
+	## 101층 배분을 필드스탯에 건다 — 화력은 ATK·MAG, 생존은 HP·DEF·MDEF.
+	## 개체 변량(`varied`) 뒤에 걸어야 변량까지 같은 배율로 커진다.
+	var out := stats.duplicate()
+	var attack_mul := memory_multiplier(attack)
+	var guard_mul := memory_multiplier(guard)
+	for axis in MEMORY_ATTACK_AXES:
+		out[axis] = float(out.get(axis, 0.0)) * attack_mul
+	for axis in MEMORY_GUARD_AXES:
+		out[axis] = float(out.get(axis, 0.0)) * guard_mul
+	return out
 
 
 static func varied(stats: Dictionary, rng, rate: float = 0.07) -> Dictionary:

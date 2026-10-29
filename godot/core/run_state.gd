@@ -12,6 +12,8 @@ extends RefCounted
 const PARTY_SIZE := 4
 const MAX_FLOOR := 130
 const START_FLOOR := 1
+## 기억 배분이 열리는 층 — 100층까지 올라온 런이 101층에서 10점을 받는다.
+const MEMORY_FLOOR := 101
 ## 세이브가 같이 적는 값 — 불러올 때 이 값으로 영웅을 다시 만든다.
 const GRADE := 5
 const LEVEL := 130
@@ -104,6 +106,30 @@ static func _shuffle(rows: Array, rng: RandomNumberGenerator) -> void:
 		rows[j] = tmp
 
 
+static func memory_points(floor_value: int) -> int:
+	## 깊이로만 정해지는 점수 — 101층 10점, 100층 9점, 1층 0점.
+	## 한 번 주고 더 안 준다 (상한이 곧 `MEMORY_MAX`).
+	return clampi(int((floor_value - 1) / 10.0), 0, FonsHeroStats.MEMORY_MAX)
+
+
+static func apply_memory_to_party(party: Array, attack: int, guard: int) -> void:
+	## 이미 걷고 있는 파티에 배분을 건다 — 101층에서 한 번. HP 는 비율을 지킨다.
+	## `heroes_from` 의 배율과 같은 축이다 — 두 경로가 같은 숫자를 내야 한다.
+	if attack <= 0 and guard <= 0:
+		return
+	var attack_mul := FonsHeroStats.memory_multiplier(attack)
+	var guard_mul := FonsHeroStats.memory_multiplier(guard)
+	for hero in party:
+		var max_hp := maxf(1.0, float(hero.get("maxHp", 1)))
+		var ratio := clampf(float(hero.get("hp", 0)) / max_hp, 0.0, 1.0)
+		hero["maxHp"] = int(roundf(max_hp * guard_mul))
+		hero["hp"] = int(roundf(float(hero["maxHp"]) * ratio))
+		for axis in ["atk", "mag"]:
+			hero[axis] = float(hero.get(axis, 0.0)) * attack_mul
+		for axis in ["def", "mdef"]:
+			hero[axis] = float(hero.get(axis, 0.0)) * guard_mul
+
+
 static func applied_cards(job: Dictionary, cards: int = 0) -> Array:
 	## 적용되는 키워드 카드 — 원본 규칙 (Unity `ProgressionData.Accumulate`, 원본 대조):
 	##   일반 L2 — 키워드 **전부**를 곱한다 (원본은 3장 L2 를 전부 곱했다).
@@ -141,9 +167,11 @@ static func keyword_mod_for(job: Dictionary, cards: int = 0) -> Array:
 static func heroes_from(races: Dictionary, job_tree: Dictionary = {}, equipment: Dictionary = {},
 		grade: int = 5, level: int = 130, seed_value: int = 0,
 		job_coef: Dictionary = {}, cards: int = 0, party_size: int = PARTY_SIZE,
-		ai: Dictionary = {}, basics: Dictionary = {}) -> Array:
+		ai: Dictionary = {}, basics: Dictionary = {},
+		memory_attack: int = 0, memory_guard: int = 0) -> Array:
 	## 기준스탯 → **직업계수** × 키워드 × 등급 × 레벨 × 순수도 + 장비 → 개체 변량 ±7% → 전투 유닛.
 	## 키워드는 원본 규칙대로 — 일반 L2 는 3장 전부 곱, 종점(7장)은 1장만 (`cards` 로 상한 재면 측정용).
+	## `memory_attack`·`memory_guard` — 101층 기억 배분. 기본 0:0 이면 배율 없음(기존 경로 그대로).
 	## 장비는 3등급 한 벌(`equipment.json`) — 강화·상점·획득 경로는 아직 없다 (원본 대조는 구현만).
 	var def := FonsHeroStats.from_data(races)
 	var gear: Dictionary = FonsEquipment.from_grade(equipment, 3) if not equipment.is_empty() else {}
@@ -161,6 +189,8 @@ static func heroes_from(races: Dictionary, job_tree: Dictionary = {}, equipment:
 			job_mod = FonsJobCoef.multipliers(job_coef, String(job.get("id", "")))
 		var field: Dictionary = FonsHeroStats.field_stats(def.base, grade, level, 1.0, mod, gear, job_mod)
 		field = FonsHeroStats.varied(field, rng)
+		if memory_attack > 0 or memory_guard > 0:
+			field = FonsHeroStats.apply_memory(field, memory_attack, memory_guard)
 		var unit: Dictionary = FonsBattle.unit_from_hero(field, String(HERO_LABELS[i] if i < HERO_LABELS.size() else "영웅 %d" % (i + 1)))
 		if not job.is_empty():
 			unit["job"] = String(job.get("name", ""))

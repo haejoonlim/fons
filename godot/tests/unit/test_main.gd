@@ -528,6 +528,25 @@ func test_ending_line_picks_the_object_particle_by_final_syllable() -> void:
 	assert_string_contains(line.text, "무명자를 지나", "받침이 없으면 `를`")
 
 
+func test_memory_panel_opens_at_101_and_closes_after_the_split() -> void:
+	## 101층에 들어서면 세계를 멈추고 한 번 묻는다 — 나누면 다시 묻지 않고 배율이 걸린다 (설계 §3-3).
+	var node := _scene()
+	var panel: Control = node._memory
+	assert_not_null(panel, "배분 화면이 HUD 에 붙어 있다")
+	node._field.floor = FonsRunState.MEMORY_FLOOR
+	node._push()
+	assert_true(panel.visible, "101층에서 배분 화면이 뜬다")
+	assert_true(get_tree().paused, "고르는 동안 세계가 멈춘다")
+	var before := float(node._field.heroes[0]["atk"])
+	panel.chosen.emit(5, 5)
+	assert_false(panel.visible, "나누면 닫힌다")
+	assert_false(get_tree().paused, "세계가 다시 돈다")
+	assert_almost_eq(float(node._field.heroes[0]["atk"]) / before, 3.71293, 0.001,
+		"ATK ×3.71")
+	node._push()
+	assert_false(panel.visible, "두 번째는 안 묻는다")
+
+
 func _scene() -> Node:
 	var packed := load("res://game/main/main.tscn") as PackedScene
 	var node: Node = packed.instantiate()

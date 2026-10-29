@@ -250,3 +250,47 @@ func test_start_clamps_the_floor() -> void:
 	assert_eq(st.floor, 1, "0층은 1층으로 자른다")
 	var high := _state(1, 999)
 	assert_eq(high.floor, FonsRunState.MAX_FLOOR, "상한 130")
+
+
+func test_memory_points_follow_the_floor() -> void:
+	# 설계 §3-1 — 깊이로만 정해진다. 101층이 첫 10점이다.
+	assert_eq(FonsRunState.memory_points(1), 0, "1층은 0점")
+	assert_eq(FonsRunState.memory_points(100), 9, "100층은 9점")
+	assert_eq(FonsRunState.memory_points(101), 10, "101층에 10점")
+	assert_eq(FonsRunState.memory_points(130), 10, "상한 10점")
+
+
+func test_memory_multiplier_is_compounded() -> void:
+	# 1점당 ×1.30 곱연산 — 5점 ×3.71 · 10점 ×13.79 (설계 §4-1).
+	assert_almost_eq(FonsHeroStats.memory_multiplier(0), 1.0, 0.0001, "0점은 그대로")
+	assert_almost_eq(FonsHeroStats.memory_multiplier(5), 3.71293, 0.0001, "5점 ×3.71")
+	assert_almost_eq(FonsHeroStats.memory_multiplier(10), 13.785849, 0.001, "10점 ×13.79")
+
+
+func test_memory_scales_attack_and_guard_axes_only() -> void:
+	# 화력 = ATK·MAG, 생존 = HP·DEF·MDEF. 다른 축은 그대로여야 한다 (설계 §3-2).
+	var races: Dictionary = DataLoader.load_json("races.json")
+	var tree: Dictionary = DataLoader.load_json("job_tree.json")
+	var base := FonsRunState.heroes_from(races, tree, {}, 5, 130, 3, {}, 0, 5)
+	var split := FonsRunState.heroes_from(races, tree, {}, 5, 130, 3, {}, 0, 5, {}, {}, 5, 5)
+	assert_eq(split.size(), base.size(), "인원은 그대로")
+	for i in base.size():
+		assert_almost_eq(float(split[i]["atk"]) / float(base[i]["atk"]), 3.71293, 0.001,
+			"%d번 ATK ×3.71" % i)
+		assert_almost_eq(float(split[i]["mag"]) / float(base[i]["mag"]), 3.71293, 0.001,
+			"%d번 MAG ×3.71" % i)
+		assert_almost_eq(float(split[i]["maxHp"]) / float(base[i]["maxHp"]), 3.71293, 0.001,
+			"%d번 HP ×3.71" % i)
+		assert_almost_eq(float(split[i]["def"]) / float(base[i]["def"]), 3.71293, 0.001,
+			"%d번 DEF ×3.71" % i)
+
+
+func test_memory_leave_nothing_when_the_points_are_zero() -> void:
+	# 기본값 0:0 은 기존 경로 그대로다 — 1~100층 표가 안 바뀐다는 계약.
+	var races: Dictionary = DataLoader.load_json("races.json")
+	var tree: Dictionary = DataLoader.load_json("job_tree.json")
+	var plain := FonsRunState.heroes_from(races, tree, {}, 5, 130, 7, {}, 0, 5)
+	var zero := FonsRunState.heroes_from(races, tree, {}, 5, 130, 7, {}, 0, 5, {}, {}, 0, 0)
+	for i in plain.size():
+		assert_eq(int(zero[i]["atk"]), int(plain[i]["atk"]), "0점은 ATK 를 안 건드린다")
+		assert_eq(int(zero[i]["maxHp"]), int(plain[i]["maxHp"]), "0점은 HP 를 안 건드린다")
