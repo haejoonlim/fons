@@ -364,6 +364,37 @@ func test_gatekeeper_scale_is_linear_to_ref_floor() -> void:
 	assert_eq(int(scaled["stats"]["def"]), int(gk["stats"]["def"]), "DEF 는 이 식의 대상이 아니다")
 
 
+func test_ending_gatekeeper_attack_rises_from_127() -> void:
+	# 엔딩 구간(127~130)만 문지기 공격 ×15 — 기억 배분이 깎은 위험을 되돌린다.
+	# HP 는 안 건드린다: HP 2배는 길이만 늘고 생존은 5.0/5 그대로였다.
+	var monsters: Variant = DataLoader.get_monsters()
+	var biomes: Variant = DataLoader.get_biomes()
+	var end_gk := FonsEncounter.gatekeeper_for_floor(monsters, 130, biomes)
+	var plain := FonsScaling.scale_monster(end_gk, 130, {})
+	var scaled := FonsScaling.scale_gatekeeper(end_gk, 130)
+	assert_eq(int(scaled["stats"]["atk"]),
+		int(roundf(float(plain["stats"]["atk"]) * FonsScaling.ENDING_GATEKEEPER_ATK)),
+		"130층 무문의 파수병 ATK = 층 스케일 × 15")
+	assert_eq(int(scaled["stats"]["hp"]), int(plain["stats"]["hp"]), "HP 는 안 건드린다")
+	# 마법형 문지기는 `mag` 축에 걸린다 — 127 장부군주.
+	var caster := FonsEncounter.gatekeeper_for_floor(monsters, 127, biomes)
+	assert_eq(int(FonsScaling.scale_gatekeeper(caster, 127)["stats"]["mag"]),
+		int(roundf(float(FonsScaling.scale_monster(caster, 127, {})["stats"]["mag"])
+			* FonsScaling.ENDING_GATEKEEPER_ATK)), "127 마법형은 mag × 15")
+	# 관문 126 은 그대로다 — 기억을 안 나눈 파티도 이겨야 하는 층이다 (test_field_party).
+	var gate := FonsEncounter.gatekeeper_for_floor(monsters, 126, biomes)
+	assert_eq(int(FonsScaling.scale_gatekeeper(gate, 126)["stats"]["atk"]),
+		int(FonsScaling.scale_monster(gate, 126, {})["stats"]["atk"]), "126층은 보정 없음")
+	# 문턱 밖과 선형식 문지기는 그대로다.
+	var before := FonsEncounter.gatekeeper_for_floor(monsters, 125, biomes)
+	assert_eq(int(FonsScaling.scale_gatekeeper(before, 125)["stats"]["atk"]),
+		int(FonsScaling.scale_monster(before, 125, {})["stats"]["atk"]), "125층은 보정 없음")
+	var early := FonsEncounter.gatekeeper_for_floor(monsters, 5)
+	var ref := int(early["spawn"]["bossScaleRefFloor"])
+	assert_eq(int(FonsScaling.scale_gatekeeper(early, 5)["stats"]["hp"]),
+		maxi(1, int(roundf(float(early["stats"]["hp"]) * 5.0 / float(ref)))), "5층 선형식 그대로")
+
+
 func test_chain_role_folds_the_ecology_role_into_three_layers() -> void:
 	## 08 §4 — 마커 접촉 로그와 사슬 사냥이 쓰는 세 층. 역할 이름은 데이터 그대로 두고
 	## **그물에서의 자리만** 셋으로 접는다. 새 역할 이름을 만들지 않는다.

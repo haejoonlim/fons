@@ -56,6 +56,10 @@ var _rewarded_floors := {}
 var ending := false
 ## 마지막 문지기 판 — 이름·턴·생존·전리품. 엔딩 화면이 이 숫자를 적는다 (연출 전용).
 var last_gatekeeper := {}
+## 101층 기억 배분 — 화력 점수 / 생존 점수. 합이 `FonsHeroStats.MEMORY_MAX` 면 나눈 것이다.
+## 저장한다: 불러오면 같은 배분으로 영웅을 다시 만든다.
+var memory_attack := 0
+var memory_guard := 0
 
 var _races: Dictionary = {}
 var _monsters: Variant = null
@@ -136,6 +140,7 @@ func to_save() -> Dictionary:
 		"ending": ending,
 		## JSON 이 정수를 float 로 돌려주므로 복원할 때 다시 int 로 읽는다 (설계 §2).
 		"rewarded": _rewarded_floors.keys(),
+		"memory": {"attack": memory_attack, "guard": memory_guard},
 	}
 
 
@@ -147,6 +152,7 @@ func restore(saved: Dictionary) -> bool:
 	_start_floor = clampi(int(saved.get("start_floor", _start_floor)), START_FLOOR, MAX_FLOOR)
 	floor = clampi(int(saved.get("floor", _start_floor)), START_FLOOR, MAX_FLOOR)
 	heroes = _make_party()
+	_restore_memory(saved.get("memory", {}))
 	FonsRunState.apply_hero_save(heroes, saved.get("heroes", []))
 	_open_field()
 	# 저장분이 필드 시작값을 덮는다 — 여기는 "변한 것"이다 (ADR 0008).
@@ -162,11 +168,28 @@ func restore(saved: Dictionary) -> bool:
 	return true
 
 
+func _restore_memory(saved: Variant) -> void:
+	## 저장된 배분을 먼저 영웅에게 걸고, 그 다음에 HP 를 되살린다 — 순서를 바꾸면
+	## 저장된 HP 가 배분 전 상한으로 잘린다.
+	## 배분 키가 없는 예전 세이브는 101층 위에서 5:5 로 되살린다 (설계 §3-3 기본값).
+	memory_attack = 0
+	memory_guard = 0
+	if saved is Dictionary:
+		memory_attack = clampi(int(saved.get("attack", 0)), 0, FonsHeroStats.MEMORY_MAX)
+		memory_guard = clampi(int(saved.get("guard", 0)), 0, FonsHeroStats.MEMORY_MAX)
+	if memory_attack + memory_guard < FonsHeroStats.MEMORY_MAX and floor >= FonsRunState.MEMORY_FLOOR:
+		memory_attack = 5
+		memory_guard = FonsHeroStats.MEMORY_MAX - memory_attack
+	FonsRunState.apply_memory_to_party(heroes, memory_attack, memory_guard)
+
+
 func restart() -> void:
 	## 새 런이다 — 첫 격파 기억도 같이 비운다. 엔딩은 기록이라 남긴다.
 	floor = _start_floor
 	controlled = 0
 	_rewarded_floors.clear()
+	memory_attack = 0
+	memory_guard = 0
 	heroes = _make_party()
 	_open_field()
 	log_lines = []
@@ -596,6 +619,31 @@ func party_alive() -> int:
 		if bool(hero.get("alive", false)):
 			n += 1
 	return n
+
+
+func memory_pending() -> bool:
+	## 101층 위인데 아직 안 나눴다 — main 이 이때 한 번 묻는다.
+	return floor >= FonsRunState.MEMORY_FLOOR \
+		and memory_attack + memory_guard < FonsHeroStats.MEMORY_MAX
+
+
+func allocate_memory(attack: int, guard: int) -> bool:
+	## 101층 한 번 — 10점을 화력과 생존에 나눈다. 나눈 뒤에는 이 런에서 못 바꾼다.
+	## HP 는 비율을 지킨다 (층 사이에 반피로 서 있어도 그 비율 그대로 커진다).
+	if not memory_pending():
+		return false
+	var a := clampi(attack, 0, FonsHeroStats.MEMORY_MAX)
+	var g := clampi(guard, 0, FonsHeroStats.MEMORY_MAX)
+	if a + g != FonsHeroStats.MEMORY_MAX:
+		return false
+	memory_attack = a
+	memory_guard = g
+	FonsRunState.apply_memory_to_party(heroes, a, g)
+	log_lines.append("기억 %d점 — 화력 ×%.2f · 생존 ×%.2f" % [
+		FonsHeroStats.MEMORY_MAX, FonsHeroStats.memory_multiplier(a),
+		FonsHeroStats.memory_multiplier(g)])
+	log_lines = log_lines.slice(maxi(0, log_lines.size() - LOG_TAIL))
+	return true
 
 
 func hint() -> String:

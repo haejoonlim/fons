@@ -245,8 +245,140 @@ func test_same_seed_same_snapshot() -> void:
 	assert_eq(a["winner"], b["winner"])
 
 
+func test_support_floor_fills_missing_ally_shield_jobs() -> void:
+	# 규칙 후보 — 아군 보호막 직업이 `min_shield` 보다 적으면 뒤에서부터 채운다.
+	# 기본값 0 이면 정본 그대로다(게임 경로 변화 없음).
+	var races: Dictionary = DataLoader.load_json("races.json")
+	var tree: Dictionary = DataLoader.load_json("job_tree.json")
+	var basics: Dictionary = DataLoader.load_json("basic_attacks.json")
+	var seed_value := 0
+	for s in range(1, 30):
+		var probe := FonsRunState.heroes_from(races, tree, {}, 5, 130, s, {}, 0, 5, {}, basics)
+		if _ally_shield_count(probe) == 0:
+			seed_value = s
+			break
+	assert_gt(seed_value, 0, "보호막 0개 파티가 나오는 시드가 있다")
+	if seed_value <= 0:
+		return
+	var plain := FonsRunState.heroes_from(races, tree, {}, 5, 130, seed_value, {}, 0, 5, {}, basics)
+	var once := FonsRunState.heroes_from(races, tree, {}, 5, 130, seed_value, {}, 0, 5, {}, basics, 1)
+	var twice := FonsRunState.heroes_from(races, tree, {}, 5, 130, seed_value, {}, 0, 5, {}, basics, 2)
+	assert_eq(_ally_shield_count(plain), 0, "기본값은 안 채운다")
+	assert_eq(_ally_shield_count(once), 1, "최소 1 — 한 명 채운다")
+	assert_eq(_ally_shield_count(twice), 2, "최소 2 — 두 명 채운다")
+	assert_eq(twice.size(), 5, "인원은 그대로")
+	var again := FonsRunState.heroes_from(races, tree, {}, 5, 130, seed_value, {}, 0, 5, {}, basics, 2)
+	for i in twice.size():
+		assert_eq(String(twice[i].get("job_id", "")), String(again[i].get("job_id", "")), "같은 시드 = 같은 교체")
+
+
+func test_role_floor_fills_missing_tank_and_healer() -> void:
+	# 역할 보장 후보 — 수호 1 · 치유 1 을 채운다. 기본값 0 이면 정본 그대로다.
+	var races: Dictionary = DataLoader.load_json("races.json")
+	var tree: Dictionary = DataLoader.load_json("job_tree.json")
+	var basics: Dictionary = DataLoader.load_json("basic_attacks.json")
+	var seed_value := 0
+	for s in range(1, 60):
+		var probe := FonsRunState.heroes_from(races, tree, {}, 5, 130, s, {}, 0, 5, {}, basics)
+		if _tank_count(probe) == 0 and _heal_count(probe) == 0:
+			seed_value = s
+			break
+	assert_gt(seed_value, 0, "수호·치유가 둘 다 없는 파티가 나오는 시드가 있다")
+	if seed_value <= 0:
+		return
+	var plain := FonsRunState.heroes_from(races, tree, {}, 5, 130, seed_value, {}, 0, 5, {}, basics)
+	var filled := FonsRunState.heroes_from(races, tree, {}, 5, 130, seed_value, {}, 0, 5, {}, basics, 0, 1, 1)
+	assert_eq(_tank_count(plain), 0, "기본값은 수호를 안 채운다")
+	assert_eq(_heal_count(plain), 0, "기본값은 치유를 안 채운다")
+	assert_true(_tank_count(filled) >= 1, "수호 1 을 채운다")
+	assert_true(_heal_count(filled) >= 1, "치유 1 을 채운다")
+	assert_eq(filled.size(), 5, "인원은 그대로")
+	var all := FonsRunState.heroes_from(races, tree, {}, 5, 130, seed_value, {}, 0, 5, {}, basics, 2, 1, 1)
+	assert_true(_ally_shield_count(all) >= 2, "보호막 2 를 채운다")
+	assert_true(_tank_count(all) >= 1, "보호막을 채워도 수호가 남는다")
+	assert_true(_heal_count(all) >= 1, "보호막을 채워도 치유가 남는다")
+	var again := FonsRunState.heroes_from(races, tree, {}, 5, 130, seed_value, {}, 0, 5, {}, basics, 2, 1, 1)
+	for i in all.size():
+		assert_eq(String(all[i].get("job_id", "")), String(again[i].get("job_id", "")), "같은 시드 = 같은 교체")
+
+
+func _tank_count(heroes: Array) -> int:
+	var tanks := ["l2_ironwall", "l2_vanguard", "l2_paladin"]
+	var n := 0
+	for h in heroes:
+		if String(h.get("job_id", "")) in tanks:
+			n += 1
+	return n
+
+
+func _heal_count(heroes: Array) -> int:
+	var n := 0
+	for h in heroes:
+		for b in h.get("basics", []):
+			if String(b.get("tag", "")) == "치유":
+				n += 1
+				break
+	return n
+
+
+func _ally_shield_count(heroes: Array) -> int:
+	var n := 0
+	for h in heroes:
+		var ok := false
+		for b in h.get("basics", []):
+			if String(b.get("tag", "")) in ["보호막", "아군보호"]:
+				ok = true
+		if ok:
+			n += 1
+	return n
+
+
 func test_start_clamps_the_floor() -> void:
 	var st := _state(1, 0)
 	assert_eq(st.floor, 1, "0층은 1층으로 자른다")
 	var high := _state(1, 999)
 	assert_eq(high.floor, FonsRunState.MAX_FLOOR, "상한 130")
+
+
+func test_memory_points_follow_the_floor() -> void:
+	# 설계 §3-1 — 깊이로만 정해진다. 101층이 첫 10점이다.
+	assert_eq(FonsRunState.memory_points(1), 0, "1층은 0점")
+	assert_eq(FonsRunState.memory_points(100), 9, "100층은 9점")
+	assert_eq(FonsRunState.memory_points(101), 10, "101층에 10점")
+	assert_eq(FonsRunState.memory_points(130), 10, "상한 10점")
+
+
+func test_memory_multiplier_is_compounded() -> void:
+	# 1점당 ×1.30 곱연산 — 5점 ×3.71 · 10점 ×13.79 (설계 §4-1).
+	assert_almost_eq(FonsHeroStats.memory_multiplier(0), 1.0, 0.0001, "0점은 그대로")
+	assert_almost_eq(FonsHeroStats.memory_multiplier(5), 3.71293, 0.0001, "5점 ×3.71")
+	assert_almost_eq(FonsHeroStats.memory_multiplier(10), 13.785849, 0.001, "10점 ×13.79")
+
+
+func test_memory_scales_attack_and_guard_axes_only() -> void:
+	# 화력 = ATK·MAG, 생존 = HP·DEF·MDEF. 다른 축은 그대로여야 한다 (설계 §3-2).
+	var races: Dictionary = DataLoader.load_json("races.json")
+	var tree: Dictionary = DataLoader.load_json("job_tree.json")
+	var base := FonsRunState.heroes_from(races, tree, {}, 5, 130, 3, {}, 0, 5)
+	var split := FonsRunState.heroes_from(races, tree, {}, 5, 130, 3, {}, 0, 5, {}, {}, 0, 0, 0, 5, 5)
+	assert_eq(split.size(), base.size(), "인원은 그대로")
+	for i in base.size():
+		assert_almost_eq(float(split[i]["atk"]) / float(base[i]["atk"]), 3.71293, 0.001,
+			"%d번 ATK ×3.71" % i)
+		assert_almost_eq(float(split[i]["mag"]) / float(base[i]["mag"]), 3.71293, 0.001,
+			"%d번 MAG ×3.71" % i)
+		assert_almost_eq(float(split[i]["maxHp"]) / float(base[i]["maxHp"]), 3.71293, 0.001,
+			"%d번 HP ×3.71" % i)
+		assert_almost_eq(float(split[i]["def"]) / float(base[i]["def"]), 3.71293, 0.001,
+			"%d번 DEF ×3.71" % i)
+
+
+func test_memory_leave_nothing_when_the_points_are_zero() -> void:
+	# 기본값 0:0 은 기존 경로 그대로다 — 1~100층 표가 안 바뀐다는 계약.
+	var races: Dictionary = DataLoader.load_json("races.json")
+	var tree: Dictionary = DataLoader.load_json("job_tree.json")
+	var plain := FonsRunState.heroes_from(races, tree, {}, 5, 130, 7, {}, 0, 5)
+	var zero := FonsRunState.heroes_from(races, tree, {}, 5, 130, 7, {}, 0, 5, {}, {}, 0, 0, 0, 0, 0)
+	for i in plain.size():
+		assert_eq(int(zero[i]["atk"]), int(plain[i]["atk"]), "0점은 ATK 를 안 건드린다")
+		assert_eq(int(zero[i]["maxHp"]), int(plain[i]["maxHp"]), "0점은 HP 를 안 건드린다")

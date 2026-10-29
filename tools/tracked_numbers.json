@@ -244,6 +244,33 @@
    ],
    "sources": [],
    "note": "툰 넓은 광택 — 태양 색을 albedo 무관하게 더해 색을 맞춘다. toon_shade.gd. 색 오차 0.104 → 0.045 (§3.9)"
+  },
+  {
+   "name": "MEMORY_MAX",
+   "value": "10",
+   "aliases": [
+    "MEMORY_MAX"
+   ],
+   "sources": [],
+   "note": "101층 기억 배분 총점 — hero_stats.gd. 100층까지 올라온 런이 101층에서 한 번 나눈다 (확정 아님 · 설계 ★5_101_120_기억_성장축)"
+  },
+  {
+   "name": "MEMORY_STEP",
+   "value": "0.30",
+   "aliases": [
+    "MEMORY_STEP"
+   ],
+   "sources": [],
+   "note": "기억 1점당 배율 증가폭 — hero_stats.gd. 곱연산이라 2점은 1.69배 (확정 아님 · 설계 ★5_101_120_기억_성장축)"
+  },
+  {
+   "name": "ENDING_GATEKEEPER_ATK",
+   "value": "15.0",
+   "aliases": [
+    "ENDING_GATEKEEPER_ATK"
+   ],
+   "sources": [],
+   "note": "엔딩 구간(127~130) 문지기 공격 배율 — scaling.gd. 방어식이 피해를 92~95% 깎아 ×15 라야 위험이 돌아온다(130 82턴·2.9/5). 126 은 관문이라 제외 (확정 아님 · 설계 127_130_문지기_무게_판단)"
   }
  ]
 }

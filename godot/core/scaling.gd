@@ -26,6 +26,18 @@ const HP_LEVER_STEP := 0.98     ## 확정 #38 ② — Lv110+ 회당 −2%
 const G4_HP_RELIEF := 0.90      ## 확정 #55 — 101층부터 적 HP ×0.90
 const LEVEL_PER_FLOOR := 1.3    ## 확정 #37 — Lv = round(층 × 1.3)
 
+## 이데아 문턱 문지기 보정 — 101층 기억 배분이 ★5를 ★7 위로 올려 마지막 네 층이 가벼워졌다.
+## HP 는 안 건드린다. HP 2배는 길이만 57→112턴으로 늘고 생존은 5.0/5 그대로였다.
+## 공격 축을 키워야 위험이 돌아온다 — ×15 에서 130 이 82턴·2.9/5 가 된다(10/10 승).
+## 배율이 큰 이유는 방어식이다: 영웅 DEF 2,000~3,500 이 피해를 92~95% 깎아
+## 보스 기본 ATK 3,600 이 한 대 200~300 으로 들어온다. ×15 라야 4,000 대가 된다.
+##
+## 126 은 뺸다. 126 이데아수문장은 기억을 안 나눈 ★5 5인도 잠아야 하는 관문이고
+## (test_field_party 의 보장), ×15 를 걸면 그 경로가 진다. 127 부터가 엔딩 구간이다.
+## 근거·측정: docs/design/127_130_문지기_무게_판단.md
+const ENDING_GATEKEEPER_FROM := 127
+const ENDING_GATEKEEPER_ATK := 15.0
+
 ## 배율을 거는 축 = 크기 스탯. 나머지(CRI·CDMG·EVA·ASPD·STA·MANA·SPD_CAST)는 그대로.
 const MAGNITUDE_KEYS := ["hp", "atk", "def", "mdef", "mag"]
 
@@ -72,7 +84,17 @@ static func scale_gatekeeper(monster: Dictionary, floor: int,
 	## `bossScaleRefFloor` 가 없는 보스(26~130층)는 이 식의 대상이 아니므로 일반 층 스케일을 쓴다.
 	var ref := int(monster.get("spawn", {}).get("bossScaleRefFloor", 0))
 	if ref <= 0:
-		return scale_monster(monster, floor, {})
+		var plain := scale_monster(monster, floor, {})
+		if floor < ENDING_GATEKEEPER_FROM:
+			return plain
+		# 엔딩 구간만 — 기억 배분이 깎은 위험을 적이 실제로 쓰는 피해 축에 되돌린다.
+		# 마법형은 `mag`, 물리형은 `atk` 다 (아래 선형식 가지와 같은 규칙).
+		var end_key := "mag" if String(monster.get("aiType", "")) in FonsBattle.MAGICAL_AI else "atk"
+		var plain_stats: Dictionary = plain.get("stats", {})
+		if plain_stats.has(end_key):
+			plain_stats[end_key] = maxi(1, int(roundf(float(plain_stats[end_key]) * ENDING_GATEKEEPER_ATK)))
+			plain["stats"] = plain_stats
+		return plain
 	var out := monster.duplicate(true)
 	var stats: Dictionary = out.get("stats", {})
 	if stats.is_empty():
@@ -96,10 +118,11 @@ static func scale_gatekeeper(monster: Dictionary, floor: int,
 
 
 static func scale_monster(monster: Dictionary, floor: int, biome: Dictionary,
-		hp_knob: float = 1.0) -> Dictionary:
+		hp_knob: float = 1.0, atk_knob: float = 1.0) -> Dictionary:
 	## 원본을 건드리지 않고 배율만 곱한 사본을 돌려준다 (편성 원본은 데이터 그대로 남는다).
 	##
-	## `hp_knob` 은 **측정용 손잡이**다 — 정본 HP 곡선을 고치지 않고 민감도를 재기 위한 배율.
+	## `hp_knob`·`atk_knob` 은 **측정용 손잡이**다 — 정본 곡선을 고치지 않고 민감도를 재기 위한 배율.
+	## `atk_knob` 은 atk·mag 두 축에 걸린다 (적이 실제로 쓰는 피해 축이 둘이다).
 	## 기본 1.0 이면 정본 그대로다. 난이도 조정이 확정되면 정본(GDD) 쪽을 먼저 고치고,
 	## 이 인자는 1.0 그대로 둔다 (게임 경로가 측정 손잡이에 기대지 않게).
 	var out := monster.duplicate(true)
@@ -117,6 +140,8 @@ static func scale_monster(monster: Dictionary, floor: int, biome: Dictionary,
 		var m := mult
 		if String(key) == "hp":
 			m *= hp_mult
+		elif String(key) == "atk" or String(key) == "mag":
+			m *= atk_knob
 		# 최소 1 — 배율이 0 이하로 떨어져도 적이 무피해 벽이 되지는 않는다.
 		stats[key] = maxi(1, int(roundf(float(stats[key]) * m)))
 	out["stats"] = stats

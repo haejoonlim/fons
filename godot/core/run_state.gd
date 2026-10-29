@@ -12,6 +12,8 @@ extends RefCounted
 const PARTY_SIZE := 4
 const MAX_FLOOR := 130
 const START_FLOOR := 1
+## 기억 배분이 열리는 층 — 100층까지 올라온 런이 101층에서 10점을 받는다.
+const MEMORY_FLOOR := 101
 ## 세이브가 같이 적는 값 — 불러올 때 이 값으로 영웅을 다시 만든다.
 const GRADE := 5
 const LEVEL := 130
@@ -104,6 +106,30 @@ static func _shuffle(rows: Array, rng: RandomNumberGenerator) -> void:
 		rows[j] = tmp
 
 
+static func memory_points(floor_value: int) -> int:
+	## 깊이로만 정해지는 점수 — 101층 10점, 100층 9점, 1층 0점.
+	## 한 번 주고 더 안 준다 (상한이 곧 `MEMORY_MAX`).
+	return clampi(int((floor_value - 1) / 10.0), 0, FonsHeroStats.MEMORY_MAX)
+
+
+static func apply_memory_to_party(party: Array, attack: int, guard: int) -> void:
+	## 이미 걷고 있는 파티에 배분을 건다 — 101층에서 한 번. HP 는 비율을 지킨다.
+	## `heroes_from` 의 배율과 같은 축이다 — 두 경로가 같은 숫자를 내야 한다.
+	if attack <= 0 and guard <= 0:
+		return
+	var attack_mul := FonsHeroStats.memory_multiplier(attack)
+	var guard_mul := FonsHeroStats.memory_multiplier(guard)
+	for hero in party:
+		var max_hp := maxf(1.0, float(hero.get("maxHp", 1)))
+		var ratio := clampf(float(hero.get("hp", 0)) / max_hp, 0.0, 1.0)
+		hero["maxHp"] = int(roundf(max_hp * guard_mul))
+		hero["hp"] = int(roundf(float(hero["maxHp"]) * ratio))
+		for axis in ["atk", "mag"]:
+			hero[axis] = float(hero.get(axis, 0.0)) * attack_mul
+		for axis in ["def", "mdef"]:
+			hero[axis] = float(hero.get(axis, 0.0)) * guard_mul
+
+
 static func applied_cards(job: Dictionary, cards: int = 0) -> Array:
 	## 적용되는 키워드 카드 — 원본 규칙 (Unity `ProgressionData.Accumulate`, 원본 대조):
 	##   일반 L2 — 키워드 **전부**를 곱한다 (원본은 3장 L2 를 전부 곱했다).
@@ -141,15 +167,21 @@ static func keyword_mod_for(job: Dictionary, cards: int = 0) -> Array:
 static func heroes_from(races: Dictionary, job_tree: Dictionary = {}, equipment: Dictionary = {},
 		grade: int = 5, level: int = 130, seed_value: int = 0,
 		job_coef: Dictionary = {}, cards: int = 0, party_size: int = PARTY_SIZE,
-		ai: Dictionary = {}, basics: Dictionary = {}) -> Array:
+		ai: Dictionary = {}, basics: Dictionary = {}, min_shield: int = 0,
+		min_tank: int = 0, min_heal: int = 0,
+		memory_attack: int = 0, memory_guard: int = 0) -> Array:
 	## 기준스탯 → **직업계수** × 키워드 × 등급 × 레벨 × 순수도 + 장비 → 개체 변량 ±7% → 전투 유닛.
 	## 키워드는 원본 규칙대로 — 일반 L2 는 3장 전부 곱, 종점(7장)은 1장만 (`cards` 로 상한 재면 측정용).
+	## `min_shield`·`min_tank`·`min_heal` — 측정·규칙 후보. 기본 0 이면 정본 그대로다.
+	## `memory_attack`·`memory_guard` — 101층 기억 배분. 기본 0:0 이면 배율 없음(기존 경로 그대로).
 	## 장비는 3등급 한 벌(`equipment.json`) — 강화·상점·획득 경로는 아직 없다 (원본 대조는 구현만).
 	var def := FonsHeroStats.from_data(races)
 	var gear: Dictionary = FonsEquipment.from_grade(equipment, 3) if not equipment.is_empty() else {}
 	# 직업은 **이 파티 크기**만큼 뽑는다. 기본값(PARTY_SIZE=4)에 기대면 5인 파티의 마지막이
 	# 직업·계수·브레인 없이 남는다 — 필드 파티는 5인이다.
 	var jobs: Array = keyword_jobs(job_tree, party_size, seed_value)
+	if min_shield > 0 or min_tank > 0 or min_heal > 0:
+		jobs = with_required_jobs(jobs, job_tree, basics, min_shield, min_tank, min_heal, seed_value)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
 	var out: Array = []
@@ -161,6 +193,8 @@ static func heroes_from(races: Dictionary, job_tree: Dictionary = {}, equipment:
 			job_mod = FonsJobCoef.multipliers(job_coef, String(job.get("id", "")))
 		var field: Dictionary = FonsHeroStats.field_stats(def.base, grade, level, 1.0, mod, gear, job_mod)
 		field = FonsHeroStats.varied(field, rng)
+		if memory_attack > 0 or memory_guard > 0:
+			field = FonsHeroStats.apply_memory(field, memory_attack, memory_guard)
 		var unit: Dictionary = FonsBattle.unit_from_hero(field, String(HERO_LABELS[i] if i < HERO_LABELS.size() else "영웅 %d" % (i + 1)))
 		if not job.is_empty():
 			unit["job"] = String(job.get("name", ""))
@@ -170,6 +204,124 @@ static func heroes_from(races: Dictionary, job_tree: Dictionary = {}, equipment:
 		_attach_ai(unit, ai, job, grade, level, seed_value, i)
 		out.append(unit)
 	return out
+
+
+static func has_ally_shield(job: Dictionary, basics: Dictionary) -> bool:
+	## 그 직업의 기본공격에 아군 보호막 태그가 있나. 빈 basics 면 판정하지 않는다(기존 동작).
+	var acts: Array = basics.get("jobs", basics).get(String(job.get("id", "")), [])
+	for a in acts:
+		if String(a.get("tag", "")) in ["보호막", "아군보호"]:
+			return true
+	return false
+
+
+static func has_heal(job: Dictionary, basics: Dictionary) -> bool:
+	## 그 직업의 기본공격에 치유 태그가 있나. 빈 basics 면 판정하지 않는다.
+	var acts: Array = basics.get("jobs", basics).get(String(job.get("id", "")), [])
+	for a in acts:
+		if String(a.get("tag", "")) == "치유":
+			return true
+	return false
+
+
+static func is_tank(job: Dictionary) -> bool:
+	## 수호 역할 — 보호막 태그와 겹칠 수 있다(철벽기사·성기사).
+	return String(job.get("role", "")) == "수호"
+
+
+static func _meets_requirement(job: Dictionary, key: String, basics: Dictionary) -> bool:
+	match key:
+		"tank":
+			return is_tank(job)
+		"heal":
+			return has_heal(job, basics)
+		"shield":
+			return has_ally_shield(job, basics)
+	return false
+
+
+static func _requirement_count(jobs: Array, key: String, basics: Dictionary) -> int:
+	var n := 0
+	for j in jobs:
+		if _meets_requirement(j, key, basics):
+			n += 1
+	return n
+
+
+static func _has_job(jobs: Array, job: Dictionary) -> bool:
+	var id := String(job.get("id", ""))
+	for j in jobs:
+		if String(j.get("id", "")) == id:
+			return true
+	return false
+
+
+static func _replaceable_slot(jobs: Array, reqs: Dictionary, basics: Dictionary) -> int:
+	## 아직 최소치를 채운 역할의 마지막 한 명은 지키고, 남는 자리를 뒤에서부터 고른다.
+	for i in range(jobs.size() - 1, -1, -1):
+		var protected := false
+		for key in reqs:
+			var minimum := int(reqs[key])
+			if minimum <= 0:
+				continue
+			if _meets_requirement(jobs[i], key, basics) and _requirement_count(jobs, key, basics) <= minimum:
+				protected = true
+				break
+		if not protected:
+			return i
+	return -1
+
+
+static func _fill_requirement(jobs: Array, job_tree: Dictionary, basics: Dictionary,
+		key: String, minimum: int, seed_offset: int, seed_value: int, reqs: Dictionary) -> Array:
+	if minimum <= 0 or _requirement_count(jobs, key, basics) >= minimum:
+		return jobs
+	var pool: Array = []
+	for job in job_tree.get("jobs", []):
+		if int(job.get("stage", 0)) != 2:
+			continue
+		if (job.get("keywords", []) as Array).is_empty():
+			continue
+		if _meets_requirement(job, key, basics):
+			pool.append(job)
+	if pool.is_empty():
+		return jobs
+	var rng := RandomNumberGenerator.new()
+	# 보호막만 채울 때의 시드는 예전 `with_support_jobs` 와 같다 (offset 0).
+	rng.seed = seed_value * 104729 + seed_offset * 7919 + minimum
+	_shuffle(pool, rng)
+	var out := jobs.duplicate()
+	var have := _requirement_count(out, key, basics)
+	for job in pool:
+		if have >= minimum:
+			break
+		if _has_job(out, job):
+			continue
+		var slot := _replaceable_slot(out, reqs, basics)
+		if slot < 0:
+			break
+		out[slot] = job
+		have += 1
+	return out
+
+
+static func with_required_jobs(jobs: Array, job_tree: Dictionary, basics: Dictionary,
+		min_shield: int, min_tank: int, min_heal: int, seed_value: int) -> Array:
+	## 측정·규칙 후보 — 수호·치유·아군 보호막 직업의 최소 수를 채운다.
+	## 기본값이 전부 0 이면 호출되지 않는다(게임 경로 변화 없음). 같은 시드면 같은 교체가 나온다.
+	## 채우는 순서: 수호 → 치유 → 보호막. 이미 최소치를 채운 역할의 마지막 한 명은 안 지운다.
+	var reqs := {"tank": min_tank, "heal": min_heal, "shield": min_shield}
+	var out := jobs.duplicate()
+	out = _fill_requirement(out, job_tree, basics, "tank", min_tank, 1, seed_value, reqs)
+	out = _fill_requirement(out, job_tree, basics, "heal", min_heal, 2, seed_value, reqs)
+	out = _fill_requirement(out, job_tree, basics, "shield", min_shield, 0, seed_value, reqs)
+	return out
+
+
+static func with_support_jobs(jobs: Array, job_tree: Dictionary, basics: Dictionary,
+		minimum: int, seed_value: int) -> Array:
+	## 보호막만 채우는 예전 이름 — 측정 도구·문서가 쓴다.
+	return with_required_jobs(jobs, job_tree, basics, minimum, 0, 0, seed_value)
 
 
 static func _attach_ai(unit: Dictionary, ai: Dictionary, job: Dictionary, grade: int,

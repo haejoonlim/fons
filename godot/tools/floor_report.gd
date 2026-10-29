@@ -11,7 +11,18 @@ extends SceneTree
 ##   godot --headless --path godot -s tools/floor_report.gd -- --atk=mon_x:1.2   # 종별 공격 배율
 ##   godot --headless --path godot -s tools/floor_report.gd -- --biome=biome_x:1.1 # 바이옴 계수 배율
 ##   godot --headless --path godot -s tools/floor_report.gd -- --hp=mon_x:0.31     # 종별 HP 배율
+##   godot --headless --path godot -s tools/floor_report.gd -- --hp-band=111-120:0.8  # 층 대역 한정 HP 배율
+##   godot --headless --path godot -s tools/floor_report.gd -- --atk-band=111-120:0.8 # 층 대역 한정 공격(atk·mag) 배율
+##   godot --headless --path godot -s tools/floor_report.gd -- --trials=10          # 층마다 시드 10개로 반복
 ##   godot --headless --path godot -s tools/floor_report.gd -- --borrow-no-food   # 이웃 풀에서 먹이층 제외
+##   godot --headless --path godot -s tools/floor_report.gd -- --gk --party-seed=1  # 층마다 같은 파티로 문지기 표
+##   godot --headless --path godot -s tools/floor_report.gd -- --party=5 --party-shield=2  # 아군 보호막 직업 최소 수
+##   godot --headless --path godot -s tools/floor_report.gd -- --party-tank=1 --party-heal=1  # 수호·치유 최소 수
+##
+## `--party-seed=N` 은 **층 사이를 비교하는 표**용이다. 기본 0 이면 지금까지처럼 층마다
+## 다른 파티(시드 = 층)를 뽑는다. 그러면 121 행과 124 행의 차이에 보스 차이와 파티 차이가
+## 섞인다 — 121 침묵의 군주 무승부가 그렇게 만들어진 값이다(2026-10-28 실측,
+## `docs/design/121_침묵의_군주_교착.md`). N>0 이면 모든 층이 그 시드의 파티를 쓴다.
 ##
 ## 이건 게임 코드가 아니라 **측정 도구**다. 층 난이도 곡선을 바꿀 때마다 이 표를 다시 뽑는다.
 ## 영웅은 층마다 **만피로 새로** 만든다 — HP 를 이어 가면 "그 층이 어려운가"와
@@ -44,6 +55,13 @@ var _cap := 999
 var _grade := 5
 ## 파티 인원. 정본은 5인이다 (확정 #3). 4인은 2D 배치 기준으로 먼저 잡힌 값이라 둘을 비교해 잰다.
 var _party := FonsRunState.PARTY_SIZE
+## 측정용 — 파티의 아군 보호막·수호·치유 직업 최소 수. 0 이면 정본 그대로다.
+var _party_shield := 0
+var _party_tank := 0
+var _party_heal := 0
+## 영웅 파티 시드. 0 = 층마다 다른 파티(시드 = 층, 기존 동작). N>0 = 모든 층이 같은 파티.
+## 층 사이를 비교하는 표(문지기 표·층별 표)에서 보스/층 차이와 파티 차이를 가를 때 쓴다.
+var _party_seed := 0
 ## 키워드 직업을 앞에서 몇 개만 쓸지. 0 = 데이터 그대로 (지금 동작).
 ## 5인 파티에서 4를 주면 고치기 전(다섯 번째 무직) 표를 재현한다.
 var _jobs_cap := 0
@@ -80,11 +98,25 @@ var _atk_scales := {}
 var _biome_scales := {}
 ## 측정용 — 종별 HP 배율. `--hp=mon_x:0.31`. 승격 피식자의 무게를 되돌리는 안을 잴 때 쓴다.
 var _hp_scales := {}
+## 측정용 — **층 대역** HP 배율. `--hp-band=111-120:0.8` (쉼표로 여러 구간).
+## 한 대역이 바이옴 둘에 걸칠 수 있어(111~115 형상군락 · 116~120 마른 지맥) 바이옴 손잡이로는 못 잰다.
+var _band_hp: Array = []
+## 측정용 — 층 대역 **공격**(atk·mag) 배율. `--atk-band=111-120:0.5`.
+## 적 피해만 내려서 "아군이 죽는 것이 병목인가"를 가른다.
+var _band_atk: Array = []
 ## 파워 스윕 범위 — `--muls=1.5,2,3` · `--grades=5`. 비우면 도구 기본값 전체.
 var _power_muls: Array = []
 var _power_grades: Array = []
 ## 층별 표(`--floors`)에 걸 총량 배율. 1.0 이면 정본 그대로다.
 var _power_mul := 1.0
+## 측정용 — 영웅 **화력**(ATK·MAG)만 배율. `--hero-atk=1.02`. HP·DEF 는 안 건드린다.
+var _hero_atk := 1.0
+## 측정용 — 101층 기억 배분. `--memory=5:5`. 0:0 이면 배분 없음(기존 표 그대로).
+var _memory_attack := 0
+var _memory_guard := 0
+## 측정용 — 층마다 다른 시드로 몇 판 볼지. 기본 1 = 지금까지의 표(시드 = 층 번호).
+## 경계값이 한 시드에 걸려 있지 않은지 볼 때 쓴다 (`--trials=10`).
+var _trials := 1
 
 
 func _initialize() -> void:
@@ -109,6 +141,12 @@ func _initialize() -> void:
 			_grade = int(arg.split("=")[1])
 		elif arg.begins_with("--party="):
 			_party = int(arg.split("=")[1])
+		elif arg.begins_with("--party-shield="):
+			_party_shield = maxi(0, int(arg.split("=")[1]))
+		elif arg.begins_with("--party-tank="):
+			_party_tank = maxi(0, int(arg.split("=")[1]))
+		elif arg.begins_with("--party-heal="):
+			_party_heal = maxi(0, int(arg.split("=")[1]))
 		elif arg.begins_with("--jobs="):
 			_jobs_cap = int(arg.split("=")[1])
 		elif arg.begins_with("--skills="):
@@ -136,6 +174,12 @@ func _initialize() -> void:
 			_biome_scales = _pairs(arg.split("=", true, 1)[1])
 		elif arg.begins_with("--hp="):
 			_hp_scales = _pairs(arg.split("=", true, 1)[1])
+		elif arg.begins_with("--hp-band="):
+			_band_hp = _band_muls(arg.split("=", true, 1)[1])
+		elif arg.begins_with("--atk-band="):
+			_band_atk = _band_muls(arg.split("=", true, 1)[1])
+		elif arg.begins_with("--trials="):
+			_trials = maxi(1, int(arg.split("=")[1]))
 		elif arg == "--borrow-no-food":
 			FonsEncounter.borrow_skips_food = true
 		elif arg.begins_with("--muls="):
@@ -146,6 +190,14 @@ func _initialize() -> void:
 				_power_grades.append(int(part))
 		elif arg.begins_with("--power-mul="):
 			_power_mul = float(arg.split("=", true, 1)[1])
+		elif arg.begins_with("--hero-atk="):
+			_hero_atk = float(arg.split("=", true, 1)[1])
+		elif arg.begins_with("--memory="):
+			# 게임과 같은 경계로 건다 — 101층부터 (FonsRunState.MEMORY_FLOOR).
+			var kv := arg.split("=", true, 1)[1].split(":")
+			if kv.size() == 2:
+				_memory_attack = maxi(0, int(kv[0]))
+				_memory_guard = maxi(0, int(kv[1]))
 		elif arg.begins_with("--level="):
 			_level = int(arg.split("=")[1])
 		elif arg.begins_with("--gk-trials="):
@@ -156,6 +208,8 @@ func _initialize() -> void:
 			_gk_ratios = []
 			for part in arg.split("=")[1].split(","):
 				_gk_ratios.append(float(part))
+		elif arg.begins_with("--party-seed="):
+			_party_seed = maxi(0, int(arg.split("=")[1]))
 	# 인자를 다 읽은 **뒤에** 자른다 — 앞에서 자르면 `--jobs=` 가 아직 안 읽혀 있다.
 	if _jobs_cap > 0:
 		_job_tree = _tree_with_jobs(_job_tree, _jobs_cap)
@@ -268,7 +322,7 @@ func _measure_power(grade: int, mul: float, cap: int) -> Array:
 	for i in BANDS.size():
 		rows.append({"w": 0, "l": 0, "d": 0, "n": 0, "turns": 0.0})
 	for floor in range(1, 131):
-		var heroes := FonsRunState.heroes_from(_races, _job_tree, _equipment, grade, 130, floor, _job_coef, 0, FonsRunState.PARTY_SIZE, _ai(), _basics)
+		var heroes := FonsRunState.heroes_from(_races, _job_tree, _equipment, grade, 130, floor, _job_coef, 0, FonsRunState.PARTY_SIZE, _ai(), _basics, _party_shield, _party_tank, _party_heal)
 		_scale_power(heroes, mul)
 		var rng := RandomNumberGenerator.new()
 		rng.seed = floor
@@ -281,6 +335,22 @@ func _measure_power(grade: int, mul: float, cap: int) -> Array:
 			_: row["d"] = int(row["d"]) + 1
 		row["turns"] = float(row["turns"]) + float(out["turns"])
 	return rows
+
+
+func _apply_memory(heroes: Array, floor: int) -> void:
+	## 101층 배분을 이미 만든 파티에 건다 — 게임 경로와 같은 함수·같은 경계다.
+	if _memory_attack + _memory_guard <= 0 or floor < FonsRunState.MEMORY_FLOOR:
+		return
+	FonsRunState.apply_memory_to_party(heroes, _memory_attack, _memory_guard)
+
+
+func _scale_hero_atk(heroes: Array) -> void:
+	## 측정용 — 화력만 올린다. `_scale_power` 와 달리 HP·DEF 는 그대로다.
+	if is_equal_approx(_hero_atk, 1.0):
+		return
+	for h in heroes:
+		h["atk"] = float(h.get("atk", 0.0)) * _hero_atk
+		h["mag"] = float(h.get("mag", 0.0)) * _hero_atk
 
 
 func _scale_power(heroes: Array, mul: float) -> void:
@@ -309,6 +379,11 @@ func _level_for(floor: int) -> int:
 	return FonsScaling.monster_level(floor) if _level <= 0 else _level
 
 
+func _hero_seed(floor: int) -> int:
+	## `--party-seed=N` 이면 모든 층이 그 파티를 쓴다. 0 이면 층마다 다른 파티(기존).
+	return _party_seed if _party_seed > 0 else floor
+
+
 func _gk() -> void:
 	## 게이트키퍼 전투 경로 — 5·10·15·20층은 **보스 1체**(02 조우 모드 `boss`).
 	## 일반 조우(3~5종)와 섞지 않는다 — 정본이 그렇게 나눠 놓았다.
@@ -325,8 +400,9 @@ func _gk() -> void:
 			continue
 		var built := FonsFloorRun.build_gatekeeper(_monsters, _biomes, floor)
 		var hero_party := FonsRunState.heroes_from(_races, _job_tree, _equipment, _grade,
-			_level_for(floor), floor, _job_coef, 0, _party, _ai(), _basics)
+			_level_for(floor), _hero_seed(floor), _job_coef, 0, _party, _ai(), _basics, _party_shield, _party_tank, _party_heal)
 		_equip(hero_party)
+		_scale_hero_atk(hero_party)
 		var rng := RandomNumberGenerator.new()
 		rng.seed = floor
 		var out := FonsFloorRun.run(rng, hero_party, built["party"], floor, _cap)
@@ -357,7 +433,7 @@ func _gk() -> void:
 	print("|---|---|---|---|---|---|")
 	for floor in FonsEncounter.LAYER_BOUNDARIES:
 		var hero_party := FonsRunState.heroes_from(_races, _job_tree, _equipment, _grade,
-			_level_for(floor), floor, _job_coef, 0, _party, _ai(), _basics)
+			_level_for(floor), _hero_seed(floor), _job_coef, 0, _party, _ai(), _basics, _party_shield, _party_tank, _party_heal)
 		_equip(hero_party)
 		var rng := RandomNumberGenerator.new()
 		rng.seed = floor
@@ -396,7 +472,7 @@ func _gk_sweep() -> void:
 				boss_hp = int(unit.get("maxHp", 0))
 				boss_atk = float(unit.get("mag", 0)) if bool(unit.get("magical", false)) else float(unit.get("atk", 0))
 				var heroes := FonsRunState.heroes_from(_races, _job_tree, _equipment, _grade,
-					_level_for(floor), t * 7919 + floor, _job_coef, 0, _party, _ai(), _basics)
+					_level_for(floor), _hero_seed(t * 7919 + floor), _job_coef, 0, _party, _ai(), _basics, _party_shield, _party_tank, _party_heal)
 				_equip(heroes)
 				var rng := RandomNumberGenerator.new()
 				rng.seed = t * 104729 + floor
@@ -427,11 +503,14 @@ func _floors() -> void:
 	print("| 층 | 결과 | 턴 | 생존 | 바이옴 | 바이옴 계수 | 중심 tier | 편성 tier | 적 수 | 적 HP 합 |")
 	print("|---|---|---|---|---|---|---|---|---|---|")
 	for floor in range(1, 131):
-		var heroes := FonsRunState.heroes_from(_races, _job_tree, _equipment, _grade, _level_for(floor), floor, _job_coef, 0, _party, _ai(), _basics)
+		var heroes := FonsRunState.heroes_from(_races, _job_tree, _equipment, _grade, _level_for(floor), _hero_seed(floor), _job_coef, 0, _party, _ai(), _basics, _party_shield, _party_tank, _party_heal)
 		_scale_power(heroes, _power_mul)
+		_scale_hero_atk(heroes)
+		_apply_memory(heroes, floor)
 		var rng := RandomNumberGenerator.new()
 		rng.seed = floor
-		var out := FonsFloorRun.simulate(rng, _monsters, _biomes, floor, 0, heroes, _cap)
+		var out := FonsFloorRun.simulate(rng, _monsters, _biomes, floor, 0, heroes, _cap,
+			_band_mul_for(_band_hp, floor), _band_mul_for(_band_atk, floor))
 		var biome := FonsEncounter.biome_for_floor(_biomes, floor)
 		var hp_sum := 0
 		for e in out["enemies"]:
@@ -453,6 +532,36 @@ func _floors() -> void:
 			center, "/".join(tiers.map(func(v): return str(v))),
 			out["party_size"], hp_sum,
 		])
+
+
+func _band_muls(text: String) -> Array:
+	## `111-120:0.8,121-130:1.0` → [[111, 120, 0.8], [121, 130, 1.0]].
+	## `_pairs` 와 같은 태도 — 잘못된 조각은 버리고, 하나도 못 읽으면 실패로 남긴다.
+	var out: Array = []
+	for part in text.split(","):
+		var kv := String(part).split(":")
+		if kv.size() != 2:
+			continue
+		var ends := String(kv[0]).split("-")
+		if ends.size() != 2:
+			continue
+		var lo := int(ends[0])
+		var hi := int(ends[1])
+		if hi < lo:
+			continue
+		out.append([lo, hi, float(kv[1])])
+	if out.is_empty():
+		push_error("대역 배율 인자를 읽지 못했다: %s" % text)
+	return out
+
+
+func _band_mul_for(bands: Array, floor: int) -> float:
+	## 그 층에 걸린 대역 배율의 곱. 비어 있으면 1.0 — 정본 그대로다.
+	var mul := 1.0
+	for b in bands:
+		if floor >= int(b[0]) and floor <= int(b[1]):
+			mul *= float(b[2])
+	return mul
 
 
 func _pairs(text: String) -> Dictionary:
@@ -526,23 +635,35 @@ func _measure(job_tree: Dictionary, equipment: Dictionary,
 	for i in BANDS.size():
 		rows.append({"w": 0, "l": 0, "d": 0, "n": 0, "turns": 0.0})
 	for floor in range(1, 131):
-		var heroes := FonsRunState.heroes_from(_races, job_tree, equipment, _grade, _level_for(floor), floor, job_coef, 0, _party, _ai(), _basics)
-		_equip(heroes)
-		var rng := RandomNumberGenerator.new()
-		rng.seed = floor
-		var out := FonsFloorRun.simulate(rng, _monsters, _biomes, floor, 0, heroes, max_turns, hp_knob)
 		var row: Dictionary = rows[_band_index(floor)]
-		match String(out["winner"]):
-			"ally":
-				row["w"] = int(row["w"]) + 1
-			"enemy":
-				row["l"] = int(row["l"]) + 1
-			"none":
-				row["n"] = int(row["n"]) + 1
-			_:
-				row["d"] = int(row["d"]) + 1
-		row["turns"] = float(row["turns"]) + float(out["turns"])
+		for t in _trials:
+			# 시드는 층과 회차로 가른다 — 같은 층을 다른 판으로 보되 조건은 그대로다.
+			var heroes := FonsRunState.heroes_from(_races, job_tree, equipment, _grade,
+				_level_for(floor), _hero_seed(floor + t * 7919), job_coef, 0, _party, _ai(), _basics, _party_shield, _party_tank, _party_heal)
+			_equip(heroes)
+			_scale_hero_atk(heroes)
+			_apply_memory(heroes, floor)
+			var rng := RandomNumberGenerator.new()
+			rng.seed = floor + t * 104729
+			var out := FonsFloorRun.simulate(rng, _monsters, _biomes, floor, 0, heroes, max_turns,
+				hp_knob * _band_mul_for(_band_hp, floor), _band_mul_for(_band_atk, floor))
+			_match_row(row, out)
 	return rows
+
+
+func _match_row(row: Dictionary, out: Dictionary) -> void:
+	## 한 판을 대역 줄에 더한다. `--trials` 가 1 이면 예전과 같은 값이다.
+	## 턴은 회차로 나눠 더한다 — 대역 평균이 "한 판 평균"으로 남는다.
+	match String(out["winner"]):
+		"ally":
+			row["w"] = int(row["w"]) + 1
+		"enemy":
+			row["l"] = int(row["l"]) + 1
+		"none":
+			row["n"] = int(row["n"]) + 1
+		_:
+			row["d"] = int(row["d"]) + 1
+	row["turns"] = float(row["turns"]) + float(out["turns"]) / float(_trials)
 
 
 func _hero_delta() -> String:

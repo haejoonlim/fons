@@ -236,3 +236,14 @@ func test_unit_from_monster_maps_stats() -> void:
 	assert_eq(unit["atk"], 380.0)
 	assert_true(unit["magical"], "aiType magic 은 마법 공격")
 	assert_false(FonsBattle.unit_from_monster({"name": "늑대", "aiType": "melee", "stats": {"hp": 10, "atk": 1, "def": 0}})["magical"])
+
+
+func test_unit_from_monster_reads_pen_from_data() -> void:
+	# 데이터 `stats.pen` 은 퍼센트다 — 전투 유닛까지 그대로 실려야 한다.
+	# 예전에는 0.0 고정이라 monsters.json 12종의 관통이 전투에 안 닿았다.
+	var bear := {"name": "곰", "aiType": "melee", "stats": {"hp": 100, "atk": 30, "def": 10, "pen": 10}}
+	assert_eq(float(FonsBattle.unit_from_monster(bear)["pen"]), 10.0, "관통 10%")
+	var plain := {"name": "늑대", "aiType": "melee", "stats": {"hp": 10, "atk": 1, "def": 0}}
+	assert_eq(float(FonsBattle.unit_from_monster(plain)["pen"]), 0.0, "관통이 없으면 0")
+	# 관통은 실제 피해를 키운다 — DEF 820 한 대 62 → 70 (2026-10-29 실측 비율).
+	assert_gt(FonsCombat.compute(1000.0, 820.0, 0.1), FonsCombat.compute(1000.0, 820.0, 0.0))
