@@ -1580,8 +1580,8 @@
       "광로 심층"
      ],
      "gatekeeper": {
-      "name": "동결 고래",
-      "epithet": "첫 파도"
+      "name": "빙해고래",
+      "epithet": "얼음 바다의 왕"
      },
      "settlements": [],
      "nonSettlementSites": [
@@ -1645,8 +1645,8 @@
       "형상 심부"
      ],
      "gatekeeper": {
-      "name": "결정 수호자",
-      "epithet": "수정 나무 왕"
+      "name": "빙해고래",
+      "epithet": "얼음 바다의 왕"
      },
      "settlements": [],
      "topologyKit": "topo_rock_cavern_mountain",
@@ -1703,8 +1703,8 @@
       "마른 지맥 심부"
      ],
      "gatekeeper": {
-      "name": "빛을 자르는 자",
-      "epithet": "유리 파수꾼"
+      "name": "백열파수꾼",
+      "epithet": "유리를 자르는 백열"
      },
      "settlements": [],
      "topologyKit": "topo_rock_cavern_mountain",

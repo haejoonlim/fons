@@ -54,7 +54,9 @@ static func unit_from_monster(monster: Dictionary, side: String = "enemy") -> Di
 		"alive": hp > 0,
 		"atk": float(s.get("atk", 0.0)),
 		"def": float(s.get("def", 0.0)),
-		"pen": 0.0,
+		# 관통은 퍼센트다 (resolve_physical 이 /100 으로 넘긴다). 데이터에 적힌 값을 그대로 쓴다 —
+		# 예전에는 0.0 고정이라 monsters.json 12종의 `stats.pen` 이 전투에 안 닿았다.
+		"pen": float(s.get("pen", 0.0)),
 		"eva": float(s.get("eva", 0.0)),
 		"cri": float(s.get("cri", 0.0)),
 		"cdmg": float(s.get("cdmg", 0.0)),
