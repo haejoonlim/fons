@@ -10,14 +10,14 @@ func _screen() -> Control:
 	return node
 
 
-func test_open_starts_at_5_5_and_shows_both_multipliers() -> void:
+func test_open_starts_at_4_6_and_shows_both_multipliers() -> void:
 	var screen := _screen()
 	screen.open()
 	assert_true(screen.visible, "배분 화면이 뜬다")
-	assert_eq(int(screen.get_node("Center/Panel/VBox/Slider").value), 5, "기본값은 5:5")
+	assert_eq(int(screen.get_node("Center/Panel/VBox/Slider").value), 4, "기본값은 4:6")
 	var numbers := String(screen.get_node("Center/Panel/VBox/Numbers").text)
-	assert_string_contains(numbers, "화력 ×3.71")
-	assert_string_contains(numbers, "생존 ×3.71")
+	assert_string_contains(numbers, "화력 ×2.86")
+	assert_string_contains(numbers, "생존 ×4.83")
 
 
 func test_confirm_emits_the_split_and_hides() -> void:

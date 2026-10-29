@@ -18,8 +18,9 @@ func _ready() -> void:
 	hide()
 
 
-func open(attack: int = 5) -> void:
-	## 기본값 5:5 — 측정에서 111~120이 100/100으로 열린 유일한 배분이다.
+func open(attack: int = 4) -> void:
+	## 기본값 4:6 — 만피 표(101~120 10시드 100/100)와 사슬(130 10/10)에서 가장 안전하다.
+	## 5:5는 사슬에서 130에 1/5로 남아 542턴 잔당전이 된다 (130_무승부_턴상한_판단.md).
 	_slider.value = clampi(attack, 0, FonsHeroStats.MEMORY_MAX)
 	_refresh(_slider.value)
 	show()

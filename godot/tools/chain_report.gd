@@ -10,6 +10,13 @@ extends SceneTree
 ##   godot --headless --path godot -s tools/chain_report.gd -- --grades=5,7 --seeds=1,2,3 --party=5
 ##   godot --headless --path godot -s tools/chain_report.gd -- --from=101 --to=110 --bosses=115,118,120
 ##   godot --headless --path godot -s tools/chain_report.gd -- --to=125 --bosses=126,127,128,130 --heal=0.25
+##   godot --headless --path godot -s tools/chain_report.gd -- --grades=5 --seeds=1,2,3 --to=125 --bosses=126,127,128,130 --memory=5:5 --party-tank=1 --party-heal=1 --party-shield=1
+##   godot --headless --path godot -s tools/chain_report.gd -- --from=130 --to=129 --bosses=130 --turns=1200 --hero-atk=1.2
+##
+## `--memory=화력:생존` 은 101층에 닿을 때 그 파티에 한 번 건다 (`FonsRunState.apply_memory_to_party`).
+## `--party-tank` · `--party-heal` · `--party-shield` 는 편성 최소 수다 — 게임과 같은 인자다.
+## `--turns` 는 한 판 상한, `--hero-atk` 는 아군 화력만의 배율이다 — 둘 다 측정 순잡이·가드다.
+## `--from` > `--to` 면 일반 조우는 건너뛰고 `--bosses` 만 친다 (한 층만 볼 때).
 ##
 ## 기본값은 101~110 일반 조우다. `--bosses` 를 주면 `--to` 를 통과한 파티가 그 층들을
 ## 문지기(`gatekeeper_for_floor`)로 차례로 친다 — 전환 뒤 경로를 볼 때 쓴다.
@@ -24,6 +31,18 @@ var _from := 101
 var _to := 110
 var _bosses: Array = []
 var _heal := 0.0
+## 측정용 — 101층 기억 배분. 사슬은 101층에 닿을 때 한 번 건다.
+var _memory_attack := 0
+var _memory_guard := 0
+var _memory_done := false
+## 편성 최소 수 — 게임 경로(`heroes_from`)와 같은 인자다. 0 이면 규칙 없음.
+var _party_shield := 0
+var _party_tank := 0
+var _party_heal := 0
+## 한 판 턴 상한 — 추이의 `FonsFloorRun.MAX_TURNS`(500)가 기본이다.
+var _turns := FonsFloorRun.MAX_TURNS
+## 측정용 — 아군 화력(ATK·MAG)만의 배율. HP·DEF 는 그대로다.
+var _hero_atk := 1.0
 
 
 func _initialize() -> void:
@@ -56,19 +75,39 @@ func _initialize() -> void:
 			_bosses = _ints(arg.split("=", true, 1)[1])
 		elif arg.begins_with("--heal="):
 			_heal = clampf(float(arg.split("=")[1]), 0.0, 1.0)
+		elif arg.begins_with("--memory="):
+			var kv := arg.split("=", true, 1)[1].split(":")
+			if kv.size() == 2:
+				_memory_attack = maxi(0, int(kv[0]))
+				_memory_guard = maxi(0, int(kv[1]))
+		elif arg.begins_with("--party-shield="):
+			_party_shield = maxi(0, int(arg.split("=")[1]))
+		elif arg.begins_with("--party-tank="):
+			_party_tank = maxi(0, int(arg.split("=")[1]))
+		elif arg.begins_with("--party-heal="):
+			_party_heal = maxi(0, int(arg.split("=")[1]))
+		elif arg.begins_with("--turns="):
+			_turns = maxi(1, int(arg.split("=")[1]))
+		elif arg.begins_with("--hero-atk="):
+			_hero_atk = float(arg.split("=")[1])
 
-	print("사슬 %d~%d · %d인 · 시드 %s · 턴 상한 %d · 회복 %.0f%%" % [_from, _to, _party, str(_seeds),
-		FonsFloorRun.MAX_TURNS, _heal * 100.0])
+	print("사슬 %d~%d · %d인 · 시드 %s · 턴 상한 %d · 회복 %.0f%% · 기억 %d:%d · 역할 수호%d/치유%d/보호막%d · 아군 화력 ×%.2f" % [
+		_from, _to, _party, str(_seeds), _turns, _heal * 100.0,
+		_memory_attack, _memory_guard, _party_tank, _party_heal, _party_shield, _hero_atk])
 	for grade in _grades:
 		for run_seed in _seeds:
+			_memory_done = false
 			var heroes := FonsRunState.heroes_from(races, job_tree, equipment, grade, 130,
-				int(run_seed), job_coef, 0, _party, ai, basics)
+				int(run_seed), job_coef, 0, _party, ai, basics,
+				_party_shield, _party_tank, _party_heal)
+			_scale_hero_atk(heroes)
 			var rng := RandomNumberGenerator.new()
 			var reached := _from - 1
 			var stopped := ""
 			for floor in range(_from, _to + 1):
+				_apply_memory(heroes, floor)
 				rng.seed = int(run_seed) * 31 + floor
-				var out := FonsFloorRun.simulate(rng, monsters, biomes, floor, 0, heroes)
+				var out := FonsFloorRun.simulate(rng, monsters, biomes, floor, 0, heroes, _turns)
 				_line("★%d seed%d" % [grade, run_seed], floor, "일반", out, heroes)
 				if String(out.get("winner", "")) != "ally":
 					stopped = "%d %s" % [floor, String(out.get("winner", "?"))]
@@ -78,7 +117,8 @@ func _initialize() -> void:
 			if stopped.is_empty() and not _bosses.is_empty():
 				for floor in _bosses:
 					rng.seed = int(run_seed) * 31 + int(floor)
-					var out := FonsFloorRun.simulate_gatekeeper(rng, monsters, biomes, int(floor), heroes)
+					var out := FonsFloorRun.simulate_gatekeeper(rng, monsters, biomes, int(floor), heroes,
+						_turns)
 					_line("★%d seed%d" % [grade, run_seed], int(floor),
 						String(out.get("gatekeeper", "")), out, heroes)
 					if String(out.get("winner", "")) != "ally":
@@ -91,6 +131,23 @@ func _initialize() -> void:
 			var where := "없음" if reached < _from else str(reached)
 			print("도달 ★%d seed%d %s%s" % [grade, run_seed, where, tail])
 	quit()
+
+
+func _apply_memory(heroes: Array, floor: int) -> void:
+	## 101층에 닿는 순간 한 번 — 게임과 같은 함수·같은 경계다. 두 번 걸면 배율이 겹친다.
+	if _memory_done or _memory_attack + _memory_guard <= 0 or floor < FonsRunState.MEMORY_FLOOR:
+		return
+	FonsRunState.apply_memory_to_party(heroes, _memory_attack, _memory_guard)
+	_memory_done = true
+
+
+func _scale_hero_atk(heroes: Array) -> void:
+	## 측정용 — 화력만 올린다. 층 상한(`--turns`)과 함께 "안 끝나는 판"과 "긴 판"을 가른다.
+	if is_equal_approx(_hero_atk, 1.0):
+		return
+	for h in heroes:
+		h["atk"] = float(h.get("atk", 0.0)) * _hero_atk
+		h["mag"] = float(h.get("mag", 0.0)) * _hero_atk
 
 
 func _heal_party(heroes: Array) -> void:
@@ -113,8 +170,15 @@ func _line(tag: String, floor: int, kind: String, out: Dictionary, heroes: Array
 		max_hp += int(h.get("maxHp", 0))
 		if bool(h.get("alive", false)):
 			alive += 1
-	print("%s %d %s %s %d %d/%d hp %d/%d" % [tag, floor, kind,
-		String(out.get("winner", "?")), int(out.get("turns", 0)), alive, heroes.size(), hp, max_hp])
+	## 적에게 남은 HP — 상한에서 끝난 판이 "길었던 판"인지 "양쪽이 못 죽이는 판"인지 가른다.
+	var e_hp := 0
+	var e_max := 0
+	for e in out.get("enemies", []):
+		e_hp += int(e.get("hp", 0))
+		e_max += int(e.get("maxHp", 0))
+	print("%s %d %s %s %d %d/%d hp %d/%d · 적 hp %d/%d" % [tag, floor, kind,
+		String(out.get("winner", "?")), int(out.get("turns", 0)), alive, heroes.size(), hp, max_hp,
+		e_hp, e_max])
 
 
 func _ints(text: String) -> Array:
