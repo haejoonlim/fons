@@ -107,7 +107,7 @@ layout_mode = 2
 min_value = 0.0
 max_value = 10.0
 step = 1.0
-value = 5.0
+value = 4.0
 tick_count = 11
 ticks_on_borders = true
 
@@ -139,7 +139,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.76, 0.82, 1)
 theme_override_font_sizes/font_size = 15
-text = "5:5를 권한다 — 한쪽에 몰면 111~120에서 막힌다"
+text = "4:6을 권한다 — 생존이 얇으면 130에서 한 명만 남는다"
 horizontal_alignment = 1
 autowrap_mode = 2
 

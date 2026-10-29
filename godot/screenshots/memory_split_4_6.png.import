@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://baprea3jyt6ws"
-path="res://.godot/imported/memory_split_5_5.png-96d2bae8dc3c5b9569d9ab2d11f960b5.ctex"
+uid="uid://ba0wynvl2fm84"
+path="res://.godot/imported/memory_split_4_6.png-93aab8d350b04da5ed72396fa73de0bb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://screenshots/memory_split_5_5.png"
-dest_files=["res://.godot/imported/memory_split_5_5.png-96d2bae8dc3c5b9569d9ab2d11f960b5.ctex"]
+source_file="res://screenshots/memory_split_4_6.png"
+dest_files=["res://.godot/imported/memory_split_4_6.png-93aab8d350b04da5ed72396fa73de0bb.ctex"]
 
 [params]
 

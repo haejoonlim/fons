@@ -171,7 +171,8 @@ func restore(saved: Dictionary) -> bool:
 func _restore_memory(saved: Variant) -> void:
 	## 저장된 배분을 먼저 영웅에게 걸고, 그 다음에 HP 를 되살린다 — 순서를 바꾸면
 	## 저장된 HP 가 배분 전 상한으로 잘린다.
-	## 배분 키가 없는 예전 세이브는 101층 위에서 5:5 로 되살린다 (설계 §3-3 기본값).
+	## 배분 키가 없는 예전 세이브는 101층 위에서 5:5 로 되살린다 — 그때의 기본값이고,
+	## 지금 기본값은 4:6 이다. 저장된 값을 바꾸지 않고 예전 판만 그대로 따라간다.
 	memory_attack = 0
 	memory_guard = 0
 	if saved is Dictionary:
