@@ -22,13 +22,14 @@ const MAX_TURNS := 500
 
 
 static func build(monsters: Variant, biomes: Variant, floor: int, contact_index: int = 0,
-		hp_knob: float = 1.0) -> Dictionary:
+		hp_knob: float = 1.0, atk_knob: float = 1.0) -> Dictionary:
 	var party := FonsEncounter.build_party(monsters, biomes, floor, contact_index)
 	var biome := FonsEncounter.biome_for_floor(biomes, floor)
 	var units := []
 	for m in party:
 		# 06 §3.2 — 적 스탯 = 기본 × 층 스케일 × 바이옴 계수. 사본에만 건다 (원본 데이터 불변).
-		units.append(FonsBattle.unit_from_monster(FonsScaling.scale_monster(m, floor, biome, hp_knob)))
+		units.append(FonsBattle.unit_from_monster(
+			FonsScaling.scale_monster(m, floor, biome, hp_knob, atk_knob)))
 	return {
 		"floor": floor,
 		"biome_id": String(biome.get("id", "")),
@@ -135,11 +136,12 @@ static func run(rng, heroes: Array, enemies: Array, floor: int, max_turns: int =
 
 
 static func simulate(rng, monsters: Variant, biomes: Variant, floor: int, contact_index: int,
-		heroes: Array, max_turns: int = MAX_TURNS, hp_knob: float = 1.0) -> Dictionary:
+		heroes: Array, max_turns: int = MAX_TURNS, hp_knob: float = 1.0,
+		atk_knob: float = 1.0) -> Dictionary:
 	## 편성부터 한 판까지 — 판마다 새 유닛을 만든다.
 	## 일반 조우가 없는 층은 편성이 비고 `winner` 가 `none` 이다 (`run` 참조).
-	## `hp_knob` 은 적 HP 에만 걸리는 측정 손잡이다 (정본 곡선은 그대로, 기본 1.0).
-	var built := build(monsters, biomes, floor, contact_index, hp_knob)
+	## `hp_knob`·`atk_knob` 은 적 HP·공격에만 걸리는 측정 손잡이다 (정본 곡선은 그대로, 기본 1.0).
+	var built := build(monsters, biomes, floor, contact_index, hp_knob, atk_knob)
 	var enemies: Array = built["party"]
 	var out := run(rng, heroes, enemies, floor, max_turns)
 	out["party_size"] = enemies.size()

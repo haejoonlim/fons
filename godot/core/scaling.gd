@@ -96,10 +96,11 @@ static func scale_gatekeeper(monster: Dictionary, floor: int,
 
 
 static func scale_monster(monster: Dictionary, floor: int, biome: Dictionary,
-		hp_knob: float = 1.0) -> Dictionary:
+		hp_knob: float = 1.0, atk_knob: float = 1.0) -> Dictionary:
 	## 원본을 건드리지 않고 배율만 곱한 사본을 돌려준다 (편성 원본은 데이터 그대로 남는다).
 	##
-	## `hp_knob` 은 **측정용 손잡이**다 — 정본 HP 곡선을 고치지 않고 민감도를 재기 위한 배율.
+	## `hp_knob`·`atk_knob` 은 **측정용 손잡이**다 — 정본 곡선을 고치지 않고 민감도를 재기 위한 배율.
+	## `atk_knob` 은 atk·mag 두 축에 걸린다 (적이 실제로 쓰는 피해 축이 둘이다).
 	## 기본 1.0 이면 정본 그대로다. 난이도 조정이 확정되면 정본(GDD) 쪽을 먼저 고치고,
 	## 이 인자는 1.0 그대로 둔다 (게임 경로가 측정 손잡이에 기대지 않게).
 	var out := monster.duplicate(true)
@@ -117,6 +118,8 @@ static func scale_monster(monster: Dictionary, floor: int, biome: Dictionary,
 		var m := mult
 		if String(key) == "hp":
 			m *= hp_mult
+		elif String(key) == "atk" or String(key) == "mag":
+			m *= atk_knob
 		# 최소 1 — 배율이 0 이하로 떨어져도 적이 무피해 벽이 되지는 않는다.
 		stats[key] = maxi(1, int(roundf(float(stats[key]) * m)))
 	out["stats"] = stats
