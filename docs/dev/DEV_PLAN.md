@@ -206,6 +206,7 @@ Godot **4.7.2 stable** (이 머신에 설치·검증 완료). Unity C#은 전부
 
 - GUT(리포 내 `godot/addons/gut`, 벤더링된 버전 9.6.1) + `.gutconfig.json` (`dirs: ["res://tests"]`, `prefix: "test_"`, `suffix: ".gd"`, `should_exit: true`).
 - 실행: **`./tools/test_godot.sh`** (임포트 → GUT → junit 검사). 이 스크립트는 테스트가 0건이면 실패로 종료한다. 2026-10-17 구조 개편 후 실측: 5 스크립트 / 20 테스트 / 20 통과 / 49 단언 (자체 실측).
+- 임포트 단계에는 **시간 상한**이 있다 (기본 180초, `FONS_IMPORT_TIMEOUT` 로 조정). 상한을 넘기면 임포트를 건너뛰고 GUT 로 넘어가며 WARN 을 찍는다. 2026-10-29 실측: 마운트된 볼륨 하나가 고아가 되자 Godot 이 시작 시 볼륨 열거(`mountedVolumeURLsIncludingResourceValuesForKeys` → `__getattrlist`)에서 블록돼 `--import` 가 10분 넘게 멈췄고, 같은 이유로 `/sbin/mount` 까지 멈췄다 (자체 실측). 임포트는 편의 단계이고 거짓 통과를 실제로 막는 것은 아래 junit 검사(0건 실행·스크립트 누락)이므로, 매달리지 않고 경고 후 진행한다.
 - **금지:** `cd godot && godot --headless -s addons/gut/gut_cmdln.gd -gexit`를 단독으로 쓰지 않는다. `.godot` 임포트 캐시가 없는 새 사본에서는 테스트를 한 건도 실행하지 않고도 exit 0을 반환한다 — 거짓 통과다(부록 A #10).
 - 파이썬 게이트: `./.venv/bin/python tools/gate_all.py`.
 
