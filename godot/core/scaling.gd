@@ -71,7 +71,6 @@ static func scale_gatekeeper(monster: Dictionary, floor: int,
 	## 바이옴 계수도 안 건다 — 06 §35 "게이트키퍼는 바이옴 밖".
 	## `bossScaleRefFloor` 가 없는 보스(26~130층)는 이 식의 대상이 아니므로 일반 층 스케일을 쓴다.
 	var ref := int(monster.get("spawn", {}).get("bossScaleRefFloor", 0))
-	if ref <= 0:
 		return scale_monster(monster, floor, {})
 	var out := monster.duplicate(true)
 	var stats: Dictionary = out.get("stats", {})
